@@ -5,29 +5,28 @@
 #pragma once
 
 #include <memory>
+#include <thread>
 
-#include <QTcpServer>
+#include <QObject>
 
 #include "krdp_export.h"
 
 namespace KRdp
 {
 
-class KRDP_EXPORT Server : public QTcpServer
+class KRDP_EXPORT Session : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit Server(QObject *parent = nullptr);
-    ~Server() override;
+    explicit Session(qintptr socketHandle);
+    ~Session() override;
 
-    void start();
-    void stop();
-
-protected:
-    void incomingConnection(qintptr handle) override;
+    void close();
 
 private:
+    void run(std::stop_token stopToken);
+
     class Private;
     const std::unique_ptr<Private> d;
 };
