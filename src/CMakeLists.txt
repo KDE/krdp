@@ -4,6 +4,8 @@ add_library(KRdp)
 target_sources(KRdp PRIVATE
     Server.cpp
     Session.cpp
+    InputHandler.cpp
+    PeerContext.cpp
 )
 
 ecm_qt_declare_logging_category(KRdp
@@ -22,9 +24,15 @@ ecm_generate_export_header(KRdp
     EXCLUDE_DEPRECATED_BEFORE_AND_AT ${EXCLUDE_DEPRECATED_BEFORE_AND_AT}
 )
 
-target_include_directories(KRdp PUBLIC ${FreeRDP_INCLUDE_DIR} ${WinPR_INCLUDE_DIR} ${FreeRDP-Server_INCLUDE_DIR})
+target_include_directories(KRdp PUBLIC ${FreeRDP_INCLUDE_DIR} ${WinPR_INCLUDE_DIR})
+target_link_libraries(KRdp PUBLIC Qt${QT_MAJOR_VERSION}::Core Qt${QT_MAJOR_VERSION}::Network freerdp winpr)
 
-target_link_libraries(KRdp PUBLIC Qt${QT_MAJOR_VERSION}::Core Qt${QT_MAJOR_VERSION}::Network freerdp-server)
+if (${FreeRDP_VERSION} VERSION_LESS "3.0.0")
+    target_include_directories(KRdp ${FreeRDP_Server_INCLUDE_DIR})
+    target_link_libraries(KRdp freerdp-server)
+endif()
+
+# target_compile_definitions(KRdp PRIVATE -D_REENTRANT)
 
 install(TARGETS KRdp DESTINATION ${KDE_INSTALL_LIBDIR})
 

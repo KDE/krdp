@@ -9,23 +9,46 @@
 
 #include <QObject>
 
+#include <freerdp/freerdp.h>
+
 #include "krdp_export.h"
 
 namespace KRdp
 {
+
+class Server;
 
 class KRDP_EXPORT Session : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit Session(qintptr socketHandle);
+    enum class State {
+        Initial,
+        Starting,
+        Running,
+        Closed,
+    };
+
+    explicit Session(Server *server, qintptr socketHandle);
     ~Session() override;
 
-    void close();
+    State state() const;
+    Q_SIGNAL void stateChanged();
 
 private:
+    friend BOOL peerCapabilities(freerdp_peer *);
+    friend BOOL peerActivate(freerdp_peer *);
+    friend BOOL peerPostConnect(freerdp_peer *);
+
+    void setState(State newState);
+    void initialize();
     void run(std::stop_token stopToken);
+
+    bool onCapabilities();
+    bool onActivate();
+    bool onPostConnect();
+    bool onClose();
 
     class Private;
     const std::unique_ptr<Private> d;
