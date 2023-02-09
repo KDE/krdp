@@ -15,6 +15,8 @@
 namespace KRdp
 {
 
+class Session;
+
 class KRDP_EXPORT Server : public QTcpServer
 {
     Q_OBJECT
@@ -43,6 +45,8 @@ public:
 
     QString tlsCertificateKey() const;
     void setTlsCertificateKey(const QString &newTlsCertificateKey);
+
+    Q_SIGNAL void newSession(Session *session);
 
 protected:
     void incomingConnection(qintptr handle) override;
