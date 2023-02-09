@@ -4,6 +4,10 @@
 
 #include "PortalSession.h"
 
+#include <QMouseEvent>
+
+#include <linux/input.h>
+
 #include "xdp_dbus_remotedesktop_interface.h"
 #include "xdp_dbus_screencast_interface.h"
 
@@ -44,6 +48,8 @@ public:
     std::unique_ptr<OrgFreedesktopPortalScreenCastInterface> screencastInterface;
 
     QDBusObjectPath sessionPath;
+
+    bool started = false;
 };
 
 QString createHandleToken()
@@ -119,7 +125,7 @@ void PortalSession::onSourcesSelected(uint code, const QVariantMap & /*result*/)
     auto parameters = QVariantMap{
         {QStringLiteral("handle_token"), createHandleToken()},
     };
-    new PortalRequest(d->screencastInterface->Start(d->sessionPath, QString{}, parameters), this, &PortalSession::onSessionStarted);
+    new PortalRequest(d->remoteInterface->Start(d->sessionPath, QString{}, parameters), this, &PortalSession::onSessionStarted);
 }
 
 void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap & /*result*/)
@@ -129,5 +135,42 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap & /*resu
         return;
     }
 
-    qCDebug(KRDP) << "Session started";
+    qCDebug(KRDP) << "Remote Desktop Portal Session started";
+    d->started = true;
+}
+
+void KRdp::PortalSession::sendEvent(QEvent *event)
+{
+    if (!d->started) {
+        return;
+    }
+
+    switch (event->type()) {
+    case QEvent::MouseButtonPress:
+    case QEvent::MouseButtonRelease: {
+        auto me = static_cast<QMouseEvent *>(event);
+        int button = 0;
+        if (me->button() == Qt::LeftButton) {
+            button = BTN_LEFT;
+        } else if (me->button() == Qt::MiddleButton) {
+            button = BTN_MIDDLE;
+        } else if (me->button() == Qt::RightButton) {
+            button = BTN_RIGHT;
+        } else {
+            qCWarning(KRDP) << "Unsupported mouse button" << me->button();
+            return;
+        }
+        uint state = me->type() == QEvent::MouseButtonPress ? 1 : 0;
+        qDebug() << button << state;
+        d->remoteInterface->NotifyPointerButton(d->sessionPath, QVariantMap{}, button, state);
+        break;
+    }
+    case QEvent::MouseMove: {
+        auto me = static_cast<QMouseEvent *>(event);
+        d->remoteInterface->NotifyPointerMotion(d->sessionPath, QVariantMap{}, me->x(), me->y());
+        break;
+    }
+    default:
+        break;
+    }
 }

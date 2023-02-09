@@ -58,6 +58,8 @@ public:
     Q_SIGNAL void started();
     Q_SIGNAL void error();
 
+    void sendEvent(QEvent *event);
+
 private:
     void onCreateSession(uint code, const QVariantMap &result);
     void onDevicesSelected(uint code, const QVariantMap & /*result*/);

@@ -24,11 +24,12 @@ int main(int argc, char **argv)
     server.setTlsCertificateKey(QStringLiteral("server.key"));
 
     QObject::connect(&server, &KRdp::Server::newSession, [&server](KRdp::Session *newSession) {
-        QObject::connect(newSession->inputHandler(), &KRdp::InputHandler::inputEvent, [](QEvent *event) {
-            qDebug() << "Input event" << event;
+        KRdp::PortalSession *portalSession = new KRdp::PortalSession(&server);
+
+        QObject::connect(newSession->inputHandler(), &KRdp::InputHandler::inputEvent, portalSession, [portalSession](QEvent *event) {
+            portalSession->sendEvent(event);
         });
 
-        KRdp::PortalSession *portalSession = new KRdp::PortalSession(&server);
         QObject::connect(newSession, &KRdp::Session::destroyed, portalSession, [portalSession]() {
             portalSession->deleteLater();
         });
