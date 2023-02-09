@@ -153,6 +153,8 @@ InputHandler *Session::inputHandler() const
 
 void Session::initialize()
 {
+    setState(State::Starting);
+
     d->peer = freerdp_peer_new(d->socketHandle);
     if (!d->peer) {
         qCWarning(KRDP) << "Failed to create peer";
@@ -268,7 +270,7 @@ void Session::run(std::stop_token stopToken)
     }
 
     qCDebug(KRDP) << "Closing session";
-    setState(State::Closed);
+    onClose();
 }
 
 bool Session::onCapabilities()
@@ -291,7 +293,7 @@ bool Session::onPostConnect()
 
 bool Session::onClose()
 {
-    qCDebug(KRDP) << __PRETTY_FUNCTION__;
+    setState(State::Closed);
     return true;
 }
 
