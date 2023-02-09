@@ -6,6 +6,7 @@
 #include <QGuiApplication>
 
 #include "InputHandler.h"
+#include "PortalSession.h"
 #include "Server.h"
 #include "Session.h"
 
@@ -25,6 +26,11 @@ int main(int argc, char **argv)
     QObject::connect(&server, &KRdp::Server::newSession, [&server](KRdp::Session *newSession) {
         QObject::connect(newSession->inputHandler(), &KRdp::InputHandler::inputEvent, [](QEvent *event) {
             qDebug() << "Input event" << event;
+        });
+
+        KRdp::PortalSession *portalSession = new KRdp::PortalSession(&server);
+        QObject::connect(newSession, &KRdp::Session::destroyed, portalSession, [portalSession]() {
+            portalSession->deleteLater();
         });
     });
 

@@ -27,7 +27,7 @@ include(ECMEnableSanitizers)
 option(BUILD_EXAMPLES "Build example applications" ON)
 
 set(REQUIRED_QT_VERSION 5.15.2)
-find_package(Qt${QT_MAJOR_VERSION} ${REQUIRED_QT_VERSION} CONFIG REQUIRED Core Gui Network)
+find_package(Qt${QT_MAJOR_VERSION} ${REQUIRED_QT_VERSION} CONFIG REQUIRED Core Gui Network DBus)
 
 find_package(FreeRDP REQUIRED)
 find_package(WinPR REQUIRED)
