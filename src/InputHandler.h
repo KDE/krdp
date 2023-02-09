@@ -6,6 +6,7 @@
 
 #include <memory>
 
+#include <QInputEvent>
 #include <QObject>
 
 #include <freerdp/freerdp.h>
@@ -26,6 +27,8 @@ public:
     ~InputHandler() override;
 
     void initialize(rdpInput *input);
+
+    Q_SIGNAL void inputEvent(QInputEvent *event);
 
 private:
     friend BOOL inputSynchronizeEvent(rdpInput *, uint32_t);

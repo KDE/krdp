@@ -102,7 +102,28 @@ bool InputHandler::synchronizeEvent(uint32_t flags)
 
 bool InputHandler::mouseEvent(uint16_t x, uint16_t y, uint16_t flags)
 {
-    qCDebug(KRDP) << __PRETTY_FUNCTION__ << x << y << flags;
+    QPointF position = QPointF(x, y);
+
+    Qt::MouseButton button = Qt::NoButton;
+    if (flags & PTR_FLAGS_BUTTON1) {
+        button = Qt::LeftButton;
+    } else if (flags & PTR_FLAGS_BUTTON2) {
+        button = Qt::RightButton;
+    } else if (flags & PTR_FLAGS_BUTTON3) {
+        button = Qt::MiddleButton;
+    }
+
+    if (flags & PTR_FLAGS_DOWN) {
+        QMouseEvent *event = new QMouseEvent(QEvent::MouseButtonPress, position, position, QPointF{}, button, button, Qt::NoModifier);
+        Q_EMIT inputEvent(event);
+    } else if (flags & PTR_FLAGS_MOVE) {
+        QMouseEvent *event = new QMouseEvent(QEvent::MouseMove, position, position, QPointF{}, button, button, Qt::NoModifier);
+        Q_EMIT inputEvent(event);
+    } else {
+        QMouseEvent *event = new QMouseEvent(QEvent::MouseButtonRelease, position, position, QPointF{}, button, button, Qt::NoModifier);
+        Q_EMIT inputEvent(event);
+    }
+
     return true;
 }
 
