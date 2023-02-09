@@ -16,6 +16,7 @@
 namespace KRdp
 {
 
+class InputHandler;
 class Server;
 
 class KRDP_EXPORT Session : public QObject
@@ -35,6 +36,8 @@ public:
 
     State state() const;
     Q_SIGNAL void stateChanged();
+
+    InputHandler *inputHandler() const;
 
 private:
     friend BOOL peerCapabilities(freerdp_peer *);

@@ -146,6 +146,11 @@ void Session::setState(KRdp::Session::State newState)
     Q_EMIT stateChanged();
 }
 
+InputHandler *Session::inputHandler() const
+{
+    return d->inputHandler.get();
+}
+
 void Session::initialize()
 {
     d->peer = freerdp_peer_new(d->socketHandle);
