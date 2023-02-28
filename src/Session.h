@@ -18,6 +18,7 @@ namespace KRdp
 
 class InputHandler;
 class Server;
+class VideoStream;
 
 class KRDP_EXPORT Session : public QObject
 {
@@ -39,14 +40,20 @@ public:
 
     InputHandler *inputHandler() const;
 
+    VideoStream *videoStream() const;
+
 private:
     friend BOOL peerCapabilities(freerdp_peer *);
     friend BOOL peerActivate(freerdp_peer *);
     friend BOOL peerPostConnect(freerdp_peer *);
 
+    friend class VideoStream;
+
     void setState(State newState);
     void initialize();
     void run(std::stop_token stopToken);
+
+    freerdp_peer *rdpPeer() const;
 
     bool onCapabilities();
     bool onActivate();

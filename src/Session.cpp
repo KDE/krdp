@@ -27,6 +27,7 @@
 #include "InputHandler.h"
 #include "PeerContext_p.h"
 #include "Server.h"
+#include "VideoStream.h"
 
 #include "krdp_logging.h"
 
@@ -104,6 +105,7 @@ public:
     qintptr socketHandle;
 
     std::unique_ptr<InputHandler> inputHandler;
+    std::unique_ptr<VideoStream> videoStream;
 
     freerdp_peer *peer = nullptr;
 
@@ -120,6 +122,7 @@ Session::Session(Server *server, qintptr socketHandle)
     d->socketHandle = socketHandle;
 
     d->inputHandler = std::make_unique<InputHandler>(this);
+    d->videoStream = std::make_unique<VideoStream>(this);
 
     QMetaObject::invokeMethod(this, &Session::initialize, Qt::QueuedConnection);
 }
@@ -154,6 +157,11 @@ void Session::setState(KRdp::Session::State newState)
 InputHandler *Session::inputHandler() const
 {
     return d->inputHandler.get();
+}
+
+KRdp::VideoStream *Session::videoStream() const
+{
+    return d->videoStream.get();
 }
 
 void Session::initialize()
@@ -221,8 +229,8 @@ void Session::initialize()
     settings->AudioPlayback = false;
 
     settings->ColorDepth = 32;
-    settings->GfxAVC444v2 = true;
-    settings->GfxH264 = false;
+    settings->GfxAVC444v2 = false;
+    settings->GfxH264 = true;
     settings->GfxSmallCache = false;
     settings->GfxThinClient = false;
 
@@ -233,7 +241,7 @@ void Session::initialize()
     settings->RemoteConsoleAudio = true;
     settings->RemoteFxCodec = true;
     settings->SupportGraphicsPipeline = true;
-    settings->NSCodec = true;
+    settings->NSCodec = false;
     settings->FrameMarkerCommandEnabled = true;
     settings->SurfaceFrameMarkerEnabled = true;
     settings->UnicodeInput = true;
@@ -289,7 +297,7 @@ void Session::run(std::stop_token stopToken)
             case DRDYNVC_STATE_INITIALIZED:
                 break;
             case DRDYNVC_STATE_READY:
-                // TODO initialize
+                d->videoStream->initialize();
                 break;
             }
         }
@@ -301,13 +309,19 @@ void Session::run(std::stop_token stopToken)
 
 bool Session::onCapabilities()
 {
-    qCDebug(KRDP) << __PRETTY_FUNCTION__;
+    auto settings = d->peer->context->settings;
+    if (!settings->SupportGraphicsPipeline) {
+        qCWarning(KRDP) << "Client does not support graphics pipeline which is required";
+        return false;
+    }
+
     return true;
 }
 
 bool Session::onActivate()
 {
     qCDebug(KRDP) << __PRETTY_FUNCTION__;
+
     return true;
 }
 
@@ -323,4 +337,8 @@ bool Session::onClose()
     return true;
 }
 
+freerdp_peer *Session::rdpPeer() const
+{
+    return d->peer;
+}
 }
