@@ -44,7 +44,11 @@ BOOL inputExtendedMouseEvent(rdpInput *input, uint16_t flags, uint16_t x, uint16
     return FALSE;
 }
 
+#ifdef FREERDP3
 BOOL inputKeyboardEvent(rdpInput *input, uint16_t flags, uint8_t code)
+#else
+BOOL inputKeyboardEvent(rdpInput *input, uint16_t flags, uint16_t code)
+#endif
 {
     auto context = reinterpret_cast<PeerContext *>(input->context);
 

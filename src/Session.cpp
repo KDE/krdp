@@ -16,8 +16,13 @@
 #include <QThread>
 
 #include <freerdp/channels/wtsvc.h>
-#include <freerdp/peer.h>
-#include <freerdp/settings.h>
+#include <freerdp/freerdp.h>
+
+#ifdef FREERDP3
+#include <freerdp/channels/drdynvc.h>
+#else
+#define DRDYNVC_SVC_CHANNEL_NAME "drdynvc"
+#endif
 
 #include "InputHandler.h"
 #include "PeerContext_p.h"
@@ -165,7 +170,12 @@ void Session::initialize()
     d->peer->ContextNew = (psPeerContextNew)newPeerContext;
     d->peer->ContextFree = (psPeerContextFree)freePeerContext;
 
-    if (!freerdp_peer_context_new_ex(d->peer, d->server->rdpSettings())) {
+#ifdef FREERDP3
+    auto result = freerdp_peer_context_new_ex(d->peer, d->server->rdpSettings());
+#else
+    auto result = freerdp_peer_context_new(d->peer);
+#endif
+    if (!result) {
         qCWarning(KRDP) << "Failed to create peer context";
         return;
     }
@@ -182,8 +192,24 @@ void Session::initialize()
         return;
     }
 
+#ifdef FREERDP3
+    auto certificate = freerdp_certificate_new_from_file(d->server->tlsCertificate().toUtf8().data());
+    if (!certificate) {
+        qCWarning(KRDP) << "Could not read certificate file" << d->server->tlsCertificate();
+        return;
+    }
+    freerdp_settings_set_pointer_len(settings, FreeRDP_RdpServerCertificate, certificate, 1);
+
+    auto key = freerdp_key_new_from_file(d->server->tlsCertificateKey().toUtf8().data());
+    if (!key) {
+        qCWarning(KRDP) << "Could not read certificate file" << d->server->tlsCertificate();
+        return;
+    }
+    freerdp_settings_set_pointer_len(settings, FreeRDP_RdpServerRsaKey, key, 1);
+#else
     settings->CertificateFile = strdup(d->server->tlsCertificate().toUtf8().data());
     settings->PrivateKeyFile = strdup(d->server->tlsCertificateKey().toUtf8().data());
+#endif
 
     settings->RdpSecurity = false;
     settings->TlsSecurity = true;
