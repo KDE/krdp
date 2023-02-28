@@ -11,16 +11,19 @@ namespace KRdp
 
 class Session;
 class InputHandler;
+class VideoStream;
 
 struct PeerContext {
     rdpContext _p;
 
     Session *session = nullptr;
     InputHandler *inputHandler = nullptr;
+    VideoStream *stream = nullptr;
 
     HANDLE virtualChannelManager = nullptr;
 };
 
+PeerContext *contextForPeer(freerdp_peer *peer);
 }
 
 BOOL newPeerContext(freerdp_peer *peer, rdpContext *peer_context);

@@ -8,11 +8,19 @@
 
 #include "krdp_logging.h"
 
-using namespace KRdp;
+namespace KRdp
+{
+
+PeerContext *contextForPeer(freerdp_peer *peer)
+{
+    return reinterpret_cast<PeerContext *>(peer->context);
+}
+
+}
 
 BOOL newPeerContext(freerdp_peer *peer, rdpContext *context)
 {
-    auto peerContext = reinterpret_cast<PeerContext *>(context);
+    auto peerContext = reinterpret_cast<KRdp::PeerContext *>(context);
 
     peerContext->virtualChannelManager = WTSOpenServerA((LPSTR)peer->context);
     if (!peerContext->virtualChannelManager || peerContext->virtualChannelManager == INVALID_HANDLE_VALUE) {
@@ -26,7 +34,7 @@ BOOL newPeerContext(freerdp_peer *peer, rdpContext *context)
 
 void freePeerContext(freerdp_peer *peer, rdpContext *context)
 {
-    auto peerContext = reinterpret_cast<PeerContext *>(context);
+    auto peerContext = reinterpret_cast<KRdp::PeerContext *>(context);
 
     if (!peerContext) {
         return;
