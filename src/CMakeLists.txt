@@ -7,6 +7,7 @@ target_sources(KRdp PRIVATE
     InputHandler.cpp
     PeerContext.cpp
     PortalSession.cpp
+    VideoStream.cpp
 )
 
 ecm_qt_declare_logging_category(KRdp
