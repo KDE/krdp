@@ -327,7 +327,10 @@ bool Session::onActivate()
 
 bool Session::onPostConnect()
 {
-    qCDebug(KRDP) << __PRETTY_FUNCTION__;
+    qCInfo(KRDP) << "New client connected:" << d->peer->hostname << freerdp_peer_os_major_type_string(d->peer) << freerdp_peer_os_minor_type_string(d->peer);
+
+    d->samFile.remove();
+
     return true;
 }
 
