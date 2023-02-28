@@ -44,6 +44,8 @@ target_link_libraries(KRdp PUBLIC
     freerdp
     winpr
     freerdp-server
+    K::KPipeWire
+    K::KPipeWireRecord
 )
 
 install(TARGETS KRdp DESTINATION ${KDE_INSTALL_LIBDIR})

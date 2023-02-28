@@ -5,20 +5,46 @@
 #include "PortalSession.h"
 
 #include <QMouseEvent>
+#include <QQueue>
 
 #include <linux/input.h>
 
+#include <KPipeWire/PipeWireRecord>
+
+#include "VideoStream.h"
 #include "xdp_dbus_remotedesktop_interface.h"
 #include "xdp_dbus_screencast_interface.h"
 
 #include "krdp_logging.h"
 
-using namespace KRdp;
+namespace KRdp
+{
 
 static const QString dbusService = QStringLiteral("org.freedesktop.portal.Desktop");
 static const QString dbusPath = QStringLiteral("/org/freedesktop/portal/desktop");
 static const QString dbusRequestInterface = QStringLiteral("org.freedesktop.portal.Request");
 static const QString dbusResponse = QStringLiteral("Response");
+static const QString dbusSessionInterface = QStringLiteral("org.freedesktop.portal.Session");
+
+const QDBusArgument &operator>>(const QDBusArgument &arg, PortalSession::Stream &stream)
+{
+    arg.beginStructure();
+    arg >> stream.nodeId;
+
+    arg.beginMap();
+    while (!arg.atEnd()) {
+        QString key;
+        QVariant map;
+        arg.beginMapEntry();
+        arg >> key >> map;
+        arg.endMapEntry();
+        stream.map.insert(key, map);
+    }
+    arg.endMap();
+    arg.endStructure();
+
+    return arg;
+}
 
 void PortalRequest::onStarted(QDBusPendingCallWatcher *watcher)
 {
@@ -49,7 +75,11 @@ public:
 
     QDBusObjectPath sessionPath;
 
+    std::unique_ptr<PipeWireRecord> pipeWireRecord;
+
     bool started = false;
+
+    QQueue<VideoFrame> frameQueue;
 };
 
 QString createHandleToken()
@@ -82,61 +112,10 @@ PortalSession::PortalSession(Server *server)
 
 PortalSession::~PortalSession()
 {
-}
+    // d->pipeWireRecord->setActive(false);
 
-void PortalSession::onCreateSession(uint code, const QVariantMap &result)
-{
-    if (code != 0) {
-        qCWarning(KRDP) << "Could not open a new remote desktop session:" << code;
-        return;
-    }
-
-    d->sessionPath = QDBusObjectPath(result.value(QStringLiteral("session_handle")).toString());
-
-    auto parameters = QVariantMap{
-        {QStringLiteral("types"), 7u},
-        {QStringLiteral("handle_token"), createHandleToken()},
-    };
-    new PortalRequest(d->remoteInterface->SelectDevices(d->sessionPath, parameters), this, &PortalSession::onDevicesSelected);
-}
-
-void PortalSession::onDevicesSelected(uint code, const QVariantMap & /*result*/)
-{
-    if (code != 0) {
-        qCWarning(KRDP) << "Could not select devices for remote desktop session";
-        return;
-    }
-
-    auto parameters = QVariantMap{
-        {QStringLiteral("types"), 1u}, // only MONITOR is supported
-        {QStringLiteral("multiple"), false},
-        {QStringLiteral("handle_token"), createHandleToken()},
-    };
-    new PortalRequest(d->screencastInterface->SelectSources(d->sessionPath, parameters), this, &PortalSession::onSourcesSelected);
-}
-
-void PortalSession::onSourcesSelected(uint code, const QVariantMap & /*result*/)
-{
-    if (code != 0) {
-        qCWarning(KRDP) << "Could not select sources for screencast session";
-        return;
-    }
-
-    auto parameters = QVariantMap{
-        {QStringLiteral("handle_token"), createHandleToken()},
-    };
-    new PortalRequest(d->remoteInterface->Start(d->sessionPath, QString{}, parameters), this, &PortalSession::onSessionStarted);
-}
-
-void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap & /*result*/)
-{
-    if (code != 0) {
-        qCWarning(KRDP) << "Could not start screencast session";
-        return;
-    }
-
-    qCDebug(KRDP) << "Remote Desktop Portal Session started";
-    d->started = true;
+    auto closeMessage = QDBusMessage::createMethodCall(dbusService, d->sessionPath.path(), dbusSessionInterface, QStringLiteral("Close"));
+    QDBusConnection::sessionBus().asyncCall(closeMessage);
 }
 
 void KRdp::PortalSession::sendEvent(QEvent *event)
@@ -161,7 +140,6 @@ void KRdp::PortalSession::sendEvent(QEvent *event)
             return;
         }
         uint state = me->type() == QEvent::MouseButtonPress ? 1 : 0;
-        qDebug() << button << state;
         d->remoteInterface->NotifyPointerButton(d->sessionPath, QVariantMap{}, button, state);
         break;
     }
@@ -173,4 +151,131 @@ void KRdp::PortalSession::sendEvent(QEvent *event)
     default:
         break;
     }
+}
+
+VideoFrame PortalSession::takeNextFrame()
+{
+    return d->frameQueue.takeFirst();
+}
+
+void PortalSession::onCreateSession(uint code, const QVariantMap &result)
+{
+    if (code != 0) {
+        qCWarning(KRDP) << "Could not open a new remote desktop session, error code" << code;
+        return;
+    }
+
+    d->sessionPath = QDBusObjectPath(result.value(QStringLiteral("session_handle")).toString());
+
+    auto parameters = QVariantMap{
+        {QStringLiteral("types"), 7u},
+        {QStringLiteral("handle_token"), createHandleToken()},
+    };
+    new PortalRequest(d->remoteInterface->SelectDevices(d->sessionPath, parameters), this, &PortalSession::onDevicesSelected);
+}
+
+void PortalSession::onDevicesSelected(uint code, const QVariantMap & /*result*/)
+{
+    if (code != 0) {
+        qCWarning(KRDP) << "Could not select devices for remote desktop session, error code" << code;
+        return;
+    }
+
+    auto parameters = QVariantMap{
+        {QStringLiteral("types"), 1u}, // only MONITOR is supported
+        {QStringLiteral("multiple"), false},
+        {QStringLiteral("handle_token"), createHandleToken()},
+    };
+    new PortalRequest(d->screencastInterface->SelectSources(d->sessionPath, parameters), this, &PortalSession::onSourcesSelected);
+}
+
+void PortalSession::onSourcesSelected(uint code, const QVariantMap & /*result*/)
+{
+    if (code != 0) {
+        qCWarning(KRDP) << "Could not select sources for screencast session, error code" << code;
+        return;
+    }
+
+    auto parameters = QVariantMap{
+        {QStringLiteral("handle_token"), createHandleToken()},
+    };
+    new PortalRequest(d->remoteInterface->Start(d->sessionPath, QString{}, parameters), this, &PortalSession::onSessionStarted);
+}
+
+void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
+{
+    if (code != 0) {
+        qCWarning(KRDP) << "Could not start screencast session, error code" << code;
+        return;
+    }
+
+    if (result.value(QStringLiteral("devices")).toUInt() == 0) {
+        qCWarning(KRDP) << "No devices were granted" << result;
+        return;
+    }
+
+    const auto streams = qdbus_cast<QList<Stream>>(result.value(QStringLiteral("streams")));
+    if (streams.isEmpty()) {
+        qCWarning(KRDP) << "No screencast streams supplied";
+        return;
+    }
+
+    auto watcher = new QDBusPendingCallWatcher(d->screencastInterface->OpenPipeWireRemote(d->sessionPath, QVariantMap{}));
+    connect(watcher, &QDBusPendingCallWatcher::finished, this, [this, streams](QDBusPendingCallWatcher *watcher) {
+        auto reply = QDBusReply<QDBusUnixFileDescriptor>(*watcher);
+        if (reply.isValid()) {
+            auto fd = reply.value();
+            d->pipeWireRecord = std::make_unique<PipeWireRecord>();
+            d->pipeWireRecord->setNodeId(streams.first().nodeId);
+            d->pipeWireRecord->setFd(fd.takeFileDescriptor());
+            d->pipeWireRecord->setEncoder("libx264rgb");
+            connect(d->pipeWireRecord.get(), &PipeWireRecord::newPacket, this, &PortalSession::onPacketReceived);
+            d->pipeWireRecord->setActive(true);
+            d->started = true;
+            Q_EMIT started();
+        } else {
+            qCWarning(KRDP) << "Could not open pipewire remote";
+        }
+        watcher->deleteLater();
+    });
+}
+
+void PortalSession::onPacketReceived(const QByteArray &data)
+{
+    VideoFrame frameData;
+
+    // if (frame.cursor) {
+    //     auto pwCursor = frame.cursor.value();
+    //     VideoFrame::Cursor cursor {
+    //         .position = pwCursor.position,
+    //         .hotspot = pwCursor.hotspot,
+    //         .texture = pwCursor.texture,
+    //     };
+    //     frameData.cursor = cursor;
+    // }
+    //
+    // QSize dataSize;
+    // if (frame.image || frame.dmabuf) {
+    //     if (frame.image) {
+    //         auto image = frame.image.value();
+    //         dataSize = image.size();
+    //         frameData.size = image.size();
+    //         frameData.data = QByteArray(reinterpret_cast<const char*>(image.constBits()), image.sizeInBytes());
+    //     } else {
+    //         // TODO
+    //     }
+    // }
+    //
+    // if (frame.damage) {
+    //     frameData.damage = frame.damage.value();
+    // } else {
+    //     frameData.damage = {QRect(QPoint(0, 0), dataSize)};
+    // }
+
+    frameData.data = data;
+
+    d->frameQueue.enqueue(frameData);
+    Q_EMIT frameReceived();
+}
+
 }

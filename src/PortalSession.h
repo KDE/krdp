@@ -6,16 +6,21 @@
 
 #include <functional>
 #include <memory>
+#include <optional>
 #include <type_traits>
 
 #include <QDBusPendingCallWatcher>
 #include <QObject>
 #include <QPointer>
 
+#include <KPipeWire/PipeWireSourceStream>
+
 #include "krdp_export.h"
 
 namespace KRdp
 {
+
+struct VideoFrame;
 
 class Server;
 
@@ -52,6 +57,11 @@ class KRDP_EXPORT PortalSession : public QObject
     Q_OBJECT
 
 public:
+    struct Stream {
+        uint nodeId;
+        QVariantMap map;
+    };
+
     PortalSession(Server *server);
     ~PortalSession();
 
@@ -60,14 +70,20 @@ public:
 
     void sendEvent(QEvent *event);
 
+    VideoFrame takeNextFrame();
+    Q_SIGNAL void frameReceived();
+
 private:
     void onCreateSession(uint code, const QVariantMap &result);
     void onDevicesSelected(uint code, const QVariantMap & /*result*/);
     void onSourcesSelected(uint code, const QVariantMap & /*result*/);
-    void onSessionStarted(uint code, const QVariantMap & /*result*/);
+    void onSessionStarted(uint code, const QVariantMap &result);
+    void onPacketReceived(const QByteArray &data);
 
     class Private;
     const std::unique_ptr<Private> d;
 };
 
 }
+
+Q_DECLARE_METATYPE(KRdp::PortalSession::Stream)
