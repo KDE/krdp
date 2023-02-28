@@ -9,6 +9,7 @@
 #include "PortalSession.h"
 #include "Server.h"
 #include "Session.h"
+#include "VideoStream.h"
 
 int main(int argc, char **argv)
 {
@@ -25,6 +26,10 @@ int main(int argc, char **argv)
 
     QObject::connect(&server, &KRdp::Server::newSession, [&server](KRdp::Session *newSession) {
         KRdp::PortalSession *portalSession = new KRdp::PortalSession(&server);
+
+        QObject::connect(portalSession, &KRdp::PortalSession::frameReceived, newSession, [portalSession, newSession]() {
+            newSession->videoStream()->sendFrame(portalSession->takeNextFrame());
+        });
 
         QObject::connect(newSession->inputHandler(), &KRdp::InputHandler::inputEvent, portalSession, [portalSession](QEvent *event) {
             portalSession->sendEvent(event);
