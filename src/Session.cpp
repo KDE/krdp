@@ -245,13 +245,19 @@ void Session::run(std::stop_token stopToken)
         }
         WaitForMultipleObjects(1 + handleCount, events.data(), FALSE, INFINITE);
 
-        if (!d->peer->CheckFileDescriptor(d->peer)) {
+        if (d->peer->CheckFileDescriptor(d->peer) != TRUE) {
             qCDebug(KRDP) << "Unable to check file descriptor";
             onClose();
             break;
         }
 
-        if (WTSVirtualChannelManagerIsChannelJoined(context->virtualChannelManager, "drdynvc")) {
+        if (WTSVirtualChannelManagerCheckFileDescriptor(context->virtualChannelManager) != TRUE) {
+            qCDebug(KRDP) << "Unable to check Virtual Channel Manager file descriptor, closing connection";
+            onClose();
+            break;
+        }
+
+        if (WTSVirtualChannelManagerIsChannelJoined(context->virtualChannelManager, DRDYNVC_SVC_CHANNEL_NAME)) {
             switch (WTSVirtualChannelManagerGetDrdynvcState(context->virtualChannelManager)) {
             case DRDYNVC_STATE_NONE:
             case DRDYNVC_STATE_INITIALIZED:
@@ -260,12 +266,6 @@ void Session::run(std::stop_token stopToken)
                 // TODO initialize
                 break;
             }
-        }
-
-        if (!WTSVirtualChannelManagerCheckFileDescriptor(context->virtualChannelManager)) {
-            qCDebug(KRDP) << "Unable to check Virtual Channel Manager file descriptor, closing connection";
-            onClose();
-            break;
         }
     }
 
