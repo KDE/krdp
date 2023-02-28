@@ -18,7 +18,6 @@ include(KDECMakeSettings)
 include(KDEGitCommitHooks)
 
 include(ECMGenerateExportHeader)
-
 include(ECMAddTests)
 include(ECMSetupVersion)
 include(ECMQtDeclareLoggingCategory)
@@ -31,10 +30,8 @@ find_package(Qt${QT_MAJOR_VERSION} ${REQUIRED_QT_VERSION} CONFIG REQUIRED Core G
 
 find_package(FreeRDP REQUIRED)
 find_package(WinPR REQUIRED)
-
-if (${FreeRDP_VERSION} VERSION_LESS "3.0.0")
-    find_package(FreeRDP-Server REQUIRED)
-endif()
+find_package(FreeRDP-Server REQUIRED)
+find_package(KPipeWire REQUIRED)
 
 set(EXCLUDE_DEPRECATED_BEFORE_AND_AT 0 CACHE STRING "Control the range of deprecated API excluded from the build [default=0].")
 

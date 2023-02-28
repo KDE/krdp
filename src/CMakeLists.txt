@@ -29,7 +29,8 @@ qt5_add_dbus_interface(_dbus_sources xdp_dbus_remotedesktop_interface.xml xdp_db
 qt5_add_dbus_interface(_dbus_sources xdp_dbus_screencast_interface.xml xdp_dbus_screencast_interface)
 target_sources(KRdp PRIVATE ${_dbus_sources})
 
-target_include_directories(KRdp PUBLIC ${FreeRDP_INCLUDE_DIR} ${WinPR_INCLUDE_DIR})
+target_include_directories(KRdp PUBLIC ${FreeRDP_INCLUDE_DIR} ${WinPR_INCLUDE_DIR} ${FreeRDP_Server_INCLUDE_DIR})
+
 target_link_libraries(KRdp PUBLIC
     Qt${QT_MAJOR_VERSION}::Core
     Qt${QT_MAJOR_VERSION}::Gui
@@ -37,12 +38,8 @@ target_link_libraries(KRdp PUBLIC
     Qt${QT_MAJOR_VERSION}::DBus
     freerdp
     winpr
+    freerdp-server
 )
-
-if (${FreeRDP_VERSION} VERSION_LESS "3.0.0")
-    target_include_directories(KRdp ${FreeRDP_Server_INCLUDE_DIR})
-    target_link_libraries(KRdp freerdp-server)
-endif()
 
 install(TARGETS KRdp DESTINATION ${KDE_INSTALL_LIBDIR})
 
