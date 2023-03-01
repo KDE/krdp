@@ -35,14 +35,6 @@ class KRDP_EXPORT PortalSession : public QObject
     Q_OBJECT
 
 public:
-    /**
-     * A simple representation of a cursor image.
-     */
-    struct CursorImage {
-        QPoint hotspot;
-        QImage image;
-    };
-
     PortalSession(Server *server);
     ~PortalSession();
 
@@ -63,6 +55,7 @@ public:
      * been encoded by libav.
      */
     Q_SIGNAL void frameReceived(const VideoFrame &frame);
+
     /**
      * Emitted whenever a new cursor update was received.
      *
@@ -70,7 +63,7 @@ public:
      * movement that is more performant than embedding things into the video
      * stream.
      */
-    Q_SIGNAL void cursorUpdate(const QPoint &position, std::optional<CursorImage> image);
+    Q_SIGNAL void cursorUpdate(const PipeWireCursor &cursor);
 
 private:
     void onCreateSession(uint code, const QVariantMap &result);

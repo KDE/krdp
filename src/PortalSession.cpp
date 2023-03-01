@@ -9,7 +9,7 @@
 
 #include <linux/input.h>
 
-#include <KPipeWire/PipeWireRecord>
+#include <KPipeWire/PipeWireEncodedStream>
 
 #include "PortalSession_p.h"
 #include "VideoStream.h"
@@ -75,7 +75,7 @@ public:
 
     QDBusObjectPath sessionPath;
 
-    std::unique_ptr<PipeWireRecord> pipeWireRecord;
+    std::unique_ptr<PipeWireEncodedStream> encodedStream;
 
     bool started = false;
 
@@ -111,7 +111,7 @@ PortalSession::PortalSession(Server *server)
 
 PortalSession::~PortalSession()
 {
-    d->pipeWireRecord->setActive(false);
+    d->encodedStream->setActive(false);
 
     auto closeMessage = QDBusMessage::createMethodCall(dbusService, d->sessionPath.path(), dbusSessionInterface, QStringLiteral("Close"));
     QDBusConnection::sessionBus().asyncCall(closeMessage);
@@ -219,12 +219,13 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
         auto reply = QDBusReply<QDBusUnixFileDescriptor>(*watcher);
         if (reply.isValid()) {
             auto fd = reply.value();
-            d->pipeWireRecord = std::make_unique<PipeWireRecord>();
-            d->pipeWireRecord->setNodeId(streams.first().nodeId);
-            d->pipeWireRecord->setFd(fd.takeFileDescriptor());
-            d->pipeWireRecord->setEncoder("libx264");
-            connect(d->pipeWireRecord.get(), &PipeWireRecord::newPacket, this, &PortalSession::onPacketReceived);
-            d->pipeWireRecord->setActive(true);
+            d->encodedStream = std::make_unique<PipeWireEncodedStream>();
+            d->encodedStream->setNodeId(streams.first().nodeId);
+            d->encodedStream->setFd(fd.takeFileDescriptor());
+            d->encodedStream->setEncoder("libx264");
+            connect(d->encodedStream.get(), &PipeWireEncodedStream::newPacket, this, &PortalSession::onPacketReceived);
+            connect(d->encodedStream.get(), &PipeWireEncodedStream::cursorChanged, this, &PortalSession::cursorUpdate);
+            d->encodedStream->setActive(true);
             d->started = true;
             Q_EMIT started();
         } else {
