@@ -249,8 +249,8 @@ void VideoStream::sendFrame(const VideoFrame &frame)
     surfaceCommand.top = 0;
     // surfaceCommand.right = damageRect.x() + damageRect.width();
     // surfaceCommand.bottom = damageRect.y() + damageRect.height();
-    surfaceCommand.right = 1024;
-    surfaceCommand.bottom = 768;
+    surfaceCommand.right = 1920;
+    surfaceCommand.bottom = 1080;
     surfaceCommand.length = 0;
     surfaceCommand.data = nullptr;
 
@@ -264,8 +264,8 @@ void VideoStream::sendFrame(const VideoFrame &frame)
     auto rects = std::make_unique<RECTANGLE_16[]>(1);
     rects[0].left = 0;
     rects[0].top = 0;
-    rects[0].right = 1024;
-    rects[0].bottom = 768;
+    rects[0].right = 1920;
+    rects[0].bottom = 1080;
     avcStream.meta.regionRects = rects.get();
     auto qualities = std::make_unique<RDPGFX_H264_QUANT_QUALITY[]>(1);
     avcStream.meta.quantQualityVals = qualities.get();
