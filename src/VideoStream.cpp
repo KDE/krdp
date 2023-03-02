@@ -57,14 +57,13 @@ struct Surface {
 class KRDP_NO_EXPORT VideoStream::Private
 {
 public:
+    using RdpGfxContextPtr = std::unique_ptr<RdpgfxServerContext, decltype(&rdpgfx_server_context_free)>;
+
     Session *session;
 
-    RdpgfxServerContext *gfxContext = nullptr;
-
-    wStream *stream = nullptr;
+    RdpGfxContextPtr gfxContext = RdpGfxContextPtr(nullptr, rdpgfx_server_context_free);
 
     uint32_t frameId = 0;
-
     uint32_t channelId = 0;
 
     uint16_t nextSurfaceId = 1;
@@ -82,14 +81,6 @@ VideoStream::VideoStream(Session *session)
 
 VideoStream::~VideoStream()
 {
-    if (d->stream) {
-        Stream_Free(d->stream, TRUE);
-        d->stream = nullptr;
-    }
-
-    // if (d->gfxContext) {
-    //     d->gfxContext->Close(d->gfxContext);
-    // }
 }
 
 bool VideoStream::initialize()
@@ -100,7 +91,7 @@ bool VideoStream::initialize()
 
     auto peerContext = reinterpret_cast<PeerContext *>(d->session->rdpPeer()->context);
 
-    d->gfxContext = rdpgfx_server_context_new(peerContext->virtualChannelManager);
+    d->gfxContext = Private::RdpGfxContextPtr{rdpgfx_server_context_new(peerContext->virtualChannelManager), rdpgfx_server_context_free};
     if (!d->gfxContext) {
         qCWarning(KRDP) << "Failed creating RDPGFX context";
         return false;
@@ -115,7 +106,7 @@ bool VideoStream::initialize()
     d->gfxContext->custom = this;
     d->gfxContext->rdpcontext = d->session->rdpPeer()->context;
 
-    if (!d->gfxContext->Open(d->gfxContext)) {
+    if (!d->gfxContext->Open(d->gfxContext.get())) {
         qCWarning(KRDP) << "Could not open GFX context";
         return false;
     }
@@ -195,8 +186,8 @@ void VideoStream::sendFrame(const VideoFrame &frame)
     //     qualities[i].qualityVal = 100;
     // }
 
-    d->gfxContext->StartFrame(d->gfxContext, &startFramePdu);
-    d->gfxContext->SurfaceCommand(d->gfxContext, &surfaceCommand);
+    d->gfxContext->StartFrame(d->gfxContext.get(), &startFramePdu);
+    d->gfxContext->SurfaceCommand(d->gfxContext.get(), &surfaceCommand);
 
     // RDPGFX_SURFACE_TO_SURFACE_PDU surfacePdu;
     // surfacePdu.surfaceIdSrc = d->surface.id;
@@ -215,7 +206,7 @@ void VideoStream::sendFrame(const VideoFrame &frame)
     //     d->gfxContext->SurfaceToSurface(d->gfxContext, &surfacePdu);
     // }
 
-    d->gfxContext->EndFrame(d->gfxContext, &endFramePdu);
+    d->gfxContext->EndFrame(d->gfxContext.get(), &endFramePdu);
 
     // rdpUpdate *update = d->session->rdpPeer()->context->update;
     //
@@ -243,8 +234,6 @@ void VideoStream::reset()
 
 bool VideoStream::onChannelIdAssigned(uint32_t channelId)
 {
-    qDebug() << __PRETTY_FUNCTION__ << channelId;
-
     d->channelId = channelId;
 
     return true;
@@ -274,7 +263,7 @@ void VideoStream::performReset()
     monitors[0].bottom = 768;
     monitors[0].flags = MONITOR_PRIMARY;
     resetGraphicsPdu.monitorDefArray = monitors;
-    d->gfxContext->ResetGraphics(d->gfxContext, &resetGraphicsPdu);
+    d->gfxContext->ResetGraphics(d->gfxContext.get(), &resetGraphicsPdu);
 
     RDPGFX_CREATE_SURFACE_PDU createSurfacePdu;
     createSurfacePdu.width = 1024;
@@ -282,7 +271,7 @@ void VideoStream::performReset()
     uint16_t surfaceId = d->nextSurfaceId++;
     createSurfacePdu.surfaceId = surfaceId;
     createSurfacePdu.pixelFormat = GFX_PIXEL_FORMAT_XRGB_8888;
-    d->gfxContext->CreateSurface(d->gfxContext, &createSurfacePdu);
+    d->gfxContext->CreateSurface(d->gfxContext.get(), &createSurfacePdu);
 
     d->surface = Surface{
         .id = surfaceId,
@@ -293,7 +282,6 @@ void VideoStream::performReset()
     mapSurfaceToOutputPdu.outputOriginX = 0;
     mapSurfaceToOutputPdu.outputOriginY = 0;
     mapSurfaceToOutputPdu.surfaceId = surfaceId;
-    d->gfxContext->MapSurfaceToOutput(d->gfxContext, &mapSurfaceToOutputPdu);
+    d->gfxContext->MapSurfaceToOutput(d->gfxContext.get(), &mapSurfaceToOutputPdu);
 }
-
 }
