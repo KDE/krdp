@@ -70,8 +70,7 @@ public:
 
     void sendEvent(QEvent *event);
 
-    VideoFrame takeNextFrame();
-    Q_SIGNAL void frameReceived();
+    Q_SIGNAL void frameReceived(const VideoFrame &frame);
 
 private:
     void onCreateSession(uint code, const QVariantMap &result);

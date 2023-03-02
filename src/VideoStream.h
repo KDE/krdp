@@ -45,8 +45,9 @@ public:
     ~VideoStream();
 
     bool initialize();
+    void close();
 
-    void sendFrame(const VideoFrame &frame);
+    void queueFrame(const VideoFrame &frame);
 
     void reset();
 
@@ -60,6 +61,7 @@ private:
     uint32_t onFrameAcknowledge(const RDPGFX_FRAME_ACKNOWLEDGE_PDU *frameAcknowledge);
 
     void performReset();
+    void sendFrame(const VideoFrame &frame);
 
     class Private;
     const std::unique_ptr<Private> d;

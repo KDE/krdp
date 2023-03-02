@@ -336,6 +336,7 @@ bool Session::onPostConnect()
 
 bool Session::onClose()
 {
+    d->videoStream->close();
     setState(State::Closed);
     return true;
 }

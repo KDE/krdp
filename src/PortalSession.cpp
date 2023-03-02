@@ -79,7 +79,6 @@ public:
 
     bool started = false;
 
-    QQueue<VideoFrame> frameQueue;
 };
 
 QString createHandleToken()
@@ -112,7 +111,7 @@ PortalSession::PortalSession(Server *server)
 
 PortalSession::~PortalSession()
 {
-    // d->pipeWireRecord->setActive(false);
+    d->pipeWireRecord->setActive(false);
 
     auto closeMessage = QDBusMessage::createMethodCall(dbusService, d->sessionPath.path(), dbusSessionInterface, QStringLiteral("Close"));
     QDBusConnection::sessionBus().asyncCall(closeMessage);
@@ -151,11 +150,6 @@ void KRdp::PortalSession::sendEvent(QEvent *event)
     default:
         break;
     }
-}
-
-VideoFrame PortalSession::takeNextFrame()
-{
-    return d->frameQueue.takeFirst();
 }
 
 void PortalSession::onCreateSession(uint code, const QVariantMap &result)
@@ -274,8 +268,7 @@ void PortalSession::onPacketReceived(const QByteArray &data)
 
     frameData.data = data;
 
-    d->frameQueue.enqueue(frameData);
-    Q_EMIT frameReceived();
+    Q_EMIT frameReceived(frameData);
 }
 
 }
