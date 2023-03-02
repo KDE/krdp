@@ -11,6 +11,7 @@
 
 #include <QDBusPendingCallWatcher>
 #include <QObject>
+#include <QPoint>
 #include <QPointer>
 
 #include <KPipeWire/PipeWireSourceStream>
@@ -62,6 +63,11 @@ public:
         QVariantMap map;
     };
 
+    struct CursorImage {
+        QPoint hotspot;
+        QImage image;
+    };
+
     PortalSession(Server *server);
     ~PortalSession();
 
@@ -71,6 +77,7 @@ public:
     void sendEvent(QEvent *event);
 
     Q_SIGNAL void frameReceived(const VideoFrame &frame);
+    Q_SIGNAL void cursorUpdate(const QPoint &position, std::optional<CursorImage> image);
 
 private:
     void onCreateSession(uint code, const QVariantMap &result);

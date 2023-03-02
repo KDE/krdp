@@ -23,13 +23,6 @@ namespace KRdp
 class Session;
 
 struct VideoFrame {
-    struct Cursor {
-        QPoint position;
-        QPoint hotspot;
-        QImage texture;
-    };
-    std::optional<Cursor> cursor;
-
     QSize size;
     QByteArray data;
 
