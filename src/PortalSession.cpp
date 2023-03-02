@@ -222,7 +222,7 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
             d->pipeWireRecord = std::make_unique<PipeWireRecord>();
             d->pipeWireRecord->setNodeId(streams.first().nodeId);
             d->pipeWireRecord->setFd(fd.takeFileDescriptor());
-            d->pipeWireRecord->setEncoder("libx264rgb");
+            d->pipeWireRecord->setEncoder("libx264");
             connect(d->pipeWireRecord.get(), &PipeWireRecord::newPacket, this, &PortalSession::onPacketReceived);
             d->pipeWireRecord->setActive(true);
             d->started = true;
