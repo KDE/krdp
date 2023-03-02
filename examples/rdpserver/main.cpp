@@ -25,19 +25,16 @@ int main(int argc, char **argv)
     server.setTlsCertificateKey(QStringLiteral("server.key"));
 
     QObject::connect(&server, &KRdp::Server::newSession, [&server](KRdp::Session *newSession) {
-        KRdp::PortalSession *portalSession = new KRdp::PortalSession(&server);
+        auto portalSession = std::make_shared<KRdp::PortalSession>(&server);
 
-        QObject::connect(portalSession, &KRdp::PortalSession::frameReceived, newSession, [portalSession, newSession]() {
-            newSession->videoStream()->sendFrame(portalSession->takeNextFrame());
+        QObject::connect(portalSession.get(), &KRdp::PortalSession::frameReceived, newSession, [portalSession, newSession](const KRdp::VideoFrame &frame) {
+            newSession->videoStream()->queueFrame(frame);
         });
 
-        QObject::connect(newSession->inputHandler(), &KRdp::InputHandler::inputEvent, portalSession, [portalSession](QEvent *event) {
+        QObject::connect(newSession->inputHandler(), &KRdp::InputHandler::inputEvent, portalSession.get(), [portalSession](QEvent *event) {
             portalSession->sendEvent(event);
         });
 
-        QObject::connect(newSession, &KRdp::Session::destroyed, portalSession, [portalSession]() {
-            portalSession->deleteLater();
-        });
     });
 
     server.start();
