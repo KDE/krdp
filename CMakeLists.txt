@@ -1,12 +1,17 @@
+project(discover)
+set(PROJECT_VERSION "5.27.80")
+set(PROJECT_VERSION_MAJOR 5)
+
 cmake_minimum_required(VERSION 3.16)
 
-set(VERSION "0.1.0")
-set(KF_DEP_VERSION "5.95.0") # handled by release scripts
+set(QT_MIN_VERSION "6.4.0")
+set(KF6_MIN_VERSION "5.240.0")
+set(KDE_COMPILERSETTINGS_LEVEL "5.85")
 
-project(KRdp VERSION ${VERSION})
+project(KRdp VERSION "${PROJECT_VERSION}")
 
 include(FeatureSummary)
-find_package(ECM ${VERSION} NO_MODULE)
+find_package(ECM ${KF6_MIN_VERSION} NO_MODULE)
 set_package_properties(ECM PROPERTIES TYPE REQUIRED DESCRIPTION "Extra CMake Modules." URL "https://commits.kde.org/extra-cmake-modules")
 feature_summary(WHAT REQUIRED_PACKAGES_NOT_FOUND FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
@@ -25,8 +30,7 @@ include(ECMEnableSanitizers)
 
 option(BUILD_EXAMPLES "Build example applications" ON)
 
-set(REQUIRED_QT_VERSION 5.15.2)
-find_package(Qt${QT_MAJOR_VERSION} ${REQUIRED_QT_VERSION} CONFIG REQUIRED Core Gui Network DBus)
+find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED Core Gui Network DBus)
 
 find_package(FreeRDP REQUIRED)
 find_package(WinPR REQUIRED)

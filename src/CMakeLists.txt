@@ -21,13 +21,13 @@ ecm_qt_declare_logging_category(KRdp
 
 ecm_generate_export_header(KRdp
     BASE_NAME KRdp
-    VERSION ${VERSION}
+    VERSION ${CMAKE_PROJECT_VERSION}
     DEPRECATED_BASE_VERSION 0
     EXCLUDE_DEPRECATED_BEFORE_AND_AT ${EXCLUDE_DEPRECATED_BEFORE_AND_AT}
 )
 
-qt5_add_dbus_interface(_dbus_sources xdp_dbus_remotedesktop_interface.xml xdp_dbus_remotedesktop_interface)
-qt5_add_dbus_interface(_dbus_sources xdp_dbus_screencast_interface.xml xdp_dbus_screencast_interface)
+qt6_add_dbus_interface(_dbus_sources xdp_dbus_remotedesktop_interface.xml xdp_dbus_remotedesktop_interface)
+qt6_add_dbus_interface(_dbus_sources xdp_dbus_screencast_interface.xml xdp_dbus_screencast_interface)
 target_sources(KRdp PRIVATE ${_dbus_sources})
 
 if ("${FreeRDP_VERSION_MAJOR}" STREQUAL "3")
@@ -37,10 +37,10 @@ endif()
 target_include_directories(KRdp PUBLIC ${FreeRDP_INCLUDE_DIR} ${WinPR_INCLUDE_DIR} ${FreeRDP_Server_INCLUDE_DIR})
 
 target_link_libraries(KRdp PUBLIC
-    Qt${QT_MAJOR_VERSION}::Core
-    Qt${QT_MAJOR_VERSION}::Gui
-    Qt${QT_MAJOR_VERSION}::Network
-    Qt${QT_MAJOR_VERSION}::DBus
+    Qt::Core
+    Qt::Gui
+    Qt::Network
+    Qt::DBus
     freerdp
     winpr
     freerdp-server
