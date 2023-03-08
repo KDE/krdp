@@ -23,14 +23,15 @@ class KRDP_EXPORT InputHandler : public QObject
     Q_OBJECT
 
 public:
-    InputHandler(Session *session);
     ~InputHandler() override;
-
-    void initialize(rdpInput *input);
 
     Q_SIGNAL void inputEvent(QInputEvent *event);
 
 private:
+    friend class Session;
+    InputHandler(Session *session);
+    void initialize(rdpInput *input);
+
     friend BOOL inputSynchronizeEvent(rdpInput *, uint32_t);
     friend BOOL inputMouseEvent(rdpInput *, uint16_t, uint16_t, uint16_t);
     friend BOOL inputExtendedMouseEvent(rdpInput *, uint16_t, uint16_t, uint16_t);
