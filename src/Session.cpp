@@ -291,7 +291,7 @@ void Session::initialize()
     qCDebug(KRDP) << "Session setup completed, start processing...";
 
     // Perform actual communication on a separate thread.
-    d->thread = std::jthread(&Session::run, this);
+    d->thread = std::jthread(std::bind(&Session::run, this, std::placeholders::_1));
 }
 
 void Session::run(std::stop_token stopToken)
