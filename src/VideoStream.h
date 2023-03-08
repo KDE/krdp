@@ -22,13 +22,40 @@ namespace KRdp
 
 class Session;
 
+/**
+ * A frame of compressed video data.
+ */
 struct VideoFrame {
+    /**
+     * The size of the frame, in pixels.
+     */
     QSize size;
+    /**
+     * h264 compressed data in YUV420 color space.
+     */
     QByteArray data;
-
+    /**
+     * Area of the frame that was actually damaged.
+     * TODO: Actually use this information.
+     */
     QRegion damage;
 };
 
+/**
+ * A class that encapsulates an RdpGfx video stream.
+ *
+ * Video streaming is done using the "RDP Graphics Pipeline" protocol
+ * extension which allows using h264 as the codec for the video stream.
+ * However, this protocol extension is fairly complex to setup and use.
+ *
+ * VideoStream makes sure to handle most of the complexity of the RdpGfx
+ * protocol like ensuring the client knows the right resolution and a
+ * surface at the right size. It also takes care of sending the frames,
+ * using a separate thread for a submission queue.
+ *
+ * VideoStream is managed by Session. Each session will have one instance
+ * of this class.
+ */
 class KRDP_EXPORT VideoStream : public QObject
 {
     Q_OBJECT
@@ -38,8 +65,22 @@ public:
 
     void close();
 
+    /**
+     * Queue a frame to be sent to the client.
+     *
+     * This will add the provided frame to the queue of frames that should
+     * be sent to the client.
+     *
+     * \param frame The frame to send.
+     */
     void queueFrame(const VideoFrame &frame);
 
+    /**
+     * Indicate that the video state should be reset.
+     *
+     * This means the screen resolution and other information of the client
+     * will be updated based on the current state of the VideoStream.
+     */
     void reset();
 
 private:
