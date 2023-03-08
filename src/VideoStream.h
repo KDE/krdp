@@ -34,10 +34,8 @@ class KRDP_EXPORT VideoStream : public QObject
     Q_OBJECT
 
 public:
-    VideoStream(Session *session);
     ~VideoStream();
 
-    bool initialize();
     void close();
 
     void queueFrame(const VideoFrame &frame);
@@ -45,6 +43,10 @@ public:
     void reset();
 
 private:
+    friend class Session;
+    VideoStream(Session *session);
+    bool initialize();
+
     friend BOOL gfxChannelIdAssigned(RdpgfxServerContext *, uint32_t);
     friend uint32_t gfxCapsAdvertise(RdpgfxServerContext *, const RDPGFX_CAPS_ADVERTISE_PDU *);
     friend uint32_t gfxFrameAcknowledge(RdpgfxServerContext *, const RDPGFX_FRAME_ACKNOWLEDGE_PDU *);
