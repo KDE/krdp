@@ -20,11 +20,24 @@ class InputHandler;
 class Server;
 class VideoStream;
 
+/**
+ * An RDP session.
+ *
+ * This represents an RDP session, that is, a connection between an RDP client
+ * and the server. It primarily takes care of the RDP communication side of
+ * things.
+ *
+ * Note that this class starts its own thread for performing the actual
+ * communication.
+ */
 class KRDP_EXPORT Session : public QObject
 {
     Q_OBJECT
 
 public:
+    /**
+     * Session state.
+     */
     enum class State {
         Initial,
         Starting,
@@ -32,14 +45,29 @@ public:
         Closed,
     };
 
+    /**
+     * Constructor.
+     *
+     * \param server The KRdp::Server instance this session is part of.
+     * \param socketHandle A file handle to the socket this session should use
+     *                     for communication.
+     */
     explicit Session(Server *server, qintptr socketHandle);
     ~Session() override;
 
+    /**
+     * The current session state.
+     */
     State state() const;
     Q_SIGNAL void stateChanged();
 
+    /**
+     * The InputHandler instance associated with this session.
+     */
     InputHandler *inputHandler() const;
-
+    /**
+     * The VideoStream instance associated with this session.
+     */
     VideoStream *videoStream() const;
 
 private:
