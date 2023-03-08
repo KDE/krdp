@@ -24,11 +24,20 @@ namespace KRdp
 struct VideoFrame;
 class Server;
 
+/**
+ * A FreeDesktop Remote Desktop Portal session.
+ *
+ * This encapsulates all the required setup to start a FreeDesktop Remote
+ * Desktop Portal session including input sending and video streaming.
+ */
 class KRDP_EXPORT PortalSession : public QObject
 {
     Q_OBJECT
 
 public:
+    /**
+     * A simple representation of a cursor image.
+     */
     struct CursorImage {
         QPoint hotspot;
         QImage image;
@@ -40,9 +49,27 @@ public:
     Q_SIGNAL void started();
     Q_SIGNAL void error();
 
+    /**
+     * Send a new event to the portal.
+     *
+     * \param event The new event to send.
+     */
     void sendEvent(QEvent *event);
 
+    /**
+     * Emitted whenever a new frame has been received.
+     *
+     * Received in this case means that the portal has sent the data and it has
+     * been encoded by libav.
+     */
     Q_SIGNAL void frameReceived(const VideoFrame &frame);
+    /**
+     * Emitted whenever a new cursor update was received.
+     *
+     * These are separate from frames as RDP has a separate protocol for mouse
+     * movement that is more performant than embedding things into the video
+     * stream.
+     */
     Q_SIGNAL void cursorUpdate(const QPoint &position, std::optional<CursorImage> image);
 
 private:
