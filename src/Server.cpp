@@ -59,7 +59,12 @@ bool Server::start()
         return false;
     }
 
+#ifdef FREERDP3
+    // FreeRDP3 tries to use a global instance of the settings object when
+    // initializing a new peer. However, it seems to fail at actually creating a
+    // global default instance. So create one here and use that.
     d->settings = freerdp_settings_new(FREERDP_SETTINGS_SERVER_MODE);
+#endif
 
     qCDebug(KRDP) << "Listening for connections on" << serverAddress() << serverPort();
     return true;
