@@ -22,6 +22,8 @@ BOOL newPeerContext(freerdp_peer *peer, rdpContext *context)
 {
     auto peerContext = reinterpret_cast<KRdp::PeerContext *>(context);
 
+    // Initialize the virtual channel manager, so that we can create new
+    // dynamic channels.
     peerContext->virtualChannelManager = WTSOpenServerA((LPSTR)peer->context);
     if (!peerContext->virtualChannelManager || peerContext->virtualChannelManager == INVALID_HANDLE_VALUE) {
         qCWarning(KRDP) << "Failed creating virtual channel manager";

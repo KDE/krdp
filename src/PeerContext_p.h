@@ -13,7 +13,13 @@ class Session;
 class InputHandler;
 class VideoStream;
 
+/**
+ * Extension of the FreeRDP Peer Context used to store extra data for KRdp.
+ */
 struct PeerContext {
+    // The base rdpContext structure.
+    // Important: This should remain as a plain value as that is how the
+    // extension mechanism works.
     rdpContext _p;
 
     Session *session = nullptr;
@@ -23,8 +29,10 @@ struct PeerContext {
     HANDLE virtualChannelManager = nullptr;
 };
 
+// Convenience method to get the PeerContext instance for a specific FreeRDP peer.
 PeerContext *contextForPeer(freerdp_peer *peer);
 }
 
+// FreeRDP callbacks used to initialize a PeerContext during creation/destruction.
 BOOL newPeerContext(freerdp_peer *peer, rdpContext *peer_context);
 void freePeerContext(freerdp_peer *peer, rdpContext *peer_context);
