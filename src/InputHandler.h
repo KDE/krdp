@@ -28,7 +28,13 @@ class KRDP_EXPORT InputHandler : public QObject
     Q_OBJECT
 
 public:
+    InputHandler(Session *session);
     ~InputHandler() override;
+
+    /**
+     * Initialize the InputHandler. Called from within Session::initialize().
+     */
+    void initialize(rdpInput *input);
 
     /**
      * Emitted whenever a new input event was received from the client.
@@ -38,16 +44,6 @@ public:
     Q_SIGNAL void inputEvent(QInputEvent *event);
 
 private:
-    friend class Session;
-    /**
-     * InputHandler is created by Session.
-     */
-    InputHandler(Session *session);
-    /**
-     * Initialize the InputHandler. Called from within Session::initialize().
-     */
-    void initialize(rdpInput *input);
-
     // FreeRDP callbacks that need to call the event handler functions in the
     // handler.
     friend BOOL inputSynchronizeEvent(rdpInput *, uint32_t);
