@@ -44,7 +44,7 @@ private:
     bool synchronizeEvent(uint32_t flags);
     bool mouseEvent(uint16_t x, uint16_t y, uint16_t flags);
     bool extendedMouseEvent(uint16_t x, uint16_t y, uint16_t flags);
-    bool keyboardEvent(uint8_t code, uint16_t flags);
+    bool keyboardEvent(uint16_t code, uint16_t flags);
     bool unicodeKeyboardEvent(uint16_t code, uint16_t flags);
 
     class Private;

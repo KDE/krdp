@@ -137,7 +137,7 @@ bool InputHandler::extendedMouseEvent(uint16_t x, uint16_t y, uint16_t flags)
     return true;
 }
 
-bool InputHandler::keyboardEvent(uint8_t code, uint16_t flags)
+bool InputHandler::keyboardEvent(uint16_t code, uint16_t flags)
 {
     qCDebug(KRDP) << __PRETTY_FUNCTION__ << code << flags;
     return true;
