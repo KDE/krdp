@@ -11,11 +11,11 @@
 
 #include <KPipeWire/PipeWireRecord>
 
+#include "PortalSession_p.h"
 #include "VideoStream.h"
+#include "krdp_logging.h"
 #include "xdp_dbus_remotedesktop_interface.h"
 #include "xdp_dbus_screencast_interface.h"
-
-#include "krdp_logging.h"
 
 namespace KRdp
 {
@@ -26,7 +26,7 @@ static const QString dbusRequestInterface = QStringLiteral("org.freedesktop.port
 static const QString dbusResponse = QStringLiteral("Response");
 static const QString dbusSessionInterface = QStringLiteral("org.freedesktop.portal.Session");
 
-const QDBusArgument &operator>>(const QDBusArgument &arg, PortalSession::Stream &stream)
+const QDBusArgument &operator>>(const QDBusArgument &arg, PortalSessionStream &stream)
 {
     arg.beginStructure();
     arg >> stream.nodeId;
@@ -208,7 +208,7 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
         return;
     }
 
-    const auto streams = qdbus_cast<QList<Stream>>(result.value(QStringLiteral("streams")));
+    const auto streams = qdbus_cast<QList<PortalSessionStream>>(result.value(QStringLiteral("streams")));
     if (streams.isEmpty()) {
         qCWarning(KRDP) << "No screencast streams supplied";
         return;

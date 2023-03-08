@@ -22,47 +22,13 @@ namespace KRdp
 {
 
 struct VideoFrame;
-
 class Server;
-
-class PortalRequest : public QObject
-{
-    Q_OBJECT
-public:
-    template<typename ContextType, typename Callback>
-    PortalRequest(const QDBusPendingCall &call, ContextType *context, Callback callback)
-    {
-        m_context = context;
-
-        if constexpr (std::is_member_function_pointer<Callback>::value) {
-            m_callback = std::bind(callback, context, std::placeholders::_1, std::placeholders::_2);
-        } else {
-            m_callback = callback;
-        }
-
-        auto watcher = new QDBusPendingCallWatcher(call);
-        watcher->waitForFinished();
-        onStarted(watcher);
-    }
-
-private:
-    void onStarted(QDBusPendingCallWatcher *watcher);
-    Q_SLOT void onFinished(uint code, const QVariantMap &result);
-
-    QPointer<QObject> m_context;
-    std::function<void(uint, const QVariantMap &)> m_callback;
-};
 
 class KRDP_EXPORT PortalSession : public QObject
 {
     Q_OBJECT
 
 public:
-    struct Stream {
-        uint nodeId;
-        QVariantMap map;
-    };
-
     struct CursorImage {
         QPoint hotspot;
         QImage image;
@@ -91,5 +57,3 @@ private:
 };
 
 }
-
-Q_DECLARE_METATYPE(KRdp::PortalSession::Stream)
