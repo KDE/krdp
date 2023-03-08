@@ -30,8 +30,8 @@ public:
     QString userName;
     QString password;
 
-    QString tlsCertificate;
-    QString tlsCertificateKey;
+    std::filesystem::path tlsCertificate;
+    std::filesystem::path tlsCertificateKey;
 };
 
 Server::Server(QObject *parent)
@@ -126,12 +126,12 @@ void Server::setPassword(const QString &newPassword)
     d->password = newPassword;
 }
 
-QString Server::tlsCertificate() const
+std::filesystem::path Server::tlsCertificate() const
 {
     return d->tlsCertificate;
 }
 
-void Server::setTlsCertificate(const QString &newTlsCertificate)
+void Server::setTlsCertificate(const std::filesystem::path &newTlsCertificate)
 {
     if (newTlsCertificate == d->tlsCertificate) {
         return;
@@ -140,12 +140,12 @@ void Server::setTlsCertificate(const QString &newTlsCertificate)
     d->tlsCertificate = newTlsCertificate;
 }
 
-QString Server::tlsCertificateKey() const
+std::filesystem::path Server::tlsCertificateKey() const
 {
     return d->tlsCertificateKey;
 }
 
-void Server::setTlsCertificateKey(const QString &newTlsCertificateKey)
+void Server::setTlsCertificateKey(const std::filesystem::path &newTlsCertificateKey)
 {
     if (newTlsCertificateKey == d->tlsCertificateKey) {
         return;

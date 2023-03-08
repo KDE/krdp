@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <filesystem>
 #include <memory>
 
 #include <QTcpServer>
@@ -40,11 +41,11 @@ public:
     QString password() const;
     void setPassword(const QString &password);
 
-    QString tlsCertificate() const;
-    void setTlsCertificate(const QString &newTlsCertificate);
+    std::filesystem::path tlsCertificate() const;
+    void setTlsCertificate(const std::filesystem::path &newTlsCertificate);
 
-    QString tlsCertificateKey() const;
-    void setTlsCertificateKey(const QString &newTlsCertificateKey);
+    std::filesystem::path tlsCertificateKey() const;
+    void setTlsCertificateKey(const std::filesystem::path &newTlsCertificateKey);
 
     Q_SIGNAL void newSession(Session *session);
 

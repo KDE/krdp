@@ -215,8 +215,8 @@ void Session::initialize()
     }
     freerdp_settings_set_pointer_len(settings, FreeRDP_RdpServerRsaKey, key, 1);
 #else
-    settings->CertificateFile = strdup(d->server->tlsCertificate().toUtf8().data());
-    settings->PrivateKeyFile = strdup(d->server->tlsCertificateKey().toUtf8().data());
+    settings->CertificateFile = strdup(d->server->tlsCertificate().string().data());
+    settings->PrivateKeyFile = strdup(d->server->tlsCertificateKey().string().data());
 #endif
 
     settings->RdpSecurity = false;

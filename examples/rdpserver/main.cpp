@@ -21,8 +21,8 @@ int main(int argc, char **argv)
     server.setPort(3389);
     server.setUserName(QStringLiteral("test"));
     server.setPassword(QStringLiteral("test"));
-    server.setTlsCertificate(QStringLiteral("server.crt"));
-    server.setTlsCertificateKey(QStringLiteral("server.key"));
+    server.setTlsCertificate(std::filesystem::path("server.crt"));
+    server.setTlsCertificateKey(std::filesystem::path("server.key"));
 
     QObject::connect(&server, &KRdp::Server::newSession, [&server](KRdp::Session *newSession) {
         auto portalSession = std::make_shared<KRdp::PortalSession>(&server);
