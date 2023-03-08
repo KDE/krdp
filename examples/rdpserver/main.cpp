@@ -37,7 +37,9 @@ int main(int argc, char **argv)
 
     });
 
-    server.start();
-
-    return application.exec();
+    if (!server.start()) {
+        return 1;
+    } else {
+        return application.exec();
+    }
 }

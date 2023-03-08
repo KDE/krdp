@@ -25,7 +25,7 @@ public:
     explicit Server(QObject *parent = nullptr);
     ~Server() override;
 
-    void start();
+    bool start();
     void stop();
 
     QHostAddress address() const;

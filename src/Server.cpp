@@ -47,16 +47,17 @@ Server::~Server()
     stop();
 }
 
-void Server::start()
+bool Server::start()
 {
     if (!listen(d->address, d->port)) {
-        qCWarning(KRDP) << "Unable to listen for connections on" << serverAddress() << serverPort();
-        QCoreApplication::exit(1);
+        qCCritical(KRDP) << "Unable to listen for connections on" << serverAddress() << serverPort();
+        return false;
     }
 
     d->settings = freerdp_settings_new(FREERDP_SETTINGS_SERVER_MODE);
 
     qCDebug(KRDP) << "Listening for connections on" << serverAddress() << serverPort();
+    return true;
 }
 
 void Server::stop()
