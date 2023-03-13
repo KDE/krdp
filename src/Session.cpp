@@ -24,6 +24,7 @@
 #define DRDYNVC_SVC_CHANNEL_NAME "drdynvc"
 #endif
 
+#include "Cursor.h"
 #include "InputHandler.h"
 #include "PeerContext_p.h"
 #include "Server.h"
@@ -120,6 +121,7 @@ public:
 
     std::unique_ptr<InputHandler> inputHandler;
     std::unique_ptr<VideoStream> videoStream;
+    std::unique_ptr<Cursor> cursor;
 
     freerdp_peer *peer = nullptr;
 
@@ -137,6 +139,7 @@ Session::Session(Server *server, qintptr socketHandle)
 
     d->inputHandler = std::make_unique<InputHandler>(this);
     d->videoStream = std::make_unique<VideoStream>(this);
+    d->cursor = std::make_unique<Cursor>(this);
 
     QMetaObject::invokeMethod(this, &Session::initialize, Qt::QueuedConnection);
 }
@@ -176,6 +179,11 @@ InputHandler *Session::inputHandler() const
 KRdp::VideoStream *Session::videoStream() const
 {
     return d->videoStream.get();
+}
+
+Cursor *Session::cursor() const
+{
+    return d->cursor.get();
 }
 
 void Session::initialize()
@@ -380,5 +388,10 @@ bool Session::onClose()
 freerdp_peer *Session::rdpPeer() const
 {
     return d->peer;
+}
+
+rdpContext *Session::rdpPeerContext() const
+{
+    return d->peer->context;
 }
 }

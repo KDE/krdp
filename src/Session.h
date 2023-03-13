@@ -19,6 +19,7 @@ namespace KRdp
 class InputHandler;
 class Server;
 class VideoStream;
+class Cursor;
 
 /**
  * An RDP session.
@@ -70,12 +71,17 @@ public:
      * The VideoStream instance associated with this session.
      */
     VideoStream *videoStream() const;
+    /**
+     * The Cursor instance associated with this session.
+     */
+    Cursor *cursor() const;
 
 private:
     friend BOOL peerCapabilities(freerdp_peer *);
     friend BOOL peerActivate(freerdp_peer *);
     friend BOOL peerPostConnect(freerdp_peer *);
 
+    friend class Cursor;
     friend class VideoStream;
 
     void setState(State newState);
@@ -83,6 +89,7 @@ private:
     void run(std::stop_token stopToken);
 
     freerdp_peer *rdpPeer() const;
+    rdpContext *rdpPeerContext() const;
 
     bool onCapabilities();
     bool onActivate();
