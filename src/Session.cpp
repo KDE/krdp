@@ -306,7 +306,6 @@ void Session::run(std::stop_token stopToken)
         auto handleCount = d->peer->GetEventHandles(d->peer, events.data() + 1, 31);
         if (handleCount <= 0) {
             qCDebug(KRDP) << "Unable to get transport event handles";
-            onClose();
             break;
         }
         // Wait for something to happen on the connection.
@@ -315,7 +314,6 @@ void Session::run(std::stop_token stopToken)
         // Read data from the socket and have FreeRDP process it.
         if (d->peer->CheckFileDescriptor(d->peer) != TRUE) {
             qCDebug(KRDP) << "Unable to check file descriptor";
-            onClose();
             break;
         }
 
@@ -324,7 +322,6 @@ void Session::run(std::stop_token stopToken)
         // However, if we don't call this, login and any dynamic channels will not work.
         if (WTSVirtualChannelManagerCheckFileDescriptor(context->virtualChannelManager) != TRUE) {
             qCDebug(KRDP) << "Unable to check Virtual Channel Manager file descriptor, closing connection";
-            onClose();
             break;
         }
 
@@ -332,8 +329,11 @@ void Session::run(std::stop_token stopToken)
         if (WTSVirtualChannelManagerIsChannelJoined(context->virtualChannelManager, DRDYNVC_SVC_CHANNEL_NAME)) {
             // Dynamic channels can only be set up properly once the dynamic channel channel is properly setup.
             if (WTSVirtualChannelManagerGetDrdynvcState(context->virtualChannelManager) == DRDYNVC_STATE_READY) {
-                d->videoStream->initialize();
-                break;
+                if (d->videoStream->initialize()) {
+                    setState(State::Streaming);
+                } else {
+                    break;
+                }
             }
         }
     }
