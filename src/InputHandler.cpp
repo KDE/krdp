@@ -118,13 +118,13 @@ bool InputHandler::mouseEvent(uint16_t x, uint16_t y, uint16_t flags)
     }
 
     if (flags & PTR_FLAGS_DOWN) {
-        QMouseEvent *event = new QMouseEvent(QEvent::MouseButtonPress, position, position, QPointF{}, button, button, Qt::NoModifier);
+        QMouseEvent *event = new QMouseEvent(QEvent::MouseButtonPress, QPointF{}, position, button, button, Qt::NoModifier);
         Q_EMIT inputEvent(event);
     } else if (flags & PTR_FLAGS_MOVE) {
-        QMouseEvent *event = new QMouseEvent(QEvent::MouseMove, position, position, QPointF{}, button, button, Qt::NoModifier);
+        QMouseEvent *event = new QMouseEvent(QEvent::MouseMove, QPointF{}, position, button, button, Qt::NoModifier);
         Q_EMIT inputEvent(event);
     } else {
-        QMouseEvent *event = new QMouseEvent(QEvent::MouseButtonRelease, position, position, QPointF{}, button, button, Qt::NoModifier);
+        QMouseEvent *event = new QMouseEvent(QEvent::MouseButtonRelease, QPointF{}, position, button, button, Qt::NoModifier);
         Q_EMIT inputEvent(event);
     }
 
