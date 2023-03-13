@@ -150,6 +150,10 @@ void VideoStream::close()
 
 void VideoStream::queueFrame(const KRdp::VideoFrame &frame)
 {
+    if (d->session->state() != Session::State::Streaming) {
+        return;
+    }
+
     std::lock_guard lock(d->frameQueueMutex);
     d->frameQueue.append(frame);
     d->frameQueueCondition.notify_all();
