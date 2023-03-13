@@ -119,7 +119,7 @@ PortalSession::~PortalSession()
 
 void KRdp::PortalSession::sendEvent(QEvent *event)
 {
-    if (!d->started) {
+    if (!d->started || !d->encodedStream) {
         return;
     }
 
@@ -144,7 +144,8 @@ void KRdp::PortalSession::sendEvent(QEvent *event)
     }
     case QEvent::MouseMove: {
         auto me = static_cast<QMouseEvent *>(event);
-        d->remoteInterface->NotifyPointerMotion(d->sessionPath, QVariantMap{}, me->x(), me->y());
+        auto position = me->globalPosition();
+        d->remoteInterface->NotifyPointerMotionAbsolute(d->sessionPath, QVariantMap{}, d->encodedStream->nodeId(), position.x(), position.y());
         break;
     }
     default:
