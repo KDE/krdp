@@ -20,6 +20,9 @@
 namespace KRdp
 {
 
+// Maximum number of frames to contain in the queue.
+constexpr qsizetype MaxQueueSize = 100;
+
 BOOL gfxChannelIdAssigned(RdpgfxServerContext *context, uint32_t channelId)
 {
     auto stream = reinterpret_cast<VideoStream *>(context->custom);
@@ -156,6 +159,14 @@ void VideoStream::queueFrame(const KRdp::VideoFrame &frame)
 
     std::lock_guard lock(d->frameQueueMutex);
     d->frameQueue.append(frame);
+
+    if (d->frameQueue.size() > MaxQueueSize) {
+        qCWarning(KRDP) << "Queue overflow, producing more frames than we can send!";
+        while (d->frameQueue.size() > MaxQueueSize) {
+            d->frameQueue.pop_front();
+        }
+    }
+
     d->frameQueueCondition.notify_all();
 }
 
