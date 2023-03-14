@@ -300,6 +300,7 @@ void Session::initialize()
 
     // Perform actual communication on a separate thread.
     d->thread = std::jthread(std::bind(&Session::run, this, std::placeholders::_1));
+    pthread_setname_np(d->thread.native_handle(), "krdp_session");
 }
 
 void Session::run(std::stop_token stopToken)
