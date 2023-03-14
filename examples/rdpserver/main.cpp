@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QGuiApplication>
 
+#include "Cursor.h"
 #include "InputHandler.h"
 #include "PortalSession.h"
 #include "Server.h"
@@ -29,6 +30,13 @@ int main(int argc, char **argv)
 
         QObject::connect(portalSession.get(), &KRdp::PortalSession::frameReceived, newSession, [portalSession, newSession](const KRdp::VideoFrame &frame) {
             newSession->videoStream()->queueFrame(frame);
+        });
+
+        QObject::connect(portalSession.get(), &KRdp::PortalSession::cursorUpdate, newSession, [portalSession, newSession](const PipeWireCursor &cursor) {
+            KRdp::Cursor::CursorUpdate update;
+            update.hotspot = cursor.hotspot;
+            update.image = cursor.texture;
+            newSession->cursor()->update(update);
         });
 
         QObject::connect(newSession->inputHandler(), &KRdp::InputHandler::inputEvent, portalSession.get(), [portalSession](QEvent *event) {
