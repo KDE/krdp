@@ -21,7 +21,7 @@ namespace KRdp
 {
 
 // Maximum number of frames to contain in the queue.
-constexpr qsizetype MaxQueueSize = 100;
+constexpr qsizetype MaxQueueSize = 5;
 
 BOOL gfxChannelIdAssigned(RdpgfxServerContext *context, uint32_t channelId)
 {
@@ -81,7 +81,11 @@ public:
     std::jthread frameSubmissionThread;
     std::mutex frameQueueMutex;
     std::condition_variable frameQueueCondition;
+    std::mutex frameAckMutex;
+    std::condition_variable frameAckCondition;
+
     QQueue<VideoFrame> frameQueue;
+    QSet<uint32_t> pendingFrames;
 };
 
 VideoStream::VideoStream(Session *session)
@@ -125,12 +129,20 @@ bool VideoStream::initialize()
 
     d->frameSubmissionThread = std::jthread([this](std::stop_token token) {
         while (!token.stop_requested()) {
-            std::unique_lock lock(d->frameQueueMutex);
-            d->frameQueueCondition.wait(lock, [this, token]() {
-                return !d->frameQueue.isEmpty() || token.stop_requested();
-            });
-            while (!d->frameQueue.isEmpty() && !token.stop_requested()) {
+            {
+                std::unique_lock lock(d->frameQueueMutex);
+                d->frameQueueCondition.wait(lock, [this, token]() {
+                    return !d->frameQueue.isEmpty() || token.stop_requested();
+                });
+
                 sendFrame(d->frameQueue.takeFirst());
+            }
+
+            {
+                std::unique_lock lock(d->frameAckMutex);
+                d->frameAckCondition.wait(lock, [this, token]() {
+                    return d->pendingFrames.isEmpty() || token.stop_requested();
+                });
             }
         }
     });
@@ -162,7 +174,6 @@ void VideoStream::queueFrame(const KRdp::VideoFrame &frame)
     d->frameQueue.append(frame);
 
     if (d->frameQueue.size() > MaxQueueSize) {
-        qCWarning(KRDP) << "Queue overflow, producing more frames than we can send!";
         while (d->frameQueue.size() > MaxQueueSize) {
             d->frameQueue.pop_front();
         }
@@ -200,6 +211,18 @@ uint32_t VideoStream::onCapsAdvertise(const RDPGFX_CAPS_ADVERTISE_PDU *capsAdver
 
 uint32_t VideoStream::onFrameAcknowledge(const RDPGFX_FRAME_ACKNOWLEDGE_PDU *frameAcknowledge)
 {
+    auto id = frameAcknowledge->frameId;
+
+    auto itr = d->pendingFrames.find(id);
+    if (itr == d->pendingFrames.end()) {
+        qCWarning(KRDP) << "Got frame acknowledge for an unknown frame";
+        return CHANNEL_RC_OK;
+    }
+
+    d->pendingFrames.erase(itr);
+
+    d->frameAckCondition.notify_all();
+
     return CHANNEL_RC_OK;
 }
 
@@ -256,13 +279,16 @@ void VideoStream::sendFrame(const VideoFrame &frame)
     //     frame.size.width() + (frame.size.width() % 16 > 0 ? 16 - frame.size.width() : 0),
     //     frame.size.height() + (frame.size.height() % 16 > 0 ? 16 - frame.size.height() : 0)
     // };
+    auto frameId = d->frameId++;
+
+    d->pendingFrames.insert(frameId);
 
     RDPGFX_START_FRAME_PDU startFramePdu;
     RDPGFX_END_FRAME_PDU endFramePdu;
 
     startFramePdu.timestamp = QDateTime::currentMSecsSinceEpoch();
-    startFramePdu.frameId = d->frameId++;
-    endFramePdu.frameId = startFramePdu.frameId;
+    startFramePdu.frameId = frameId;
+    endFramePdu.frameId = frameId;
 
     RDPGFX_SURFACE_COMMAND surfaceCommand;
     surfaceCommand.surfaceId = d->surface.id;
