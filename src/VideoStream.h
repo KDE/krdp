@@ -85,6 +85,11 @@ public:
      */
     void reset();
 
+    /**
+     */
+    bool enabled() const;
+    void setEnabled(bool enabled);
+
 private:
     friend BOOL gfxChannelIdAssigned(RdpgfxServerContext *, uint32_t);
     friend uint32_t gfxCapsAdvertise(RdpgfxServerContext *, const RDPGFX_CAPS_ADVERTISE_PDU *);

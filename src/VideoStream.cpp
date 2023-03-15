@@ -76,6 +76,7 @@ public:
     Surface surface;
 
     bool pendingReset = true;
+    bool enabled = true;
 
     std::jthread frameSubmissionThread;
     std::mutex frameQueueMutex;
@@ -153,7 +154,7 @@ void VideoStream::close()
 
 void VideoStream::queueFrame(const KRdp::VideoFrame &frame)
 {
-    if (d->session->state() != Session::State::Streaming) {
+    if (d->session->state() != Session::State::Streaming || !d->enabled) {
         return;
     }
 
@@ -173,6 +174,16 @@ void VideoStream::queueFrame(const KRdp::VideoFrame &frame)
 void VideoStream::reset()
 {
     d->pendingReset = true;
+}
+
+bool VideoStream::enabled() const
+{
+    return d->enabled;
+}
+
+void VideoStream::setEnabled(bool enabled)
+{
+    d->enabled = enabled;
 }
 
 bool VideoStream::onChannelIdAssigned(uint32_t channelId)

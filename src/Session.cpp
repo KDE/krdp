@@ -110,6 +110,16 @@ BOOL peerActivate(freerdp_peer *peer)
     return FALSE;
 }
 
+BOOL suppressOutput(rdpContext *context, uint8_t allow, const RECTANGLE_16 *)
+{
+    auto peerContext = reinterpret_cast<PeerContext *>(context);
+    if (peerContext->session->onSuppressOutput(allow)) {
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
 class KRDP_NO_EXPORT Session::Private
 {
 public:
@@ -288,6 +298,8 @@ void Session::initialize()
     d->peer->Activate = peerActivate;
     d->peer->PostConnect = peerPostConnect;
 
+    d->peer->update->SuppressOutput = suppressOutput;
+
     d->inputHandler->initialize(d->peer->context->input);
     context->inputHandler = d->inputHandler.get();
 
@@ -383,6 +395,17 @@ bool Session::onClose()
 {
     d->videoStream->close();
     setState(State::Closed);
+    return true;
+}
+
+bool Session::onSuppressOutput(uint8_t allow)
+{
+    if (allow) {
+        d->videoStream->setEnabled(true);
+    } else {
+        d->videoStream->setEnabled(false);
+    }
+
     return true;
 }
 
