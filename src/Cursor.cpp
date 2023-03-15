@@ -55,9 +55,8 @@ void Cursor::update(const Cursor::CursorUpdate &update)
         return;
     }
 
-    // If we have no image, assume we're asking to hide the cursor and do so.
+    // Ignore updates with no image
     if (update.image.isNull()) {
-        setCursorType(CursorType::Hidden);
         return;
     }
 
