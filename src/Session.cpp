@@ -373,6 +373,21 @@ bool Session::onCapabilities()
         return false;
     }
 
+    if (settings->ColorDepth != 32) {
+        qCDebug(KRDP) << "Correcting invalid color depth from client:" << settings->ColorDepth;
+        settings->ColorDepth = 32;
+    }
+
+    if (!settings->DesktopResize) {
+        qCWarning(KRDP) << "Client doesn't support resizing, aborting";
+        return false;
+    }
+
+    if (settings->PointerCacheSize <= 0) {
+        qCWarning(KRDP) << "Client doesn't support pointer caching, aborting";
+        return false;
+    }
+
     return true;
 }
 
