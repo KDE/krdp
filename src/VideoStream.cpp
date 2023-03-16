@@ -160,6 +160,8 @@ void VideoStream::close()
 
     if (d->frameSubmissionThread.joinable()) {
         d->frameSubmissionThread.request_stop();
+        d->frameQueueCondition.notify_all();
+        d->frameAckCondition.notify_all();
         d->frameSubmissionThread.join();
     }
 }
