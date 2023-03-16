@@ -76,7 +76,7 @@ public:
     Surface surface;
 
     bool pendingReset = true;
-    bool enabled = true;
+    bool enabled = false;
 
     std::jthread frameSubmissionThread;
     std::mutex frameQueueMutex;
@@ -194,7 +194,12 @@ bool VideoStream::enabled() const
 
 void VideoStream::setEnabled(bool enabled)
 {
+    if (d->enabled == enabled) {
+        return;
+    }
+
     d->enabled = enabled;
+    Q_EMIT enabledChanged();
 }
 
 bool VideoStream::onChannelIdAssigned(uint32_t channelId)

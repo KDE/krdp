@@ -117,7 +117,22 @@ PortalSession::~PortalSession()
     QDBusConnection::sessionBus().asyncCall(closeMessage);
 }
 
-void KRdp::PortalSession::sendEvent(QEvent *event)
+bool PortalSession::streamingEnabled() const
+{
+    if (d->encodedStream) {
+        return d->encodedStream->isActive();
+    }
+    return false;
+}
+
+void PortalSession::setStreamingEnabled(bool enable)
+{
+    if (d->encodedStream) {
+        d->encodedStream->setActive(enable);
+    }
+}
+
+void PortalSession::sendEvent(QEvent *event)
 {
     if (!d->started || !d->encodedStream) {
         return;
@@ -226,7 +241,6 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
             d->encodedStream->setEncoder("libx264");
             connect(d->encodedStream.get(), &PipeWireEncodedStream::newPacket, this, &PortalSession::onPacketReceived);
             connect(d->encodedStream.get(), &PipeWireEncodedStream::cursorChanged, this, &PortalSession::cursorUpdate);
-            d->encodedStream->setActive(true);
             d->started = true;
             Q_EMIT started();
         } else {

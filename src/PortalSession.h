@@ -41,6 +41,9 @@ public:
     Q_SIGNAL void started();
     Q_SIGNAL void error();
 
+    bool streamingEnabled() const;
+    void setStreamingEnabled(bool enable);
+
     /**
      * Send a new event to the portal.
      *

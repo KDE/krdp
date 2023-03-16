@@ -89,6 +89,7 @@ public:
      */
     bool enabled() const;
     void setEnabled(bool enabled);
+    Q_SIGNAL void enabledChanged();
 
 private:
     friend BOOL gfxChannelIdAssigned(RdpgfxServerContext *, uint32_t);

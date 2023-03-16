@@ -351,6 +351,7 @@ void Session::run(std::stop_token stopToken)
             // Dynamic channels can only be set up properly once the dynamic channel channel is properly setup.
             if (WTSVirtualChannelManagerGetDrdynvcState(context->virtualChannelManager) == DRDYNVC_STATE_READY) {
                 if (d->videoStream->initialize()) {
+                    d->videoStream->setEnabled(true);
                     setState(State::Streaming);
                 } else {
                     break;
