@@ -277,6 +277,10 @@ void VideoStream::sendFrame(const VideoFrame &frame)
         return;
     }
 
+    if (frame.data.size() == 0) {
+        return;
+    }
+
     if (d->pendingReset) {
         d->pendingReset = false;
         performReset();
