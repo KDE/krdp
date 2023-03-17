@@ -111,7 +111,9 @@ PortalSession::PortalSession(Server *server)
 
 PortalSession::~PortalSession()
 {
-    d->encodedStream->setActive(false);
+    if (d->encodedStream) {
+        d->encodedStream->setActive(false);
+    }
 
     auto closeMessage = QDBusMessage::createMethodCall(dbusService, d->sessionPath.path(), dbusSessionInterface, QStringLiteral("Close"));
     QDBusConnection::sessionBus().asyncCall(closeMessage);
