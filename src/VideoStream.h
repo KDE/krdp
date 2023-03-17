@@ -100,7 +100,7 @@ private:
     uint32_t onCapsAdvertise(const RDPGFX_CAPS_ADVERTISE_PDU *capsAdvertise);
     uint32_t onFrameAcknowledge(const RDPGFX_FRAME_ACKNOWLEDGE_PDU *frameAcknowledge);
 
-    void performReset();
+    void performReset(const QSize &size);
     void sendFrame(const VideoFrame &frame);
 
     class Private;

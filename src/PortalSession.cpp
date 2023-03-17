@@ -79,6 +79,7 @@ public:
 
     bool started = false;
 
+    QSize size;
 };
 
 QString createHandleToken()
@@ -249,6 +250,9 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
             d->encodedStream->setFd(fd.takeFileDescriptor());
             d->encodedStream->setEncoder("libx264");
             connect(d->encodedStream.get(), &PipeWireEncodedStream::newPacket, this, &PortalSession::onPacketReceived);
+            connect(d->encodedStream.get(), &PipeWireEncodedStream::sizeChanged, this, [this](const QSize &size) {
+                d->size = size;
+            });
             connect(d->encodedStream.get(), &PipeWireEncodedStream::cursorChanged, this, &PortalSession::cursorUpdate);
             d->started = true;
             Q_EMIT started();
@@ -291,6 +295,7 @@ void PortalSession::onPacketReceived(const QByteArray &data)
     //     frameData.damage = {QRect(QPoint(0, 0), dataSize)};
     // }
 
+    frameData.size = d->size;
     frameData.data = data;
 
     Q_EMIT frameReceived(frameData);

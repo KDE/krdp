@@ -233,10 +233,8 @@ uint32_t VideoStream::onFrameAcknowledge(const RDPGFX_FRAME_ACKNOWLEDGE_PDU *fra
     return CHANNEL_RC_OK;
 }
 
-void VideoStream::performReset()
+void VideoStream::performReset(const QSize &size)
 {
-    QSize size{1920, 1080};
-
     RDPGFX_RESET_GRAPHICS_PDU resetGraphicsPdu;
     resetGraphicsPdu.width = size.width();
     resetGraphicsPdu.height = size.height();
@@ -283,7 +281,7 @@ void VideoStream::sendFrame(const VideoFrame &frame)
 
     if (d->pendingReset) {
         d->pendingReset = false;
-        performReset();
+        performReset(frame.size);
     }
 
     // auto alignedSize = QSize{
@@ -312,8 +310,8 @@ void VideoStream::sendFrame(const VideoFrame &frame)
     surfaceCommand.top = 0;
     // surfaceCommand.right = damageRect.x() + damageRect.width();
     // surfaceCommand.bottom = damageRect.y() + damageRect.height();
-    surfaceCommand.right = 1920;
-    surfaceCommand.bottom = 1080;
+    surfaceCommand.right = frame.size.width();
+    surfaceCommand.bottom = frame.size.height();
     surfaceCommand.length = 0;
     surfaceCommand.data = nullptr;
 
@@ -327,8 +325,8 @@ void VideoStream::sendFrame(const VideoFrame &frame)
     auto rects = std::make_unique<RECTANGLE_16[]>(1);
     rects[0].left = 0;
     rects[0].top = 0;
-    rects[0].right = 1920;
-    rects[0].bottom = 1080;
+    rects[0].right = frame.size.width();
+    rects[0].bottom = frame.size.height();
     avcStream.meta.regionRects = rects.get();
     auto qualities = std::make_unique<RDPGFX_H264_QUANT_QUALITY[]>(1);
     avcStream.meta.quantQualityVals = qualities.get();
