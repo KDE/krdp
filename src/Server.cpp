@@ -50,7 +50,8 @@ Server::~Server()
 bool Server::start()
 {
     if (!std::filesystem::exists(d->tlsCertificate) || !std::filesystem::exists(d->tlsCertificateKey)) {
-        qCCritical(KRDP) << "A valid TLS certificate and key is required for the server to run!";
+        qCCritical(KRDP).nospace() << "A valid TLS certificate (" << QString::fromStdString(d->tlsCertificate.filename().string()) << ") and key ("
+                                   << QString::fromStdString(d->tlsCertificateKey.filename().string()) << ") is required for the server to run!";
         return false;
     }
 
