@@ -4,6 +4,8 @@
 
 #include "InputHandler.h"
 
+#include <QKeyEvent>
+
 #include "PeerContext_p.h"
 
 #include "krdp_logging.h"
@@ -139,7 +141,16 @@ bool InputHandler::extendedMouseEvent(uint16_t x, uint16_t y, uint16_t flags)
 
 bool InputHandler::keyboardEvent(uint16_t code, uint16_t flags)
 {
-    qCDebug(KRDP) << __PRETTY_FUNCTION__ << code << flags;
+    auto virtualCode = GetVirtualKeyCodeFromVirtualScanCode(flags & KBD_FLAGS_EXTENDED ? code | KBDEXT : code, 4);
+    virtualCode = flags & KBD_FLAGS_EXTENDED ? virtualCode | KBDEXT : virtualCode;
+    // While "type" suggests an EVDEV code, the actual code is an X code
+    quint32 keycode = GetKeycodeFromVirtualKeyCode(virtualCode, KEYCODE_TYPE_EVDEV) - 8;
+
+    auto type = flags & KBD_FLAGS_DOWN ? QEvent::KeyPress : QEvent::KeyRelease;
+
+    auto event = new QKeyEvent(type, 0, Qt::KeyboardModifiers{}, 0, keycode, 0);
+    Q_EMIT inputEvent(event);
+
     return true;
 }
 

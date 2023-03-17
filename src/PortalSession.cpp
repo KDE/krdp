@@ -163,6 +163,13 @@ void PortalSession::sendEvent(QEvent *event)
         d->remoteInterface->NotifyPointerMotionAbsolute(d->sessionPath, QVariantMap{}, d->encodedStream->nodeId(), position.x(), position.y());
         break;
     }
+    case QEvent::KeyPress:
+    case QEvent::KeyRelease: {
+        auto ke = static_cast<QKeyEvent *>(event);
+        auto code = ke->nativeVirtualKey();
+        d->remoteInterface->NotifyKeyboardKeycode(d->sessionPath, QVariantMap{}, code, ke->type() == QEvent::KeyPress ? 1 : 0);
+        break;
+    }
     default:
         break;
     }
