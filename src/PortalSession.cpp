@@ -78,7 +78,7 @@ public:
     std::unique_ptr<PipeWireEncodedStream> encodedStream;
 
     bool started = false;
-
+    bool enabled = false;
     QSize size;
 };
 
@@ -130,6 +130,7 @@ bool PortalSession::streamingEnabled() const
 
 void PortalSession::setStreamingEnabled(bool enable)
 {
+    d->enabled = enable;
     if (d->encodedStream) {
         d->encodedStream->setActive(enable);
     }
@@ -256,6 +257,7 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
             connect(d->encodedStream.get(), &PipeWireEncodedStream::cursorChanged, this, &PortalSession::cursorUpdate);
             d->started = true;
             Q_EMIT started();
+            d->encodedStream->setActive(d->enabled);
         } else {
             qCWarning(KRDP) << "Could not open pipewire remote";
         }
