@@ -175,10 +175,8 @@ void VideoStream::queueFrame(const KRdp::VideoFrame &frame)
     std::lock_guard lock(d->frameQueueMutex);
     d->frameQueue.append(frame);
 
-    if (d->frameQueue.size() > MaxQueueSize) {
-        while (d->frameQueue.size() > MaxQueueSize) {
-            d->frameQueue.pop_front();
-        }
+    while (d->frameQueue.size() > MaxQueueSize) {
+        d->frameQueue.pop_front();
     }
 
     d->frameQueueCondition.notify_all();
