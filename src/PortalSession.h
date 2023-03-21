@@ -14,6 +14,7 @@
 #include <QPoint>
 #include <QPointer>
 
+#include <KPipeWire/PipeWireEncodedStream>
 #include <KPipeWire/PipeWireSourceStream>
 
 #include "krdp_export.h"
@@ -73,7 +74,7 @@ private:
     void onDevicesSelected(uint code, const QVariantMap & /*result*/);
     void onSourcesSelected(uint code, const QVariantMap & /*result*/);
     void onSessionStarted(uint code, const QVariantMap &result);
-    void onPacketReceived(const QByteArray &data);
+    void onPacketReceived(const PipeWireEncodedStream::Packet &data);
 
     class Private;
     const std::unique_ptr<Private> d;

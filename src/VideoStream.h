@@ -39,6 +39,11 @@ struct VideoFrame {
      * TODO: Actually use this information.
      */
     QRegion damage;
+
+    /**
+     * Whether the packet contains all the information
+     */
+    bool isKeyFrame;
 };
 
 /**

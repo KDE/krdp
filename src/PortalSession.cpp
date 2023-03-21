@@ -275,7 +275,7 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
     });
 }
 
-void PortalSession::onPacketReceived(const QByteArray &data)
+void PortalSession::onPacketReceived(const PipeWireEncodedStream::Packet &data)
 {
     VideoFrame frameData;
 
@@ -308,7 +308,8 @@ void PortalSession::onPacketReceived(const QByteArray &data)
     // }
 
     frameData.size = d->size;
-    frameData.data = data;
+    frameData.data = data.data();
+    frameData.isKeyFrame = data.isKeyFrame();
 
     Q_EMIT frameReceived(frameData);
 }
