@@ -167,6 +167,11 @@ void PortalSession::sendEvent(QEvent *event)
         d->remoteInterface->NotifyPointerMotionAbsolute(d->sessionPath, QVariantMap{}, d->encodedStream->nodeId(), position.x(), position.y());
         break;
     }
+    case QEvent::Wheel: {
+        auto we = static_cast<QWheelEvent *>(event);
+        d->remoteInterface->NotifyPointerAxisDiscrete(d->sessionPath, QVariantMap{}, 0, we->angleDelta().y() / 120);
+        break;
+    }
     case QEvent::KeyPress:
     case QEvent::KeyRelease: {
         auto ke = static_cast<QKeyEvent *>(event);
