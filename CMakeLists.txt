@@ -1,4 +1,3 @@
-project(discover)
 set(PROJECT_VERSION "5.27.80")
 set(PROJECT_VERSION_MAJOR 5)
 
@@ -32,10 +31,10 @@ option(BUILD_EXAMPLES "Build example applications" ON)
 
 find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED Core Gui Network DBus)
 
-find_package(FreeRDP REQUIRED)
+find_package(FreeRDP 2.10 REQUIRED)
 find_package(WinPR REQUIRED)
 find_package(FreeRDP-Server REQUIRED)
-find_package(KPipeWire REQUIRED)
+find_package(KPipeWire 5.27.80 REQUIRED)
 find_package(XKB REQUIRED)
 
 set(EXCLUDE_DEPRECATED_BEFORE_AND_AT 0 CACHE STRING "Control the range of deprecated API excluded from the build [default=0].")
