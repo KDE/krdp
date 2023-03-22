@@ -36,6 +36,7 @@ find_package(FreeRDP REQUIRED)
 find_package(WinPR REQUIRED)
 find_package(FreeRDP-Server REQUIRED)
 find_package(KPipeWire REQUIRED)
+find_package(XKB REQUIRED)
 
 set(EXCLUDE_DEPRECATED_BEFORE_AND_AT 0 CACHE STRING "Control the range of deprecated API excluded from the build [default=0].")
 

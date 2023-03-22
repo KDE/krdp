@@ -6,6 +6,8 @@
 
 #include <QKeyEvent>
 
+#include <xkbcommon/xkbcommon.h>
+
 #include "PeerContext_p.h"
 
 #include "krdp_logging.h"
@@ -159,7 +161,7 @@ bool InputHandler::keyboardEvent(uint16_t code, uint16_t flags)
 
     auto type = flags & KBD_FLAGS_DOWN ? QEvent::KeyPress : QEvent::KeyRelease;
 
-    auto event = new QKeyEvent(type, 0, Qt::KeyboardModifiers{}, 0, keycode, 0);
+    auto event = new QKeyEvent(type, 0, Qt::KeyboardModifiers{}, keycode, 0, 0);
     Q_EMIT inputEvent(event);
 
     return true;
@@ -167,7 +169,17 @@ bool InputHandler::keyboardEvent(uint16_t code, uint16_t flags)
 
 bool InputHandler::unicodeKeyboardEvent(uint16_t code, uint16_t flags)
 {
-    qCDebug(KRDP) << __PRETTY_FUNCTION__ << code << flags;
+    auto text = QString(QChar::fromUcs2(code));
+    auto keysym = xkb_utf32_to_keysym(text.toUcs4().first());
+    if (!keysym) {
+        return true;
+    }
+
+    auto type = flags & KBD_FLAGS_DOWN ? QEvent::KeyPress : QEvent::KeyRelease;
+
+    auto event = new QKeyEvent(type, 0, Qt::KeyboardModifiers{}, 0, keysym, 0);
+    Q_EMIT inputEvent(event);
+
     return true;
 }
 
