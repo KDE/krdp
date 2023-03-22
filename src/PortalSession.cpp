@@ -175,8 +175,13 @@ void PortalSession::sendEvent(QEvent *event)
     case QEvent::KeyPress:
     case QEvent::KeyRelease: {
         auto ke = static_cast<QKeyEvent *>(event);
-        auto code = ke->nativeVirtualKey();
-        d->remoteInterface->NotifyKeyboardKeycode(d->sessionPath, QVariantMap{}, code, ke->type() == QEvent::KeyPress ? 1 : 0);
+        auto state = ke->type() == QEvent::KeyPress ? 1 : 0;
+
+        if (ke->nativeScanCode()) {
+            d->remoteInterface->NotifyKeyboardKeycode(d->sessionPath, QVariantMap{}, ke->nativeScanCode(), state);
+        } else {
+            d->remoteInterface->NotifyKeyboardKeysym(d->sessionPath, QVariantMap{}, ke->nativeVirtualKey(), state);
+        }
         break;
     }
     default:
