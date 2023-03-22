@@ -104,7 +104,7 @@ void InputHandler::initialize(rdpInput *input)
 
 bool InputHandler::synchronizeEvent(uint32_t flags)
 {
-    qCDebug(KRDP) << __PRETTY_FUNCTION__ << flags;
+    // TODO: This syncs caps/num/scroll lock keys, do we actually want to?
     return true;
 }
 
