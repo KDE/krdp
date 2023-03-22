@@ -138,12 +138,12 @@ bool VideoStream::initialize()
                 sendFrame(d->frameQueue.takeFirst());
             }
 
-            {
-                std::unique_lock lock(d->frameAckMutex);
-                d->frameAckCondition.wait(lock, [this, token]() {
-                    return d->pendingFrames.isEmpty() || token.stop_requested();
-                });
-            }
+            // {
+            //     std::unique_lock lock(d->frameAckMutex);
+            //     d->frameAckCondition.wait(lock, [this, token]() {
+            //         return d->pendingFrames.isEmpty() || token.stop_requested();
+            //     });
+            // }
         }
     });
 
