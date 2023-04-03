@@ -148,7 +148,27 @@ bool InputHandler::mouseEvent(uint16_t x, uint16_t y, uint16_t flags)
 
 bool InputHandler::extendedMouseEvent(uint16_t x, uint16_t y, uint16_t flags)
 {
-    qCDebug(KRDP) << __PRETTY_FUNCTION__ << x << y << flags;
+    if (flags & PTR_FLAGS_MOVE) {
+        return mouseEvent(x, y, PTR_FLAGS_MOVE);
+    }
+
+    Qt::MouseButton button = Qt::NoButton;
+    if (flags & PTR_XFLAGS_BUTTON1) {
+        button = Qt::BackButton;
+    } else if (flags & PTR_XFLAGS_BUTTON2) {
+        button = Qt::ForwardButton;
+    } else {
+        return false;
+    }
+
+    if (flags & PTR_XFLAGS_DOWN) {
+        QMouseEvent *event = new QMouseEvent(QEvent::MouseButtonPress, QPointF{}, QPointF(x, y), button, button, Qt::KeyboardModifiers{});
+        Q_EMIT inputEvent(event);
+    } else {
+        QMouseEvent *event = new QMouseEvent(QEvent::MouseButtonRelease, QPointF{}, QPointF(x, y), button, button, Qt::KeyboardModifiers{});
+        Q_EMIT inputEvent(event);
+    }
+
     return true;
 }
 
