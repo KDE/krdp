@@ -9,6 +9,7 @@ target_sources(KRdp PRIVATE
     PortalSession.cpp
     VideoStream.cpp
     Cursor.cpp
+    NetworkDetection.cpp
 )
 
 ecm_qt_declare_logging_category(KRdp

@@ -12,6 +12,7 @@ namespace KRdp
 class Session;
 class InputHandler;
 class VideoStream;
+class NetworkDetection;
 
 /**
  * Extension of the FreeRDP Peer Context used to store extra data for KRdp.
@@ -25,6 +26,7 @@ struct PeerContext {
     Session *session = nullptr;
     InputHandler *inputHandler = nullptr;
     VideoStream *stream = nullptr;
+    NetworkDetection *networkDetection = nullptr;
 
     HANDLE virtualChannelManager = nullptr;
 };

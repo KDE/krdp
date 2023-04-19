@@ -20,6 +20,7 @@ class InputHandler;
 class Server;
 class VideoStream;
 class Cursor;
+class NetworkDetection;
 
 /**
  * An RDP session.
@@ -76,6 +77,8 @@ public:
      */
     Cursor *cursor() const;
 
+    NetworkDetection *networkDetection() const;
+
 private:
     friend BOOL peerCapabilities(freerdp_peer *);
     friend BOOL peerActivate(freerdp_peer *);
@@ -84,6 +87,7 @@ private:
 
     friend class Cursor;
     friend class VideoStream;
+    friend class NetworkDetection;
 
     void setState(State newState);
     void initialize();

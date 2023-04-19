@@ -26,6 +26,7 @@
 
 #include "Cursor.h"
 #include "InputHandler.h"
+#include "NetworkDetection.h"
 #include "PeerContext_p.h"
 #include "Server.h"
 #include "VideoStream.h"
@@ -132,6 +133,7 @@ public:
     std::unique_ptr<InputHandler> inputHandler;
     std::unique_ptr<VideoStream> videoStream;
     std::unique_ptr<Cursor> cursor;
+    std::unique_ptr<NetworkDetection> networkDetection;
 
     freerdp_peer *peer = nullptr;
 
@@ -150,6 +152,7 @@ Session::Session(Server *server, qintptr socketHandle)
     d->inputHandler = std::make_unique<InputHandler>(this);
     d->videoStream = std::make_unique<VideoStream>(this);
     d->cursor = std::make_unique<Cursor>(this);
+    d->networkDetection = std::make_unique<NetworkDetection>(this);
 
     QMetaObject::invokeMethod(this, &Session::initialize, Qt::QueuedConnection);
 }
@@ -194,6 +197,11 @@ KRdp::VideoStream *Session::videoStream() const
 Cursor *Session::cursor() const
 {
     return d->cursor.get();
+}
+
+NetworkDetection *Session::networkDetection() const
+{
+    return d->networkDetection.get();
 }
 
 void Session::initialize()
@@ -285,7 +293,7 @@ void Session::initialize()
     settings->UnicodeInput = true;
 
     // TODO: Implement network performance detection
-    settings->NetworkAutoDetect = false;
+    settings->NetworkAutoDetect = true;
 
     settings->RefreshRect = true;
     settings->RemoteConsoleAudio = true;
@@ -302,6 +310,9 @@ void Session::initialize()
 
     d->inputHandler->initialize(d->peer->context->input);
     context->inputHandler = d->inputHandler.get();
+
+    context->networkDetection = d->networkDetection.get();
+    d->networkDetection->initialize();
 
     if (!d->peer->Initialize(d->peer)) {
         qCWarning(KRDP) << "Unable to initialize peer";
@@ -358,6 +369,8 @@ void Session::run(std::stop_token stopToken)
                 }
             }
         }
+
+        d->networkDetection->update();
     }
 
     qCDebug(KRDP) << "Closing session";
