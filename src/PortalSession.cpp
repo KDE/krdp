@@ -286,34 +286,6 @@ void PortalSession::onPacketReceived(const PipeWireEncodedStream::Packet &data)
 {
     VideoFrame frameData;
 
-    // if (frame.cursor) {
-    //     auto pwCursor = frame.cursor.value();
-    //     VideoFrame::Cursor cursor {
-    //         .position = pwCursor.position,
-    //         .hotspot = pwCursor.hotspot,
-    //         .texture = pwCursor.texture,
-    //     };
-    //     frameData.cursor = cursor;
-    // }
-    //
-    // QSize dataSize;
-    // if (frame.image || frame.dmabuf) {
-    //     if (frame.image) {
-    //         auto image = frame.image.value();
-    //         dataSize = image.size();
-    //         frameData.size = image.size();
-    //         frameData.data = QByteArray(reinterpret_cast<const char*>(image.constBits()), image.sizeInBytes());
-    //     } else {
-    //         // TODO
-    //     }
-    // }
-    //
-    // if (frame.damage) {
-    //     frameData.damage = frame.damage.value();
-    // } else {
-    //     frameData.damage = {QRect(QPoint(0, 0), dataSize)};
-    // }
-
     frameData.size = d->size;
     frameData.data = data.data();
     frameData.isKeyFrame = data.isKeyFrame();
