@@ -12,6 +12,7 @@
 #include <freerdp/freerdp.h>
 #include <freerdp/peer.h>
 
+#include "NetworkDetection.h"
 #include "PeerContext_p.h"
 #include "Session.h"
 
@@ -20,8 +21,10 @@
 namespace KRdp
 {
 
+namespace clk = std::chrono;
+
 // Maximum number of frames to contain in the queue.
-constexpr qsizetype MaxQueueSize = 5;
+constexpr qsizetype MaxQueueSize = 10;
 
 BOOL gfxChannelIdAssigned(RdpgfxServerContext *context, uint32_t channelId)
 {
@@ -60,6 +63,11 @@ struct Surface {
     QSize size;
 };
 
+struct FrameInfo {
+    clk::system_clock::time_point submitTimeStamp;
+    clk::system_clock::duration frameTime;
+};
+
 class KRDP_NO_EXPORT VideoStream::Private
 {
 public:
@@ -77,15 +85,20 @@ public:
 
     bool pendingReset = true;
     bool enabled = false;
+    std::atomic_bool suspended = false;
 
     std::jthread frameSubmissionThread;
     std::mutex frameQueueMutex;
-    std::condition_variable frameQueueCondition;
-    std::mutex frameAckMutex;
-    std::condition_variable frameAckCondition;
 
     QQueue<VideoFrame> frameQueue;
     QSet<uint32_t> pendingFrames;
+
+    int maximumFrameRate = 60;
+    int requestedFrameRate = 60;
+
+    std::atomic_int encodedFrames = 0;
+    uint32_t activateThrottlingThreshold = 4;
+    std::atomic_int frameDelay = 0;
 };
 
 VideoStream::VideoStream(Session *session)
@@ -127,23 +140,18 @@ bool VideoStream::initialize()
         return false;
     }
 
+    connect(d->session->networkDetection(), &NetworkDetection::rttChanged, this, &VideoStream::updateRequestedFrameRate);
+
     d->frameSubmissionThread = std::jthread([this](std::stop_token token) {
         while (!token.stop_requested()) {
             {
                 std::unique_lock lock(d->frameQueueMutex);
-                d->frameQueueCondition.wait(lock, [this, token]() {
-                    return !d->frameQueue.isEmpty() || token.stop_requested();
-                });
-
-                sendFrame(d->frameQueue.takeFirst());
+                if (!d->frameQueue.isEmpty()) {
+                    sendFrame(d->frameQueue.takeFirst());
+                }
             }
 
-            // {
-            //     std::unique_lock lock(d->frameAckMutex);
-            //     d->frameAckCondition.wait(lock, [this, token]() {
-            //         return d->pendingFrames.isEmpty() || token.stop_requested();
-            //     });
-            // }
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000) / d->requestedFrameRate);
         }
     });
 
@@ -160,8 +168,6 @@ void VideoStream::close()
 
     if (d->frameSubmissionThread.joinable()) {
         d->frameSubmissionThread.request_stop();
-        d->frameQueueCondition.notify_all();
-        d->frameAckCondition.notify_all();
         d->frameSubmissionThread.join();
     }
 }
@@ -178,8 +184,6 @@ void VideoStream::queueFrame(const KRdp::VideoFrame &frame)
     while (d->frameQueue.size() > MaxQueueSize) {
         d->frameQueue.pop_front();
     }
-
-    d->frameQueueCondition.notify_all();
 }
 
 void VideoStream::reset()
@@ -200,6 +204,11 @@ void VideoStream::setEnabled(bool enabled)
 
     d->enabled = enabled;
     Q_EMIT enabledChanged();
+}
+
+uint32_t VideoStream::requestedFrameRate() const
+{
+    return d->requestedFrameRate;
 }
 
 bool VideoStream::onChannelIdAssigned(uint32_t channelId)
@@ -224,9 +233,12 @@ uint32_t VideoStream::onFrameAcknowledge(const RDPGFX_FRAME_ACKNOWLEDGE_PDU *fra
         return CHANNEL_RC_OK;
     }
 
-    d->pendingFrames.erase(itr);
+    if (frameAcknowledge->queueDepth & SUSPEND_FRAME_ACKNOWLEDGEMENT) {
+        qDebug() << "suspend frame ack";
+    }
 
-    d->frameAckCondition.notify_all();
+    d->frameDelay = d->encodedFrames - frameAcknowledge->totalFramesDecoded;
+    d->pendingFrames.erase(itr);
 
     return CHANNEL_RC_OK;
 }
@@ -282,11 +294,15 @@ void VideoStream::sendFrame(const VideoFrame &frame)
         performReset(frame.size);
     }
 
+    d->session->networkDetection()->startBandwidthMeasure();
+
     // auto alignedSize = QSize{
     //     frame.size.width() + (frame.size.width() % 16 > 0 ? 16 - frame.size.width() : 0),
     //     frame.size.height() + (frame.size.height() % 16 > 0 ? 16 - frame.size.height() : 0)
     // };
     auto frameId = d->frameId++;
+
+    d->encodedFrames++;
 
     d->pendingFrames.insert(frameId);
 
@@ -366,6 +382,8 @@ void VideoStream::sendFrame(const VideoFrame &frame)
 
     d->gfxContext->EndFrame(d->gfxContext.get(), &endFramePdu);
 
+    d->session->networkDetection()->stopBandwidthMeasure();
+
     // rdpUpdate *update = d->session->rdpPeer()->context->update;
     //
     // const SURFACE_FRAME_MARKER beginMarker {
@@ -383,5 +401,14 @@ void VideoStream::sendFrame(const VideoFrame &frame)
     //     .frameId = d->frameId,
     // };
     // update->SurfaceFrameMarker(update->context, &endMarker);
+}
+
+void VideoStream::updateRequestedFrameRate()
+{
+    auto rtt = clk::duration_cast<clk::milliseconds>(d->session->networkDetection()->averageRTT());
+    auto estimatedFromRTT = clk::milliseconds(1000) / (rtt * std::max(d->frameDelay.load(), 1));
+    d->requestedFrameRate = std::clamp(estimatedFromRTT, 1l, static_cast<clk::seconds::rep>(d->maximumFrameRate));
+    d->suspended = false;
+    Q_EMIT requestedFrameRateChanged();
 }
 }

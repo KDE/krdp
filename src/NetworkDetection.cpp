@@ -211,10 +211,6 @@ void NetworkDetection::updateAverageRtt()
     d->rdpAutodetect->netCharBandwidth = d->lastBandwithMeasurement;
     d->rdpAutodetect->netCharBaseRTT = clk::duration_cast<clk::milliseconds>(d->minimumRtt).count();
     d->rdpAutodetect->netCharAverageRTT = clk::duration_cast<clk::milliseconds>(d->averageRtt).count();
-
-    qDebug() << "Bandwidth:" << d->lastBandwithMeasurement << "Base RTT:" << d->rdpAutodetect->netCharBaseRTT
-             << "Average RTT:" << d->rdpAutodetect->netCharAverageRTT;
-
     d->rdpAutodetect->NetworkCharacteristicsResult(d->rdpAutodetect->context, d->nextSequenceNumber());
 }
 

@@ -39,11 +39,14 @@ struct VideoFrame {
      * TODO: Actually use this information.
      */
     QRegion damage;
-
     /**
      * Whether the packet contains all the information
      */
     bool isKeyFrame;
+    /**
+     * When was this frame presented.
+     */
+    std::chrono::system_clock::time_point presentationTimeStamp;
 };
 
 /**
@@ -96,6 +99,9 @@ public:
     void setEnabled(bool enabled);
     Q_SIGNAL void enabledChanged();
 
+    uint32_t requestedFrameRate() const;
+    Q_SIGNAL void requestedFrameRateChanged();
+
 private:
     friend BOOL gfxChannelIdAssigned(RdpgfxServerContext *, uint32_t);
     friend uint32_t gfxCapsAdvertise(RdpgfxServerContext *, const RDPGFX_CAPS_ADVERTISE_PDU *);
@@ -107,6 +113,8 @@ private:
 
     void performReset(const QSize &size);
     void sendFrame(const VideoFrame &frame);
+
+    void updateRequestedFrameRate();
 
     class Private;
     const std::unique_ptr<Private> d;
