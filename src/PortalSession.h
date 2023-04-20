@@ -44,6 +44,7 @@ public:
 
     bool streamingEnabled() const;
     void setStreamingEnabled(bool enable);
+    void setVideoFrameRate(quint32 framerate);
 
     /**
      * Send a new event to the portal.

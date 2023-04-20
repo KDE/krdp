@@ -136,6 +136,13 @@ void PortalSession::setStreamingEnabled(bool enable)
     }
 }
 
+void PortalSession::setVideoFrameRate(quint32 framerate)
+{
+    if (d->encodedStream) {
+        d->encodedStream->setMaxFramerate({framerate, 1});
+    }
+}
+
 void PortalSession::sendEvent(QEvent *event)
 {
     if (!d->started || !d->encodedStream) {

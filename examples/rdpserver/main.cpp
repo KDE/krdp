@@ -43,6 +43,10 @@ int main(int argc, char **argv)
             portalSession->setStreamingEnabled(newSession->videoStream()->enabled());
         });
 
+        QObject::connect(newSession->videoStream(), &KRdp::VideoStream::requestedFrameRateChanged, portalSession.get(), [newSession, portalSession]() {
+            portalSession->setVideoFrameRate(newSession->videoStream()->requestedFrameRate());
+        });
+
         QObject::connect(newSession->inputHandler(), &KRdp::InputHandler::inputEvent, portalSession.get(), [portalSession](QEvent *event) {
             portalSession->sendEvent(event);
         });
