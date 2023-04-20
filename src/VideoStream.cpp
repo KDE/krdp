@@ -403,7 +403,7 @@ void VideoStream::sendFrame(const VideoFrame &frame)
 
 void VideoStream::updateRequestedFrameRate()
 {
-    auto rtt = clk::duration_cast<clk::milliseconds>(d->session->networkDetection()->averageRTT());
+    auto rtt = std::max(clk::duration_cast<clk::milliseconds>(d->session->networkDetection()->averageRTT()), clk::milliseconds(1));
     auto estimatedFromRTT = clk::milliseconds(1000) / (rtt * std::max(d->frameDelay.load(), 1));
     d->requestedFrameRate = std::clamp(estimatedFromRTT, 1l, static_cast<clk::seconds::rep>(d->maximumFrameRate));
     Q_EMIT requestedFrameRateChanged();
