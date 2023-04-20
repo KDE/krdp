@@ -85,7 +85,6 @@ public:
 
     bool pendingReset = true;
     bool enabled = false;
-    std::atomic_bool suspended = false;
 
     std::jthread frameSubmissionThread;
     std::mutex frameQueueMutex;
@@ -97,7 +96,6 @@ public:
     int requestedFrameRate = 60;
 
     std::atomic_int encodedFrames = 0;
-    uint32_t activateThrottlingThreshold = 4;
     std::atomic_int frameDelay = 0;
 };
 
@@ -408,7 +406,6 @@ void VideoStream::updateRequestedFrameRate()
     auto rtt = clk::duration_cast<clk::milliseconds>(d->session->networkDetection()->averageRTT());
     auto estimatedFromRTT = clk::milliseconds(1000) / (rtt * std::max(d->frameDelay.load(), 1));
     d->requestedFrameRate = std::clamp(estimatedFromRTT, 1l, static_cast<clk::seconds::rep>(d->maximumFrameRate));
-    d->suspended = false;
     Q_EMIT requestedFrameRateChanged();
 }
 }
