@@ -412,7 +412,7 @@ void VideoStream::updateRequestedFrameRate()
 
     FrameRateEstimate estimate;
     estimate.timeStamp = now;
-    estimate.estimate = clk::milliseconds(1000) / (rtt * std::max(d->frameDelay.load(), 1));
+    estimate.estimate = std::min(int(clk::milliseconds(1000) / (rtt * std::max(d->frameDelay.load(), 1))), d->maximumFrameRate);
     d->frameRateEstimates.append(estimate);
 
     if (now - d->lastFrameRateEstimation < FrameRateEstimateAveragePeriod) {
@@ -434,7 +434,6 @@ void VideoStream::updateRequestedFrameRate()
     auto average = sum / d->frameRateEstimates.size();
 
     if (average != d->requestedFrameRate) {
-        qDebug() << "new average" << average;
         d->requestedFrameRate = average;
         Q_EMIT requestedFrameRateChanged();
     }
