@@ -266,7 +266,7 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
             d->encodedStream = std::make_unique<PipeWireEncodedStream>();
             d->encodedStream->setNodeId(streams.first().nodeId);
             d->encodedStream->setFd(fd.takeFileDescriptor());
-            d->encodedStream->setEncoder("libx264");
+            d->encodedStream->setEncoder(PipeWireEncodedStream::H264Baseline);
             connect(d->encodedStream.get(), &PipeWireEncodedStream::newPacket, this, &PortalSession::onPacketReceived);
             connect(d->encodedStream.get(), &PipeWireEncodedStream::sizeChanged, this, [this](const QSize &size) {
                 d->size = size;
