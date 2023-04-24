@@ -26,6 +26,8 @@ namespace clk = std::chrono;
 // Maximum number of frames to contain in the queue.
 constexpr qsizetype MaxQueueSize = 10;
 
+constexpr clk::system_clock::duration FrameRateEstimateAveragePeriod = clk::seconds(1);
+
 BOOL gfxChannelIdAssigned(RdpgfxServerContext *context, uint32_t channelId)
 {
     auto stream = reinterpret_cast<VideoStream *>(context->custom);
@@ -63,9 +65,9 @@ struct Surface {
     QSize size;
 };
 
-struct FrameInfo {
-    clk::system_clock::time_point submitTimeStamp;
-    clk::system_clock::duration frameTime;
+struct FrameRateEstimate {
+    clk::system_clock::time_point timeStamp;
+    int estimate = 0;
 };
 
 class KRDP_NO_EXPORT VideoStream::Private
@@ -94,6 +96,7 @@ public:
 
     int maximumFrameRate = 60;
     int requestedFrameRate = 60;
+    QQueue<FrameRateEstimate> frameRateEstimates;
 
     std::atomic_int encodedFrames = 0;
     std::atomic_int frameDelay = 0;
@@ -404,8 +407,28 @@ void VideoStream::sendFrame(const VideoFrame &frame)
 void VideoStream::updateRequestedFrameRate()
 {
     auto rtt = std::max(clk::duration_cast<clk::milliseconds>(d->session->networkDetection()->averageRTT()), clk::milliseconds(1));
-    auto estimatedFromRTT = clk::milliseconds(1000) / (rtt * std::max(d->frameDelay.load(), 1));
-    d->requestedFrameRate = std::clamp(estimatedFromRTT, 1l, static_cast<clk::seconds::rep>(d->maximumFrameRate));
-    Q_EMIT requestedFrameRateChanged();
+    auto now = clk::system_clock::now();
+
+    FrameRateEstimate estimate;
+    estimate.timeStamp = now;
+    estimate.estimate = clk::milliseconds(1000) / (rtt * std::max(d->frameDelay.load(), 1));
+    d->frameRateEstimates.append(estimate);
+
+    d->frameRateEstimates.erase(std::remove_if(d->frameRateEstimates.begin(),
+                                               d->frameRateEstimates.end(),
+                                               [now](const auto &estimate) {
+                                                   return (estimate.timeStamp - now) > FrameRateEstimateAveragePeriod;
+                                               }),
+                                d->frameRateEstimates.end());
+
+    auto sum = std::accumulate(d->frameRateEstimates.begin(), d->frameRateEstimates.end(), 0, [](int acc, const auto &estimate) {
+        return acc + estimate.estimate;
+    });
+    auto average = sum / d->frameRateEstimates.size();
+
+    if (average != d->requestedFrameRate) {
+        d->requestedFrameRate = average;
+        Q_EMIT requestedFrameRateChanged();
+    }
 }
 }
