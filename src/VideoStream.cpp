@@ -97,6 +97,7 @@ public:
     int maximumFrameRate = 60;
     int requestedFrameRate = 60;
     QQueue<FrameRateEstimate> frameRateEstimates;
+    clk::system_clock::time_point lastFrameRateEstimation;
 
     std::atomic_int encodedFrames = 0;
     std::atomic_int frameDelay = 0;
@@ -414,6 +415,12 @@ void VideoStream::updateRequestedFrameRate()
     estimate.estimate = clk::milliseconds(1000) / (rtt * std::max(d->frameDelay.load(), 1));
     d->frameRateEstimates.append(estimate);
 
+    if (now - d->lastFrameRateEstimation < FrameRateEstimateAveragePeriod) {
+        return;
+    }
+
+    d->lastFrameRateEstimation = now;
+
     d->frameRateEstimates.erase(std::remove_if(d->frameRateEstimates.begin(),
                                                d->frameRateEstimates.end(),
                                                [now](const auto &estimate) {
@@ -427,6 +434,7 @@ void VideoStream::updateRequestedFrameRate()
     auto average = sum / d->frameRateEstimates.size();
 
     if (average != d->requestedFrameRate) {
+        qDebug() << "new average" << average;
         d->requestedFrameRate = average;
         Q_EMIT requestedFrameRateChanged();
     }
