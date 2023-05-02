@@ -1,0 +1,35 @@
+{
+    "id": "org.kde.krdp",
+    "branch": "master",
+    "runtime": "org.kde.Platform",
+    "runtime-version": "6.4",
+    "sdk": "org.kde.Sdk",
+    "command": "KRdp",
+    "tags": ["nightly"],
+    "desktop-file-name-suffix": " (Nightly)",
+    "finish-args": ["--share=ipc", "--device=all", "--socket=x11", "--socket=wayland", "--talk-name=org.kde.StatusNotifierWatcher",  "--own-name=org.kde.StatusNotifierItem-2-2", "--env=QT_LOGGING_DEBUG=*.debug=true qt.qpa.input*.debug=false"],
+
+    "modules": [
+        {
+            "name": "FreeRDP",
+            "buildsystem": "cmake-ninja",
+            "sources": [{"type": "git", "url": "https://github.com/FreeRDP/FreeRDP", "tag": "2.10.0"}]
+        },
+        {
+            "config-opts": [ "-DENABLE_TESTING=OFF" ],
+            "name": "kpipewire",
+            "buildsystem": "cmake-ninja",
+            "sources": [ { "type": "git", "url": "https://invent.kde.org/plasma/kpipewire.git" } ]
+        },
+        {
+            "name": "krdp",
+            "buildsystem": "cmake-ninja",
+            "sources": [
+                {
+                    "type": "dir",
+                    "path": "."
+                }
+            ]
+        }
+    ]
+}
