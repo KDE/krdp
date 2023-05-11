@@ -42,12 +42,12 @@ int main(int argc, char **argv)
     auto certificateKey = std::filesystem::path(parser.value(u"certificate-key"_qs).toStdString());
 
     if (!std::filesystem::exists(certificate)) {
-        qCritical() << "The specified certificate file" << certificate.string() << "does not exist. A valid TLS certificate file is required.";
+        qCritical() << "The specified certificate file" << certificate.string().data() << "does not exist. A valid TLS certificate file is required.";
         parser.showHelp(2);
     }
 
     if (!std::filesystem::exists(certificateKey)) {
-        qCritical() << "The specified certificate key" << certificateKey.string() << "does not exist. A valid TLS certificate key is required.";
+        qCritical() << "The specified certificate key" << certificateKey.string().data() << "does not exist. A valid TLS certificate key is required.";
         parser.showHelp(3);
     }
 

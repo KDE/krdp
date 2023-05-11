@@ -1,0 +1,123 @@
+id: org.kde.krdp
+branch: master
+runtime: org.kde.Platform
+runtime-version: '6.4'
+sdk: org.kde.Sdk
+command: krdpserver
+tags:
+-   nightly
+desktop-file-name-suffix: " (Nightly)"
+
+finish-args:
+-   "--share=ipc"
+-   "--share=network"
+-   "--device=all"
+-   "--socket=x11"
+-   "--socket=wayland"
+-   "--filesystem=home:ro"
+-   "--env=QT_LOGGING_DEBUG=*.debug=true qt.qpa.input*.debug=false"
+
+add-extensions: {}
+
+modules:
+# -   name: ensure-extension-directories
+#     buildsystem: simple
+#     build-commands:
+#     -   mkdir -p /app/lib/ffmpeg
+#     -   mkdir -p /app/lib/GL
+
+-   name: x264
+    config-opts:
+    -   "--disable-cli"
+    -   "--enable-shared"
+    cleanup:
+    -   "/include"
+    -   "/lib/pkgconfig"
+    sources:
+    -   type: git
+        url: https://code.videolan.org/videolan/x264.git
+        branch: stable
+
+-   name: ffmpeg
+    config-opts:
+    -   "--enable-gpl"
+    -   "--enable-shared"
+    -   "--disable-static"
+    -   "--disable-doc"
+    -   "--enable-version3"
+    -   "--enable-pthreads"
+    -   "--enable-libvpx"
+    -   "--enable-libx264"
+    -   "--enable-libdrm"
+    sources:
+    -   type: archive
+        url: https://www.ffmpeg.org/releases/ffmpeg-6.0.tar.xz
+        sha256: 57be87c22d9b49c112b6d24bc67d42508660e6b718b3db89c44e47e289137082
+    cleanup:
+    -   "/include"
+    -   "/lib/pkgconfig"
+
+-   name: FreeRDP
+    config-opts:
+    -   "-DWITH_SERVER=ON"
+    -   "-DCHANNEL_URBDRC=OFF"
+    -   "-DWITH_FFMPEG=OFF"
+    buildsystem: cmake-ninja
+    sources:
+    -   type: git
+        url: https://github.com/FreeRDP/FreeRDP
+        tag: 2.10.0
+
+-   name: extra-cmake-modules
+    config-opts:
+    -   "-DENABLE_TESTING=OFF"
+    buildsystem: cmake-ninja
+    sources:
+    -   type: git
+        url: https://invent.kde.org/frameworks/extra-cmake-modules.git
+
+-   name: kcoreaddons
+    config-opts:
+    -   "-DENABLE_TESTING=OFF"
+    buildsystem: cmake-ninja
+    sources:
+    -   type: git
+        url: https://invent.kde.org/frameworks/kcoreaddons.git
+
+-   name: plasma-wayland-protocols
+    config-opts:
+    -   "-DENABLE_TESTING=OFF"
+    buildsystem: cmake-ninja
+    sources:
+    -   type: git
+        url: https://invent.kde.org/libraries/plasma-wayland-protocols.git
+
+-   name: kwayland
+    config-opts:
+    -   "-DENABLE_TESTING=OFF"
+    buildsystem: cmake-ninja
+    sources:
+    -   type: git
+        url: https://invent.kde.org/frameworks/kwayland.git
+
+-   name: ki18n
+    config-opts:
+    -   "-DENABLE_TESTING=OFF"
+    buildsystem: cmake-ninja
+    sources:
+    -   type: git
+        url: https://invent.kde.org/frameworks/ki18n.git
+
+-   name: kpipewire
+    config-opts:
+    -   "-DBUILD_TESTING=OFF"
+    buildsystem: cmake-ninja
+    sources:
+    -   type: git
+        url: https://invent.kde.org/plasma/kpipewire.git
+
+-   name: krdp
+    buildsystem: cmake-ninja
+    sources:
+    -   type: dir
+        path: "."

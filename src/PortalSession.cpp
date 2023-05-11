@@ -118,6 +118,8 @@ PortalSession::~PortalSession()
 
     auto closeMessage = QDBusMessage::createMethodCall(dbusService, d->sessionPath.path(), dbusSessionInterface, QStringLiteral("Close"));
     QDBusConnection::sessionBus().asyncCall(closeMessage);
+
+    qCDebug(KRDP) << "Closing Freedesktop Portal Session";
 }
 
 bool PortalSession::streamingEnabled() const
@@ -262,6 +264,7 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
     connect(watcher, &QDBusPendingCallWatcher::finished, this, [this, streams](QDBusPendingCallWatcher *watcher) {
         auto reply = QDBusReply<QDBusUnixFileDescriptor>(*watcher);
         if (reply.isValid()) {
+            qCDebug(KRDP) << "Started Freedesktop Portal session";
             auto fd = reply.value();
             d->encodedStream = std::make_unique<PipeWireEncodedStream>();
             d->encodedStream->setNodeId(streams.first().nodeId);

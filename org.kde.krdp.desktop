@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Exec=krdpserver
+Icon=krfb
+Terminal=false
+Name=KRdp
+GenericName=Desktop Sharing (RDP)
+Comment=Desktop Sharing
+Categories=Qt;KDE;Network;RemoteAccess;

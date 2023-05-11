@@ -1,2 +1,5 @@
 .clang-format
 *kdev4*
+
+.flatpak-builder
+.cache

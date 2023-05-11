@@ -73,6 +73,8 @@ install(FILES
     COMPONENT Devel
 )
 
+install(FILES "org.kde.krdp.desktop" DESTINATION ${KDE_INSTALL_APPDIR})
+
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
 kde_configure_git_pre_commit_hook(CHECKS CLANG_FORMAT)
