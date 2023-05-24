@@ -179,7 +179,8 @@ void PortalSession::sendEvent(QEvent *event)
     case QEvent::MouseMove: {
         auto me = static_cast<QMouseEvent *>(event);
         auto position = me->globalPosition();
-        d->remoteInterface->NotifyPointerMotionAbsolute(d->sessionPath, QVariantMap{}, d->encodedStream->nodeId(), position.x(), position.y());
+        auto logicalPosition = QPointF{(position.x() / d->size.width()) * d->logicalSize.width(), (position.y() / d->size.height()) * d->logicalSize.height()};
+        d->remoteInterface->NotifyPointerMotionAbsolute(d->sessionPath, QVariantMap{}, d->encodedStream->nodeId(), logicalPosition.x(), logicalPosition.y());
         break;
     }
     case QEvent::Wheel: {
