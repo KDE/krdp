@@ -4,6 +4,7 @@
 
 #include "PortalSession.h"
 
+#include <QGuiApplication>
 #include <QMouseEvent>
 #include <QQueue>
 
@@ -80,6 +81,7 @@ public:
     bool started = false;
     bool enabled = false;
     QSize size;
+    QSize logicalSize;
 };
 
 QString createHandleToken()
@@ -92,6 +94,10 @@ PortalSession::PortalSession(Server *server)
     , d(std::make_unique<Private>())
 {
     d->server = server;
+
+    connect(qGuiApp, &QGuiApplication::screenAdded, this, &PortalSession::updateScreenLayout);
+    connect(qGuiApp, &QGuiApplication::screenRemoved, this, &PortalSession::updateScreenLayout);
+    updateScreenLayout();
 
     d->remoteInterface = std::make_unique<OrgFreedesktopPortalRemoteDesktopInterface>(dbusService, dbusPath, QDBusConnection::sessionBus());
     d->screencastInterface = std::make_unique<OrgFreedesktopPortalScreenCastInterface>(dbusService, dbusPath, QDBusConnection::sessionBus());
@@ -296,4 +302,16 @@ void PortalSession::onPacketReceived(const PipeWireEncodedStream::Packet &data)
     Q_EMIT frameReceived(frameData);
 }
 
+void PortalSession::updateScreenLayout()
+{
+    int logicalSurfaceWidth = 0;
+    int logicalSurfaceHeight = 0;
+    const auto screens = QGuiApplication::screens();
+    for (auto screen : screens) {
+        logicalSurfaceWidth += screen->geometry().width();
+        logicalSurfaceHeight += screen->geometry().height();
+    }
+
+    d->logicalSize = QSize{logicalSurfaceWidth, logicalSurfaceHeight};
+}
 }
