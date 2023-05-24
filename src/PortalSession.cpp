@@ -122,6 +122,12 @@ PortalSession::~PortalSession()
         d->encodedStream->setActive(false);
     }
 
+    // Make sure to clear any modifier keys that were pressed when the session closed, otherwise
+    // we risk those keys getting stuck and the original session becoming unusable.
+    for (auto keycode : {KEY_LEFTCTRL, KEY_RIGHTCTRL, KEY_LEFTSHIFT, KEY_RIGHTSHIFT, KEY_LEFTALT, KEY_RIGHTALT, KEY_LEFTMETA, KEY_RIGHTMETA}) {
+        d->remoteInterface->NotifyKeyboardKeycode(d->sessionPath, QVariantMap{}, keycode, 0);
+    }
+
     auto closeMessage = QDBusMessage::createMethodCall(dbusService, d->sessionPath.path(), dbusSessionInterface, QStringLiteral("Close"));
     QDBusConnection::sessionBus().asyncCall(closeMessage);
 
