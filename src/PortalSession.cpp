@@ -10,8 +10,6 @@
 
 #include <linux/input.h>
 
-#include <KPipeWire/PipeWireEncodedStream>
-
 #include "PortalSession_p.h"
 #include "VideoStream.h"
 #include "krdp_logging.h"

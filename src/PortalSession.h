@@ -14,8 +14,8 @@
 #include <QPoint>
 #include <QPointer>
 
-#include <KPipeWire/PipeWireEncodedStream>
-#include <KPipeWire/PipeWireSourceStream>
+#include <PipeWireEncodedStream>
+#include <PipeWireSourceStream>
 
 #include "krdp_export.h"
 
