@@ -2,9 +2,12 @@
 //
 // SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 
+#include <filesystem>
+
 #include <QCommandLineParser>
 #include <QDebug>
 #include <QGuiApplication>
+#include <QProcess>
 
 #include "Cursor.h"
 #include "InputHandler.h"
@@ -20,35 +23,54 @@ int main(int argc, char **argv)
     application.setApplicationDisplayName(u"KRDP Example Server"_qs);
 
     QCommandLineParser parser;
+    parser.setApplicationDescription(
+        u"A basic RDP server that exposes the current desktop session over the RDP protocol.\nNote that a valid TLS certificate and key is needed. If not provided, a temporary certificate will be generated."_qs);
+    parser.addHelpOption();
     parser.addOptions({
         {{u"u"_qs, u"username"_qs}, u"The username to use for login. Required."_qs, u"username"_qs},
         {{u"p"_qs, u"password"_qs}, u"The password to use for login. Required."_qs, u"password"_qs},
         {u"port"_qs, u"The port to use for connections. Defaults to 3389."_qs, u"port"_qs, u"3389"_qs},
-        {u"certificate"_qs, u"The TLS certificate file to use. Defaults to 'server.crt' in the current directory."_qs, u"certificate"_qs, u"server.crt"_qs},
-        {u"certificate-key"_qs,
-         u"The TLS certificate key to use. Defaults to 'server.key' in the current directory."_qs,
-         u"certificate-key"_qs,
-         u"server.key"_qs},
+        {u"certificate"_qs, u"The TLS certificate file to use."_qs, u"certificate"_qs, u"server.crt"_qs},
+        {u"certificate-key"_qs, u"The TLS certificate key to use."_qs, u"certificate-key"_qs, u"server.key"_qs},
     });
-    parser.addHelpOption();
     parser.process(application);
 
     if (!parser.isSet(u"username"_qs) || !parser.isSet(u"password"_qs)) {
-        qCritical() << "A username and password needs to be provided.";
+        qCritical() << "Error: A username and password needs to be provided.";
         parser.showHelp(1);
     }
 
     auto certificate = std::filesystem::path(parser.value(u"certificate"_qs).toStdString());
     auto certificateKey = std::filesystem::path(parser.value(u"certificate-key"_qs).toStdString());
+    bool certificateGenerated = false;
 
-    if (!std::filesystem::exists(certificate)) {
-        qCritical() << "The specified certificate file" << certificate.string().data() << "does not exist. A valid TLS certificate file is required.";
-        parser.showHelp(2);
-    }
+    if (!std::filesystem::exists(certificate) || !std::filesystem::exists(certificateKey)) {
+        qWarning() << "Could not find certificate and certificate key, generating temporary certificate...";
+        QProcess sslProcess;
+        sslProcess.start(u"openssl"_qs,
+                         {
+                             u"req"_qs,
+                             u"-nodes"_qs,
+                             u"-new"_qs,
+                             u"-x509"_qs,
+                             u"-keyout"_qs,
+                             u"/tmp/krdp.key"_qs,
+                             u"-out"_qs,
+                             u"/tmp/krdp.crt"_qs,
+                             u"-days"_qs,
+                             u"1"_qs,
+                             u"-batch"_qs,
+                         });
+        sslProcess.waitForFinished();
 
-    if (!std::filesystem::exists(certificateKey)) {
-        qCritical() << "The specified certificate key" << certificateKey.string().data() << "does not exist. A valid TLS certificate key is required.";
-        parser.showHelp(3);
+        certificate = std::filesystem::path("/tmp/krdp.crt");
+        certificateKey = std::filesystem::path("/tmp/krdp.key");
+        certificateGenerated = true;
+
+        if (!std::filesystem::exists(certificate) || !std::filesystem::exists(certificateKey)) {
+            qCritical() << "Could not generate a certificate and no certificate provided. A valid TLS certificate and key should be provided.";
+            parser.showHelp(2);
+        }
     }
 
     KRdp::Server server;
@@ -57,8 +79,8 @@ int main(int argc, char **argv)
     server.setPort(parser.value(u"port"_qs).toInt());
     server.setUserName(parser.value(u"username"_qs));
     server.setPassword(parser.value(u"password"_qs));
-    server.setTlsCertificate(std::filesystem::path("server.crt"));
-    server.setTlsCertificateKey(std::filesystem::path("server.key"));
+    server.setTlsCertificate(certificate);
+    server.setTlsCertificateKey(certificateKey);
 
     QObject::connect(&server, &KRdp::Server::newSession, [&server](KRdp::Session *newSession) {
         auto portalSession = std::make_shared<KRdp::PortalSession>(&server);
@@ -90,7 +112,12 @@ int main(int argc, char **argv)
 
     if (!server.start()) {
         return -1;
-    } else {
-        return application.exec();
     }
+
+    auto result = application.exec();
+    if (certificateGenerated) {
+        std::filesystem::remove(certificate);
+        std::filesystem::remove(certificateKey);
+    }
+    return result;
 }
