@@ -309,14 +309,11 @@ void PortalSession::onPacketReceived(const PipeWireEncodedStream::Packet &data)
 
 void PortalSession::updateScreenLayout()
 {
-    int logicalSurfaceWidth = 0;
-    int logicalSurfaceHeight = 0;
     const auto screens = QGuiApplication::screens();
+    QRegion logicalRegion;
     for (auto screen : screens) {
-        logicalSurfaceWidth += screen->geometry().width();
-        logicalSurfaceHeight += screen->geometry().height();
+        logicalRegion += screen->geometry();
     }
-
-    d->logicalSize = QSize{logicalSurfaceWidth, logicalSurfaceHeight};
+    d->logicalSize = logicalRegion.boundingRect().size();
 }
 }
