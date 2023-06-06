@@ -32,6 +32,7 @@ int main(int argc, char **argv)
         {u"port"_qs, u"The port to use for connections. Defaults to 3389."_qs, u"port"_qs, u"3389"_qs},
         {u"certificate"_qs, u"The TLS certificate file to use."_qs, u"certificate"_qs, u"server.crt"_qs},
         {u"certificate-key"_qs, u"The TLS certificate key to use."_qs, u"certificate-key"_qs, u"server.key"_qs},
+        {u"monitor"_qs, u"The index of the monitor to use when streaming."_qs, u"monitor"_qs, u"-1"_qs},
     });
     parser.process(application);
 
@@ -73,6 +74,8 @@ int main(int argc, char **argv)
         }
     }
 
+    quint32 monitorIndex = parser.value(u"monitor"_qs).toInt();
+
     KRdp::Server server;
 
     server.setAddress(QHostAddress::Any);
@@ -82,8 +85,9 @@ int main(int argc, char **argv)
     server.setTlsCertificate(certificate);
     server.setTlsCertificateKey(certificateKey);
 
-    QObject::connect(&server, &KRdp::Server::newSession, [&server](KRdp::Session *newSession) {
+    QObject::connect(&server, &KRdp::Server::newSession, [&server, monitorIndex](KRdp::Session *newSession) {
         auto portalSession = std::make_shared<KRdp::PortalSession>(&server);
+        portalSession->setActiveStream(monitorIndex);
 
         QObject::connect(portalSession.get(), &KRdp::PortalSession::frameReceived, newSession, [portalSession, newSession](const KRdp::VideoFrame &frame) {
             newSession->videoStream()->queueFrame(frame);
@@ -107,7 +111,6 @@ int main(int argc, char **argv)
         QObject::connect(newSession->inputHandler(), &KRdp::InputHandler::inputEvent, portalSession.get(), [portalSession](QEvent *event) {
             portalSession->sendEvent(event);
         });
-
     });
 
     if (!server.start()) {

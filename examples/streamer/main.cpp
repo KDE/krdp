@@ -4,9 +4,11 @@
 
 #include <csignal>
 
+#include <QCommandLineParser>
 #include <QDebug>
 #include <QFile>
 #include <QGuiApplication>
+#include <QTimer>
 #include <QUrl>
 
 #include "PortalSession.h"
@@ -16,10 +18,23 @@ int main(int argc, char **argv)
 {
     QGuiApplication application{argc, argv};
 
+    QCommandLineParser parser;
+    parser.addHelpOption();
+    parser.addOptions({
+        {u"quit-after"_qs, u"Quit after running for this amount of seconds"_qs, u"seconds"_qs},
+        {u"monitor"_qs, u"Index of the monitor to display."_qs, u"monitor"_qs, u"-1"_qs},
+    });
+    parser.process(application);
+
     KRdp::PortalSession session{nullptr};
     session.setStreamingEnabled(true);
+    session.setActiveStream(parser.value(u"monitor"_qs).toInt());
 
     signal(SIGINT, [](int) {
+        QCoreApplication::exit(0);
+    });
+
+    signal(SIGUSR1, [](int) {
         QCoreApplication::exit(0);
     });
 
@@ -32,6 +47,13 @@ int main(int argc, char **argv)
     QObject::connect(&session, &KRdp::PortalSession::frameReceived, &session, [&file](const KRdp::VideoFrame &frame) {
         file.write(frame.data);
     });
+
+    QTimer timer;
+    QObject::connect(&timer, &QTimer::timeout, &application, &QCoreApplication::quit);
+    if (parser.isSet(u"quit-after"_qs)) {
+        QObject::connect(&session, &KRdp::PortalSession::started, &timer, qOverload<>(&QTimer::start));
+        timer.setInterval(parser.value(u"quit-after"_qs).toInt() * 1000);
+    }
 
     auto result = application.exec();
 
