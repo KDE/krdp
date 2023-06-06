@@ -45,6 +45,7 @@ public:
     bool streamingEnabled() const;
     void setStreamingEnabled(bool enable);
     void setVideoFrameRate(quint32 framerate);
+    void setActiveStream(int stream);
 
     /**
      * Send a new event to the portal.
@@ -72,11 +73,10 @@ public:
 
 private:
     void onCreateSession(uint code, const QVariantMap &result);
-    void onDevicesSelected(uint code, const QVariantMap & /*result*/);
-    void onSourcesSelected(uint code, const QVariantMap & /*result*/);
+    void onDevicesSelected(uint code, const QVariantMap &result);
+    void onSourcesSelected(uint code, const QVariantMap &result);
     void onSessionStarted(uint code, const QVariantMap &result);
     void onPacketReceived(const PipeWireEncodedStream::Packet &data);
-    void updateScreenLayout();
 
     class Private;
     const std::unique_ptr<Private> d;

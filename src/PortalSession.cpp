@@ -80,6 +80,7 @@ public:
     bool enabled = false;
     QSize size;
     QSize logicalSize;
+    int stream = -1;
 };
 
 QString createHandleToken()
@@ -92,10 +93,6 @@ PortalSession::PortalSession(Server *server)
     , d(std::make_unique<Private>())
 {
     d->server = server;
-
-    connect(qGuiApp, &QGuiApplication::screenAdded, this, &PortalSession::updateScreenLayout);
-    connect(qGuiApp, &QGuiApplication::screenRemoved, this, &PortalSession::updateScreenLayout);
-    updateScreenLayout();
 
     d->remoteInterface = std::make_unique<OrgFreedesktopPortalRemoteDesktopInterface>(dbusService, dbusPath, QDBusConnection::sessionBus());
     d->screencastInterface = std::make_unique<OrgFreedesktopPortalScreenCastInterface>(dbusService, dbusPath, QDBusConnection::sessionBus());
@@ -154,6 +151,11 @@ void PortalSession::setVideoFrameRate(quint32 framerate)
     if (d->encodedStream) {
         d->encodedStream->setMaxFramerate({framerate, 1});
     }
+}
+
+void PortalSession::setActiveStream(int stream)
+{
+    d->stream = stream;
 }
 
 void PortalSession::sendEvent(QEvent *event)
@@ -235,13 +237,13 @@ void PortalSession::onDevicesSelected(uint code, const QVariantMap & /*result*/)
 
     auto parameters = QVariantMap{
         {QStringLiteral("types"), 1u}, // only MONITOR is supported
-        {QStringLiteral("multiple"), false},
+        {QStringLiteral("multiple"), d->stream >= 0},
         {QStringLiteral("handle_token"), createHandleToken()},
     };
     new PortalRequest(d->screencastInterface->SelectSources(d->sessionPath, parameters), this, &PortalSession::onSourcesSelected);
 }
 
-void PortalSession::onSourcesSelected(uint code, const QVariantMap & /*result*/)
+void PortalSession::onSourcesSelected(uint code, const QVariantMap &result)
 {
     if (code != 0) {
         qCWarning(KRDP) << "Could not select sources for screencast session, error code" << code;
@@ -277,9 +279,16 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
         auto reply = QDBusReply<QDBusUnixFileDescriptor>(*watcher);
         if (reply.isValid()) {
             qCDebug(KRDP) << "Started Freedesktop Portal session";
+
+            if (d->stream > streams.size()) {
+                d->stream = 0;
+            }
+            auto stream = streams.at(d->stream >= 0 ? d->stream : 0);
+            d->logicalSize = qdbus_cast<QSize>(stream.map.value(u"size"_qs));
+
             auto fd = reply.value();
             d->encodedStream = std::make_unique<PipeWireEncodedStream>();
-            d->encodedStream->setNodeId(streams.first().nodeId);
+            d->encodedStream->setNodeId(stream.nodeId);
             d->encodedStream->setFd(fd.takeFileDescriptor());
             d->encodedStream->setEncoder(PipeWireEncodedStream::H264Baseline);
             connect(d->encodedStream.get(), &PipeWireEncodedStream::newPacket, this, &PortalSession::onPacketReceived);
@@ -306,15 +315,5 @@ void PortalSession::onPacketReceived(const PipeWireEncodedStream::Packet &data)
     frameData.isKeyFrame = data.isKeyFrame();
 
     Q_EMIT frameReceived(frameData);
-}
-
-void PortalSession::updateScreenLayout()
-{
-    const auto screens = QGuiApplication::screens();
-    QRegion logicalRegion;
-    for (auto screen : screens) {
-        logicalRegion += screen->geometry();
-    }
-    d->logicalSize = logicalRegion.boundingRect().size();
 }
 }
