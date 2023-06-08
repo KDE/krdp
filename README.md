@@ -4,13 +4,20 @@ Library and examples for creating an RDP server.
 
 # Running the example server
 
-The example server requires a username and password to be provided on the command line. The username and password are used when logging in from an RDP client. They can be provided using the `-u` and `-p` command line parameters, respectively. In addition, a valid TLS certificate and key are required to encrypt the communication between client and server. By default, the server will look for a file called `server.crt` and `server.key` in the current working directory, but a different path can be provided using the `--certificate` and `--certificate-key` command line parameters.
+The example server requires a username and password to be provided on the command line, which will be used when connecting from an RDP client. They can be provided using the `-u` and `-p` command line parameters, respectively. For example:
 
-For example, to run the server using the user `test` and the password `test`, using a TLS certificate and key with the default name in the current working directory, you would run the command `krdp_server -u test -p test`. The server will listen on all interfaces on port 3389.
+```
+krdpserver -u user -p test
+```
 
-## Creating a TLS certificate
-A self-signed certificate can be generated using OpenSSL using the following command: `openssl req -nodes -new -x509 -keyout server.key -out server.crt -days 1000`. It will ask for some information, which can be provided if you wish or you can accept the default values.
+The server will then listen on all interfaces on port 3389, and clients can connect with the username "user" and the password "pass".
 
 # Connecting to the example server
 
-Currently, the main client that has been used for testing and is confirmed to work is the FreeRDP client. To connect to the server, make sure to pass the username and password the server was started with. Launch the client with the following command: `xfreerdp /u:<username> /p:<password> /gfx -clipboard /v:<ip_address>:3389`, filling in the username, password and IP address as appropriate.
+To connect to the server, make sure to pass the username and password the server was started with.
+
+Currently, the main client that has been used for testing and is confirmed to work is the FreeRDP client. Launch the FreeRDP client with the following command: `xfreerdp /u:<username> /p:<password> /gfx -clipboard /v:<ip_address>:3389`, filling in the username, password and IP address as appropriate. If testing locally, substitute `localhost` for an IP address.
+
+# Security considerations
+
+In addition, a valid TLS certificate and key are required to encrypt the communication between client and server. The server will look for a file called `server.crt` and `server.key` in the current working directory, but a different path can be provided using the `--certificate` and `--certificate-key` command line parameters. If no valid certificate is found using any of these methods, the server will internally generate a self-signed certificate and use that.
