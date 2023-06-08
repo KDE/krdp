@@ -71,6 +71,8 @@ int main(int argc, char **argv)
         if (!std::filesystem::exists(certificate) || !std::filesystem::exists(certificateKey)) {
             qCritical() << "Could not generate a certificate and no certificate provided. A valid TLS certificate and key should be provided.";
             parser.showHelp(2);
+        } else {
+            qWarning() << "Temporary certificate generated; ready to accept connections.";
         }
     }
 
