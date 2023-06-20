@@ -82,8 +82,8 @@ public:
     QSize logicalSize;
     int stream = -1;
     std::optional<quint32> frameRate = 60;
-
     QSet<QObject *> enableRequests;
+    std::optional<quint8> quality = 100;
 };
 
 QString createHandleToken()
@@ -178,6 +178,14 @@ void PortalSession::requestStreamingDisable(QObject *requester)
         if (d->encodedStream) {
             d->encodedStream->setActive(false);
         }
+    }
+}
+
+void PortalSession::setVideoQuality(quint8 quality)
+{
+    d->quality = quality;
+    if (d->encodedStream) {
+        d->encodedStream->setQuality(quality);
     }
 }
 
@@ -323,6 +331,9 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
             d->encodedStream->setEncoder(PipeWireEncodedStream::H264Baseline);
             if (d->frameRate) {
                 d->encodedStream->setMaxFramerate({d->frameRate.value(), 1});
+            }
+            if (d->quality) {
+                d->encodedStream->setQuality(d->quality.value());
             }
             connect(d->encodedStream.get(), &PipeWireEncodedStream::newPacket, this, &PortalSession::onPacketReceived);
             connect(d->encodedStream.get(), &PipeWireEncodedStream::sizeChanged, this, [this](const QSize &size) {

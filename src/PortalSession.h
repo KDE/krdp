@@ -45,6 +45,13 @@ public:
     bool streamingEnabled() const;
     void setVideoFrameRate(quint32 framerate);
     void setActiveStream(int stream);
+    /**
+     * Set the quality of the video stream.
+     *
+     * \param quality A value from 0 to 100 that indicates the quality,
+     *                where 0 is lowest and 100 is highest.
+     */
+    void setVideoQuality(quint8 quality);
 
     void requestStreamingEnable(QObject *requester);
     void requestStreamingDisable(QObject *requester);
