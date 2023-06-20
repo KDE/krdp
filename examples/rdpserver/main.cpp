@@ -87,10 +87,10 @@ int main(int argc, char **argv)
     server.setTlsCertificate(certificate);
     server.setTlsCertificateKey(certificateKey);
 
-    QObject::connect(&server, &KRdp::Server::newSession, [&server, monitorIndex](KRdp::Session *newSession) {
-        auto portalSession = std::make_shared<KRdp::PortalSession>(&server);
-        portalSession->setActiveStream(monitorIndex);
+    auto portalSession = std::make_shared<KRdp::PortalSession>(&server);
+    portalSession->setActiveStream(monitorIndex);
 
+    QObject::connect(&server, &KRdp::Server::newSession, [&portalSession](KRdp::Session *newSession) {
         QObject::connect(portalSession.get(), &KRdp::PortalSession::frameReceived, newSession, [portalSession, newSession](const KRdp::VideoFrame &frame) {
             newSession->videoStream()->queueFrame(frame);
         });
