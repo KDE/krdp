@@ -23,12 +23,16 @@ int main(int argc, char **argv)
     parser.addOptions({
         {u"quit-after"_qs, u"Quit after running for this amount of seconds"_qs, u"seconds"_qs},
         {u"monitor"_qs, u"Index of the monitor to display."_qs, u"monitor"_qs, u"-1"_qs},
+        {u"quality"_qs, u"Encoding quality of the stream, from 0 (lowest) to 100 (highest)"_qs, u"quality"_qs},
     });
     parser.process(application);
 
     KRdp::PortalSession session{nullptr};
     session.requestStreamingEnable(&application);
     session.setActiveStream(parser.value(u"monitor"_qs).toInt());
+    if (parser.isSet(u"quality"_qs)) {
+        session.setVideoQuality(parser.value(u"quality"_qs).toUShort());
+    }
 
     signal(SIGINT, [](int) {
         QCoreApplication::exit(0);

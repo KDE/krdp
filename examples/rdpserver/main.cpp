@@ -34,6 +34,7 @@ int main(int argc, char **argv)
         {u"certificate"_qs, u"The TLS certificate file to use."_qs, u"certificate"_qs, u"server.crt"_qs},
         {u"certificate-key"_qs, u"The TLS certificate key to use."_qs, u"certificate-key"_qs, u"server.key"_qs},
         {u"monitor"_qs, u"The index of the monitor to use when streaming."_qs, u"monitor"_qs, u"-1"_qs},
+        {u"quality"_qs, u"Encoding quality of the stream, from 0 (lowest) to 100 (highest)"_qs, u"quality"_qs},
     });
     parser.process(application);
 
@@ -94,6 +95,9 @@ int main(int argc, char **argv)
 
     auto portalSession = std::make_shared<KRdp::PortalSession>(&server);
     portalSession->setActiveStream(monitorIndex);
+    if (parser.isSet(u"quality"_qs)) {
+        portalSession->setVideoQuality(parser.value(u"quality"_qs).toUShort());
+    }
 
     QObject::connect(portalSession.get(), &KRdp::PortalSession::error, []() {
         QCoreApplication::exit(-1);
