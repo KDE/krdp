@@ -81,6 +81,7 @@ public:
     QSize size;
     QSize logicalSize;
     int stream = -1;
+    std::optional<quint32> frameRate = 60;
 };
 
 QString createHandleToken()
@@ -148,6 +149,7 @@ void PortalSession::setStreamingEnabled(bool enable)
 
 void PortalSession::setVideoFrameRate(quint32 framerate)
 {
+    d->frameRate = framerate;
     if (d->encodedStream) {
         d->encodedStream->setMaxFramerate({framerate, 1});
     }
@@ -291,6 +293,9 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
             d->encodedStream->setNodeId(stream.nodeId);
             d->encodedStream->setFd(fd.takeFileDescriptor());
             d->encodedStream->setEncoder(PipeWireEncodedStream::H264Baseline);
+            if (d->frameRate) {
+                d->encodedStream->setMaxFramerate({d->frameRate.value(), 1});
+            }
             connect(d->encodedStream.get(), &PipeWireEncodedStream::newPacket, this, &PortalSession::onPacketReceived);
             connect(d->encodedStream.get(), &PipeWireEncodedStream::sizeChanged, this, [this](const QSize &size) {
                 d->size = size;
