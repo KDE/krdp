@@ -79,7 +79,7 @@ public:
     bool started = false;
     bool enabled = false;
     QSize size;
-    QSize logicalSize;
+    QRect logicalRect;
     int stream = -1;
     std::optional<quint32> frameRate = 60;
 };
@@ -110,6 +110,10 @@ PortalSession::PortalSession(Server *server)
         {QStringLiteral("session_handle_token"), createHandleToken()},
     };
     new PortalRequest(d->remoteInterface->CreateSession(parameters), this, &PortalSession::onCreateSession);
+
+    connect(qGuiApp, &QGuiApplication::screenAdded, this, &PortalSession::updateScreenLayout);
+    connect(qGuiApp, &QGuiApplication::screenRemoved, this, &PortalSession::updateScreenLayout);
+    updateScreenLayout();
 }
 
 PortalSession::~PortalSession()
@@ -188,7 +192,8 @@ void PortalSession::sendEvent(QEvent *event)
     case QEvent::MouseMove: {
         auto me = static_cast<QMouseEvent *>(event);
         auto position = me->globalPosition();
-        auto logicalPosition = QPointF{(position.x() / d->size.width()) * d->logicalSize.width(), (position.y() / d->size.height()) * d->logicalSize.height()};
+        auto logicalPosition = QPointF{(position.x() / d->size.width()) * d->logicalRect.width() + d->logicalRect.x(),
+                                       (position.y() / d->size.height()) * d->logicalRect.height() + d->logicalRect.y()};
         d->remoteInterface->NotifyPointerMotionAbsolute(d->sessionPath, QVariantMap{}, d->encodedStream->nodeId(), logicalPosition.x(), logicalPosition.y());
         break;
     }
@@ -286,7 +291,6 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
                 d->stream = 0;
             }
             auto stream = streams.at(d->stream >= 0 ? d->stream : 0);
-            d->logicalSize = qdbus_cast<QSize>(stream.map.value(u"size"_qs));
 
             auto fd = reply.value();
             d->encodedStream = std::make_unique<PipeWireEncodedStream>();
@@ -320,5 +324,19 @@ void PortalSession::onPacketReceived(const PipeWireEncodedStream::Packet &data)
     frameData.isKeyFrame = data.isKeyFrame();
 
     Q_EMIT frameReceived(frameData);
+}
+
+void PortalSession::updateScreenLayout()
+{
+    const auto screens = QGuiApplication::screens();
+    if (d->stream < 0) {
+        QRegion logicalRegion;
+        for (auto screen : screens) {
+            logicalRegion += screen->geometry();
+        }
+        d->logicalRect = logicalRegion.boundingRect();
+    } else {
+        d->logicalRect = screens.at(d->stream)->geometry();
+    }
 }
 }
