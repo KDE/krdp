@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 
+#include <csignal>
 #include <filesystem>
 
 #include <QCommandLineParser>
@@ -40,6 +41,10 @@ int main(int argc, char **argv)
         qCritical() << "Error: A username and password needs to be provided.";
         parser.showHelp(1);
     }
+
+    signal(SIGINT, [](int) {
+        QCoreApplication::exit(0);
+    });
 
     auto certificate = std::filesystem::path(parser.value(u"certificate"_qs).toStdString());
     auto certificateKey = std::filesystem::path(parser.value(u"certificate-key"_qs).toStdString());
