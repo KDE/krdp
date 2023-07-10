@@ -39,3 +39,42 @@ The following command line options are available for the example server:
     <dd>The path to the TLS certificate key that matches the provided certificate.</dd>
     <dt>--monitor <monitor></dt>The index of the monitor to use for streaming video. If not supplied the whole workspace is used.</dd>
 </dl>
+
+# Known Working and Not-Working Clients
+
+The following clients are known to work with the server:
+
+- XFreeRDP and wlFreeRDP from the FreeRDP project.
+- Reminna, a remote desktop client for Gnome.
+- Thincast Remote Desktop Client
+
+The following clients are known not to work:
+
+- Krdc, KDE's remote desktop client. While it supports RDP it does not support
+the graphics pipeline.
+- Windows' Remote Desktop client. It can connect but will only display a black
+screen. Input does work however.
+- Microsoft's Remote Desktop client for Android. It behaves the same as the
+Windows RDP client.
+
+# Known Issues and Limitations
+
+- Only video streaming and remote input is supported.
+- Only the NLA security type of RDP is supported.
+- Only one username and password combination is supported for login.
+- Only the "Graphics Pipeline" extension of the RDP protocol is
+implemented for video streaming. This extension allows using H.264 for video
+streaming, but it means only clients supporting that extension are supported.
+- H.264 encoding is done using hardware encoding if possible, but currently we
+only support using VAAPI for this. Most notably this means hardware encoding on
+NVidia hardware can not be used and software encoding will be used instead.
+Additionally, on certain hardware there are limits to what size of frame can be
+encoded by the hardware. In both cases, encoding will fall back to software
+encoding.
+- KDE's implementation of the Remote Desktop portal is rather limited as
+shipped with Plasma 5.27. Most notably it does not allow selecting which screen
+to stream, nor does it have an option to remember the setup and reuse it when
+the same application requests a new connection. As a workaround, the server
+will open a remote desktop session on startup and reuse that session for all
+RDP connections. Additionally, monitor selection can be done using the
+`--monitor` command line option.
