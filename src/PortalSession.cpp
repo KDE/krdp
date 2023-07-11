@@ -223,6 +223,7 @@ void PortalSession::onCreateSession(uint code, const QVariantMap &result)
 {
     if (code != 0) {
         qCWarning(KRDP) << "Could not open a new remote desktop session, error code" << code;
+        Q_EMIT error();
         return;
     }
 
@@ -239,6 +240,7 @@ void PortalSession::onDevicesSelected(uint code, const QVariantMap & /*result*/)
 {
     if (code != 0) {
         qCWarning(KRDP) << "Could not select devices for remote desktop session, error code" << code;
+        Q_EMIT error();
         return;
     }
 
@@ -254,6 +256,7 @@ void PortalSession::onSourcesSelected(uint code, const QVariantMap &result)
 {
     if (code != 0) {
         qCWarning(KRDP) << "Could not select sources for screencast session, error code" << code;
+        Q_EMIT error();
         return;
     }
 
@@ -267,17 +270,20 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
 {
     if (code != 0) {
         qCWarning(KRDP) << "Could not start screencast session, error code" << code;
+        Q_EMIT error();
         return;
     }
 
     if (result.value(QStringLiteral("devices")).toUInt() == 0) {
         qCWarning(KRDP) << "No devices were granted" << result;
+        Q_EMIT error();
         return;
     }
 
     const auto streams = qdbus_cast<QList<PortalSessionStream>>(result.value(QStringLiteral("streams")));
     if (streams.isEmpty()) {
         qCWarning(KRDP) << "No screencast streams supplied";
+        Q_EMIT error();
         return;
     }
 
@@ -311,6 +317,7 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
             d->encodedStream->setActive(d->enabled);
         } else {
             qCWarning(KRDP) << "Could not open pipewire remote";
+            Q_EMIT error();
         }
         watcher->deleteLater();
     });
