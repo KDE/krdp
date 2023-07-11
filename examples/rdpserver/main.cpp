@@ -95,6 +95,10 @@ int main(int argc, char **argv)
     auto portalSession = std::make_shared<KRdp::PortalSession>(&server);
     portalSession->setActiveStream(monitorIndex);
 
+    QObject::connect(portalSession.get(), &KRdp::PortalSession::error, [&application]() {
+        application.exit(-1);
+    });
+
     QObject::connect(&server, &KRdp::Server::newSession, [&portalSession](KRdp::Session *newSession) {
         QObject::connect(portalSession.get(), &KRdp::PortalSession::frameReceived, newSession, [portalSession, newSession](const KRdp::VideoFrame &frame) {
             newSession->videoStream()->queueFrame(frame);
