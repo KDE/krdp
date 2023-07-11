@@ -162,6 +162,7 @@ void PortalSession::setVideoFrameRate(quint32 framerate)
 void PortalSession::setActiveStream(int stream)
 {
     d->stream = stream;
+    updateScreenLayout();
 }
 
 void PortalSession::sendEvent(QEvent *event)
@@ -337,14 +338,18 @@ void PortalSession::onPacketReceived(const PipeWireEncodedStream::Packet &data)
 void PortalSession::updateScreenLayout()
 {
     const auto screens = QGuiApplication::screens();
-    if (d->stream < 0) {
+
+    if (d->stream < 0 || d->stream >= screens.size()) {
         QRegion logicalRegion;
         for (auto screen : screens) {
             logicalRegion += screen->geometry();
         }
         d->logicalRect = logicalRegion.boundingRect();
     } else {
-        d->logicalRect = screens.at(d->stream)->geometry();
+        auto screenGeometry = screens.at(d->stream)->geometry();
+        auto primaryGeometry = qGuiApp->primaryScreen()->geometry();
+        screenGeometry.moveTopLeft(-primaryGeometry.topLeft());
+        d->logicalRect = screenGeometry;
     }
 }
 }
