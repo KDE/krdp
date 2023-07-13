@@ -47,15 +47,15 @@ The following clients are known to work with the server:
 - XFreeRDP and wlFreeRDP from the FreeRDP project.
 - Reminna, a remote desktop client for Gnome.
 - Thincast Remote Desktop Client
+- Windows Remote Desktop client, at least as shipped with a recent Windows 10.
 
 The following clients are known not to work:
 
 - Krdc, KDE's remote desktop client. While it supports RDP it does not support
 the graphics pipeline.
-- Windows' Remote Desktop client. It can connect but will only display a black
 screen. Input does work however.
-- Microsoft's Remote Desktop client for Android. It behaves the same as the
-Windows RDP client.
+- Microsoft's Remote Desktop client for Android. While it should support H.264
+it seems to not enable it.
 
 # Known Issues and Limitations
 
