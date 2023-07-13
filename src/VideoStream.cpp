@@ -406,7 +406,9 @@ void VideoStream::sendFrame(const VideoFrame &frame)
     RDPGFX_START_FRAME_PDU startFramePdu;
     RDPGFX_END_FRAME_PDU endFramePdu;
 
-    startFramePdu.timestamp = QDateTime::currentMSecsSinceEpoch();
+    auto now = QDateTime::currentDateTimeUtc().time();
+    startFramePdu.timestamp = now.hour() << 22 | now.minute() << 16 | now.second() << 10 | now.msec();
+
     startFramePdu.frameId = frameId;
     endFramePdu.frameId = frameId;
 
