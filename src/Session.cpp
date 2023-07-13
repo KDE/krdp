@@ -159,6 +159,10 @@ Session::Session(Server *server, qintptr socketHandle)
 
 Session::~Session()
 {
+    if (d->state == State::Streaming) {
+        d->peer->Close(d->peer);
+    }
+
     if (d->thread.joinable()) {
         d->thread.request_stop();
         d->thread.join();
