@@ -74,6 +74,7 @@ public:
 
     bool initialize();
     void close();
+    Q_SIGNAL void closed();
 
     /**
      * Queue a frame to be sent to the client.

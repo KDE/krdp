@@ -4,6 +4,7 @@
 
 #include "VideoStream.h"
 
+#include <algorithm>
 #include <condition_variable>
 
 #include <QDateTime>
@@ -27,6 +28,40 @@ namespace clk = std::chrono;
 constexpr qsizetype MaxQueueSize = 10;
 
 constexpr clk::system_clock::duration FrameRateEstimateAveragePeriod = clk::seconds(1);
+
+struct RdpCapsInformation {
+    uint32_t version;
+    bool avcSupported;
+    RDPGFX_CAPSET capSet;
+};
+
+const char *capVersionToString(uint32_t version)
+{
+    switch (version) {
+    case RDPGFX_CAPVERSION_107:
+        return "RDPGFX_CAPVERSION_107";
+    case RDPGFX_CAPVERSION_106:
+        return "RDPGFX_CAPVERSION_106";
+    case RDPGFX_CAPVERSION_105:
+        return "RDPGFX_CAPVERSION_105";
+    case RDPGFX_CAPVERSION_104:
+        return "RDPGFX_CAPVERSION_104";
+    case RDPGFX_CAPVERSION_103:
+        return "RDPGFX_CAPVERSION_103";
+    case RDPGFX_CAPVERSION_102:
+        return "RDPGFX_CAPVERSION_102";
+    case RDPGFX_CAPVERSION_101:
+        return "RDPGFX_CAPVERSION_101";
+    case RDPGFX_CAPVERSION_10:
+        return "RDPGFX_CAPVERSION_10";
+    case RDPGFX_CAPVERSION_81:
+        return "RDPGFX_CAPVERSION_81";
+    case RDPGFX_CAPVERSION_8:
+        return "RDPGFX_CAPVERSION_8";
+    default:
+        return "UNKNOWN_VERSION";
+    }
+}
 
 BOOL gfxChannelIdAssigned(RdpgfxServerContext *context, uint32_t channelId)
 {
@@ -87,6 +122,7 @@ public:
 
     bool pendingReset = true;
     bool enabled = false;
+    bool capsConfirmed = false;
 
     std::jthread frameSubmissionThread;
     std::mutex frameQueueMutex;
@@ -172,6 +208,8 @@ void VideoStream::close()
         d->frameSubmissionThread.request_stop();
         d->frameSubmissionThread.join();
     }
+
+    Q_EMIT closed();
 }
 
 void VideoStream::queueFrame(const KRdp::VideoFrame &frame)
@@ -222,6 +260,63 @@ bool VideoStream::onChannelIdAssigned(uint32_t channelId)
 
 uint32_t VideoStream::onCapsAdvertise(const RDPGFX_CAPS_ADVERTISE_PDU *capsAdvertise)
 {
+    auto capsSets = capsAdvertise->capsSets;
+    auto count = capsAdvertise->capsSetCount;
+
+    std::vector<RdpCapsInformation> capsInformation;
+    capsInformation.reserve(count);
+
+    qCDebug(KRDP) << "Received caps:";
+    for (int i = 0; i < count; ++i) {
+        auto set = capsSets[i];
+
+        RdpCapsInformation caps;
+        caps.version = set.version;
+        caps.avcSupported = true;
+        caps.capSet = set;
+
+        qCDebug(KRDP) << " " << capVersionToString(caps.version) << "AVC:" << caps.avcSupported;
+
+        switch (set.version) {
+        case RDPGFX_CAPVERSION_107:
+        case RDPGFX_CAPVERSION_106:
+        case RDPGFX_CAPVERSION_105:
+        case RDPGFX_CAPVERSION_104:
+        case RDPGFX_CAPVERSION_103:
+        case RDPGFX_CAPVERSION_102:
+        case RDPGFX_CAPVERSION_101:
+        case RDPGFX_CAPVERSION_10:
+            if (set.flags & RDPGFX_CAPS_FLAG_AVC_DISABLED) {
+                caps.avcSupported = false;
+            }
+            break;
+        case RDPGFX_CAPVERSION_81:
+            if (!(set.flags & RDPGFX_CAPS_FLAG_AVC420_ENABLED)) {
+                caps.avcSupported = false;
+            }
+        }
+
+        capsInformation.push_back(caps);
+    }
+
+    auto firstWithAvc = std::find_if(capsInformation.begin(), capsInformation.end(), [](const RdpCapsInformation &caps) {
+        return caps.avcSupported;
+    });
+
+    if (firstWithAvc == capsInformation.end()) {
+        qCWarning(KRDP) << "Client has AVC disabled!";
+        close();
+        return CHANNEL_RC_INITIALIZATION_ERROR;
+    }
+
+    qCDebug(KRDP) << "Selected caps:" << capVersionToString(firstWithAvc->version);
+
+    RDPGFX_CAPS_CONFIRM_PDU capsConfirmPdu;
+    capsConfirmPdu.capsSet = &(firstWithAvc->capSet);
+    d->gfxContext->CapsConfirm(d->gfxContext.get(), &capsConfirmPdu);
+
+    d->capsConfirmed = true;
+
     return CHANNEL_RC_OK;
 }
 
@@ -283,7 +378,7 @@ void VideoStream::performReset(const QSize &size)
 
 void VideoStream::sendFrame(const VideoFrame &frame)
 {
-    if (!d->gfxContext) {
+    if (!d->gfxContext || !d->capsConfirmed) {
         return;
     }
 
