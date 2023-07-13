@@ -31,8 +31,9 @@ constexpr clk::system_clock::duration FrameRateEstimateAveragePeriod = clk::seco
 
 struct RdpCapsInformation {
     uint32_t version;
-    bool avcSupported;
     RDPGFX_CAPSET capSet;
+    bool avcSupported : 1 = false;
+    bool yuv420Supported : 1 = false;
 };
 
 const char *capVersionToString(uint32_t version)
@@ -272,47 +273,56 @@ uint32_t VideoStream::onCapsAdvertise(const RDPGFX_CAPS_ADVERTISE_PDU *capsAdver
 
         RdpCapsInformation caps;
         caps.version = set.version;
-        caps.avcSupported = true;
         caps.capSet = set;
-
-        qCDebug(KRDP) << " " << capVersionToString(caps.version) << "AVC:" << caps.avcSupported;
 
         switch (set.version) {
         case RDPGFX_CAPVERSION_107:
         case RDPGFX_CAPVERSION_106:
         case RDPGFX_CAPVERSION_105:
         case RDPGFX_CAPVERSION_104:
+            caps.yuv420Supported = true;
+            Q_FALLTHROUGH();
         case RDPGFX_CAPVERSION_103:
         case RDPGFX_CAPVERSION_102:
         case RDPGFX_CAPVERSION_101:
         case RDPGFX_CAPVERSION_10:
-            if (set.flags & RDPGFX_CAPS_FLAG_AVC_DISABLED) {
-                caps.avcSupported = false;
+            if (!(set.flags & RDPGFX_CAPS_FLAG_AVC_DISABLED)) {
+                caps.avcSupported = true;
             }
             break;
         case RDPGFX_CAPVERSION_81:
-            if (!(set.flags & RDPGFX_CAPS_FLAG_AVC420_ENABLED)) {
-                caps.avcSupported = false;
+            if (set.flags & RDPGFX_CAPS_FLAG_AVC420_ENABLED) {
+                caps.avcSupported = true;
+                caps.yuv420Supported = true;
             }
+            break;
+        case RDPGFX_CAPVERSION_8:
+            break;
         }
+
+        qCDebug(KRDP) << " " << capVersionToString(caps.version) << "AVC:" << caps.avcSupported << "YUV420:" << caps.yuv420Supported;
 
         capsInformation.push_back(caps);
     }
 
-    auto firstWithAvc = std::find_if(capsInformation.begin(), capsInformation.end(), [](const RdpCapsInformation &caps) {
-        return caps.avcSupported;
+    auto supported = std::any_of(capsInformation.begin(), capsInformation.end(), [](const RdpCapsInformation &caps) {
+        return caps.avcSupported && caps.yuv420Supported;
     });
 
-    if (firstWithAvc == capsInformation.end()) {
-        qCWarning(KRDP) << "Client has AVC disabled!";
+    if (!supported) {
+        qCWarning(KRDP) << "Client does not support H.264 in YUV420 mode!";
         close();
         return CHANNEL_RC_INITIALIZATION_ERROR;
     }
 
-    qCDebug(KRDP) << "Selected caps:" << capVersionToString(firstWithAvc->version);
+    auto maxVersion = std::max_element(capsInformation.begin(), capsInformation.end(), [](const auto &first, const auto &second) {
+        return first.version < second.version;
+    });
+
+    qCDebug(KRDP) << "Selected caps:" << capVersionToString(maxVersion->version);
 
     RDPGFX_CAPS_CONFIRM_PDU capsConfirmPdu;
-    capsConfirmPdu.capsSet = &(firstWithAvc->capSet);
+    capsConfirmPdu.capsSet = &(maxVersion->capSet);
     d->gfxContext->CapsConfirm(d->gfxContext.get(), &capsConfirmPdu);
 
     d->capsConfirmed = true;
