@@ -79,7 +79,7 @@ public:
     bool started = false;
     bool enabled = false;
     QSize size;
-    QRect logicalRect;
+    QSize logicalSize;
     int stream = -1;
     std::optional<quint32> frameRate = 60;
 };
@@ -110,10 +110,6 @@ PortalSession::PortalSession(Server *server)
         {QStringLiteral("session_handle_token"), createHandleToken()},
     };
     new PortalRequest(d->remoteInterface->CreateSession(parameters), this, &PortalSession::onCreateSession);
-
-    connect(qGuiApp, &QGuiApplication::screenAdded, this, &PortalSession::updateScreenLayout);
-    connect(qGuiApp, &QGuiApplication::screenRemoved, this, &PortalSession::updateScreenLayout);
-    updateScreenLayout();
 }
 
 PortalSession::~PortalSession()
@@ -162,7 +158,6 @@ void PortalSession::setVideoFrameRate(quint32 framerate)
 void PortalSession::setActiveStream(int stream)
 {
     d->stream = stream;
-    updateScreenLayout();
 }
 
 void PortalSession::sendEvent(QEvent *event)
@@ -193,8 +188,7 @@ void PortalSession::sendEvent(QEvent *event)
     case QEvent::MouseMove: {
         auto me = static_cast<QMouseEvent *>(event);
         auto position = me->globalPosition();
-        auto logicalPosition = QPointF{(position.x() / d->size.width()) * d->logicalRect.width() + d->logicalRect.x(),
-                                       (position.y() / d->size.height()) * d->logicalRect.height() + d->logicalRect.y()};
+        auto logicalPosition = QPointF{(position.x() / d->size.width()) * d->logicalSize.width(), (position.y() / d->size.height()) * d->logicalSize.height()};
         d->remoteInterface->NotifyPointerMotionAbsolute(d->sessionPath, QVariantMap{}, d->encodedStream->nodeId(), logicalPosition.x(), logicalPosition.y());
         break;
     }
@@ -300,6 +294,7 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
             }
             auto stream = streams.at(d->stream >= 0 ? d->stream : 0);
 
+            d->logicalSize = qdbus_cast<QSize>(stream.map.value(u"size"_qs));
             auto fd = reply.value();
             d->encodedStream = std::make_unique<PipeWireEncodedStream>();
             d->encodedStream->setNodeId(stream.nodeId);
@@ -335,21 +330,4 @@ void PortalSession::onPacketReceived(const PipeWireEncodedStream::Packet &data)
     Q_EMIT frameReceived(frameData);
 }
 
-void PortalSession::updateScreenLayout()
-{
-    const auto screens = QGuiApplication::screens();
-
-    if (d->stream < 0 || d->stream >= screens.size()) {
-        QRegion logicalRegion;
-        for (auto screen : screens) {
-            logicalRegion += screen->geometry();
-        }
-        d->logicalRect = logicalRegion.boundingRect();
-    } else {
-        auto screenGeometry = screens.at(d->stream)->geometry();
-        auto primaryGeometry = qGuiApp->primaryScreen()->geometry();
-        screenGeometry.moveTopLeft(-primaryGeometry.topLeft());
-        d->logicalRect = screenGeometry;
-    }
-}
 }

@@ -77,7 +77,6 @@ private:
     void onSourcesSelected(uint code, const QVariantMap &result);
     void onSessionStarted(uint code, const QVariantMap &result);
     void onPacketReceived(const PipeWireEncodedStream::Packet &data);
-    void updateScreenLayout();
 
     class Private;
     const std::unique_ptr<Private> d;
