@@ -151,6 +151,11 @@ Session::Session(Server *server, qintptr socketHandle)
 
     d->inputHandler = std::make_unique<InputHandler>(this);
     d->videoStream = std::make_unique<VideoStream>(this);
+    connect(d->videoStream.get(), &VideoStream::closed, this, [this]() {
+        if (d->state == State::Streaming) {
+            d->peer->Close(d->peer);
+        }
+    });
     d->cursor = std::make_unique<Cursor>(this);
     d->networkDetection = std::make_unique<NetworkDetection>(this);
 
