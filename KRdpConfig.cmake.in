@@ -1,7 +1,7 @@
 @PACKAGE_INIT@
 
 include(CMakeFindDependencyMacro)
-find_dependency(Qt@QT_MAJOR_VERSION@Core @REQUIRED_QT_VERSION@)
+find_dependency(Qt6Core @REQUIRED_QT_VERSION@)
 
 find_dependency(ECM @KF_DEP_VERSION@)
 
