@@ -4,3 +4,4 @@
 .flatpak-builder
 .cache
 build*/
+CMakeLists.txt.user
