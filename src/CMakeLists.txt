@@ -3,13 +3,21 @@ add_library(KRdp)
 
 target_sources(KRdp PRIVATE
     Server.cpp
+    Server.h
     Session.cpp
+    Session.h
     InputHandler.cpp
+    InputHandler.h
     PeerContext.cpp
+    PeerContext.h
     PortalSession.cpp
+    PortalSession.h
     VideoStream.cpp
+    VideoStream.h
     Cursor.cpp
+    Cursor.h
     NetworkDetection.cpp
+    NetworkDetection.h
 )
 
 ecm_qt_declare_logging_category(KRdp
