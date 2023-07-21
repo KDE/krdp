@@ -9,7 +9,7 @@ target_sources(KRdp PRIVATE
     InputHandler.cpp
     InputHandler.h
     PeerContext.cpp
-    PeerContext.h
+    PeerContext_p.h
     PortalSession.cpp
     PortalSession.h
     VideoStream.cpp
