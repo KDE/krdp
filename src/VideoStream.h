@@ -69,8 +69,8 @@ class KRDP_EXPORT VideoStream : public QObject
     Q_OBJECT
 
 public:
-    VideoStream(Session *session);
-    ~VideoStream();
+    explicit VideoStream(Session *session);
+    ~VideoStream() override;
 
     bool initialize();
     void close();

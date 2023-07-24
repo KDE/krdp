@@ -28,7 +28,7 @@ class KRDP_EXPORT InputHandler : public QObject
     Q_OBJECT
 
 public:
-    InputHandler(Session *session);
+    explicit InputHandler(Session *session);
     ~InputHandler() override;
 
     /**

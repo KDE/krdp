@@ -28,7 +28,7 @@ public:
         PendingResults,
     };
 
-    NetworkDetection(Session *session);
+    explicit NetworkDetection(Session *session);
     ~NetworkDetection();
 
     Q_PROPERTY(std::chrono::system_clock::duration minimumRTT READ minimumRTT NOTIFY rttChanged)

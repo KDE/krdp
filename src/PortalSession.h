@@ -36,8 +36,8 @@ class KRDP_EXPORT PortalSession : public QObject
     Q_OBJECT
 
 public:
-    PortalSession(Server *server);
-    ~PortalSession();
+    explicit PortalSession(Server *server);
+    ~PortalSession() override;
 
     Q_SIGNAL void started();
     Q_SIGNAL void error();
