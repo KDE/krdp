@@ -152,7 +152,8 @@ Session::Session(Server *server, qintptr socketHandle)
     d->inputHandler = std::make_unique<InputHandler>(this);
     d->videoStream = std::make_unique<VideoStream>(this);
     connect(d->videoStream.get(), &VideoStream::closed, this, [this]() {
-        if (d->state == State::Streaming) {
+        if (d->state == State::Running || d->state == State::Streaming) {
+            qCDebug(KRDP) << "Video stream closed, closing session";
             d->peer->Close(d->peer);
         }
     });
@@ -191,6 +192,11 @@ void Session::setState(KRdp::Session::State newState)
 
     d->state = newState;
     Q_EMIT stateChanged();
+}
+
+void Session::close()
+{
+    d->peer->Close(d->peer);
 }
 
 InputHandler *Session::inputHandler() const

@@ -201,9 +201,11 @@ bool VideoStream::initialize()
 
 void VideoStream::close()
 {
-    if (d->gfxContext) {
-        d->gfxContext->Close(d->gfxContext.get());
+    if (!d->gfxContext) {
+        return;
     }
+
+    d->gfxContext->Close(d->gfxContext.get());
 
     if (d->frameSubmissionThread.joinable()) {
         d->frameSubmissionThread.request_stop();
@@ -311,8 +313,8 @@ uint32_t VideoStream::onCapsAdvertise(const RDPGFX_CAPS_ADVERTISE_PDU *capsAdver
 
     if (!supported) {
         qCWarning(KRDP) << "Client does not support H.264 in YUV420 mode!";
-        close();
-        return CHANNEL_RC_INITIALIZATION_ERROR;
+        d->session->close();
+        return CHANNEL_RC_OK;
     }
 
     auto maxVersion = std::max_element(capsInformation.begin(), capsInformation.end(), [](const auto &first, const auto &second) {

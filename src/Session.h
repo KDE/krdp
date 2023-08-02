@@ -64,6 +64,8 @@ public:
     State state() const;
     Q_SIGNAL void stateChanged();
 
+    void close();
+
     /**
      * The InputHandler instance associated with this session.
      */
