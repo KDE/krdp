@@ -43,9 +43,11 @@ public:
     Q_SIGNAL void error();
 
     bool streamingEnabled() const;
-    void setStreamingEnabled(bool enable);
     void setVideoFrameRate(quint32 framerate);
     void setActiveStream(int stream);
+
+    void requestStreamingEnable(QObject *requester);
+    void requestStreamingDisable(QObject *requester);
 
     /**
      * Send a new event to the portal.

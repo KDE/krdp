@@ -82,6 +82,8 @@ public:
     QSize logicalSize;
     int stream = -1;
     std::optional<quint32> frameRate = 60;
+
+    QSet<QObject *> enableRequests;
 };
 
 QString createHandleToken()
@@ -139,14 +141,6 @@ bool PortalSession::streamingEnabled() const
     return false;
 }
 
-void PortalSession::setStreamingEnabled(bool enable)
-{
-    d->enabled = enable;
-    if (d->encodedStream) {
-        d->encodedStream->setActive(enable);
-    }
-}
-
 void PortalSession::setVideoFrameRate(quint32 framerate)
 {
     d->frameRate = framerate;
@@ -158,6 +152,33 @@ void PortalSession::setVideoFrameRate(quint32 framerate)
 void PortalSession::setActiveStream(int stream)
 {
     d->stream = stream;
+}
+
+void PortalSession::requestStreamingEnable(QObject *requester)
+{
+    d->enableRequests.insert(requester);
+    connect(requester, &QObject::destroyed, this, &PortalSession::requestStreamingDisable);
+    if (d->enableRequests.size() > 0) {
+        d->enabled = true;
+        if (d->encodedStream) {
+            d->encodedStream->setActive(true);
+        }
+    }
+}
+
+void PortalSession::requestStreamingDisable(QObject *requester)
+{
+    if (!d->enableRequests.contains(requester)) {
+        return;
+    }
+    disconnect(requester, &QObject::destroyed, this, &PortalSession::requestStreamingDisable);
+    d->enableRequests.remove(requester);
+    if (d->enableRequests.size() == 0) {
+        d->enabled = false;
+        if (d->encodedStream) {
+            d->encodedStream->setActive(false);
+        }
+    }
 }
 
 void PortalSession::sendEvent(QEvent *event)
