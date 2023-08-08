@@ -16,7 +16,7 @@ The server will then listen on all interfaces on port 3389, and clients can conn
 
 To connect to the server, make sure to pass the username and password the server was started with.
 
-Currently, the main client that has been used for testing and is confirmed to work is the FreeRDP client. Launch the FreeRDP client with the following command: `xfreerdp /u:<username> /p:<password> /gfx -clipboard /v:<ip_address>:3389`, filling in the username, password and IP address as appropriate. If testing locally, substitute `localhost` for an IP address.
+Currently, the main client that has been used for testing and is confirmed to work is the FreeRDP client. Launch the FreeRDP client with the following command: `xfreerdp /u:<username> /p:<password> -clipboard /v:<ip_address>:3389`, filling in the username, password and IP address as appropriate. If testing locally, substitute `localhost` for an IP address.
 
 # Security considerations
 
@@ -38,6 +38,8 @@ The following command line options are available for the example server:
     <dt>--certificate-key <certificate-key></dt>  
     <dd>The path to the TLS certificate key that matches the provided certificate.</dd>
     <dt>--monitor <monitor></dt>The index of the monitor to use for streaming video. If not supplied the whole workspace is used.</dd>
+    <dt>--quality <quality></dt>
+    <dd>Set the video quality, from 0 (lowest) to 100 (highest).</dd>
 </dl>
 
 # Known Working and Not-Working Clients
@@ -53,7 +55,6 @@ The following clients are known not to work:
 
 - Krdc, KDE's remote desktop client. While it supports RDP it does not support
 the graphics pipeline.
-screen. Input does work however.
 - Microsoft's Remote Desktop client for Android. While it should support H.264
 it seems to not enable it.
 
@@ -78,3 +79,6 @@ the same application requests a new connection. As a workaround, the server
 will open a remote desktop session on startup and reuse that session for all
 RDP connections. Additionally, monitor selection can be done using the
 `--monitor` command line option.
+- Input on a high DPI screen may be offset incorrectly. This is due to a bug in
+the Remote Desktop Portal that has been fixed in the meantime. The fix will be 
+released with KDE Plasma 5.27.8.
