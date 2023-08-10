@@ -2,10 +2,9 @@
 add_library(KRdp)
 
 target_sources(KRdp PRIVATE
+    RdpSession.cpp
     Server.cpp
     Server.h
-    Session.cpp
-    Session.h
     InputHandler.cpp
     InputHandler.h
     PeerContext.cpp

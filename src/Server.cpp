@@ -12,7 +12,7 @@
 #include <freerdp/freerdp.h>
 #include <winpr/ssl.h>
 
-#include "Session.h"
+#include "RdpSession.h"
 
 #include "krdp_logging.h"
 
@@ -21,7 +21,7 @@ using namespace KRdp;
 class KRDP_NO_EXPORT Server::Private
 {
 public:
-    std::vector<std::unique_ptr<Session>> sessions;
+    std::vector<std::unique_ptr<RdpSession>> sessions;
     rdp_settings *settings = nullptr;
 
     QHostAddress address = QHostAddress::LocalHost;
@@ -167,10 +167,10 @@ void Server::setTlsCertificateKey(const std::filesystem::path &newTlsCertificate
 
 void Server::incomingConnection(qintptr handle)
 {
-    auto session = std::make_unique<Session>(this, handle);
+    auto session = std::make_unique<RdpSession>(this, handle);
     auto sessionPtr = session.get();
-    connect(session.get(), &Session::stateChanged, this, [this, sessionPtr]() {
-        if (sessionPtr->state() == Session::State::Closed) {
+    connect(session.get(), &RdpSession::stateChanged, this, [this, sessionPtr]() {
+        if (sessionPtr->state() == RdpSession::State::Closed) {
             auto itr = std::find_if(d->sessions.begin(), d->sessions.end(), [sessionPtr](auto &session) {
                 return session.get() == sessionPtr;
             });

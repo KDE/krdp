@@ -13,8 +13,8 @@
 #include "Cursor.h"
 #include "InputHandler.h"
 #include "PortalSession.h"
+#include "RdpSession.h"
 #include "Server.h"
-#include "Session.h"
 #include "VideoStream.h"
 
 int main(int argc, char **argv)
@@ -103,7 +103,7 @@ int main(int argc, char **argv)
         QCoreApplication::exit(-1);
     });
 
-    QObject::connect(&server, &KRdp::Server::newSession, [&portalSession](KRdp::Session *newSession) {
+    QObject::connect(&server, &KRdp::Server::newSession, [&portalSession](KRdp::RdpSession *newSession) {
         QObject::connect(portalSession.get(), &KRdp::PortalSession::frameReceived, newSession, [portalSession, newSession](const KRdp::VideoFrame &frame) {
             newSession->videoStream()->queueFrame(frame);
         });

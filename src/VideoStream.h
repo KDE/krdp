@@ -20,7 +20,7 @@
 namespace KRdp
 {
 
-class Session;
+class RdpSession;
 
 /**
  * A frame of compressed video data.
@@ -69,7 +69,7 @@ class KRDP_EXPORT VideoStream : public QObject
     Q_OBJECT
 
 public:
-    explicit VideoStream(Session *session);
+    explicit VideoStream(RdpSession *session);
     ~VideoStream() override;
 
     bool initialize();

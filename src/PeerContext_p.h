@@ -9,7 +9,7 @@
 namespace KRdp
 {
 
-class Session;
+class RdpSession;
 class InputHandler;
 class VideoStream;
 class NetworkDetection;
@@ -23,7 +23,7 @@ struct PeerContext {
     // extension mechanism works.
     rdpContext _p;
 
-    Session *session = nullptr;
+    RdpSession *session = nullptr;
     InputHandler *inputHandler = nullptr;
     VideoStream *stream = nullptr;
     NetworkDetection *networkDetection = nullptr;

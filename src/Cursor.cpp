@@ -9,7 +9,7 @@
 #include <freerdp/freerdp.h>
 #include <freerdp/peer.h>
 
-#include "Session.h"
+#include "RdpSession.h"
 
 using namespace KRdp;
 
@@ -29,7 +29,7 @@ bool Cursor::CursorUpdate::operator==(const Cursor::CursorUpdate &other) const
 class KRDP_NO_EXPORT Cursor::Private
 {
 public:
-    Session *session;
+    RdpSession *session;
 
     CursorType cursorType = CursorType::SystemDefault;
 
@@ -38,7 +38,7 @@ public:
     QHash<uint32_t, CursorUpdate> cursorCache;
 };
 
-Cursor::Cursor(Session *session)
+Cursor::Cursor(RdpSession *session)
     : QObject(nullptr)
     , d(std::make_unique<Private>())
 {
@@ -51,7 +51,7 @@ Cursor::~Cursor()
 
 void Cursor::update(const Cursor::CursorUpdate &update)
 {
-    if (d->session->state() != Session::State::Streaming) {
+    if (d->session->state() != RdpSession::State::Streaming) {
         return;
     }
 

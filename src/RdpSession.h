@@ -32,7 +32,7 @@ class NetworkDetection;
  * Note that this class starts its own thread for performing the actual
  * communication.
  */
-class KRDP_EXPORT Session : public QObject
+class KRDP_EXPORT RdpSession : public QObject
 {
     Q_OBJECT
 
@@ -55,8 +55,8 @@ public:
      * \param socketHandle A file handle to the socket this session should use
      *                     for communication.
      */
-    explicit Session(Server *server, qintptr socketHandle);
-    ~Session() override;
+    explicit RdpSession(Server *server, qintptr socketHandle);
+    ~RdpSession() override;
 
     /**
      * The current session state.

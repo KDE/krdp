@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 
-#include "Session.h"
+#include "RdpSession.h"
 
 #include <filesystem>
 #include <optional>
@@ -121,7 +121,7 @@ BOOL suppressOutput(rdpContext *context, uint8_t allow, const RECTANGLE_16 *)
     return FALSE;
 }
 
-class KRDP_NO_EXPORT Session::Private
+class KRDP_NO_EXPORT RdpSession::Private
 {
 public:
     Server *server = nullptr;
@@ -142,7 +142,7 @@ public:
     QTemporaryFile samFile;
 };
 
-Session::Session(Server *server, qintptr socketHandle)
+RdpSession::RdpSession(Server *server, qintptr socketHandle)
     : QObject(nullptr)
     , d(std::make_unique<Private>())
 {
@@ -160,10 +160,10 @@ Session::Session(Server *server, qintptr socketHandle)
     d->cursor = std::make_unique<Cursor>(this);
     d->networkDetection = std::make_unique<NetworkDetection>(this);
 
-    QMetaObject::invokeMethod(this, &Session::initialize, Qt::QueuedConnection);
+    QMetaObject::invokeMethod(this, &RdpSession::initialize, Qt::QueuedConnection);
 }
 
-Session::~Session()
+RdpSession::~RdpSession()
 {
     if (d->state == State::Streaming) {
         d->peer->Close(d->peer);
@@ -179,12 +179,12 @@ Session::~Session()
     }
 }
 
-Session::State Session::state() const
+RdpSession::State RdpSession::state() const
 {
     return d->state;
 }
 
-void Session::setState(KRdp::Session::State newState)
+void RdpSession::setState(KRdp::RdpSession::State newState)
 {
     if (newState == d->state) {
         return;
@@ -194,32 +194,32 @@ void Session::setState(KRdp::Session::State newState)
     Q_EMIT stateChanged();
 }
 
-void Session::close()
+void RdpSession::close()
 {
     d->peer->Close(d->peer);
 }
 
-InputHandler *Session::inputHandler() const
+InputHandler *RdpSession::inputHandler() const
 {
     return d->inputHandler.get();
 }
 
-KRdp::VideoStream *Session::videoStream() const
+KRdp::VideoStream *RdpSession::videoStream() const
 {
     return d->videoStream.get();
 }
 
-Cursor *Session::cursor() const
+Cursor *RdpSession::cursor() const
 {
     return d->cursor.get();
 }
 
-NetworkDetection *Session::networkDetection() const
+NetworkDetection *RdpSession::networkDetection() const
 {
     return d->networkDetection.get();
 }
 
-void Session::initialize()
+void RdpSession::initialize()
 {
     setState(State::Starting);
 
@@ -337,11 +337,11 @@ void Session::initialize()
     qCDebug(KRDP) << "Session setup completed, start processing...";
 
     // Perform actual communication on a separate thread.
-    d->thread = std::jthread(std::bind(&Session::run, this, std::placeholders::_1));
+    d->thread = std::jthread(std::bind(&RdpSession::run, this, std::placeholders::_1));
     pthread_setname_np(d->thread.native_handle(), "krdp_session");
 }
 
-void Session::run(std::stop_token stopToken)
+void RdpSession::run(std::stop_token stopToken)
 {
     auto context = reinterpret_cast<PeerContext *>(d->peer->context);
     auto channelEvent = WTSVirtualChannelManagerGetEventHandle(context->virtualChannelManager);
@@ -392,7 +392,7 @@ void Session::run(std::stop_token stopToken)
     onClose();
 }
 
-bool Session::onCapabilities()
+bool RdpSession::onCapabilities()
 {
     auto settings = d->peer->context->settings;
     // We only support GraphicsPipeline clients currently as that is required
@@ -420,12 +420,12 @@ bool Session::onCapabilities()
     return true;
 }
 
-bool Session::onActivate()
+bool RdpSession::onActivate()
 {
     return true;
 }
 
-bool Session::onPostConnect()
+bool RdpSession::onPostConnect()
 {
     qCInfo(KRDP) << "New client connected:" << d->peer->hostname << freerdp_peer_os_major_type_string(d->peer) << freerdp_peer_os_minor_type_string(d->peer);
 
@@ -435,14 +435,14 @@ bool Session::onPostConnect()
     return true;
 }
 
-bool Session::onClose()
+bool RdpSession::onClose()
 {
     d->videoStream->close();
     setState(State::Closed);
     return true;
 }
 
-bool Session::onSuppressOutput(uint8_t allow)
+bool RdpSession::onSuppressOutput(uint8_t allow)
 {
     if (allow) {
         d->videoStream->setEnabled(true);
@@ -453,12 +453,12 @@ bool Session::onSuppressOutput(uint8_t allow)
     return true;
 }
 
-freerdp_peer *Session::rdpPeer() const
+freerdp_peer *RdpSession::rdpPeer() const
 {
     return d->peer;
 }
 
-rdpContext *Session::rdpPeerContext() const
+rdpContext *RdpSession::rdpPeerContext() const
 {
     return d->peer->context;
 }

@@ -16,7 +16,7 @@
 namespace KRdp
 {
 
-class Session;
+class RdpSession;
 
 /**
  * Core RDP server class.
@@ -107,7 +107,7 @@ public:
      *
      * \param session The new session that was just started.
      */
-    Q_SIGNAL void newSession(Session *session);
+    Q_SIGNAL void newSession(RdpSession *session);
 
 protected:
     /**
@@ -116,7 +116,7 @@ protected:
     void incomingConnection(qintptr handle) override;
 
 private:
-    friend class Session;
+    friend class RdpSession;
     rdp_settings *rdpSettings() const;
 
     class Private;

@@ -16,7 +16,7 @@
 namespace KRdp
 {
 
-class Session;
+class RdpSession;
 
 /**
  * This class processes RDP input events and converts them to Qt events.
@@ -28,7 +28,7 @@ class KRDP_EXPORT InputHandler : public QObject
     Q_OBJECT
 
 public:
-    explicit InputHandler(Session *session);
+    explicit InputHandler(RdpSession *session);
     ~InputHandler() override;
 
     /**

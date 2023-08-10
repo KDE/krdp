@@ -77,11 +77,11 @@ BOOL inputUnicodeKeyboardEvent(rdpInput *input, uint16_t flags, uint16_t code)
 class KRDP_NO_EXPORT InputHandler::Private
 {
 public:
-    Session *session;
+    RdpSession *session;
     rdpInput *input;
 };
 
-InputHandler::InputHandler(KRdp::Session *session)
+InputHandler::InputHandler(KRdp::RdpSession *session)
     : QObject(nullptr)
     , d(std::make_unique<Private>())
 {

@@ -10,7 +10,7 @@
 #include <QTimer>
 
 #include "PeerContext_p.h"
-#include "Session.h"
+#include "RdpSession.h"
 
 #include "krdp_logging.h"
 
@@ -51,7 +51,7 @@ class NetworkDetection::Private
 public:
     uint32_t nextSequenceNumber();
 
-    Session *session = nullptr;
+    RdpSession *session = nullptr;
     rdpAutoDetect *rdpAutodetect = nullptr;
 
     State state = State::None;
@@ -71,7 +71,7 @@ public:
     clk::system_clock::time_point lastNetworkResult;
 };
 
-NetworkDetection::NetworkDetection(Session *session)
+NetworkDetection::NetworkDetection(RdpSession *session)
     : QObject(nullptr)
     , d(std::make_unique<Private>())
 {
@@ -119,7 +119,7 @@ void NetworkDetection::stopBandwidthMeasure()
 
 void NetworkDetection::update()
 {
-    if (d->session->state() != Session::State::Streaming) {
+    if (d->session->state() != RdpSession::State::Streaming) {
         return;
     }
 
