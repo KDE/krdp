@@ -1,5 +1,10 @@
-
 add_library(KRdp)
+
+qt6_generate_wayland_protocol_client_sources(KRdp FILES
+    ${PLASMA_WAYLAND_PROTOCOLS_DIR}/zkde-screencast-unstable-v1.xml
+    ${PLASMA_WAYLAND_PROTOCOLS_DIR}/fake-input.xml
+    ${Wayland_DATADIR}/wayland.xml
+)
 
 target_sources(KRdp PRIVATE
     RdpSession.cpp
@@ -13,10 +18,13 @@ target_sources(KRdp PRIVATE
     PortalSession.h
     VideoStream.cpp
     VideoStream.h
+    PlasmaSession.cpp
     Cursor.cpp
     Cursor.h
     NetworkDetection.cpp
     NetworkDetection.h
+
+    screencasting.cpp
 )
 
 ecm_qt_declare_logging_category(KRdp
@@ -50,6 +58,9 @@ target_link_libraries(KRdp PUBLIC
     Qt::Gui
     Qt::Network
     Qt::DBus
+    Qt::WaylandClient
+    Qt::GuiPrivate
+
     freerdp
     winpr
     freerdp-server
