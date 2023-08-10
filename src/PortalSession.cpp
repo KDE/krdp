@@ -73,17 +73,6 @@ public:
     std::unique_ptr<OrgFreedesktopPortalScreenCastInterface> screencastInterface;
 
     QDBusObjectPath sessionPath;
-
-    std::unique_ptr<PipeWireEncodedStream> encodedStream;
-
-    bool started = false;
-    bool enabled = false;
-    QSize size;
-    QSize logicalSize;
-    int stream = -1;
-    std::optional<quint32> frameRate = 60;
-    QSet<QObject *> enableRequests;
-    std::optional<quint8> quality = 100;
 };
 
 QString createHandleToken()
@@ -92,7 +81,7 @@ QString createHandleToken()
 }
 
 PortalSession::PortalSession(Server *server)
-    : QObject(nullptr)
+    : AbstractSession(server)
     , d(std::make_unique<Private>())
 {
     d->server = server;
@@ -116,10 +105,6 @@ PortalSession::PortalSession(Server *server)
 
 PortalSession::~PortalSession()
 {
-    if (d->encodedStream) {
-        d->encodedStream->setActive(false);
-    }
-
     // Make sure to clear any modifier keys that were pressed when the session closed, otherwise
     // we risk those keys getting stuck and the original session becoming unusable.
     for (auto keycode : {KEY_LEFTCTRL, KEY_RIGHTCTRL, KEY_LEFTSHIFT, KEY_RIGHTSHIFT, KEY_LEFTALT, KEY_RIGHTALT, KEY_LEFTMETA, KEY_RIGHTMETA}) {
@@ -133,65 +118,10 @@ PortalSession::~PortalSession()
     qCDebug(KRDP) << "Closing Freedesktop Portal Session";
 }
 
-bool PortalSession::streamingEnabled() const
-{
-    if (d->encodedStream) {
-        return d->encodedStream->isActive();
-    }
-    return false;
-}
-
-void PortalSession::setVideoFrameRate(quint32 framerate)
-{
-    d->frameRate = framerate;
-    if (d->encodedStream) {
-        d->encodedStream->setMaxFramerate({framerate, 1});
-    }
-}
-
-void PortalSession::setActiveStream(int stream)
-{
-    d->stream = stream;
-}
-
-void PortalSession::requestStreamingEnable(QObject *requester)
-{
-    d->enableRequests.insert(requester);
-    connect(requester, &QObject::destroyed, this, &PortalSession::requestStreamingDisable);
-    if (d->enableRequests.size() > 0) {
-        d->enabled = true;
-        if (d->encodedStream) {
-            d->encodedStream->setActive(true);
-        }
-    }
-}
-
-void PortalSession::requestStreamingDisable(QObject *requester)
-{
-    if (!d->enableRequests.contains(requester)) {
-        return;
-    }
-    disconnect(requester, &QObject::destroyed, this, &PortalSession::requestStreamingDisable);
-    d->enableRequests.remove(requester);
-    if (d->enableRequests.size() == 0) {
-        d->enabled = false;
-        if (d->encodedStream) {
-            d->encodedStream->setActive(false);
-        }
-    }
-}
-
-void PortalSession::setVideoQuality(quint8 quality)
-{
-    d->quality = quality;
-    if (d->encodedStream) {
-        d->encodedStream->setQuality(quality);
-    }
-}
-
 void PortalSession::sendEvent(QEvent *event)
 {
-    if (!d->started || !d->encodedStream) {
+    auto encodedStream = stream();
+    if (!encodedStream || !encodedStream->isActive()) {
         return;
     }
 
@@ -217,8 +147,8 @@ void PortalSession::sendEvent(QEvent *event)
     case QEvent::MouseMove: {
         auto me = static_cast<QMouseEvent *>(event);
         auto position = me->globalPosition();
-        auto logicalPosition = QPointF{(position.x() / d->size.width()) * d->logicalSize.width(), (position.y() / d->size.height()) * d->logicalSize.height()};
-        d->remoteInterface->NotifyPointerMotionAbsolute(d->sessionPath, QVariantMap{}, d->encodedStream->nodeId(), logicalPosition.x(), logicalPosition.y());
+        auto logicalPosition = QPointF{(position.x() / size().width()) * logicalSize().width(), (position.y() / size().height()) * logicalSize().height()};
+        d->remoteInterface->NotifyPointerMotionAbsolute(d->sessionPath, QVariantMap{}, encodedStream->nodeId(), logicalPosition.x(), logicalPosition.y());
         break;
     }
     case QEvent::Wheel: {
@@ -270,7 +200,7 @@ void PortalSession::onDevicesSelected(uint code, const QVariantMap & /*result*/)
 
     auto parameters = QVariantMap{
         {QStringLiteral("types"), 1u}, // only MONITOR is supported
-        {QStringLiteral("multiple"), d->stream >= 0},
+        {QStringLiteral("multiple"), activeStream() >= 0},
         {QStringLiteral("handle_token"), createHandleToken()},
     };
     new PortalRequest(d->screencastInterface->SelectSources(d->sessionPath, parameters), this, &PortalSession::onSourcesSelected);
@@ -317,32 +247,22 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
         if (reply.isValid()) {
             qCDebug(KRDP) << "Started Freedesktop Portal session";
 
-            if (d->stream >= streams.size()) {
+            if (activeStream() >= streams.size()) {
                 qCWarning(KRDP) << "Requested monitor index out of range, using first monitor";
-                d->stream = 0;
+                setActiveStream(0);
             }
-            auto stream = streams.at(d->stream >= 0 ? d->stream : 0);
+            auto stream = streams.at(activeStream() >= 0 ? activeStream() : 0);
 
-            d->logicalSize = qdbus_cast<QSize>(stream.map.value(u"size"_qs));
+            setLogicalSize(qdbus_cast<QSize>(stream.map.value(u"size"_qs)));
             auto fd = reply.value();
-            d->encodedStream = std::make_unique<PipeWireEncodedStream>();
-            d->encodedStream->setNodeId(stream.nodeId);
-            d->encodedStream->setFd(fd.takeFileDescriptor());
-            d->encodedStream->setEncoder(PipeWireEncodedStream::H264Baseline);
-            if (d->frameRate) {
-                d->encodedStream->setMaxFramerate({d->frameRate.value(), 1});
-            }
-            if (d->quality) {
-                d->encodedStream->setQuality(d->quality.value());
-            }
-            connect(d->encodedStream.get(), &PipeWireEncodedStream::newPacket, this, &PortalSession::onPacketReceived);
-            connect(d->encodedStream.get(), &PipeWireEncodedStream::sizeChanged, this, [this](const QSize &size) {
-                d->size = size;
-            });
-            connect(d->encodedStream.get(), &PipeWireEncodedStream::cursorChanged, this, &PortalSession::cursorUpdate);
-            d->started = true;
-            Q_EMIT started();
-            d->encodedStream->setActive(d->enabled);
+            auto encodedStream = this->stream();
+            encodedStream->setNodeId(stream.nodeId);
+            encodedStream->setFd(fd.takeFileDescriptor());
+            encodedStream->setEncoder(PipeWireEncodedStream::H264Baseline);
+            connect(encodedStream, &PipeWireEncodedStream::newPacket, this, &PortalSession::onPacketReceived);
+            connect(encodedStream, &PipeWireEncodedStream::sizeChanged, this, &PortalSession::setSize);
+            connect(encodedStream, &PipeWireEncodedStream::cursorChanged, this, &PortalSession::cursorUpdate);
+            setStarted(true);
         } else {
             qCWarning(KRDP) << "Could not open pipewire remote";
             Q_EMIT error();
@@ -355,7 +275,7 @@ void PortalSession::onPacketReceived(const PipeWireEncodedStream::Packet &data)
 {
     VideoFrame frameData;
 
-    frameData.size = d->size;
+    frameData.size = size();
     frameData.data = data.data();
     frameData.isKeyFrame = data.isKeyFrame();
 

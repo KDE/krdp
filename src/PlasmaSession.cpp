@@ -153,44 +153,28 @@ class KRDP_NO_EXPORT PlasmaSession::Private
 public:
     Server *server = nullptr;
 
-    std::unique_ptr<PipeWireEncodedStream> encodedStream;
-
-    bool started = false;
-    bool enabled = false;
-    QSize size;
-    QSize logicalSize;
-    int stream = -1;
-    std::optional<quint32> frameRate = 60;
     Screencasting m_screencasting;
     ScreencastingStream *request = nullptr;
     FakeInput *remoteInterface = nullptr;
 };
 
 PlasmaSession::PlasmaSession(Server *server)
-    : QObject(nullptr)
+    : AbstractSession(server)
     , d(std::make_unique<Private>())
 {
-    d->server = server;
     d->request = d->m_screencasting.createWorkspaceStream(Screencasting::Metadata);
     connect(d->request, &ScreencastingStream::failed, this, &PlasmaSession::error);
     connect(d->request, &ScreencastingStream::created, this, [this](uint nodeId) {
-        qCDebug(KRDP) << "Started Freedesktop Portal session";
+        qCDebug(KRDP) << "Started Plasma session";
 
-        d->logicalSize = d->request->size();
-        d->encodedStream = std::make_unique<PipeWireEncodedStream>();
-        d->encodedStream->setNodeId(nodeId);
-        d->encodedStream->setEncoder(PipeWireEncodedStream::H264Baseline);
-        if (d->frameRate) {
-            d->encodedStream->setMaxFramerate({d->frameRate.value(), 1});
-        }
-        connect(d->encodedStream.get(), &PipeWireEncodedStream::newPacket, this, &PlasmaSession::onPacketReceived);
-        connect(d->encodedStream.get(), &PipeWireEncodedStream::sizeChanged, this, [this](const QSize &size) {
-            d->size = size;
-        });
-        connect(d->encodedStream.get(), &PipeWireEncodedStream::cursorChanged, this, &PlasmaSession::cursorUpdate);
-        d->started = true;
-        Q_EMIT started();
-        d->encodedStream->setActive(d->enabled);
+        setLogicalSize(d->request->size());
+        auto encodedStream = stream();
+        encodedStream->setNodeId(nodeId);
+        encodedStream->setEncoder(PipeWireEncodedStream::H264Baseline);
+        connect(encodedStream, &PipeWireEncodedStream::newPacket, this, &PlasmaSession::onPacketReceived);
+        connect(encodedStream, &PipeWireEncodedStream::sizeChanged, this, &PlasmaSession::setSize);
+        connect(encodedStream, &PipeWireEncodedStream::cursorChanged, this, &PlasmaSession::cursorUpdate);
+        setStarted(true);
     });
     d->remoteInterface = new FakeInput();
 }
@@ -200,38 +184,10 @@ PlasmaSession::~PlasmaSession()
     qCDebug(KRDP) << "Closing Plasma Remote Session";
 }
 
-bool PlasmaSession::streamingEnabled() const
-{
-    if (d->encodedStream) {
-        return d->encodedStream->isActive();
-    }
-    return false;
-}
-
-void PlasmaSession::setStreamingEnabled(bool enable)
-{
-    d->enabled = enable;
-    if (d->encodedStream) {
-        d->encodedStream->setActive(enable);
-    }
-}
-
-void PlasmaSession::setVideoFrameRate(quint32 framerate)
-{
-    d->frameRate = framerate;
-    if (d->encodedStream) {
-        d->encodedStream->setMaxFramerate({framerate, 1});
-    }
-}
-
-void PlasmaSession::setActiveStream(int stream)
-{
-    d->stream = stream;
-}
-
 void PlasmaSession::sendEvent(QEvent *event)
 {
-    if (!d->started || !d->encodedStream) {
+    auto encodedStream = stream();
+    if (!encodedStream || !encodedStream->isActive()) {
         return;
     }
 
@@ -257,7 +213,7 @@ void PlasmaSession::sendEvent(QEvent *event)
     case QEvent::MouseMove: {
         auto me = static_cast<QMouseEvent *>(event);
         auto position = me->globalPosition();
-        auto logicalPosition = QPointF{(position.x() / d->size.width()) * d->logicalSize.width(), (position.y() / d->size.height()) * d->logicalSize.height()};
+        auto logicalPosition = QPointF{(position.x() / size().width()) * logicalSize().width(), (position.y() / size().height()) * logicalSize().height()};
         d->remoteInterface->pointer_motion_absolute(logicalPosition.x(), logicalPosition.y());
         break;
     }
@@ -309,7 +265,7 @@ void PlasmaSession::onPacketReceived(const PipeWireEncodedStream::Packet &data)
 {
     VideoFrame frameData;
 
-    frameData.size = d->size;
+    frameData.size = size();
     frameData.data = data.data();
     frameData.isKeyFrame = data.isKeyFrame();
 

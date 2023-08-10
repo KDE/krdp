@@ -10,13 +10,10 @@
 #include <type_traits>
 
 #include <QDBusPendingCallWatcher>
-#include <QObject>
 #include <QPoint>
 #include <QPointer>
 
-#include <PipeWireEncodedStream>
-#include <PipeWireSourceStream>
-
+#include "AbstractSession.h"
 #include "krdp_export.h"
 
 namespace KRdp
@@ -28,45 +25,15 @@ class Server;
 /**
  * An implementation of the Plasma screencasting wayland protocol.
  */
-class KRDP_EXPORT PlasmaSession : public QObject
+class KRDP_EXPORT PlasmaSession : public AbstractSession
 {
     Q_OBJECT
 
 public:
     PlasmaSession(Server *server);
-    ~PlasmaSession();
+    ~PlasmaSession() override;
 
-    Q_SIGNAL void started();
-    Q_SIGNAL void error();
-
-    bool streamingEnabled() const;
-    void setStreamingEnabled(bool enable);
-    void setVideoFrameRate(quint32 framerate);
-    void setActiveStream(int stream);
-
-    /**
-     * Send a new event to the portal.
-     *
-     * \param event The new event to send.
-     */
-    void sendEvent(QEvent *event);
-
-    /**
-     * Emitted whenever a new frame has been received.
-     *
-     * Received in this case means that the portal has sent the data and it has
-     * been encoded by libav.
-     */
-    Q_SIGNAL void frameReceived(const VideoFrame &frame);
-
-    /**
-     * Emitted whenever a new cursor update was received.
-     *
-     * These are separate from frames as RDP has a separate protocol for mouse
-     * movement that is more performant than embedding things into the video
-     * stream.
-     */
-    Q_SIGNAL void cursorUpdate(const PipeWireCursor &cursor);
+    void sendEvent(QEvent *event) override;
 
 private:
     void onPacketReceived(const PipeWireEncodedStream::Packet &data);

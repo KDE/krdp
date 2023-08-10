@@ -99,23 +99,23 @@ int main(int argc, char **argv)
         portalSession->setVideoQuality(parser.value(u"quality"_qs).toUShort());
     }
 
-    QObject::connect(portalSession.get(), &KRdp::PortalSession::error, []() {
+    QObject::connect(portalSession, &KRdp::AbstractSession::error, []() {
         QCoreApplication::exit(-1);
     });
 
     QObject::connect(&server, &KRdp::Server::newSession, [&portalSession](KRdp::RdpSession *newSession) {
-        QObject::connect(portalSession.get(), &KRdp::PortalSession::frameReceived, newSession, [portalSession, newSession](const KRdp::VideoFrame &frame) {
+        QObject::connect(portalSession, &KRdp::AbstractSession::frameReceived, newSession, [newSession](const KRdp::VideoFrame &frame) {
             newSession->videoStream()->queueFrame(frame);
         });
 
-        QObject::connect(portalSession.get(), &KRdp::PortalSession::cursorUpdate, newSession, [portalSession, newSession](const PipeWireCursor &cursor) {
+        QObject::connect(portalSession, &KRdp::AbstractSession::cursorUpdate, newSession, [newSession](const PipeWireCursor &cursor) {
             KRdp::Cursor::CursorUpdate update;
             update.hotspot = cursor.hotspot;
             update.image = cursor.texture;
             newSession->cursor()->update(update);
         });
 
-        QObject::connect(newSession->videoStream(), &KRdp::VideoStream::enabledChanged, portalSession.get(), [newSession, portalSession]() {
+        QObject::connect(newSession->videoStream(), &KRdp::VideoStream::enabledChanged, portalSession, [newSession, portalSession]() {
             if (newSession->videoStream()->enabled()) {
                 portalSession->requestStreamingEnable(newSession->videoStream());
             } else {
@@ -123,11 +123,11 @@ int main(int argc, char **argv)
             }
         });
 
-        QObject::connect(newSession->videoStream(), &KRdp::VideoStream::requestedFrameRateChanged, portalSession.get(), [newSession, portalSession]() {
+        QObject::connect(newSession->videoStream(), &KRdp::VideoStream::requestedFrameRateChanged, portalSession, [newSession, portalSession]() {
             portalSession->setVideoFrameRate(newSession->videoStream()->requestedFrameRate());
         });
 
-        QObject::connect(newSession->inputHandler(), &KRdp::InputHandler::inputEvent, portalSession.get(), [portalSession](QEvent *event) {
+        QObject::connect(newSession->inputHandler(), &KRdp::InputHandler::inputEvent, portalSession, [portalSession](QEvent *event) {
             portalSession->sendEvent(event);
         });
     });

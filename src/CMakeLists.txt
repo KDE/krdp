@@ -7,6 +7,7 @@ qt6_generate_wayland_protocol_client_sources(KRdp FILES
 )
 
 target_sources(KRdp PRIVATE
+    AbstractSession.cpp
     RdpSession.cpp
     Server.cpp
     Server.h
