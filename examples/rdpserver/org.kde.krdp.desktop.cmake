@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
-Exec=krdpserver
+Exec=@CMAKE_INSTALL_PREFIX@/bin/krdpserver
 Icon=krfb
 Terminal=false
 Name=KRdp
@@ -87,3 +87,4 @@ Comment[x-test]=xxDesktop Sharingxx
 Comment[zh_CN]=桌面共享
 Comment[zh_TW]=桌面分享
 Categories=Qt;KDE;Network;RemoteAccess;
+X-KDE-Wayland-Interfaces=org_kde_kwin_fake_input,zkde_screencast_unstable_v1
