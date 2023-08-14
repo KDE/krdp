@@ -168,3 +168,5 @@ void Cursor::setCursorType(Cursor::CursorType type)
         d->session->rdpPeer()->update->pointer->PointerSystem(d->session->rdpPeerContext(), &pointerSystemUpdate);
     }
 }
+
+#include "moc_Cursor.cpp"

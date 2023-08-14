@@ -548,3 +548,5 @@ void VideoStream::updateRequestedFrameRate()
     }
 }
 }
+
+#include "moc_VideoStream.cpp"

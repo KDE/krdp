@@ -463,3 +463,5 @@ rdpContext *RdpConnection::rdpPeerContext() const
     return d->peer->context;
 }
 }
+
+#include "moc_Session.cpp"

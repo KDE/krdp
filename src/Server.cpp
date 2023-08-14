@@ -185,3 +185,5 @@ rdp_settings *Server::rdpSettings() const
 {
     return d->settings;
 }
+
+#include "moc_Server.cpp"

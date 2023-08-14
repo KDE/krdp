@@ -283,3 +283,7 @@ void PortalSession::onPacketReceived(const PipeWireEncodedStream::Packet &data)
 }
 
 }
+
+#include "moc_PortalSession_p.cpp"
+
+#include "moc_PortalSession.cpp"

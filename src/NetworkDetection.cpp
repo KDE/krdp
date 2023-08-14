@@ -225,3 +225,5 @@ uint32_t NetworkDetection::Private::nextSequenceNumber()
 }
 
 } // namespace KRdp
+
+#include "moc_NetworkDetection.cpp"

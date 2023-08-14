@@ -204,3 +204,5 @@ bool InputHandler::unicodeKeyboardEvent(uint16_t code, uint16_t flags)
 }
 
 }
+
+#include "moc_InputHandler.cpp"
