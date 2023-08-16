@@ -32,6 +32,10 @@ option(BUILD_EXAMPLES "Build example applications" ON)
 
 find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED Core Gui Network DBus)
 
+find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
+    Config
+)
+
 find_package(FreeRDP 2.10 REQUIRED)
 find_package(WinPR REQUIRED)
 find_package(FreeRDP-Server REQUIRED)
