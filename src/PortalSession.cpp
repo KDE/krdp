@@ -227,6 +227,7 @@ void PortalSession::onCreateSession(uint code, const QVariantMap &result)
     auto parameters = QVariantMap{
         {QStringLiteral("types"), 7u},
         {QStringLiteral("handle_token"), createHandleToken()},
+        {QStringLiteral("persist_mode"), 2},
     };
     new PortalRequest(d->remoteInterface->SelectDevices(d->sessionPath, parameters), this, &PortalSession::onDevicesSelected);
 }
@@ -244,6 +245,9 @@ void PortalSession::onDevicesSelected(uint code, const QVariantMap & /*result*/)
         {QStringLiteral("multiple"), d->stream >= 0},
         {QStringLiteral("handle_token"), createHandleToken()},
     };
+
+    // dave, add restore token here
+
     new PortalRequest(d->screencastInterface->SelectSources(d->sessionPath, parameters), this, &PortalSession::onSourcesSelected);
 }
 
@@ -274,6 +278,8 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
         Q_EMIT error();
         return;
     }
+
+    qDebug() << result.value(QStringLiteral("restore_token"));
 
     const auto streams = qdbus_cast<QList<PortalSessionStream>>(result.value(QStringLiteral("streams")));
     if (streams.isEmpty()) {
