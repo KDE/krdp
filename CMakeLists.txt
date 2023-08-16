@@ -33,6 +33,10 @@ option(BUILD_PLASMA_SESSION "Build support for Plasma Screencasting extensions" 
 
 find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED Core Gui Network DBus WaylandClient)
 
+find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
+    Config
+)
+
 find_package(FreeRDP 2.10 REQUIRED)
 find_package(WinPR REQUIRED)
 find_package(FreeRDP-Server REQUIRED)

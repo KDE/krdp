@@ -10,6 +10,9 @@
 
 #include <linux/input.h>
 
+#include <KConfigGroup>
+#include <KSharedConfig>
+
 #include "PortalSession_p.h"
 #include "VideoStream.h"
 #include "krdp_logging.h"
@@ -183,10 +186,19 @@ void PortalSession::onCreateSession(uint code, const QVariantMap &result)
 
     d->sessionPath = QDBusObjectPath(result.value(QStringLiteral("session_handle")).toString());
 
+    static const uint PermissionsPersistUntilExplicitlyRevoked = 2;
+
     auto parameters = QVariantMap{
         {QStringLiteral("types"), 7u},
         {QStringLiteral("handle_token"), createHandleToken()},
+        {QStringLiteral("persist_mode"), PermissionsPersistUntilExplicitlyRevoked},
     };
+    KConfigGroup restorationGroup = KSharedConfig::openConfig()->group("General");
+    const QString restoreToken = restorationGroup.readEntry("restorationToken");
+    if (!restoreToken.isEmpty()) {
+        parameters[QStringLiteral("restore_token")] = restoreToken;
+    }
+
     new PortalRequest(d->remoteInterface->SelectDevices(d->sessionPath, parameters), this, &PortalSession::onDevicesSelected);
 }
 
@@ -203,6 +215,7 @@ void PortalSession::onDevicesSelected(uint code, const QVariantMap & /*result*/)
         {QStringLiteral("multiple"), activeStream() >= 0},
         {QStringLiteral("handle_token"), createHandleToken()},
     };
+
     new PortalRequest(d->screencastInterface->SelectSources(d->sessionPath, parameters), this, &PortalSession::onSourcesSelected);
 }
 
@@ -233,6 +246,9 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
         Q_EMIT error();
         return;
     }
+
+    KConfigGroup restorationGroup = KSharedConfig::openConfig()->group("General");
+    restorationGroup.writeEntry("restorationToken", result.value(QStringLiteral("restore_token")));
 
     const auto streams = qdbus_cast<QList<PortalSessionStream>>(result.value(QStringLiteral("streams")));
     if (streams.isEmpty()) {
