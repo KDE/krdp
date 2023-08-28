@@ -14,7 +14,7 @@
 #include "InputHandler.h"
 #include "PlasmaSession.h"
 #include "PortalSession.h"
-#include "RdpSession.h"
+#include "RdpConnection.h"
 #include "Server.h"
 #include "VideoStream.h"
 
@@ -111,31 +111,31 @@ int main(int argc, char **argv)
         QCoreApplication::exit(-1);
     });
 
-    QObject::connect(&server, &KRdp::Server::newSession, [&portalSession](KRdp::RdpSession *newSession) {
-        QObject::connect(portalSession, &KRdp::AbstractSession::frameReceived, newSession, [newSession](const KRdp::VideoFrame &frame) {
-            newSession->videoStream()->queueFrame(frame);
+    QObject::connect(&server, &KRdp::Server::newConnection, [&portalSession](KRdp::RdpConnection *newConnection) {
+        QObject::connect(portalSession, &KRdp::AbstractSession::frameReceived, newConnection, [newConnection](const KRdp::VideoFrame &frame) {
+            newConnection->videoStream()->queueFrame(frame);
         });
 
-        QObject::connect(portalSession, &KRdp::AbstractSession::cursorUpdate, newSession, [newSession](const PipeWireCursor &cursor) {
+        QObject::connect(portalSession, &KRdp::AbstractSession::cursorUpdate, newConnection, [newConnection](const PipeWireCursor &cursor) {
             KRdp::Cursor::CursorUpdate update;
             update.hotspot = cursor.hotspot;
             update.image = cursor.texture;
-            newSession->cursor()->update(update);
+            newConnection->cursor()->update(update);
         });
 
-        QObject::connect(newSession->videoStream(), &KRdp::VideoStream::enabledChanged, portalSession, [newSession, portalSession]() {
-            if (newSession->videoStream()->enabled()) {
-                portalSession->requestStreamingEnable(newSession->videoStream());
+        QObject::connect(newConnection->videoStream(), &KRdp::VideoStream::enabledChanged, portalSession, [newConnection, portalSession]() {
+            if (newConnection->videoStream()->enabled()) {
+                portalSession->requestStreamingEnable(newConnection->videoStream());
             } else {
-                portalSession->requestStreamingDisable(newSession->videoStream());
+                portalSession->requestStreamingDisable(newConnection->videoStream());
             }
         });
 
-        QObject::connect(newSession->videoStream(), &KRdp::VideoStream::requestedFrameRateChanged, portalSession, [newSession, portalSession]() {
-            portalSession->setVideoFrameRate(newSession->videoStream()->requestedFrameRate());
+        QObject::connect(newConnection->videoStream(), &KRdp::VideoStream::requestedFrameRateChanged, portalSession, [newConnection, portalSession]() {
+            portalSession->setVideoFrameRate(newConnection->videoStream()->requestedFrameRate());
         });
 
-        QObject::connect(newSession->inputHandler(), &KRdp::InputHandler::inputEvent, portalSession, [portalSession](QEvent *event) {
+        QObject::connect(newConnection->inputHandler(), &KRdp::InputHandler::inputEvent, portalSession, [portalSession](QEvent *event) {
             portalSession->sendEvent(event);
         });
     });

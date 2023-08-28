@@ -16,7 +16,7 @@
 namespace KRdp
 {
 
-class RdpSession;
+class RdpConnection;
 
 /**
  * Core RDP server class.
@@ -103,11 +103,11 @@ public:
     void setTlsCertificateKey(const std::filesystem::path &newTlsCertificateKey);
 
     /**
-     * Emitted whenever a new session is started.
+     * Emitted whenever a new connection is started.
      *
-     * \param session The new session that was just started.
+     * \param connection The new connection that was just started.
      */
-    Q_SIGNAL void newSession(RdpSession *session);
+    Q_SIGNAL void newConnection(RdpConnection *connection);
 
 protected:
     /**
@@ -116,7 +116,7 @@ protected:
     void incomingConnection(qintptr handle) override;
 
 private:
-    friend class RdpSession;
+    friend class RdpConnection;
     rdp_settings *rdpSettings() const;
 
     class Private;

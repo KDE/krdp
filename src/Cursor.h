@@ -17,7 +17,7 @@
 namespace KRdp
 {
 
-class RdpSession;
+class RdpConnection;
 
 /**
  * Encapsulates cursor-specific parts of the RDP protocol.
@@ -48,7 +48,7 @@ public:
         Image,
     };
 
-    Cursor(RdpSession *session);
+    Cursor(RdpConnection *session);
     ~Cursor();
 
     void update(const CursorUpdate &update);

@@ -15,7 +15,7 @@
 
 #include "NetworkDetection.h"
 #include "PeerContext_p.h"
-#include "RdpSession.h"
+#include "RdpConnection.h"
 
 #include "krdp_logging.h"
 
@@ -111,7 +111,7 @@ class KRDP_NO_EXPORT VideoStream::Private
 public:
     using RdpGfxContextPtr = std::unique_ptr<RdpgfxServerContext, decltype(&rdpgfx_server_context_free)>;
 
-    RdpSession *session;
+    RdpConnection *session;
 
     RdpGfxContextPtr gfxContext = RdpGfxContextPtr(nullptr, rdpgfx_server_context_free);
 
@@ -140,7 +140,7 @@ public:
     std::atomic_int frameDelay = 0;
 };
 
-VideoStream::VideoStream(RdpSession *session)
+VideoStream::VideoStream(RdpConnection *session)
     : QObject(nullptr)
     , d(std::make_unique<Private>())
 {
@@ -217,7 +217,7 @@ void VideoStream::close()
 
 void VideoStream::queueFrame(const KRdp::VideoFrame &frame)
 {
-    if (d->session->state() != RdpSession::State::Streaming || !d->enabled) {
+    if (d->session->state() != RdpConnection::State::Streaming || !d->enabled) {
         return;
     }
 

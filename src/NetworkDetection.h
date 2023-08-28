@@ -14,7 +14,7 @@
 namespace KRdp
 {
 
-class RdpSession;
+class RdpConnection;
 
 class NetworkDetection : public QObject
 {
@@ -28,7 +28,7 @@ public:
         PendingResults,
     };
 
-    explicit NetworkDetection(RdpSession *session);
+    explicit NetworkDetection(RdpConnection *session);
     ~NetworkDetection();
 
     Q_PROPERTY(std::chrono::system_clock::duration minimumRTT READ minimumRTT NOTIFY rttChanged)
