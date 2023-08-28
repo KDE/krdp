@@ -78,7 +78,7 @@ bool createSamFile(QTemporaryFile &file, const QString &username, const QString 
 BOOL peerCapabilities(freerdp_peer *peer)
 {
     auto context = reinterpret_cast<PeerContext *>(peer->context);
-    if (context->session->onCapabilities()) {
+    if (context->connection->onCapabilities()) {
         return TRUE;
     }
 
@@ -91,7 +91,7 @@ BOOL peerCapabilities(freerdp_peer *peer)
 BOOL peerPostConnect(freerdp_peer *peer)
 {
     auto context = reinterpret_cast<PeerContext *>(peer->context);
-    if (context->session->onPostConnect()) {
+    if (context->connection->onPostConnect()) {
         return TRUE;
     }
 
@@ -104,7 +104,7 @@ BOOL peerPostConnect(freerdp_peer *peer)
 BOOL peerActivate(freerdp_peer *peer)
 {
     auto context = reinterpret_cast<PeerContext *>(peer->context);
-    if (context->session->onActivate()) {
+    if (context->connection->onActivate()) {
         return TRUE;
     }
 
@@ -114,7 +114,7 @@ BOOL peerActivate(freerdp_peer *peer)
 BOOL suppressOutput(rdpContext *context, uint8_t allow, const RECTANGLE_16 *)
 {
     auto peerContext = reinterpret_cast<PeerContext *>(context);
-    if (peerContext->session->onSuppressOutput(allow)) {
+    if (peerContext->connection->onSuppressOutput(allow)) {
         return TRUE;
     }
 
@@ -246,7 +246,7 @@ void RdpConnection::initialize()
     }
 
     auto context = reinterpret_cast<PeerContext *>(d->peer->context);
-    context->session = this;
+    context->connection = this;
 
     auto settings = d->peer->context->settings;
 

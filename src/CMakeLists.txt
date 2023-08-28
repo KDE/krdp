@@ -6,7 +6,7 @@ if (BUILD_PLASMA_SESSION)
         ${PLASMA_WAYLAND_PROTOCOLS_DIR}/fake-input.xml
         ${Wayland_DATADIR}/wayland.xml
     )
-    target_sources(KRdp PRIVATE screencasting.cpp PlasmaSession.cpp)
+    target_sources(KRdp PRIVATE screencasting.cpp PlasmaScreencastV1Session.cpp)
 endif()
 
 target_sources(KRdp PRIVATE

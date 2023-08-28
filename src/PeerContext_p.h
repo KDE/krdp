@@ -23,7 +23,7 @@ struct PeerContext {
     // extension mechanism works.
     rdpContext _p;
 
-    RdpConnection *session = nullptr;
+    RdpConnection *connection = nullptr;
     InputHandler *inputHandler = nullptr;
     VideoStream *stream = nullptr;
     NetworkDetection *networkDetection = nullptr;

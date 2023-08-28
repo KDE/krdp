@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 
-#include "PlasmaSession.h"
+#include "PlasmaScreencastV1Session.h"
 
 #include <QGuiApplication>
 #include <QMouseEvent>
@@ -16,7 +16,7 @@
 
 #include "qwayland-fake-input.h"
 #include "qwayland-wayland.h"
-#include "screencasting.h"
+#include "screencasting_p.h"
 
 #include "VideoStream.h"
 #include "krdp_logging.h"
@@ -148,7 +148,7 @@ private:
     ScopedXKBState m_state;
 };
 
-class KRDP_NO_EXPORT PlasmaSession::Private
+class KRDP_NO_EXPORT PlasmaScreencastV1Session::Private
 {
 public:
     Server *server = nullptr;
@@ -158,12 +158,12 @@ public:
     FakeInput *remoteInterface = nullptr;
 };
 
-PlasmaSession::PlasmaSession(Server *server)
+PlasmaScreencastV1Session::PlasmaScreencastV1Session(Server *server)
     : AbstractSession(server)
     , d(std::make_unique<Private>())
 {
     d->request = d->m_screencasting.createWorkspaceStream(Screencasting::Metadata);
-    connect(d->request, &ScreencastingStream::failed, this, &PlasmaSession::error);
+    connect(d->request, &ScreencastingStream::failed, this, &PlasmaScreencastV1Session::error);
     connect(d->request, &ScreencastingStream::created, this, [this](uint nodeId) {
         qCDebug(KRDP) << "Started Plasma session";
 
@@ -171,20 +171,20 @@ PlasmaSession::PlasmaSession(Server *server)
         auto encodedStream = stream();
         encodedStream->setNodeId(nodeId);
         encodedStream->setEncoder(PipeWireEncodedStream::H264Baseline);
-        connect(encodedStream, &PipeWireEncodedStream::newPacket, this, &PlasmaSession::onPacketReceived);
-        connect(encodedStream, &PipeWireEncodedStream::sizeChanged, this, &PlasmaSession::setSize);
-        connect(encodedStream, &PipeWireEncodedStream::cursorChanged, this, &PlasmaSession::cursorUpdate);
+        connect(encodedStream, &PipeWireEncodedStream::newPacket, this, &PlasmaScreencastV1Session::onPacketReceived);
+        connect(encodedStream, &PipeWireEncodedStream::sizeChanged, this, &PlasmaScreencastV1Session::setSize);
+        connect(encodedStream, &PipeWireEncodedStream::cursorChanged, this, &PlasmaScreencastV1Session::cursorUpdate);
         setStarted(true);
     });
     d->remoteInterface = new FakeInput();
 }
 
-PlasmaSession::~PlasmaSession()
+PlasmaScreencastV1Session::~PlasmaScreencastV1Session()
 {
     qCDebug(KRDP) << "Closing Plasma Remote Session";
 }
 
-void PlasmaSession::sendEvent(QEvent *event)
+void PlasmaScreencastV1Session::sendEvent(QEvent *event)
 {
     auto encodedStream = stream();
     if (!encodedStream || !encodedStream->isActive()) {
@@ -261,7 +261,7 @@ void PlasmaSession::sendEvent(QEvent *event)
     }
 }
 
-void PlasmaSession::onPacketReceived(const PipeWireEncodedStream::Packet &data)
+void PlasmaScreencastV1Session::onPacketReceived(const PipeWireEncodedStream::Packet &data)
 {
     VideoFrame frameData;
 

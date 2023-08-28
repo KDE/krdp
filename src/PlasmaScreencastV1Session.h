@@ -25,13 +25,13 @@ class Server;
 /**
  * An implementation of the Plasma screencasting wayland protocol.
  */
-class KRDP_EXPORT PlasmaSession : public AbstractSession
+class KRDP_EXPORT PlasmaScreencastV1Session : public AbstractSession
 {
     Q_OBJECT
 
 public:
-    PlasmaSession(Server *server);
-    ~PlasmaSession() override;
+    PlasmaScreencastV1Session(Server *server);
+    ~PlasmaScreencastV1Session() override;
 
     void sendEvent(QEvent *event) override;
 
