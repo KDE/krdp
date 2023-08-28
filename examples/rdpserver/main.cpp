@@ -12,11 +12,13 @@
 
 #include "Cursor.h"
 #include "InputHandler.h"
-#include "PlasmaSession.h"
 #include "PortalSession.h"
 #include "RdpConnection.h"
 #include "Server.h"
 #include "VideoStream.h"
+#if WITH_PLASMA_SESSION == 0
+#include "PlasmaSession.h"
+#endif
 
 int main(int argc, char **argv)
 {
@@ -36,7 +38,9 @@ int main(int argc, char **argv)
         {u"certificate-key"_qs, u"The TLS certificate key to use."_qs, u"certificate-key"_qs, u"server.key"_qs},
         {u"monitor"_qs, u"The index of the monitor to use when streaming."_qs, u"monitor"_qs, u"-1"_qs},
         {u"quality"_qs, u"Encoding quality of the stream, from 0 (lowest) to 100 (highest)"_qs, u"quality"_qs},
+#if WITH_PLASMA_SESSION == 0
         {u"plasma"_qs, u"Use Plasma protocols instead of XDP"_qs},
+#endif
     });
     parser.process(application);
 
@@ -96,9 +100,12 @@ int main(int argc, char **argv)
     server.setTlsCertificateKey(certificateKey);
 
     std::unique_ptr<KRdp::AbstractSession> session;
+#if WITH_PLASMA_SESSION == 0
     if (parser.isSet(u"plasma"_qs)) {
         session = std::unique_ptr<KRdp::AbstractSession>(new KRdp::PlasmaSession(&server));
-    } else {
+    } else
+#endif
+    {
         session = std::unique_ptr<KRdp::AbstractSession>(new KRdp::PortalSession(&server));
     }
     KRdp::AbstractSession *portalSession = session.get();

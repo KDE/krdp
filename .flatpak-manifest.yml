@@ -118,6 +118,8 @@ modules:
 
 -   name: krdp
     buildsystem: cmake-ninja
+    config-opts:
+    -   "-DBUILD_PLASMA_SESSION=OFF"
     sources:
     -   type: dir
         path: "."

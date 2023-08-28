@@ -29,6 +29,7 @@ include(ECMQtDeclareLoggingCategory)
 include(ECMEnableSanitizers)
 
 option(BUILD_EXAMPLES "Build example applications" ON)
+option(BUILD_PLASMA_SESSION "Build support for Plasma Screencasting extensions" ON)
 
 find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED Core Gui Network DBus WaylandClient)
 

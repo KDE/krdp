@@ -1,10 +1,13 @@
 add_library(KRdp)
 
-qt6_generate_wayland_protocol_client_sources(KRdp FILES
-    ${PLASMA_WAYLAND_PROTOCOLS_DIR}/zkde-screencast-unstable-v1.xml
-    ${PLASMA_WAYLAND_PROTOCOLS_DIR}/fake-input.xml
-    ${Wayland_DATADIR}/wayland.xml
-)
+if (BUILD_PLASMA_SESSION)
+    qt6_generate_wayland_protocol_client_sources(KRdp FILES
+        ${PLASMA_WAYLAND_PROTOCOLS_DIR}/zkde-screencast-unstable-v1.xml
+        ${PLASMA_WAYLAND_PROTOCOLS_DIR}/fake-input.xml
+        ${Wayland_DATADIR}/wayland.xml
+    )
+    target_sources(KRdp PRIVATE screencasting.cpp PlasmaSession.cpp)
+endif()
 
 target_sources(KRdp PRIVATE
     AbstractSession.cpp
@@ -19,13 +22,10 @@ target_sources(KRdp PRIVATE
     PortalSession.h
     VideoStream.cpp
     VideoStream.h
-    PlasmaSession.cpp
     Cursor.cpp
     Cursor.h
     NetworkDetection.cpp
     NetworkDetection.h
-
-    screencasting.cpp
 )
 
 ecm_qt_declare_logging_category(KRdp
