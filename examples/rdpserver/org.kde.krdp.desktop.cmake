@@ -5,6 +5,7 @@ Icon=krfb
 Terminal=false
 Name=KRdp
 Name[ar]=كي أردبي
+Name[ast]=KRdp
 Name[bg]=KRdp
 Name[ca]=KRdp
 Name[ca@valencia]=KRdp
