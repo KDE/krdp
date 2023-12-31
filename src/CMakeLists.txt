@@ -70,6 +70,11 @@ target_link_libraries(KRdp PUBLIC
     XKB::XKB
 )
 
+set_target_properties(KRdp PROPERTIES
+    VERSION ${PROJECT_VERSION}
+    SOVERSION ${PROJECT_VERSION_MAJOR}
+)
+
 install(TARGETS KRdp DESTINATION ${KDE_INSTALL_LIBDIR})
 
 ecm_qt_install_logging_categories(EXPORT KRdp DESTINATION ${KDE_INSTALL_LOGGINGCATEGORIESDIR})
