@@ -14,4 +14,10 @@ KRDPModule::KRDPModule(QObject *parent, const KPluginMetaData &data, const QVari
     setButtons(Help | Apply | Default);
 }
 
+void KRDPModule::installCertificateFromFile(const QUrl &url, const bool key)
+{
+    qDebug() << "Loading certificate file: " << url;
+    qDebug() << "Is a key? " << key;
+}
+
 #include "kcm_krdp.moc"

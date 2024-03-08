@@ -11,4 +11,6 @@ class KRDPModule : public KQuickConfigModule
     Q_OBJECT
 public:
     KRDPModule(QObject *parent, const KPluginMetaData &data, const QVariantList &args);
+
+    Q_INVOKABLE void installCertificateFromFile(const QUrl &url, const bool key);
 };
