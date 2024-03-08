@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2024 Akseli Lahtinen <akselmo@akselmo.dev>
+#
+# SPDX-License-Identifier: BSD-2-Clause
+
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 add_definitions(-DTRANSLATION_DOMAIN=\"kcm_krdp\")
