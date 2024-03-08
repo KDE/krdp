@@ -13,11 +13,14 @@ KCMUtils.SimpleKCM {
     id: root
     title: "KRDP Configuration"
 
+
     Kirigami.FormLayout {
         id: layout
         Layout.fillWidth: true
 
+
         QQC2.TextField {
+
             Kirigami.FormData.label: "Username:"
         }
         QQC2.TextField {
@@ -29,32 +32,83 @@ KCMUtils.SimpleKCM {
             inputMethodHints: Qt.ImhDigitsOnly
             Kirigami.FormData.label: "Port:"
         }
-        QQC2.Button {
-            text: qsTr("Certificate")
+
+        QQC2.TextField {
+            id: certPath
+            Kirigami.FormData.label: "Certificate path:"
+        }
+        RowLayout {
+            id: certLayout
             Layout.fillWidth: true
-            onClicked: {
-                certLoader.key = false;
-                certLoader.active = true;
+            QQC2.Button {
+                text: qsTr("Browse...")
+                onClicked: {
+                    certLoader.key = false;
+                    certLoader.active = true;
+                }
+            }
+            QQC2.Button {
+                text: qsTr("1")
+                width: Kirigami.smallSpacing
+                onClicked: {
+                    certLoader.key = false;
+                    certLoader.active = true;
+                }
             }
         }
-        QQC2.Button {
-            text: qsTr("Certificate key")
-            Layout.fillWidth: true
-            onClicked: {
-                certLoader.key = true;
-                certLoader.active = true;
+
+        QQC2.TextField {
+            id: certKeyPath
+            Kirigami.FormData.label: "Certificate key path:"
+        }
+        RowLayout {
+            id: certKeyLayout
+            QQC2.Button {
+                text: qsTr("Browse...")
+                onClicked: {
+                    certLoader.key = true;
+                    certLoader.active = true;
+                }
+            }
+            QQC2.Button {
+                text: qsTr("1")
+                width: Kirigami.smallSpacing
+                onClicked: {
+                    certLoader.key = false;
+                    certLoader.active = true;
+                }
             }
         }
-        QQC2.SpinBox {
+
+        RowLayout {
             Kirigami.FormData.label: "Quality:"
-            value: 100
-            from: 0
-            to: 100
+            QQC2.Label {
+                text: qualitySlider.value
+                Layout.fillWidth: false
+                Layout.minimumWidth: Kirigami.Units.gridUnit
+            }
+            QQC2.Label {
+                text: "Speed"
+                Layout.fillWidth: false
+            }
+            QQC2.Slider {
+                id: qualitySlider
+                from: 0
+                to: 100
+                value: 100
+                stepSize: 1
+                Layout.fillWidth: true
+                Layout.minimumWidth: Kirigami.Units.gridUnit * 15
+
+            }
+            QQC2.Label {
+                text: "Quality"
+                Layout.fillWidth: false
+            }
         }
-        QQC2.Switch {
-            text: qsTr("Use Plasma protocols?")
-            checked: false
-        }
+
+
+
     }
 
     Loader {
