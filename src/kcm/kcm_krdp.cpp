@@ -11,13 +11,66 @@ K_PLUGIN_CLASS_WITH_JSON(KRDPModule, "kcm_krdp.json")
 KRDPModule::KRDPModule(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
     : KQuickConfigModule(parent, data)
 {
-    setButtons(Help | Apply | Default);
+    setButtons(Apply);
 }
 
-void KRDPModule::installCertificateFromFile(const QUrl &url, const bool key)
+void KRDPModule::load()
 {
-    qDebug() << "Loading certificate file: " << url;
-    qDebug() << "Is a key? " << key;
+    KQuickConfigModule::load();
+}
+void KRDPModule::save()
+{
+    KQuickConfigModule::save();
+}
+
+QString KRDPModule::getUsername()
+{
+    return m_username;
+}
+QString KRDPModule::getPassword()
+{
+    return m_password;
+}
+int KRDPModule::getPort()
+{
+    return m_port;
+}
+QString KRDPModule::getCertPath()
+{
+    return m_certPath.toString();
+}
+QString KRDPModule::getCertKeyPath()
+{
+    return m_certKeyPath.toString();
+}
+int KRDPModule::getQuality()
+{
+    return m_quality;
+}
+
+void KRDPModule::setUsername(const QString username)
+{
+    m_username = username;
+}
+void KRDPModule::setPassword(const QString password)
+{
+    m_password = password;
+}
+void KRDPModule::setPort(const int port)
+{
+    m_port = port;
+}
+void KRDPModule::setCertPath(const QString certPath)
+{
+    m_certPath = QUrl(certPath);
+}
+void KRDPModule::setCertKeyPath(const QString certKeyPath)
+{
+    m_certKeyPath = QUrl(certKeyPath);
+}
+void KRDPModule::setQuality(const int quality)
+{
+    m_quality = quality;
 }
 
 #include "kcm_krdp.moc"

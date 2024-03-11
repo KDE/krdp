@@ -13,30 +13,47 @@ KCMUtils.SimpleKCM {
     id: root
     title: "KRDP Configuration"
 
+    property string certFile
+    property string certKeyFile
 
     Kirigami.FormLayout {
         id: layout
         Layout.fillWidth: true
 
-
         QQC2.TextField {
-
+            id: usernameField
             Kirigami.FormData.label: "Username:"
+            onTextEdited: {
+                kcm.setUsername = text;
+            }
         }
         QQC2.TextField {
+            id: passwordField
             echoMode: TextInput.Password
             Kirigami.FormData.label: "Password:"
+            onTextEdited: {
+                kcm.setPassword = text;
+            }
         }
         QQC2.TextField {
+            id: portField
             inputMask: "99999999"
             inputMethodHints: Qt.ImhDigitsOnly
             Kirigami.FormData.label: "Port:"
+            onTextEdited: {
+                kcm.setPort = parseInt(text);
+            }
         }
 
         QQC2.TextField {
-            id: certPath
+            id: certPathField
             Kirigami.FormData.label: "Certificate path:"
+            text: root.certFile
+            onTextEdited: {
+                kcm.setCertFile = text;
+            }
         }
+
         RowLayout {
             id: certLayout
             Layout.fillWidth: true
@@ -48,18 +65,21 @@ KCMUtils.SimpleKCM {
                 }
             }
             QQC2.Button {
-                text: qsTr("1")
+                text: qsTr("Reset")
                 width: Kirigami.smallSpacing
                 onClicked: {
-                    certLoader.key = false;
-                    certLoader.active = true;
+                    certPathField.text = "";
                 }
             }
         }
 
         QQC2.TextField {
-            id: certKeyPath
+            id: certKeyPathField
             Kirigami.FormData.label: "Certificate key path:"
+            text: root.certKeyFile
+            onTextEdited: {
+                kcm.certKeyFile = text;
+            }
         }
         RowLayout {
             id: certKeyLayout
@@ -71,11 +91,10 @@ KCMUtils.SimpleKCM {
                 }
             }
             QQC2.Button {
-                text: qsTr("1")
+                text: qsTr("Reset")
                 width: Kirigami.smallSpacing
                 onClicked: {
-                    certLoader.key = false;
-                    certLoader.active = true;
+                    certKeyPathField.text = "";
                 }
             }
         }
@@ -99,16 +118,15 @@ KCMUtils.SimpleKCM {
                 stepSize: 1
                 Layout.fillWidth: true
                 Layout.minimumWidth: Kirigami.Units.gridUnit * 15
-
+                onMoved: {
+                    kcm.setQuality = value;
+                }
             }
             QQC2.Label {
                 text: "Quality"
                 Layout.fillWidth: false
             }
         }
-
-
-
     }
 
     Loader {
@@ -120,7 +138,12 @@ KCMUtils.SimpleKCM {
             currentFolder: StandardPaths.standardLocations(StandardPaths.HomeLocation)[0]
             Component.onCompleted: open()
             onAccepted: {
-                kcm.installCertificateFromFile(selectedFile, key);
+                //kcm.installCertificateFromFile(selectedFile, key);
+                if (key) {
+                    root.certKeyFile = selectedFile;
+                } else {
+                    root.certFile = selectedFile;
+                }
                 certLoader.active = false;
             }
             onRejected: {
