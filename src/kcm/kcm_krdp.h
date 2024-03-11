@@ -9,7 +9,7 @@
 class KRDPModule : public KQuickConfigModule
 {
     Q_OBJECT
-
+public:
     Q_PROPERTY(QString username READ getUsername WRITE setUsername)
     Q_PROPERTY(QString password READ getPassword WRITE setPassword)
     Q_PROPERTY(int port READ getPort WRITE setPort)
@@ -17,7 +17,6 @@ class KRDPModule : public KQuickConfigModule
     Q_PROPERTY(QString certKeyPath READ getCertKeyPath WRITE setCertKeyPath)
     Q_PROPERTY(int quality READ getQuality WRITE setQuality)
 
-public:
     KRDPModule(QObject *parent, const KPluginMetaData &data, const QVariantList &args);
 
     void load() override;
@@ -30,12 +29,12 @@ public:
     QString getCertKeyPath();
     int getQuality();
 
-    void setUsername(const QString username);
-    void setPassword(const QString password);
-    void setPort(const int port);
-    void setCertPath(const QString certPath);
-    void setCertKeyPath(const QString certKeyPath);
-    void setQuality(const int quality);
+    void setUsername(const QString &username);
+    void setPassword(const QString &password);
+    void setPort(const int &port);
+    void setCertPath(const QString &certPath);
+    void setCertKeyPath(const QString &certKeyPath);
+    void setQuality(const int &quality);
 
 private:
     QString m_username;

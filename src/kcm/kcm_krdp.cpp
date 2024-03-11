@@ -16,10 +16,12 @@ KRDPModule::KRDPModule(QObject *parent, const KPluginMetaData &data, const QVari
 
 void KRDPModule::load()
 {
+    // TODO load the config file and set the text fields to values
     KQuickConfigModule::load();
 }
 void KRDPModule::save()
 {
+    // TODO write the changes to config file
     KQuickConfigModule::save();
 }
 
@@ -48,29 +50,35 @@ int KRDPModule::getQuality()
     return m_quality;
 }
 
-void KRDPModule::setUsername(const QString username)
+void KRDPModule::setUsername(const QString &username)
 {
     m_username = username;
+    setNeedsSave(true);
 }
-void KRDPModule::setPassword(const QString password)
+void KRDPModule::setPassword(const QString &password)
 {
     m_password = password;
+    setNeedsSave(true);
 }
-void KRDPModule::setPort(const int port)
+void KRDPModule::setPort(const int &port)
 {
     m_port = port;
+    setNeedsSave(true);
 }
-void KRDPModule::setCertPath(const QString certPath)
+void KRDPModule::setCertPath(const QString &certPath)
 {
     m_certPath = QUrl(certPath);
+    setNeedsSave(true);
 }
-void KRDPModule::setCertKeyPath(const QString certKeyPath)
+void KRDPModule::setCertKeyPath(const QString &certKeyPath)
 {
     m_certKeyPath = QUrl(certKeyPath);
+    setNeedsSave(true);
 }
-void KRDPModule::setQuality(const int quality)
+void KRDPModule::setQuality(const int &quality)
 {
     m_quality = quality;
+    setNeedsSave(true);
 }
 
 #include "kcm_krdp.moc"

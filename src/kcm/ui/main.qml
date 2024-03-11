@@ -13,9 +13,6 @@ KCMUtils.SimpleKCM {
     id: root
     title: "KRDP Configuration"
 
-    property string certFile
-    property string certKeyFile
-
     Kirigami.FormLayout {
         id: layout
         Layout.fillWidth: true
@@ -23,16 +20,16 @@ KCMUtils.SimpleKCM {
         QQC2.TextField {
             id: usernameField
             Kirigami.FormData.label: "Username:"
-            onTextEdited: {
-                kcm.setUsername = text;
+            onTextChanged: {
+                kcm.username = text;
             }
         }
         QQC2.TextField {
             id: passwordField
             echoMode: TextInput.Password
             Kirigami.FormData.label: "Password:"
-            onTextEdited: {
-                kcm.setPassword = text;
+            onTextChanged: {
+                kcm.password = text;
             }
         }
         QQC2.TextField {
@@ -40,17 +37,16 @@ KCMUtils.SimpleKCM {
             inputMask: "99999999"
             inputMethodHints: Qt.ImhDigitsOnly
             Kirigami.FormData.label: "Port:"
-            onTextEdited: {
-                kcm.setPort = parseInt(text);
+            onTextChanged: {
+                kcm.port = parseInt(text);
             }
         }
 
         QQC2.TextField {
             id: certPathField
             Kirigami.FormData.label: "Certificate path:"
-            text: root.certFile
-            onTextEdited: {
-                kcm.setCertFile = text;
+            onTextChanged: {
+                kcm.certPath = text;
             }
         }
 
@@ -76,9 +72,8 @@ KCMUtils.SimpleKCM {
         QQC2.TextField {
             id: certKeyPathField
             Kirigami.FormData.label: "Certificate key path:"
-            text: root.certKeyFile
-            onTextEdited: {
-                kcm.certKeyFile = text;
+            onTextChanged: {
+                kcm.certKeyPath = text;
             }
         }
         RowLayout {
@@ -119,7 +114,7 @@ KCMUtils.SimpleKCM {
                 Layout.fillWidth: true
                 Layout.minimumWidth: Kirigami.Units.gridUnit * 15
                 onMoved: {
-                    kcm.setQuality = value;
+                    kcm.quality = value;
                 }
             }
             QQC2.Label {
@@ -138,11 +133,12 @@ KCMUtils.SimpleKCM {
             currentFolder: StandardPaths.standardLocations(StandardPaths.HomeLocation)[0]
             Component.onCompleted: open()
             onAccepted: {
-                //kcm.installCertificateFromFile(selectedFile, key);
                 if (key) {
-                    root.certKeyFile = selectedFile;
+                    //kcm.certKeyFile = selectedFile;
+                    certKeyPathField.text = selectedFile;
                 } else {
-                    root.certFile = selectedFile;
+                    //kcm.certFile = selectedFile;
+                    certPathField.text = selectedFile;
                 }
                 certLoader.active = false;
             }
