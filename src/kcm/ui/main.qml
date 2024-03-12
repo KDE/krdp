@@ -96,10 +96,15 @@ KCMUtils.SimpleKCM {
 
         RowLayout {
             Kirigami.FormData.label: "Quality:"
-            QQC2.Label {
+            QQC2.TextField {
+                inputMethodHints: Qt.ImhDigitsOnly
                 text: qualitySlider.value
                 Layout.fillWidth: false
-                Layout.minimumWidth: Kirigami.Units.gridUnit
+                Layout.maximumWidth: Kirigami.Units.gridUnit * 2
+                onTextEdited: {
+                    qualitySlider.value = text
+                    kcm.quality = text
+                }
             }
             QQC2.Label {
                 text: "Speed"
