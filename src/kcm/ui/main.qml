@@ -26,6 +26,7 @@ KCMUtils.SimpleKCM {
                 kcm.needsSave = true;
             }
         }
+
         QQC2.TextField {
             id: passwordField
             echoMode: TextInput.Password
@@ -36,6 +37,7 @@ KCMUtils.SimpleKCM {
                 kcm.needsSave = true;
             }
         }
+
         QQC2.TextField {
             id: portField
             inputMask: "99999999"
@@ -57,7 +59,6 @@ KCMUtils.SimpleKCM {
                 kcm.needsSave = true;
             }
         }
-
         RowLayout {
             id: certLayout
             Layout.fillWidth: true
