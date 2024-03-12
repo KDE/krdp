@@ -10,12 +10,12 @@ class KRDPModule : public KQuickConfigModule
 {
     Q_OBJECT
 public:
-    Q_PROPERTY(QString username READ getUsername WRITE setUsername)
-    Q_PROPERTY(QString password READ getPassword WRITE setPassword)
-    Q_PROPERTY(int port READ getPort WRITE setPort)
-    Q_PROPERTY(QString certPath READ getCertPath WRITE setCertPath)
-    Q_PROPERTY(QString certKeyPath READ getCertKeyPath WRITE setCertKeyPath)
-    Q_PROPERTY(int quality READ getQuality WRITE setQuality)
+    Q_PROPERTY(QString username READ getUsername WRITE setUsername NOTIFY usernameChanged)
+    Q_PROPERTY(QString password READ getPassword WRITE setPassword NOTIFY passwordChanged)
+    Q_PROPERTY(int port READ getPort WRITE setPort NOTIFY portChanged)
+    Q_PROPERTY(QString certPath READ getCertPath WRITE setCertPath NOTIFY certPathChanged)
+    Q_PROPERTY(QString certKeyPath READ getCertKeyPath WRITE setCertKeyPath NOTIFY certKeyPathChanged)
+    Q_PROPERTY(int quality READ getQuality WRITE setQuality NOTIFY qualityChanged)
 
     KRDPModule(QObject *parent, const KPluginMetaData &data, const QVariantList &args);
 
@@ -37,6 +37,14 @@ public:
     void setCertPath(const QString &certPath);
     void setCertKeyPath(const QString &certKeyPath);
     void setQuality(const int &quality);
+
+Q_SIGNALS:
+    void usernameChanged();
+    void passwordChanged();
+    void portChanged();
+    void certPathChanged();
+    void certKeyPathChanged();
+    void qualityChanged();
 
 private:
     QString m_username;
