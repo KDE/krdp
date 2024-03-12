@@ -50,57 +50,45 @@ KCMUtils.SimpleKCM {
             }
         }
 
-        QQC2.TextField {
-            id: certPathField
-            Kirigami.FormData.label: "Certificate path:"
-            text: kcm.certPath
-            onTextEdited: {
-                kcm.certPath = text;
-                kcm.needsSave = true;
-            }
-        }
         RowLayout {
             id: certLayout
+            Kirigami.FormData.label: "Certificate path:"
             Layout.fillWidth: true
+            QQC2.TextField {
+                id: certPathField
+                text: kcm.certPath
+                onTextEdited: {
+                    kcm.certPath = text;
+                    kcm.needsSave = true;
+                }
+            }
             QQC2.Button {
                 text: qsTr("Browse...")
+                Layout.maximumWidth: Kirigami.Units.gridUnit * 2
                 onClicked: {
                     certLoader.key = false;
                     certLoader.active = true;
                 }
             }
-            QQC2.Button {
-                text: qsTr("Reset")
-                width: Kirigami.smallSpacing
-                onClicked: {
-                    certPathField.text = "";
-                }
-            }
         }
 
-        QQC2.TextField {
-            id: certKeyPathField
-            Kirigami.FormData.label: "Certificate key path:"
-            text: kcm.certKeyPath
-            onTextEdited: {
-                kcm.certKeyPath = text;
-                kcm.needsSave = true;
-            }
-        }
         RowLayout {
             id: certKeyLayout
+            Kirigami.FormData.label: "Certificate key path:"
+            QQC2.TextField {
+                id: certKeyPathField
+                text: kcm.certKeyPath
+                onTextEdited: {
+                    kcm.certKeyPath = text;
+                    kcm.needsSave = true;
+                }
+            }
             QQC2.Button {
                 text: qsTr("Browse...")
+                Layout.maximumWidth: Kirigami.Units.gridUnit * 2
                 onClicked: {
                     certLoader.key = true;
                     certLoader.active = true;
-                }
-            }
-            QQC2.Button {
-                text: qsTr("Reset")
-                width: Kirigami.smallSpacing
-                onClicked: {
-                    certKeyPathField.text = "";
                 }
             }
         }
@@ -129,7 +117,6 @@ KCMUtils.SimpleKCM {
                 value: kcm.quality
                 stepSize: 1
                 Layout.fillWidth: true
-                Layout.minimumWidth: Kirigami.Units.gridUnit * 15
                 onMoved: {
                     kcm.quality = value;
                     kcm.needsSave = true;
