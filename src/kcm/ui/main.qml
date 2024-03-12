@@ -21,8 +21,9 @@ KCMUtils.SimpleKCM {
             id: usernameField
             Kirigami.FormData.label: "Username:"
             text: kcm.username
-            onTextChanged: {
+            onTextEdited: {
                 kcm.username = text;
+                kcm.needsSave = true;
             }
         }
         QQC2.TextField {
@@ -30,8 +31,9 @@ KCMUtils.SimpleKCM {
             echoMode: TextInput.Password
             Kirigami.FormData.label: "Password:"
             text: kcm.password
-            onTextChanged: {
+            onTextEdited: {
                 kcm.password = text;
+                kcm.needsSave = true;
             }
         }
         QQC2.TextField {
@@ -40,8 +42,9 @@ KCMUtils.SimpleKCM {
             inputMethodHints: Qt.ImhDigitsOnly
             Kirigami.FormData.label: "Port:"
             text: kcm.port
-            onTextChanged: {
+            onTextEdited: {
                 kcm.port = parseInt(text);
+                kcm.needsSave = true;
             }
         }
 
@@ -49,8 +52,9 @@ KCMUtils.SimpleKCM {
             id: certPathField
             Kirigami.FormData.label: "Certificate path:"
             text: kcm.certPath
-            onTextChanged: {
+            onTextEdited: {
                 kcm.certPath = text;
+                kcm.needsSave = true;
             }
         }
 
@@ -77,8 +81,9 @@ KCMUtils.SimpleKCM {
             id: certKeyPathField
             Kirigami.FormData.label: "Certificate key path:"
             text: kcm.certKeyPath
-            onTextChanged: {
+            onTextEdited: {
                 kcm.certKeyPath = text;
+                kcm.needsSave = true;
             }
         }
         RowLayout {
@@ -107,8 +112,9 @@ KCMUtils.SimpleKCM {
                 Layout.fillWidth: false
                 Layout.maximumWidth: Kirigami.Units.gridUnit * 2
                 onTextEdited: {
-                    qualitySlider.value = text
-                    kcm.quality = text
+                    qualitySlider.value = text;
+                    kcm.quality = text;
+                    kcm.needsSave = true;
                 }
             }
             QQC2.Label {
@@ -125,6 +131,7 @@ KCMUtils.SimpleKCM {
                 Layout.minimumWidth: Kirigami.Units.gridUnit * 15
                 onMoved: {
                     kcm.quality = value;
+                    kcm.needsSave = true;
                 }
             }
             QQC2.Label {
@@ -140,16 +147,17 @@ KCMUtils.SimpleKCM {
         active: false
         sourceComponent: QtDialogs.FileDialog {
             title: i18n("Select Certificate file")
-            currentFolder: StandardPaths.standardLocations(StandardPaths.HomeLocation)[0]
             Component.onCompleted: open()
             onAccepted: {
+                var file = kcm.toLocalFile(selectedFile);
                 if (key) {
-                    //kcm.certKeyFile = selectedFile;
-                    certKeyPathField.text = selectedFile;
+                    kcm.certKeyPath = file;
+                    certKeyPathField.text = file;
                 } else {
-                    //kcm.certFile = selectedFile;
-                    certPathField.text = selectedFile;
+                    kcm.certPath = file;
+                    certPathField.text = file;
                 }
+                kcm.needsSave = true;
                 certLoader.active = false;
             }
             onRejected: {

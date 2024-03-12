@@ -19,6 +19,8 @@ public:
 
     KRDPModule(QObject *parent, const KPluginMetaData &data, const QVariantList &args);
 
+    Q_INVOKABLE QString toLocalFile(const QUrl url);
+
     void load() override;
     void save() override;
 

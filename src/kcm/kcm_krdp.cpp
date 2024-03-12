@@ -17,6 +17,12 @@ KRDPModule::KRDPModule(QObject *parent, const KPluginMetaData &data, const QVari
     load();
 }
 
+QString KRDPModule::toLocalFile(const QUrl url)
+{
+    return url.toLocalFile();
+}
+
+// Save and load
 void KRDPModule::load()
 {
     KQuickConfigModule::load();
@@ -47,6 +53,7 @@ void KRDPModule::save()
     generalGroup.writeEntry("Quality", getQuality());
 }
 
+// Getters
 QString KRDPModule::getUsername()
 {
     return m_username;
@@ -72,35 +79,30 @@ int KRDPModule::getQuality()
     return m_quality;
 }
 
+// Setters
 void KRDPModule::setUsername(const QString &username)
 {
     m_username = username;
-    setNeedsSave(true);
 }
 void KRDPModule::setPassword(const QString &password)
 {
     m_password = password;
-    setNeedsSave(true);
 }
 void KRDPModule::setPort(const int &port)
 {
     m_port = port;
-    setNeedsSave(true);
 }
 void KRDPModule::setCertPath(const QString &certPath)
 {
     m_certPath = certPath;
-    setNeedsSave(true);
 }
 void KRDPModule::setCertKeyPath(const QString &certKeyPath)
 {
     m_certKeyPath = certKeyPath;
-    setNeedsSave(true);
 }
 void KRDPModule::setQuality(const int &quality)
 {
     m_quality = quality;
-    setNeedsSave(true);
 }
 
 #include "kcm_krdp.moc"
