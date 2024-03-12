@@ -63,7 +63,7 @@ KCMUtils.SimpleKCM {
                 }
             }
             QQC2.Button {
-                text: qsTr("Browse...")
+                icon.name: "folder-open-symbolic"
                 Layout.maximumWidth: Kirigami.Units.gridUnit * 2
                 onClicked: {
                     certLoader.key = false;
@@ -84,7 +84,7 @@ KCMUtils.SimpleKCM {
                 }
             }
             QQC2.Button {
-                text: qsTr("Browse...")
+                icon.name: "folder-open-symbolic"
                 Layout.maximumWidth: Kirigami.Units.gridUnit * 2
                 onClicked: {
                     certLoader.key = true;
