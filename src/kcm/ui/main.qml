@@ -12,12 +12,14 @@ import org.kde.kcmutils as KCMUtils
 KCMUtils.SimpleKCM {
     id: root
     title: "KRDP Configuration"
+    Layout.fillWidth: true
 
     Kirigami.FormLayout {
         id: layout
 
         QQC2.TextField {
             id: usernameField
+            Layout.maximumWidth: Kirigami.Units.gridUnit * 8
             Kirigami.FormData.label: "Username:"
             text: kcm.username
             onTextEdited: {
@@ -28,6 +30,7 @@ KCMUtils.SimpleKCM {
 
         QQC2.TextField {
             id: passwordField
+            Layout.maximumWidth: Kirigami.Units.gridUnit * 8
             echoMode: TextInput.Password
             Kirigami.FormData.label: "Password:"
             text: kcm.password
@@ -40,6 +43,7 @@ KCMUtils.SimpleKCM {
         QQC2.TextField {
             id: portField
             inputMask: "99999999"
+            Layout.maximumWidth: Kirigami.Units.gridUnit * 5
             inputMethodHints: Qt.ImhDigitsOnly
             Kirigami.FormData.label: "Port:"
             text: kcm.port
@@ -49,11 +53,17 @@ KCMUtils.SimpleKCM {
             }
         }
 
+        Item {
+            Layout.fillWidth: true
+        }
+
         RowLayout {
             id: certLayout
+            width: usernameField.width
             Kirigami.FormData.label: "Certificate path:"
             QQC2.TextField {
                 id: certPathField
+                implicitWidth: Kirigami.Units.gridUnit * 14
                 text: kcm.certPath
                 onTextEdited: {
                     kcm.certPath = text;
@@ -71,9 +81,11 @@ KCMUtils.SimpleKCM {
 
         RowLayout {
             id: certKeyLayout
+            width: usernameField.width
             Kirigami.FormData.label: "Certificate key path:"
             QQC2.TextField {
                 id: certKeyPathField
+                implicitWidth: Kirigami.Units.gridUnit * 14
                 text: kcm.certKeyPath
                 onTextEdited: {
                     kcm.certKeyPath = text;
@@ -87,6 +99,10 @@ KCMUtils.SimpleKCM {
                     certLoader.active = true;
                 }
             }
+        }
+
+        Item {
+            Layout.fillWidth: true
         }
 
         RowLayout {
@@ -106,6 +122,7 @@ KCMUtils.SimpleKCM {
             }
             QQC2.Slider {
                 id: qualitySlider
+                Layout.minimumWidth: Kirigami.Units.gridUnit * 10
                 from: 0
                 to: 100
                 value: kcm.quality
