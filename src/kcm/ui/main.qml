@@ -15,7 +15,6 @@ KCMUtils.SimpleKCM {
 
     Kirigami.FormLayout {
         id: layout
-        Layout.fillWidth: true
 
         QQC2.TextField {
             id: usernameField
@@ -53,7 +52,6 @@ KCMUtils.SimpleKCM {
         RowLayout {
             id: certLayout
             Kirigami.FormData.label: "Certificate path:"
-            Layout.fillWidth: true
             QQC2.TextField {
                 id: certPathField
                 text: kcm.certPath
@@ -64,7 +62,6 @@ KCMUtils.SimpleKCM {
             }
             QQC2.Button {
                 icon.name: "folder-open-symbolic"
-                Layout.maximumWidth: Kirigami.Units.gridUnit * 2
                 onClicked: {
                     certLoader.key = false;
                     certLoader.active = true;
@@ -85,7 +82,6 @@ KCMUtils.SimpleKCM {
             }
             QQC2.Button {
                 icon.name: "folder-open-symbolic"
-                Layout.maximumWidth: Kirigami.Units.gridUnit * 2
                 onClicked: {
                     certLoader.key = true;
                     certLoader.active = true;
@@ -98,7 +94,6 @@ KCMUtils.SimpleKCM {
             QQC2.TextField {
                 inputMethodHints: Qt.ImhDigitsOnly
                 text: qualitySlider.value
-                Layout.fillWidth: false
                 Layout.maximumWidth: Kirigami.Units.gridUnit * 2
                 onTextEdited: {
                     qualitySlider.value = text;
@@ -108,7 +103,6 @@ KCMUtils.SimpleKCM {
             }
             QQC2.Label {
                 text: "Speed"
-                Layout.fillWidth: false
             }
             QQC2.Slider {
                 id: qualitySlider
@@ -124,7 +118,6 @@ KCMUtils.SimpleKCM {
             }
             QQC2.Label {
                 text: "Quality"
-                Layout.fillWidth: false
             }
         }
     }
