@@ -20,6 +20,7 @@ KCMUtils.SimpleKCM {
         QQC2.TextField {
             id: usernameField
             Kirigami.FormData.label: "Username:"
+            text: kcm.username
             onTextChanged: {
                 kcm.username = text;
             }
@@ -28,6 +29,7 @@ KCMUtils.SimpleKCM {
             id: passwordField
             echoMode: TextInput.Password
             Kirigami.FormData.label: "Password:"
+            text: kcm.password
             onTextChanged: {
                 kcm.password = text;
             }
@@ -37,6 +39,7 @@ KCMUtils.SimpleKCM {
             inputMask: "99999999"
             inputMethodHints: Qt.ImhDigitsOnly
             Kirigami.FormData.label: "Port:"
+            text: kcm.port
             onTextChanged: {
                 kcm.port = parseInt(text);
             }
@@ -45,6 +48,7 @@ KCMUtils.SimpleKCM {
         QQC2.TextField {
             id: certPathField
             Kirigami.FormData.label: "Certificate path:"
+            text: kcm.certPath
             onTextChanged: {
                 kcm.certPath = text;
             }
@@ -72,6 +76,7 @@ KCMUtils.SimpleKCM {
         QQC2.TextField {
             id: certKeyPathField
             Kirigami.FormData.label: "Certificate key path:"
+            text: kcm.certKeyPath
             onTextChanged: {
                 kcm.certKeyPath = text;
             }
@@ -114,7 +119,7 @@ KCMUtils.SimpleKCM {
                 id: qualitySlider
                 from: 0
                 to: 100
-                value: 100
+                value: kcm.quality
                 stepSize: 1
                 Layout.fillWidth: true
                 Layout.minimumWidth: Kirigami.Units.gridUnit * 15

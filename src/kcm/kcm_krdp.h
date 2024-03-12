@@ -40,7 +40,8 @@ private:
     QString m_username;
     QString m_password;
     int m_port;
-    QUrl m_certPath;
-    QUrl m_certKeyPath;
+    QString m_certPath;
+    QString m_certKeyPath;
     int m_quality;
+    QLatin1String m_settingsFile = QLatin1String("krdprc");
 };

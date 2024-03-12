@@ -5,6 +5,8 @@
 #include "kcm_krdp.h"
 
 #include <KPluginFactory>
+#include <kconfiggroup.h>
+#include <qlatin1stringview.h>
 
 K_PLUGIN_CLASS_WITH_JSON(KRDPModule, "kcm_krdp.json")
 
@@ -12,17 +14,37 @@ KRDPModule::KRDPModule(QObject *parent, const KPluginMetaData &data, const QVari
     : KQuickConfigModule(parent, data)
 {
     setButtons(Apply);
+    load();
 }
 
 void KRDPModule::load()
 {
-    // TODO load the config file and set the text fields to values
     KQuickConfigModule::load();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig(m_settingsFile);
+
+    KConfigGroup generalGroup(config, QStringLiteral("General"));
+
+    setUsername(generalGroup.readEntry("Username", ""));
+    setPassword(generalGroup.readEntry("Password", ""));
+    setPort(generalGroup.readEntry("Port", 0));
+    setCertPath(generalGroup.readEntry("CertPath", ""));
+    setCertKeyPath(generalGroup.readEntry("CertKeyPath", ""));
+    setQuality(generalGroup.readEntry("Quality", 100));
 }
+
 void KRDPModule::save()
 {
-    // TODO write the changes to config file
     KQuickConfigModule::save();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig(m_settingsFile);
+
+    KConfigGroup generalGroup(config, QStringLiteral("General"));
+
+    generalGroup.writeEntry("Username", getUsername());
+    generalGroup.writeEntry("Password", getPassword());
+    generalGroup.writeEntry("Port", getPort());
+    generalGroup.writeEntry("CertPath", getCertPath());
+    generalGroup.writeEntry("CertKeyPath", getCertKeyPath());
+    generalGroup.writeEntry("Quality", getQuality());
 }
 
 QString KRDPModule::getUsername()
@@ -39,11 +61,11 @@ int KRDPModule::getPort()
 }
 QString KRDPModule::getCertPath()
 {
-    return m_certPath.toString();
+    return m_certPath;
 }
 QString KRDPModule::getCertKeyPath()
 {
-    return m_certKeyPath.toString();
+    return m_certKeyPath;
 }
 int KRDPModule::getQuality()
 {
@@ -67,12 +89,12 @@ void KRDPModule::setPort(const int &port)
 }
 void KRDPModule::setCertPath(const QString &certPath)
 {
-    m_certPath = QUrl(certPath);
+    m_certPath = certPath;
     setNeedsSave(true);
 }
 void KRDPModule::setCertKeyPath(const QString &certKeyPath)
 {
-    m_certKeyPath = QUrl(certKeyPath);
+    m_certKeyPath = certKeyPath;
     setNeedsSave(true);
 }
 void KRDPModule::setQuality(const int &quality)
