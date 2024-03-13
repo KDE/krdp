@@ -49,6 +49,15 @@ public:
     };
 
     /**
+     * Reasons for closing the stream.
+     */
+    enum class CloseReason {
+        None, ///< No particular reason, e.g. closing due to normal operation
+              ///  like client disconnect.
+        VideoInitFailed, ///< VideoStream failed to initialize.
+    };
+
+    /**
      * Constructor.
      *
      * \param server The KRdp::Server instance this session is part of.
@@ -64,7 +73,13 @@ public:
     State state() const;
     Q_SIGNAL void stateChanged();
 
-    void close();
+    /**
+     * Close the connection
+     *
+     * \param reason The reason to close the connection. May set error state if
+     *               it is something different than CloseReason::None.
+     */
+    void close(CloseReason reason = CloseReason::None);
 
     /**
      * The InputHandler instance associated with this session.

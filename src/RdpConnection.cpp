@@ -201,8 +201,16 @@ void RdpConnection::setState(KRdp::RdpConnection::State newState)
     Q_EMIT stateChanged();
 }
 
-void RdpConnection::close()
+void RdpConnection::close(RdpConnection::CloseReason reason)
 {
+    switch (reason) {
+    case CloseReason::VideoInitFailed:
+        freerdp_set_error_info(d->peer->context->rdp, ERRINFO_GRAPHICS_SUBSYSTEM_FAILED);
+        break;
+    case CloseReason::None:
+        break;
+    }
+
     d->peer->Close(d->peer);
 }
 
