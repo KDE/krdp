@@ -33,16 +33,17 @@ option(BUILD_PLASMA_SESSION "Build support for Plasma Screencasting extensions" 
 
 find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED Core Gui Network DBus WaylandClient)
 
-find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
-    Config
-)
+find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS Config DBusAddons)
 
 find_package(FreeRDP 2.10 REQUIRED)
 find_package(WinPR REQUIRED)
 find_package(FreeRDP-Server REQUIRED)
 find_package(KPipeWire 5.27.80 REQUIRED)
 find_package(XKB REQUIRED)
-find_package(PlasmaWaylandProtocols REQUIRED)
+
+if (BUILD_PLASMA_SESSION)
+    find_package(PlasmaWaylandProtocols REQUIRED)
+endif()
 
 set(EXCLUDE_DEPRECATED_BEFORE_AND_AT 0 CACHE STRING "Control the range of deprecated API excluded from the build [default=0].")
 
@@ -50,6 +51,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
 add_subdirectory(src)
+add_subdirectory(server)
 
 if(BUILD_EXAMPLES)
     add_subdirectory(examples)
