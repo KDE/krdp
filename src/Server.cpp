@@ -27,8 +27,7 @@ public:
     QHostAddress address = QHostAddress::LocalHost;
     quint16 port = 3389;
 
-    QString userName;
-    QString password;
+    QList<User> users;
 
     std::filesystem::path tlsCertificate;
     std::filesystem::path tlsCertificateKey;
@@ -109,32 +108,19 @@ void Server::setPort(quint16 newPort)
     d->port = newPort;
 }
 
-QString Server::userName() const
+QList<User> KRdp::Server::users() const
 {
-    return d->userName;
+    return d->users;
 }
 
-void Server::setUserName(const QString &newUserName)
+void KRdp::Server::setUsers(const QList<User> &users)
 {
-    if (newUserName == d->userName) {
-        return;
-    }
-
-    d->userName = newUserName;
+    d->users = users;
 }
 
-QString Server::password() const
+void KRdp::Server::addUser(const User &user)
 {
-    return d->password;
-}
-
-void Server::setPassword(const QString &newPassword)
-{
-    if (newPassword == d->password) {
-        return;
-    }
-
-    d->password = newPassword;
+    d->users.append(user);
 }
 
 std::filesystem::path Server::tlsCertificate() const

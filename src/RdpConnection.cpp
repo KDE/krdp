@@ -43,7 +43,7 @@ namespace KRdp
  * information. It hashes the password in the appropriate format and writes that
  * along with the username to the provided temporary file.
  */
-bool createSamFile(QTemporaryFile &file, const QString &username, const QString &password)
+bool createSamFile(QTemporaryFile &file, const QList<User> &users)
 {
     auto runtimePath = fs::path(QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation).toStdString());
 
@@ -56,15 +56,22 @@ bool createSamFile(QTemporaryFile &file, const QString &username, const QString 
         return false;
     }
 
-    auto pw = password.toUtf8();
-    std::array<uint8_t, 16> hash;
-    NTOWFv1A((LPSTR)pw.data(), pw.size(), hash.data());
+    QString data;
 
-    auto data = QStringLiteral("%1:::").arg(username);
-    for (int i = 0; i < 16; ++i) {
-        data.append(QStringLiteral("%1").arg(hash[i], 2, 16, QLatin1Char('0')));
+    for (const auto &user : users) {
+        auto username = user.name;
+        auto password = user.password.toUtf8();
+
+        std::array<uint8_t, 16> hash;
+        NTOWFv1A((LPSTR)password.data(), password.size(), hash.data());
+
+        auto entry = QStringLiteral("%1:::").arg(username);
+        for (int i = 0; i < 16; ++i) {
+            entry.append(QStringLiteral("%1").arg(hash[i], 2, 16, QLatin1Char('0')));
+        }
+        entry.append(QStringLiteral(":::\n"));
+        data.append(entry);
     }
-    data.append(QStringLiteral(":::\n"));
 
     file.write(data.toUtf8());
     file.close();
@@ -250,7 +257,7 @@ void RdpConnection::initialize()
 
     auto settings = d->peer->context->settings;
 
-    createSamFile(d->samFile, d->server->userName(), d->server->password());
+    createSamFile(d->samFile, d->server->users());
     if (!freerdp_settings_set_string(settings, FreeRDP_NtlmSamFile, d->samFile.fileName().toUtf8().data())) {
         qCWarning(KRDP) << "Failed to set SAM database";
         return;
