@@ -313,8 +313,8 @@ uint32_t VideoStream::onCapsAdvertise(const RDPGFX_CAPS_ADVERTISE_PDU *capsAdver
 
     if (!supported) {
         qCWarning(KRDP) << "Client does not support H.264 in YUV420 mode!";
-        d->session->close();
-        return CHANNEL_RC_OK;
+        d->session->close(RdpConnection::CloseReason::VideoInitFailed);
+        return CHANNEL_RC_INITIALIZATION_ERROR;
     }
 
     auto maxVersion = std::max_element(capsInformation.begin(), capsInformation.end(), [](const auto &first, const auto &second) {
