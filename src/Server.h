@@ -19,6 +19,15 @@ namespace KRdp
 class RdpConnection;
 
 /**
+ * Data required per user that is allowed to connect to the server.
+ */
+struct User {
+    QString name; ///< The user name used to connect.
+    QString password; ///< The password for the user.
+    bool readOnly = false; ///< Whether this user is allowed to control the session.
+};
+
+/**
  * Core RDP server class.
  *
  * This class listens for TCP connections and creates a new @c Session for each
@@ -67,22 +76,13 @@ public:
     void setPort(quint16 newPort);
 
     /**
-     * The username needed to log in to the server.
+     * The list of users allowed to log in to the server.
      *
-     * Note that if this is changed while the server is running, it will only
-     * take effect for new sessions.
+     * At least one user is required for the server to work.
      */
-    QString userName() const;
-    void setUserName(const QString &userName);
-
-    /**
-     * The password needed to log in to the server.
-     *
-     * Note that if this is changed while the server is running, it will only
-     * take effect for new sessions.
-     */
-    QString password() const;
-    void setPassword(const QString &password);
+    QList<User> users() const;
+    void setUsers(const QList<User> &users);
+    void addUser(const User &user);
 
     /**
      * The path of a certificate file to use for encrypting communications.
