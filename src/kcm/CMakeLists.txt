@@ -14,7 +14,7 @@ target_sources(kcm_krdp PRIVATE
 target_link_libraries(kcm_krdp PRIVATE
     Qt::Quick
     Qt::DBus
-
+    qt6keychain
     KF6::CoreAddons
     KF6::KCMUtils
     KF6::I18n

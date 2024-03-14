@@ -5,8 +5,10 @@
 #include "kcm_krdp.h"
 
 #include <KPluginFactory>
+#include <KSharedConfig>
 #include <kconfiggroup.h>
 #include <qlatin1stringview.h>
+#include <qt6keychain/keychain.h>
 
 K_PLUGIN_CLASS_WITH_JSON(KRDPModule, "kcm_krdp.json")
 
@@ -31,11 +33,11 @@ void KRDPModule::load()
     KConfigGroup generalGroup(config, QStringLiteral("General"));
 
     setUsername(generalGroup.readEntry("Username", ""));
-    setPassword(generalGroup.readEntry("Password", ""));
     setPort(generalGroup.readEntry("Port", 0));
     setCertPath(generalGroup.readEntry("CertPath", ""));
     setCertKeyPath(generalGroup.readEntry("CertKeyPath", ""));
     setQuality(generalGroup.readEntry("Quality", 100));
+    readPassword();
 }
 
 void KRDPModule::save()
@@ -45,36 +47,61 @@ void KRDPModule::save()
 
     KConfigGroup generalGroup(config, QStringLiteral("General"));
 
-    generalGroup.writeEntry("Username", getUsername());
-    generalGroup.writeEntry("Password", getPassword());
-    generalGroup.writeEntry("Port", getPort());
-    generalGroup.writeEntry("CertPath", getCertPath());
-    generalGroup.writeEntry("CertKeyPath", getCertKeyPath());
-    generalGroup.writeEntry("Quality", getQuality());
+    generalGroup.writeEntry("Username", username());
+    generalGroup.writeEntry("Port", port());
+    generalGroup.writeEntry("CertPath", certPath());
+    generalGroup.writeEntry("CertKeyPath", certKeyPath());
+    generalGroup.writeEntry("Quality", quality());
+    writePassword();
+}
+
+void KRDPModule::writePassword()
+{
+    const auto writeJob = new QKeychain::WritePasswordJob(QLatin1StringView("KRDP"));
+    writeJob->setKey(QLatin1StringView(("KRDP")));
+    writeJob->setTextData(password());
+    writeJob->start();
+    if (writeJob->error()) {
+        qWarning() << "requestPassword: Failed to write password because of error: " << writeJob->error();
+    }
+}
+
+void KRDPModule::readPassword()
+{
+    const auto readJob = new QKeychain::ReadPasswordJob(QLatin1StringView("KRDP"), this);
+    readJob->setKey(QLatin1StringView("KRDP"));
+    connect(readJob, &QKeychain::ReadPasswordJob::finished, this, [this, readJob]() {
+        if (readJob->error() != QKeychain::Error::NoError) {
+            qWarning() << "requestPassword: Failed to read password because of error: " << readJob->error();
+            return;
+        }
+        setPassword(readJob->textData());
+    });
+    readJob->start();
 }
 
 // Getters
-QString KRDPModule::getUsername()
+QString KRDPModule::username()
 {
     return m_username;
 }
-QString KRDPModule::getPassword()
+QString KRDPModule::password()
 {
     return m_password;
 }
-int KRDPModule::getPort()
+int KRDPModule::port()
 {
     return m_port;
 }
-QString KRDPModule::getCertPath()
+QString KRDPModule::certPath()
 {
     return m_certPath;
 }
-QString KRDPModule::getCertKeyPath()
+QString KRDPModule::certKeyPath()
 {
     return m_certKeyPath;
 }
-int KRDPModule::getQuality()
+int KRDPModule::quality()
 {
     return m_quality;
 }

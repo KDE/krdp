@@ -5,17 +5,18 @@
 #pragma once
 
 #include <KQuickConfigModule>
+#include <qt6keychain/keychain.h>
 
 class KRDPModule : public KQuickConfigModule
 {
     Q_OBJECT
 public:
-    Q_PROPERTY(QString username READ getUsername WRITE setUsername NOTIFY usernameChanged)
-    Q_PROPERTY(QString password READ getPassword WRITE setPassword NOTIFY passwordChanged)
-    Q_PROPERTY(int port READ getPort WRITE setPort NOTIFY portChanged)
-    Q_PROPERTY(QString certPath READ getCertPath WRITE setCertPath NOTIFY certPathChanged)
-    Q_PROPERTY(QString certKeyPath READ getCertKeyPath WRITE setCertKeyPath NOTIFY certKeyPathChanged)
-    Q_PROPERTY(int quality READ getQuality WRITE setQuality NOTIFY qualityChanged)
+    Q_PROPERTY(QString username READ username WRITE setUsername NOTIFY usernameChanged)
+    Q_PROPERTY(QString password READ password WRITE setPassword NOTIFY passwordChanged)
+    Q_PROPERTY(int port READ port WRITE setPort NOTIFY portChanged)
+    Q_PROPERTY(QString certPath READ certPath WRITE setCertPath NOTIFY certPathChanged)
+    Q_PROPERTY(QString certKeyPath READ certKeyPath WRITE setCertKeyPath NOTIFY certKeyPathChanged)
+    Q_PROPERTY(int quality READ quality WRITE setQuality NOTIFY qualityChanged)
 
     KRDPModule(QObject *parent, const KPluginMetaData &data, const QVariantList &args);
 
@@ -24,12 +25,15 @@ public:
     void load() override;
     void save() override;
 
-    QString getUsername();
-    QString getPassword();
-    int getPort();
-    QString getCertPath();
-    QString getCertKeyPath();
-    int getQuality();
+    void writePassword();
+    void readPassword();
+
+    QString username();
+    QString password();
+    int port();
+    QString certPath();
+    QString certKeyPath();
+    int quality();
 
     void setUsername(const QString &username);
     void setPassword(const QString &password);
