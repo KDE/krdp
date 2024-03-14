@@ -11,7 +11,6 @@ import org.kde.kcmutils as KCMUtils
 
 KCMUtils.SimpleKCM {
     id: root
-    title: i18nc("@title", "Remote Desktop")
 
     Kirigami.FormLayout {
         id: layout
