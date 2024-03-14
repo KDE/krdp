@@ -1,12 +1,12 @@
 {
     "KPlugin": {
-        "Description": "Configure KRDP",
+        "Description": "Configure Remote Desktop",
         "FormFactors": [
             "desktop"
         ],
         "Icon": "preferences-krdp",
-        "Name": "KRDP"
+        "Name": "Remote Desktop"
     },
     "X-KDE-Keywords": "KRDP,remote desktop",
-	"X-KDE-System-Settings-Parent-Category": "hardware"
+    "X-KDE-System-Settings-Parent-Category": "hardware"
 }
