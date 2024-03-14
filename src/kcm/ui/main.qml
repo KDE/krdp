@@ -11,7 +11,7 @@ import org.kde.kcmutils as KCMUtils
 
 KCMUtils.SimpleKCM {
     id: root
-    title: "KRDP Configuration"
+    title: "Remote Desktop"
     Layout.fillWidth: true
 
     Kirigami.FormLayout {
@@ -28,7 +28,7 @@ KCMUtils.SimpleKCM {
             }
         }
 
-        QQC2.TextField {
+        Kirigami.PasswordField {
             id: passwordField
             Layout.maximumWidth: Kirigami.Units.gridUnit * 8
             echoMode: TextInput.Password
@@ -117,9 +117,6 @@ KCMUtils.SimpleKCM {
                     kcm.needsSave = true;
                 }
             }
-            QQC2.Label {
-                text: "Speed"
-            }
             QQC2.Slider {
                 id: qualitySlider
                 Layout.minimumWidth: Kirigami.Units.gridUnit * 10
@@ -132,9 +129,6 @@ KCMUtils.SimpleKCM {
                     kcm.quality = value;
                     kcm.needsSave = true;
                 }
-            }
-            QQC2.Label {
-                text: "Quality"
             }
         }
     }
