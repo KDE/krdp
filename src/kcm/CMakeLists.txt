@@ -18,5 +18,4 @@ target_link_libraries(kcm_krdp PRIVATE
     KF6::CoreAddons
     KF6::KCMUtils
     KF6::I18n
-    KF6::AuthCore
 )

@@ -31,14 +31,13 @@ include(ECMEnableSanitizers)
 option(BUILD_EXAMPLES "Build example applications" ON)
 option(BUILD_PLASMA_SESSION "Build support for Plasma Screencasting extensions" ON)
 
-find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED Core Quick QuickWidgets Gui Network DBus WaylandClient Qml)
+find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED Core Quick Gui Network DBus WaylandClient Qml)
 
 find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
     Config
     CoreAddons
     KCMUtils
     I18n
-    Auth
 )
 
 find_package(FreeRDP 2.10 REQUIRED)
