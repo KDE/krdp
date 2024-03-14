@@ -4,9 +4,9 @@
 
 #pragma once
 
+#include <KConfigGroup>
 #include <KQuickConfigModule>
 #include <KSharedConfig>
-#include <kconfiggroup.h>
 #include <qt6keychain/keychain.h>
 
 class KRDPModule : public KQuickConfigModule

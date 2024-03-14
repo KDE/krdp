@@ -4,10 +4,9 @@
 
 #include "kcm_krdp.h"
 
+#include <KConfigGroup>
 #include <KPluginFactory>
 #include <KSharedConfig>
-#include <kconfiggroup.h>
-#include <qlatin1stringview.h>
 #include <qt6keychain/keychain.h>
 
 K_PLUGIN_CLASS_WITH_JSON(KRDPModule, "kcm_krdp.json")
