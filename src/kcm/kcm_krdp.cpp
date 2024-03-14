@@ -12,6 +12,9 @@
 
 K_PLUGIN_CLASS_WITH_JSON(KRDPModule, "kcm_krdp.json")
 
+static const QString settingsFileName = QLatin1StringView("krdprc");
+static const QString passwordServiceName = QLatin1StringView("KRDP");
+
 KRDPModule::KRDPModule(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
     : KQuickConfigModule(parent, data)
 {
@@ -28,7 +31,7 @@ QString KRDPModule::toLocalFile(const QUrl url)
 void KRDPModule::load()
 {
     KQuickConfigModule::load();
-    KSharedConfig::Ptr config = KSharedConfig::openConfig(m_settingsFile);
+    KSharedConfig::Ptr config = KSharedConfig::openConfig(settingsFileName);
 
     KConfigGroup generalGroup(config, QStringLiteral("General"));
 
@@ -43,7 +46,7 @@ void KRDPModule::load()
 void KRDPModule::save()
 {
     KQuickConfigModule::save();
-    KSharedConfig::Ptr config = KSharedConfig::openConfig(m_settingsFile);
+    KSharedConfig::Ptr config = KSharedConfig::openConfig(settingsFileName);
 
     KConfigGroup generalGroup(config, QStringLiteral("General"));
 
@@ -57,7 +60,7 @@ void KRDPModule::save()
 
 void KRDPModule::writePassword()
 {
-    const auto writeJob = new QKeychain::WritePasswordJob(QLatin1StringView("KRDP"));
+    const auto writeJob = new QKeychain::WritePasswordJob(passwordServiceName);
     writeJob->setKey(QLatin1StringView(("KRDP")));
     writeJob->setTextData(password());
     writeJob->start();
@@ -68,7 +71,7 @@ void KRDPModule::writePassword()
 
 void KRDPModule::readPassword()
 {
-    const auto readJob = new QKeychain::ReadPasswordJob(QLatin1StringView("KRDP"), this);
+    const auto readJob = new QKeychain::ReadPasswordJob(passwordServiceName, this);
     readJob->setKey(QLatin1StringView("KRDP"));
     connect(readJob, &QKeychain::ReadPasswordJob::finished, this, [this, readJob]() {
         if (readJob->error() != QKeychain::Error::NoError) {

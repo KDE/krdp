@@ -57,5 +57,4 @@ private:
     QString m_certPath;
     QString m_certKeyPath;
     int m_quality;
-    QLatin1String m_settingsFile = QLatin1String("krdprc");
 };
