@@ -83,7 +83,7 @@ void KRDPModule::setPassword(const QString &password)
     writeJob->setKey(QLatin1StringView(("KRDP")));
     writeJob->setTextData(password);
     writeJob->start();
-    if (writeJob->error()) {
+    if (writeJob->error() != QKeychain::Error::NoError) {
         qWarning() << "requestPassword: Failed to write password because of error: " << writeJob->error();
     }
 }
