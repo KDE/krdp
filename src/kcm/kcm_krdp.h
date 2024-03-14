@@ -18,7 +18,7 @@ public:
     Q_PROPERTY(QString certKeyPath READ certKeyPath WRITE setCertKeyPath NOTIFY certKeyPathChanged)
     Q_PROPERTY(int quality READ quality WRITE setQuality NOTIFY qualityChanged)
 
-    KRDPModule(QObject *parent, const KPluginMetaData &data, const QVariantList &args);
+    KRDPModule(QObject *parent, const KPluginMetaData &data);
 
     Q_INVOKABLE QString toLocalFile(const QUrl url);
 

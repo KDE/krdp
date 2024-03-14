@@ -15,7 +15,7 @@ K_PLUGIN_CLASS_WITH_JSON(KRDPModule, "kcm_krdp.json")
 static const QString settingsFileName = QLatin1StringView("krdprc");
 static const QString passwordServiceName = QLatin1StringView("KRDP");
 
-KRDPModule::KRDPModule(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
+KRDPModule::KRDPModule(QObject *parent, const KPluginMetaData &data)
     : KQuickConfigModule(parent, data)
 {
     setButtons(Apply);
