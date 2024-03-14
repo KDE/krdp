@@ -20,7 +20,7 @@ KCMUtils.SimpleKCM {
         QQC2.TextField {
             id: usernameField
             Layout.maximumWidth: Kirigami.Units.gridUnit * 8
-            Kirigami.FormData.label: "Username:"
+            Kirigami.FormData.label: i18nc("@label:textbox", "Username:")
             text: kcm.username
             onTextEdited: {
                 kcm.username = text;
@@ -32,7 +32,7 @@ KCMUtils.SimpleKCM {
             id: passwordField
             Layout.maximumWidth: Kirigami.Units.gridUnit * 8
             echoMode: TextInput.Password
-            Kirigami.FormData.label: "Password:"
+            Kirigami.FormData.label: i18nc("@label:textbox", "Password:")
             text: kcm.password
             onTextEdited: {
                 kcm.password = text;
@@ -45,7 +45,7 @@ KCMUtils.SimpleKCM {
             inputMask: "99999999"
             Layout.maximumWidth: Kirigami.Units.gridUnit * 5
             inputMethodHints: Qt.ImhDigitsOnly
-            Kirigami.FormData.label: "Port:"
+            Kirigami.FormData.label: i18nc("@label:textbox", "Port:")
             text: kcm.port
             onTextEdited: {
                 kcm.port = parseInt(text);
@@ -60,7 +60,7 @@ KCMUtils.SimpleKCM {
         RowLayout {
             id: certLayout
             width: usernameField.width
-            Kirigami.FormData.label: "Certificate path:"
+            Kirigami.FormData.label: i18nc("@label:textbox", "Certificate path:")
             QQC2.TextField {
                 id: certPathField
                 implicitWidth: Kirigami.Units.gridUnit * 14
@@ -72,6 +72,8 @@ KCMUtils.SimpleKCM {
             }
             QQC2.Button {
                 icon.name: "folder-open-symbolic"
+                text: i18nc("@label:chooser", "Open file picker for Certificate file")
+                display: QQC2.AbstractButton.IconOnly
                 onClicked: {
                     certLoader.key = false;
                     certLoader.active = true;
@@ -82,7 +84,7 @@ KCMUtils.SimpleKCM {
         RowLayout {
             id: certKeyLayout
             width: usernameField.width
-            Kirigami.FormData.label: "Certificate key path:"
+            Kirigami.FormData.label: i18nc("@label:textbox", "Certificate key path:")
             QQC2.TextField {
                 id: certKeyPathField
                 implicitWidth: Kirigami.Units.gridUnit * 14
@@ -94,6 +96,8 @@ KCMUtils.SimpleKCM {
             }
             QQC2.Button {
                 icon.name: "folder-open-symbolic"
+                text: i18nc("@label:chooser", "Open file picker for Certificate Key file")
+                display: QQC2.AbstractButton.IconOnly
                 onClicked: {
                     certLoader.key = true;
                     certLoader.active = true;
@@ -106,14 +110,16 @@ KCMUtils.SimpleKCM {
         }
 
         RowLayout {
-            Kirigami.FormData.label: "Quality:"
-            QQC2.TextField {
+            Kirigami.FormData.label: i18nc("@label:slider", "Quality:")
+            QQC2.SpinBox {
                 inputMethodHints: Qt.ImhDigitsOnly
-                text: qualitySlider.value
-                Layout.maximumWidth: Kirigami.Units.gridUnit * 2
-                onTextEdited: {
-                    qualitySlider.value = text;
-                    kcm.quality = text;
+                from: 0
+                to: 100
+                stepSize: 1
+                value: qualitySlider.value
+                onValueModified: {
+                    qualitySlider.value = value;
+                    kcm.quality = value;
                     kcm.needsSave = true;
                 }
             }
@@ -122,8 +128,8 @@ KCMUtils.SimpleKCM {
                 Layout.minimumWidth: Kirigami.Units.gridUnit * 10
                 from: 0
                 to: 100
-                value: kcm.quality
                 stepSize: 1
+                value: kcm.quality
                 Layout.fillWidth: true
                 onMoved: {
                     kcm.quality = value;
@@ -138,7 +144,8 @@ KCMUtils.SimpleKCM {
         property bool key
         active: false
         sourceComponent: QtDialogs.FileDialog {
-            title: i18n("Select Certificate file")
+            id: fileDialog
+            title: key ? i18nc("@title:window", "Select Certificate Key file") : i18nc("@title:window", "Select Certificate file")
             Component.onCompleted: open()
             onAccepted: {
                 var file = kcm.toLocalFile(selectedFile);
