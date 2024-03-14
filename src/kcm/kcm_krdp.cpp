@@ -13,10 +13,13 @@
 K_PLUGIN_CLASS_WITH_JSON(KRDPModule, "kcm_krdp.json")
 
 static const QString settingsFileName = QLatin1StringView("krdprc");
+static const QString settingsGroupName = QStringLiteral("General");
 static const QString passwordServiceName = QLatin1StringView("KRDP");
 
 KRDPModule::KRDPModule(QObject *parent, const KPluginMetaData &data)
     : KQuickConfigModule(parent, data)
+    , m_config(KSharedConfig::openConfig(settingsFileName))
+    , m_configGroup(KConfigGroup(m_config, settingsGroupName))
 {
     setButtons(Apply);
     load();
@@ -27,49 +30,13 @@ QString KRDPModule::toLocalFile(const QUrl url)
     return url.toLocalFile();
 }
 
-// Save and load
-void KRDPModule::load()
+// Getters
+QString KRDPModule::username()
 {
-    KQuickConfigModule::load();
-    KSharedConfig::Ptr config = KSharedConfig::openConfig(settingsFileName);
-
-    KConfigGroup generalGroup(config, QStringLiteral("General"));
-
-    setUsername(generalGroup.readEntry("Username", ""));
-    setPort(generalGroup.readEntry("Port", 0));
-    setCertPath(generalGroup.readEntry("CertPath", ""));
-    setCertKeyPath(generalGroup.readEntry("CertKeyPath", ""));
-    setQuality(generalGroup.readEntry("Quality", 100));
-    readPassword();
+    return m_configGroup.readEntry("Username", "");
 }
 
-void KRDPModule::save()
-{
-    KQuickConfigModule::save();
-    KSharedConfig::Ptr config = KSharedConfig::openConfig(settingsFileName);
-
-    KConfigGroup generalGroup(config, QStringLiteral("General"));
-
-    generalGroup.writeEntry("Username", username());
-    generalGroup.writeEntry("Port", port());
-    generalGroup.writeEntry("CertPath", certPath());
-    generalGroup.writeEntry("CertKeyPath", certKeyPath());
-    generalGroup.writeEntry("Quality", quality());
-    writePassword();
-}
-
-void KRDPModule::writePassword()
-{
-    const auto writeJob = new QKeychain::WritePasswordJob(passwordServiceName);
-    writeJob->setKey(QLatin1StringView(("KRDP")));
-    writeJob->setTextData(password());
-    writeJob->start();
-    if (writeJob->error()) {
-        qWarning() << "requestPassword: Failed to write password because of error: " << writeJob->error();
-    }
-}
-
-void KRDPModule::readPassword()
+QString KRDPModule::password()
 {
     const auto readJob = new QKeychain::ReadPasswordJob(passwordServiceName, this);
     readJob->setKey(QLatin1StringView("KRDP"));
@@ -78,61 +45,67 @@ void KRDPModule::readPassword()
             qWarning() << "requestPassword: Failed to read password because of error: " << readJob->error();
             return;
         }
-        setPassword(readJob->textData());
+        m_password = readJob->textData();
     });
     readJob->start();
-}
-
-// Getters
-QString KRDPModule::username()
-{
-    return m_username;
-}
-QString KRDPModule::password()
-{
     return m_password;
 }
+
 int KRDPModule::port()
 {
-    return m_port;
+    return m_configGroup.readEntry("Port", 123);
 }
+
 QString KRDPModule::certPath()
 {
-    return m_certPath;
+    return m_configGroup.readEntry("CertPath", "");
 }
+
 QString KRDPModule::certKeyPath()
 {
-    return m_certKeyPath;
+    return m_configGroup.readEntry("CertKeyPath", "");
 }
+
 int KRDPModule::quality()
 {
-    return m_quality;
+    return m_configGroup.readEntry("Quality", 100);
 }
 
 // Setters
 void KRDPModule::setUsername(const QString &username)
 {
-    m_username = username;
+    m_configGroup.writeEntry("Username", username);
 }
+
 void KRDPModule::setPassword(const QString &password)
 {
-    m_password = password;
+    const auto writeJob = new QKeychain::WritePasswordJob(passwordServiceName);
+    writeJob->setKey(QLatin1StringView(("KRDP")));
+    writeJob->setTextData(password);
+    writeJob->start();
+    if (writeJob->error()) {
+        qWarning() << "requestPassword: Failed to write password because of error: " << writeJob->error();
+    }
 }
+
 void KRDPModule::setPort(const int &port)
 {
-    m_port = port;
+    m_configGroup.writeEntry("Port", port);
 }
+
 void KRDPModule::setCertPath(const QString &certPath)
 {
-    m_certPath = certPath;
+    m_configGroup.writeEntry("CertPath", certPath);
 }
+
 void KRDPModule::setCertKeyPath(const QString &certKeyPath)
 {
-    m_certKeyPath = certKeyPath;
+    m_configGroup.writeEntry("CertKeyPath", certKeyPath);
 }
+
 void KRDPModule::setQuality(const int &quality)
 {
-    m_quality = quality;
+    m_configGroup.writeEntry("Quality", quality);
 }
 
 #include "kcm_krdp.moc"

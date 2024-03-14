@@ -5,6 +5,8 @@
 #pragma once
 
 #include <KQuickConfigModule>
+#include <KSharedConfig>
+#include <kconfiggroup.h>
 #include <qt6keychain/keychain.h>
 
 class KRDPModule : public KQuickConfigModule
@@ -21,12 +23,6 @@ public:
     KRDPModule(QObject *parent, const KPluginMetaData &data);
 
     Q_INVOKABLE QString toLocalFile(const QUrl url);
-
-    void load() override;
-    void save() override;
-
-    void writePassword();
-    void readPassword();
 
     QString username();
     QString password();
@@ -51,10 +47,7 @@ Q_SIGNALS:
     void qualityChanged();
 
 private:
-    QString m_username;
+    KSharedConfig::Ptr m_config;
+    KConfigGroup m_configGroup;
     QString m_password;
-    int m_port;
-    QString m_certPath;
-    QString m_certKeyPath;
-    int m_quality;
 };
