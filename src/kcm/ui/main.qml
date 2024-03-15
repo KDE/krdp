@@ -46,7 +46,9 @@ KCM.SimpleKCM {
             Layout.maximumWidth: Kirigami.Units.gridUnit * 8
             echoMode: TextInput.Password
             Kirigami.FormData.label: i18nc("@label:textbox", "Password:")
-            text: kcm.readPasswordFromWallet(Settings.user)
+            Component.onCompleted: {
+                kcm.readPasswordFromWallet(Settings.user);
+            }
             onTextEdited: {
                 kcm.needsSave = true;
             }
@@ -54,6 +56,7 @@ KCM.SimpleKCM {
 
         QQC2.TextField {
             id: addressField
+            Layout.maximumWidth: Kirigami.Units.gridUnit * 8
             Kirigami.FormData.label: i18nc("@label:textbox", "Listen Address:")
             text: Settings.listenAddress
             onTextEdited: {
@@ -82,12 +85,12 @@ KCM.SimpleKCM {
         }
 
         Item {
-            Layout.fillWidth: true
+            Kirigami.FormData.isSection: true
         }
 
         RowLayout {
             id: certLayout
-            width: usernameField.width
+            spacing: Kirigami.Units.smallSpacing
             Kirigami.FormData.label: i18nc("@label:textbox", "Certificate path:")
             QQC2.TextField {
                 id: certPathField
@@ -114,7 +117,7 @@ KCM.SimpleKCM {
 
         RowLayout {
             id: certKeyLayout
-            width: usernameField.width
+            spacing: Kirigami.Units.smallSpacing
             Kirigami.FormData.label: i18nc("@label:textbox", "Certificate key path:")
             QQC2.TextField {
                 id: certKeyPathField
@@ -140,7 +143,7 @@ KCM.SimpleKCM {
         }
 
         Item {
-            Layout.fillWidth: true
+            Kirigami.FormData.isSection: true
         }
 
         RowLayout {
@@ -157,7 +160,7 @@ KCM.SimpleKCM {
             }
             QQC2.Slider {
                 id: qualitySlider
-                Layout.minimumWidth: Kirigami.Units.gridUnit * 10
+                Layout.minimumWidth: Kirigami.Units.gridUnit * 12
                 from: 0
                 to: 100
                 stepSize: 1
