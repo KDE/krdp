@@ -16,11 +16,23 @@ KCM.SimpleKCM {
     Kirigami.FormLayout {
         id: layout
 
+        Connections {
+            target: kcm
+            function onKrdpServerSettingsChanged() {
+                if (passwordField.text != kcm.password(Settings.user)) {
+                    kcm.setPassword(Settings.user, passwordField.text);
+                }
+            }
+        }
+
         QQC2.TextField {
             id: usernameField
             Layout.maximumWidth: Kirigami.Units.gridUnit * 8
             Kirigami.FormData.label: i18nc("@label:textbox", "Username:")
-            text: Settings.users
+            text: Settings.user
+            onTextEdited: {
+                Settings.user = text;
+            }
             KCM.SettingStateBinding {
                 configObject: Settings
                 settingName: "users"
@@ -32,10 +44,24 @@ KCM.SimpleKCM {
             Layout.maximumWidth: Kirigami.Units.gridUnit * 8
             echoMode: TextInput.Password
             Kirigami.FormData.label: i18nc("@label:textbox", "Password:")
-            text: Settings.passwords
+            text: kcm.password(Settings.user)
+            onTextEdited: {
+                if (text != kcm.password(Settings.user)) {
+                    kcm.needsSave = true;
+                }
+            }
+        }
+
+        QQC2.TextField {
+            id: addressField
+            Kirigami.FormData.label: i18nc("@label:textbox", "Listen Address:")
+            text: Settings.listenAddress
+            onTextEdited: {
+                Settings.listenAddress = text;
+            }
             KCM.SettingStateBinding {
                 configObject: Settings
-                settingName: "passwords"
+                settingName: "listenAddress"
             }
         }
 
@@ -44,11 +70,14 @@ KCM.SimpleKCM {
             inputMask: "99999999"
             Layout.maximumWidth: Kirigami.Units.gridUnit * 5
             inputMethodHints: Qt.ImhDigitsOnly
-            Kirigami.FormData.label: i18nc("@label:textbox", "Port:")
-            text: Settings.ListenPort
+            Kirigami.FormData.label: i18nc("@label:textbox", "Listen Port:")
+            text: Settings.listenPort
             onTextEdited: {
-                kcm.port = parseInt(text);
-                kcm.needsSave = true;
+                Settings.listenPort = text;
+            }
+            KCM.SettingStateBinding {
+                configObject: Settings
+                settingName: "listenPort"
             }
         }
 
@@ -63,10 +92,13 @@ KCM.SimpleKCM {
             QQC2.TextField {
                 id: certPathField
                 implicitWidth: Kirigami.Units.gridUnit * 14
-                text: kcm.certPath
-                onTextEdited: {
-                    kcm.certPath = text;
-                    kcm.needsSave = true;
+                text: Settings.certificate
+                onTextChanged: {
+                    Settings.certificate = text;
+                }
+                KCM.SettingStateBinding {
+                    configObject: Settings
+                    settingName: "certificate"
                 }
             }
             QQC2.Button {
@@ -87,10 +119,13 @@ KCM.SimpleKCM {
             QQC2.TextField {
                 id: certKeyPathField
                 implicitWidth: Kirigami.Units.gridUnit * 14
-                text: kcm.certKeyPath
-                onTextEdited: {
-                    kcm.certKeyPath = text;
-                    kcm.needsSave = true;
+                text: Settings.certificateKey
+                onTextChanged: {
+                    Settings.certificateKey = text;
+                }
+                KCM.SettingStateBinding {
+                    configObject: Settings
+                    settingName: "certificateKey"
                 }
             }
             QQC2.Button {
@@ -118,8 +153,6 @@ KCM.SimpleKCM {
                 value: qualitySlider.value
                 onValueModified: {
                     qualitySlider.value = value;
-                    kcm.quality = value;
-                    kcm.needsSave = true;
                 }
             }
             QQC2.Slider {
@@ -128,11 +161,14 @@ KCM.SimpleKCM {
                 from: 0
                 to: 100
                 stepSize: 1
-                value: kcm.quality
                 Layout.fillWidth: true
-                onMoved: {
-                    kcm.quality = value;
-                    kcm.needsSave = true;
+                value: Settings.quality
+                onValueChanged: {
+                    Settings.quality = value;
+                }
+                KCM.SettingStateBinding {
+                    configObject: Settings
+                    settingName: "quality"
                 }
             }
         }
@@ -149,13 +185,10 @@ KCM.SimpleKCM {
             onAccepted: {
                 var file = kcm.toLocalFile(selectedFile);
                 if (key) {
-                    kcm.certKeyPath = file;
                     certKeyPathField.text = file;
                 } else {
-                    kcm.certPath = file;
                     certPathField.text = file;
                 }
-                kcm.needsSave = true;
                 certLoader.active = false;
             }
             onRejected: {

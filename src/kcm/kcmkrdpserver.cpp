@@ -19,6 +19,7 @@ KRDPServerConfig::KRDPServerConfig(QObject *parent, const KPluginMetaData &data)
     auto settings = new KRDPServerSettings(this);
     qmlRegisterSingletonInstance("org.kde.krdpserversettings.private", 1, 0, "Settings", settings);
     setButtons(Help | Apply | Default);
+    load();
 }
 
 KRDPServerConfig::~KRDPServerConfig() = default;
@@ -32,7 +33,7 @@ QString KRDPServerConfig::password(const QString &user)
 {
     m_password.clear();
     const auto readJob = new QKeychain::ReadPasswordJob(passwordServiceName, this);
-    readJob->setKey(QLatin1StringView("KRDP"));
+    readJob->setKey(QLatin1StringView(user.toLatin1()));
     connect(readJob, &QKeychain::ReadPasswordJob::finished, this, [this, readJob]() {
         if (readJob->error() != QKeychain::Error::NoError) {
             qWarning() << "requestPassword: Failed to read password because of error: " << readJob->error();
@@ -47,12 +48,23 @@ QString KRDPServerConfig::password(const QString &user)
 void KRDPServerConfig::setPassword(const QString &user, const QString &password)
 {
     const auto writeJob = new QKeychain::WritePasswordJob(passwordServiceName);
-    writeJob->setKey(QLatin1StringView(("KRDP")));
+    writeJob->setKey(QLatin1StringView(user.toLatin1()));
     writeJob->setTextData(password);
     writeJob->start();
     if (writeJob->error() != QKeychain::Error::NoError) {
         qWarning() << "requestPassword: Failed to write password because of error: " << writeJob->error();
     }
+}
+
+void KRDPServerConfig::defaults()
+{
+    KQuickManagedConfigModule::defaults();
+}
+
+void KRDPServerConfig::save()
+{
+    KQuickManagedConfigModule::save();
+    Q_EMIT krdpServerSettingsChanged();
 }
 
 #include "kcmkrdpserver.moc"
