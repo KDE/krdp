@@ -103,7 +103,7 @@ KCM.SimpleKCM {
             }
             QQC2.Button {
                 icon.name: "folder-open-symbolic"
-                text: i18nc("@label:chooser", "Open file picker for Certificate file")
+                text: i18nc("@action:button", "Choose Certificate File…")
                 display: QQC2.AbstractButton.IconOnly
                 onClicked: {
                     certLoader.key = false;
@@ -130,7 +130,7 @@ KCM.SimpleKCM {
             }
             QQC2.Button {
                 icon.name: "folder-open-symbolic"
-                text: i18nc("@label:chooser", "Open file picker for Certificate Key file")
+                text: i18nc("@action:button", "Choose Certificate Key File…")
                 display: QQC2.AbstractButton.IconOnly
                 onClicked: {
                     certLoader.key = true;
