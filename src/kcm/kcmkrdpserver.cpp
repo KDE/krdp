@@ -29,9 +29,13 @@ QString KRDPServerConfig::toLocalFile(const QUrl url)
     return url.toLocalFile();
 }
 
-QString KRDPServerConfig::password(const QString &user)
+QString KRDPServerConfig::password()
 {
-    m_password.clear();
+    return m_password;
+}
+
+void KRDPServerConfig::readPasswordFromWallet(const QString &user)
+{
     const auto readJob = new QKeychain::ReadPasswordJob(passwordServiceName, this);
     readJob->setKey(QLatin1StringView(user.toLatin1()));
     connect(readJob, &QKeychain::ReadPasswordJob::finished, this, [this, readJob]() {
@@ -40,12 +44,12 @@ QString KRDPServerConfig::password(const QString &user)
             return;
         }
         m_password = readJob->textData();
+        Q_EMIT passwordLoaded();
     });
     readJob->start();
-    return m_password;
 }
 
-void KRDPServerConfig::setPassword(const QString &user, const QString &password)
+void KRDPServerConfig::writePasswordToWallet(const QString &user, const QString &password)
 {
     const auto writeJob = new QKeychain::WritePasswordJob(passwordServiceName);
     writeJob->setKey(QLatin1StringView(user.toLatin1()));

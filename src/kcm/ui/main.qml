@@ -19,9 +19,10 @@ KCM.SimpleKCM {
         Connections {
             target: kcm
             function onKrdpServerSettingsChanged() {
-                if (passwordField.text != kcm.password(Settings.user)) {
-                    kcm.setPassword(Settings.user, passwordField.text);
-                }
+                kcm.writePasswordToWallet(Settings.user, passwordField.text);
+            }
+            function onPasswordLoaded() {
+                passwordField.text = kcm.password();
             }
         }
 
@@ -32,6 +33,7 @@ KCM.SimpleKCM {
             text: Settings.user
             onTextEdited: {
                 Settings.user = text;
+                passwordField.text = "";
             }
             KCM.SettingStateBinding {
                 configObject: Settings
@@ -44,11 +46,9 @@ KCM.SimpleKCM {
             Layout.maximumWidth: Kirigami.Units.gridUnit * 8
             echoMode: TextInput.Password
             Kirigami.FormData.label: i18nc("@label:textbox", "Password:")
-            text: kcm.password(Settings.user)
+            text: kcm.readPasswordFromWallet(Settings.user)
             onTextEdited: {
-                if (text != kcm.password(Settings.user)) {
-                    kcm.needsSave = true;
-                }
+                kcm.needsSave = true;
             }
         }
 
