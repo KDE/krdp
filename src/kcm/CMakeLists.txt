@@ -25,5 +25,6 @@ target_link_libraries(kcmkrdpserver PRIVATE
     qt6keychain
     KF6::CoreAddons
     KF6::KCMUtils
+    KF6::KCMUtilsQuick
     KF6::I18n
 )

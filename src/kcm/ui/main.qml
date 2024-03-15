@@ -20,10 +20,10 @@ KCM.SimpleKCM {
             id: usernameField
             Layout.maximumWidth: Kirigami.Units.gridUnit * 8
             Kirigami.FormData.label: i18nc("@label:textbox", "Username:")
-            text: Settings.Users
+            text: Settings.users
             KCM.SettingStateBinding {
                 configObject: Settings
-                settingName: "Users"
+                settingName: "users"
             }
         }
 
@@ -32,10 +32,10 @@ KCM.SimpleKCM {
             Layout.maximumWidth: Kirigami.Units.gridUnit * 8
             echoMode: TextInput.Password
             Kirigami.FormData.label: i18nc("@label:textbox", "Password:")
-            text: kcm.password
-            onTextEdited: {
-                kcm.password = text;
-                kcm.needsSave = true;
+            text: Settings.passwords
+            KCM.SettingStateBinding {
+                configObject: Settings
+                settingName: "passwords"
             }
         }
 

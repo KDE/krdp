@@ -18,8 +18,8 @@ public:
 
     Q_INVOKABLE QString toLocalFile(const QUrl url);
 
-    QString password();
-    void setPassword(const QString &password);
+    QString password(const QString &user);
+    void setPassword(const QString &user, const QString &password);
 
 private:
     QString m_password;
