@@ -2,16 +2,15 @@
 #
 # SPDX-License-Identifier: BSD-2-Clause
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
+add_definitions(-DTRANSLATION_DOMAIN=\"kcmkrdpserver\")
 
-add_definitions(-DTRANSLATION_DOMAIN=\"kcm_krdp\")
-
-kcmutils_add_qml_kcm(kcm_krdp)
-target_sources(kcm_krdp PRIVATE
-   kcm_krdp.cpp
-   kcm_krdp.h
+kcmutils_add_qml_kcm(kcmkrdpserver)
+target_sources(kcmkrdpserver PRIVATE
+   kcmkrdpserver.cpp
+   kcmkrdpserver.h
 )
-target_link_libraries(kcm_krdp PRIVATE
+
+target_link_libraries(kcmkrdpserver PRIVATE
     Qt::Quick
     Qt::DBus
     qt6keychain
