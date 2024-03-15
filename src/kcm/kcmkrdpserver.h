@@ -4,16 +4,17 @@
 
 #pragma once
 
-#include <KConfigGroup>
-#include <KQuickConfigModule>
-#include <KSharedConfig>
+#include <KQuickManagedConfigModule>
 #include <qt6keychain/keychain.h>
 
-class KRDPServerConfig : public KQuickConfigModule
+class KRDPServerConfigImpl;
+
+class KRDPServerConfig : public KQuickManagedConfigModule
 {
     Q_OBJECT
 public:
-    KRDPServerConfig(QObject *parent, const KPluginMetaData &data);
+    explicit KRDPServerConfig(QObject *parent, const KPluginMetaData &data);
+    ~KRDPServerConfig() override;
 
     Q_INVOKABLE QString toLocalFile(const QUrl url);
 
@@ -21,7 +22,5 @@ public:
     void setPassword(const QString &password);
 
 private:
-    KSharedConfig::Ptr m_config;
-    KConfigGroup m_configGroup;
     QString m_password;
 };

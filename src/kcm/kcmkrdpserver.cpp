@@ -3,26 +3,25 @@
 // SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 
 #include "kcmkrdpserver.h"
+#include "krdpserverdata.h"
+#include "krdpserversettings.h"
 
-#include <KConfigGroup>
 #include <KPluginFactory>
-#include <KSharedConfig>
 #include <qt6keychain/keychain.h>
 
-K_PLUGIN_CLASS_WITH_JSON(KRDPServerConfig, "kcmkrdpserver.json")
+K_PLUGIN_FACTORY_WITH_JSON(KRDPServerConfigFactory, "kcmkrdpserver.json", registerPlugin<KRDPServerConfig>(); registerPlugin<KRDPServerData>();)
 
-static const QString settingsFileName = QLatin1StringView("krdprc");
-static const QString settingsGroupName = QStringLiteral("General");
 static const QString passwordServiceName = QLatin1StringView("KRDP");
 
 KRDPServerConfig::KRDPServerConfig(QObject *parent, const KPluginMetaData &data)
-    : KQuickConfigModule(parent, data)
-    , m_config(KSharedConfig::openConfig(settingsFileName))
-    , m_configGroup(KConfigGroup(m_config, settingsGroupName))
+    : KQuickManagedConfigModule(parent, data)
 {
-    setButtons(Apply);
-    load();
+    auto settings = new KRDPServerSettings(this);
+    qmlRegisterSingletonInstance("org.kde.krdpserversettings.private", 1, 0, "Settings", settings);
+    setButtons(Help | Apply | Default);
 }
+
+KRDPServerConfig::~KRDPServerConfig() = default;
 
 QString KRDPServerConfig::toLocalFile(const QUrl url)
 {

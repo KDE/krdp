@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0                           http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
+	<kcfgfile name="krdpserverrc"/>
+	<group name="General">
+		<entry name="ListenAddress" type="String">
+			<label>The address the server listens on</label>
+			<default>0.0.0.0</default>
+		</entry>
+		<entry name="ListenPort" type="Int">
+			<label>The port the server listens on</label>
+			<default>3389</default>
+		</entry>
+		<entry name="Certificate" type="String">
+			<label>The certificate to use for TLS connections</label>
+		</entry>
+		<entry name="CertificateKey" type="String">
+			<label>The key that matches the TLS certificate</label>
+		</entry>
+		<entry name="Quality" type="Int">
+			<label>The quality of the video stream</label>
+		</entry>
+	</group>
+	<group name="Users">
+		<entry name="UseSystemUsers" type="Bool">
+			<label>Allow login using usernames and passwords from the system</label>
+			<default>true</default>
+		</entry>
+		<entry name="UseWalletPasswords" type="Bool">
+			<label>Store passwords in KWallet</label>
+			<default>true</default>
+		</entry>
+		<entry name="Users" type="StringList">
+			<label>The list of users allowed to login</label>
+		</entry>
+		<entry name="Passwords" type="StringList">
+			<label>The list of passwords for each user</label>
+		</entry>
+	</group>
+</kcfg>

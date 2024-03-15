@@ -7,9 +7,10 @@ import QtQuick.Controls as QQC2
 import QtQuick.Layouts
 import QtQuick.Dialogs as QtDialogs
 import org.kde.kirigami as Kirigami
-import org.kde.kcmutils as KCMUtils
+import org.kde.krdpserversettings.private 1.0
+import org.kde.kcmutils as KCM
 
-KCMUtils.SimpleKCM {
+KCM.SimpleKCM {
     id: root
 
     Kirigami.FormLayout {
@@ -19,10 +20,10 @@ KCMUtils.SimpleKCM {
             id: usernameField
             Layout.maximumWidth: Kirigami.Units.gridUnit * 8
             Kirigami.FormData.label: i18nc("@label:textbox", "Username:")
-            text: kcm.username
-            onTextEdited: {
-                kcm.username = text;
-                kcm.needsSave = true;
+            text: Settings.Users
+            KCM.SettingStateBinding {
+                configObject: Settings
+                settingName: "Users"
             }
         }
 
@@ -44,7 +45,7 @@ KCMUtils.SimpleKCM {
             Layout.maximumWidth: Kirigami.Units.gridUnit * 5
             inputMethodHints: Qt.ImhDigitsOnly
             Kirigami.FormData.label: i18nc("@label:textbox", "Port:")
-            text: kcm.port
+            text: Settings.ListenPort
             onTextEdited: {
                 kcm.port = parseInt(text);
                 kcm.needsSave = true;
