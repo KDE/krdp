@@ -29,22 +29,16 @@ QString KRDPServerConfig::toLocalFile(const QUrl url)
     return url.toLocalFile();
 }
 
-QString KRDPServerConfig::password()
-{
-    return m_password;
-}
-
 void KRDPServerConfig::readPasswordFromWallet(const QString &user)
 {
     const auto readJob = new QKeychain::ReadPasswordJob(passwordServiceName, this);
     readJob->setKey(QLatin1StringView(user.toLatin1()));
-    connect(readJob, &QKeychain::ReadPasswordJob::finished, this, [this, readJob]() {
+    connect(readJob, &QKeychain::ReadPasswordJob::finished, this, [this, user, readJob]() {
         if (readJob->error() != QKeychain::Error::NoError) {
             qWarning() << "requestPassword: Failed to read password because of error: " << readJob->error();
             return;
         }
-        m_password = readJob->textData();
-        Q_EMIT passwordLoaded();
+        Q_EMIT passwordLoaded(user, readJob->textData());
     });
     readJob->start();
 }
@@ -58,11 +52,6 @@ void KRDPServerConfig::writePasswordToWallet(const QString &user, const QString 
     if (writeJob->error() != QKeychain::Error::NoError) {
         qWarning() << "requestPassword: Failed to write password because of error: " << writeJob->error();
     }
-}
-
-void KRDPServerConfig::defaults()
-{
-    KQuickManagedConfigModule::defaults();
 }
 
 void KRDPServerConfig::save()

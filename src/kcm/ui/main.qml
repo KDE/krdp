@@ -18,11 +18,13 @@ KCM.SimpleKCM {
 
         Connections {
             target: kcm
-            function onKrdpServerSettingsChanged() {
+            function onKrdpServerSettingsChanged(): void {
                 kcm.writePasswordToWallet(Settings.user, passwordField.text);
             }
-            function onPasswordLoaded() {
-                passwordField.text = kcm.password();
+            function onPasswordLoaded(user: string, password: string): void {
+                if (user === Settings.user) {
+                    passwordField.text = password;
+                }
             }
         }
 

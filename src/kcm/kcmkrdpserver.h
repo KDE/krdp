@@ -18,19 +18,13 @@ public:
 
     Q_INVOKABLE QString toLocalFile(const QUrl url);
 
-    Q_INVOKABLE QString password();
     Q_INVOKABLE void readPasswordFromWallet(const QString &user);
     Q_INVOKABLE void writePasswordToWallet(const QString &user, const QString &password);
-
-    void defaults() override;
 
 public Q_SLOTS:
     void save() override;
 
 Q_SIGNALS:
     void krdpServerSettingsChanged();
-    void passwordLoaded();
-
-private:
-    QString m_password;
+    void passwordLoaded(const QString &user, const QString &password);
 };
