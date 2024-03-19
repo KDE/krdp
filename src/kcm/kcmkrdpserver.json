@@ -4,7 +4,7 @@
         "FormFactors": [
             "desktop"
         ],
-        "Icon": "preferences-krdp",
+        "Icon": "preferences-system-network-remote",
         "Name": "Remote Desktop"
     },
     "X-KDE-Keywords": "KRDP,remote desktop",
