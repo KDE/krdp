@@ -12,168 +12,194 @@ import org.kde.kcmutils as KCM
 
 KCM.SimpleKCM {
     id: root
-
-    Kirigami.FormLayout {
-        id: layout
-
-        Connections {
-            target: kcm
-            function onKrdpServerSettingsChanged(): void {
-                kcm.writePasswordToWallet(Settings.user, passwordField.text);
-            }
-            function onPasswordLoaded(user: string, password: string): void {
-                if (user === Settings.user) {
-                    passwordField.text = password;
-                }
+    Connections {
+        target: kcm
+        function onKrdpServerSettingsChanged(): void {
+            kcm.writePasswordToWallet(Settings.user, passwordField.text);
+        }
+        function onPasswordLoaded(user: string, password: string): void {
+            if (user === Settings.user) {
+                passwordField.text = password;
             }
         }
+    }
 
-        QQC2.TextField {
-            id: usernameField
-            Layout.maximumWidth: Kirigami.Units.gridUnit * 8
-            Kirigami.FormData.label: i18nc("@label:textbox", "Username:")
-            text: Settings.user
-            onTextEdited: {
-                Settings.user = text;
-                passwordField.text = "";
-            }
-            KCM.SettingStateBinding {
-                configObject: Settings
-                settingName: "users"
+    ColumnLayout {
+        Kirigami.FormLayout {
+            id: userLayout
+            twinFormLayouts: settingsLayout
+            // Users
+            Kirigami.Separator {
+                Kirigami.FormData.label: i18nc("A list of usernames for KRDP", "Users")
+                Kirigami.FormData.isSection: true
             }
         }
-
-        Kirigami.PasswordField {
-            id: passwordField
-            Layout.maximumWidth: Kirigami.Units.gridUnit * 8
-            echoMode: TextInput.Password
-            Kirigami.FormData.label: i18nc("@label:textbox", "Password:")
-            Component.onCompleted: {
-                kcm.readPasswordFromWallet(Settings.user);
-            }
-            onTextEdited: {
-                kcm.needsSave = true;
-            }
-        }
-
-        QQC2.TextField {
-            id: addressField
-            Layout.maximumWidth: Kirigami.Units.gridUnit * 8
-            Kirigami.FormData.label: i18nc("@label:textbox", "Listen Address:")
-            text: Settings.listenAddress
-            onTextEdited: {
-                Settings.listenAddress = text;
-            }
-            KCM.SettingStateBinding {
-                configObject: Settings
-                settingName: "listenAddress"
-            }
-        }
-
-        QQC2.TextField {
-            id: portField
-            inputMask: "99999999"
-            Layout.maximumWidth: Kirigami.Units.gridUnit * 5
-            inputMethodHints: Qt.ImhDigitsOnly
-            Kirigami.FormData.label: i18nc("@label:textbox", "Listen Port:")
-            text: Settings.listenPort
-            onTextEdited: {
-                Settings.listenPort = text;
-            }
-            KCM.SettingStateBinding {
-                configObject: Settings
-                settingName: "listenPort"
-            }
-        }
-
         Item {
             Kirigami.FormData.isSection: true
         }
+        Kirigami.ScrollablePage {
+            id: userView
+            clip: true
+            Kirigami.FormData.label: ""
 
-        RowLayout {
-            id: certLayout
-            spacing: Kirigami.Units.smallSpacing
-            Kirigami.FormData.label: i18nc("@label:textbox", "Certificate path:")
+            verticalScrollBarPolicy: QQC2.ScrollBar.AlwaysOn
+            width: userLayout.width
+            Component {
+                id: userComponent
+                QQC2.ItemDelegate {
+                    id: itemDelegate
+                    text: modelData
+                    contentItem: Kirigami.TitleSubtitle {
+                        implicitWidth: userView.width - Kirigami.Units.gridUnit
+                        title: itemDelegate.text
+                    }
+
+                    onClicked: {
+                        console.log(itemDelegate.text, "clicked");
+                    }
+                }
+            }
+
+            ListView {
+                id: userListView
+                anchors.fill: parent
+                model: Settings.users
+                delegate: userComponent
+                spacing: Kirigami.Units.smallSpacing
+            }
+        }
+
+        Kirigami.FormLayout {
+            id: settingsLayout
+            twinFormLayouts: userLayout
+            // Settings
+            Kirigami.Separator {
+                Kirigami.FormData.label: i18nc("General KRDP related settings", "General Settings")
+                Kirigami.FormData.isSection: true
+            }
+            Item {
+                Kirigami.FormData.isSection: true
+            }
+
             QQC2.TextField {
-                id: certPathField
-                implicitWidth: Kirigami.Units.gridUnit * 14
-                text: Settings.certificate
-                onTextChanged: {
-                    Settings.certificate = text;
+                id: addressField
+                Layout.maximumWidth: Kirigami.Units.gridUnit * 8
+                Kirigami.FormData.label: i18nc("@label:textbox", "Listen Address:")
+                text: Settings.listenAddress
+                onTextEdited: {
+                    Settings.listenAddress = text;
                 }
                 KCM.SettingStateBinding {
                     configObject: Settings
-                    settingName: "certificate"
+                    settingName: "listenAddress"
                 }
             }
-            QQC2.Button {
-                icon.name: "folder-open-symbolic"
-                text: i18nc("@action:button", "Choose Certificate File…")
-                display: QQC2.AbstractButton.IconOnly
-                onClicked: {
-                    certLoader.key = false;
-                    certLoader.active = true;
-                }
-            }
-        }
 
-        RowLayout {
-            id: certKeyLayout
-            spacing: Kirigami.Units.smallSpacing
-            Kirigami.FormData.label: i18nc("@label:textbox", "Certificate key path:")
             QQC2.TextField {
-                id: certKeyPathField
-                implicitWidth: Kirigami.Units.gridUnit * 14
-                text: Settings.certificateKey
-                onTextChanged: {
-                    Settings.certificateKey = text;
-                }
-                KCM.SettingStateBinding {
-                    configObject: Settings
-                    settingName: "certificateKey"
-                }
-            }
-            QQC2.Button {
-                icon.name: "folder-open-symbolic"
-                text: i18nc("@action:button", "Choose Certificate Key File…")
-                display: QQC2.AbstractButton.IconOnly
-                onClicked: {
-                    certLoader.key = true;
-                    certLoader.active = true;
-                }
-            }
-        }
-
-        Item {
-            Kirigami.FormData.isSection: true
-        }
-
-        RowLayout {
-            Kirigami.FormData.label: i18nc("@label:slider", "Quality:")
-            QQC2.SpinBox {
+                id: portField
+                inputMask: "99999999"
+                Layout.maximumWidth: Kirigami.Units.gridUnit * 5
                 inputMethodHints: Qt.ImhDigitsOnly
-                from: 0
-                to: 100
-                stepSize: 1
-                value: qualitySlider.value
-                onValueModified: {
-                    qualitySlider.value = value;
-                }
-            }
-            QQC2.Slider {
-                id: qualitySlider
-                Layout.minimumWidth: Kirigami.Units.gridUnit * 12
-                from: 0
-                to: 100
-                stepSize: 1
-                Layout.fillWidth: true
-                value: Settings.quality
-                onValueChanged: {
-                    Settings.quality = value;
+                Kirigami.FormData.label: i18nc("@label:textbox", "Listen Port:")
+                text: Settings.listenPort
+                onTextEdited: {
+                    Settings.listenPort = text;
                 }
                 KCM.SettingStateBinding {
                     configObject: Settings
-                    settingName: "quality"
+                    settingName: "listenPort"
+                }
+            }
+
+            Item {
+                Kirigami.FormData.isSection: true
+            }
+
+            RowLayout {
+                id: certLayout
+                spacing: Kirigami.Units.smallSpacing
+                Kirigami.FormData.label: i18nc("@label:textbox", "Certificate path:")
+                QQC2.TextField {
+                    id: certPathField
+                    implicitWidth: Kirigami.Units.gridUnit * 14
+                    text: Settings.certificate
+                    onTextChanged: {
+                        Settings.certificate = text;
+                    }
+                    KCM.SettingStateBinding {
+                        configObject: Settings
+                        settingName: "certificate"
+                    }
+                }
+                QQC2.Button {
+                    icon.name: "folder-open-symbolic"
+                    text: i18nc("@action:button", "Choose Certificate File…")
+                    display: QQC2.AbstractButton.IconOnly
+                    onClicked: {
+                        certLoader.key = false;
+                        certLoader.active = true;
+                    }
+                }
+            }
+
+            RowLayout {
+                id: certKeyLayout
+                spacing: Kirigami.Units.smallSpacing
+                Kirigami.FormData.label: i18nc("@label:textbox", "Certificate key path:")
+                QQC2.TextField {
+                    id: certKeyPathField
+                    implicitWidth: Kirigami.Units.gridUnit * 14
+                    text: Settings.certificateKey
+                    onTextChanged: {
+                        Settings.certificateKey = text;
+                    }
+                    KCM.SettingStateBinding {
+                        configObject: Settings
+                        settingName: "certificateKey"
+                    }
+                }
+                QQC2.Button {
+                    icon.name: "folder-open-symbolic"
+                    text: i18nc("@action:button", "Choose Certificate Key File…")
+                    display: QQC2.AbstractButton.IconOnly
+                    onClicked: {
+                        certLoader.key = true;
+                        certLoader.active = true;
+                    }
+                }
+            }
+
+            Item {
+                Kirigami.FormData.isSection: true
+            }
+
+            RowLayout {
+                Kirigami.FormData.label: i18nc("@label:slider", "Quality:")
+                QQC2.SpinBox {
+                    inputMethodHints: Qt.ImhDigitsOnly
+                    from: 0
+                    to: 100
+                    stepSize: 1
+                    value: qualitySlider.value
+                    onValueModified: {
+                        qualitySlider.value = value;
+                    }
+                }
+                QQC2.Slider {
+                    id: qualitySlider
+                    Layout.minimumWidth: Kirigami.Units.gridUnit * 12
+                    from: 0
+                    to: 100
+                    stepSize: 1
+                    Layout.fillWidth: true
+                    value: Settings.quality
+                    onValueChanged: {
+                        Settings.quality = value;
+                    }
+                    KCM.SettingStateBinding {
+                        configObject: Settings
+                        settingName: "quality"
+                    }
                 }
             }
         }

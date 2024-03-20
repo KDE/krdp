@@ -22,8 +22,8 @@
     <entry name="Quality" type="Int">
       <label>The quality of the video stream</label>
     </entry>
-    <entry name="User" type="String">
-      <label>User allowed to login, password is stored in KWallet</label>
+    <entry name="Users" type="StringList">
+      <label>Users allowed to login, passwords are stored in KWallet</label>
     </entry>
   </group>
 </kcfg>
