@@ -25,75 +25,60 @@ KCM.SimpleKCM {
     }
 
     ColumnLayout {
-        Kirigami.FormLayout {
-            id: userLayout
-            twinFormLayouts: settingsLayout
-            // Users
-            Kirigami.Separator {
-                id: separator
-                Kirigami.FormData.label: i18nc("A list of usernames for KRDP", "Users")
-                Kirigami.FormData.isSection: true
-            }
-            Item {
-                Kirigami.FormData.isSection: true
-            }
-        }
 
-        ColumnLayout {
-            Layout.maximumWidth: separator.width - Kirigami.Units.gridUnit * 2
+        // User
+        Kirigami.ScrollablePage {
+            id: userView
             Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
-            QQC2.Label {
-                text: i18nc("Guide for adding users to KRDP settings", "Click on an username to modify it or delete it.")
-                Kirigami.FormData.isSection: true
-            }
+            clip: true
 
-            Kirigami.ScrollablePage {
-                id: userView
-                clip: true
+            verticalScrollBarPolicy: QQC2.ScrollBar.AlwaysOn
+            Layout.maximumHeight: root.height / 2
 
-                verticalScrollBarPolicy: QQC2.ScrollBar.AlwaysOn
-                Layout.maximumHeight: Kirigami.Units.gridUnit * 8
+            Component {
+                id: userComponent
+                QQC2.ItemDelegate {
+                    id: itemDelegate
+                    text: modelData
+                    contentItem: Kirigami.TitleSubtitle {
+                        implicitWidth: userListView.width - Kirigami.Units.gridUnit
+                        title: itemDelegate.text
+                    }
 
-                Component {
-                    id: userComponent
-                    QQC2.ItemDelegate {
-                        id: itemDelegate
-                        text: modelData
-                        contentItem: Kirigami.TitleSubtitle {
-                            implicitWidth: userListView.width - Kirigami.Units.gridUnit
-                            title: itemDelegate.text
-                        }
-
-                        onClicked: {
-                            console.log(itemDelegate.text, "clicked");
-                        }
+                    onClicked: {
+                        console.log(itemDelegate.text, "clicked");
                     }
                 }
-
-                ListView {
-                    id: userListView
-                    anchors.fill: parent
-                    model: Settings.users
-                    delegate: userComponent
-                    spacing: Kirigami.Units.smallSpacing
-                }
             }
 
-            QQC2.Button {
-                id: addUserButton
-                icon.name: "list-add-user"
-                text: i18nc("@action:button", "New User...")
+            ListView {
+                id: userListView
+                anchors.fill: parent
+                model: Settings.users
+                delegate: userComponent
+                spacing: Kirigami.Units.smallSpacing
+                headerPositioning: ListView.OverlayHeader
+                header: Kirigami.InlineViewHeader {
+                    width: userListView.width
+                    text: "Usernames"
+                    actions: [
+                        Kirigami.Action {
+                            icon.name: "list-add-symbolic"
+                            text: "Add user"
+                            onTriggered: {
+                                console.log("Adding user woo!");
+                            }
+                        }
+                    ]
+                }
             }
         }
 
+        // Settings
         Kirigami.FormLayout {
             id: settingsLayout
             twinFormLayouts: userLayout
-            // Settings
-            Kirigami.Separator {
-                Kirigami.FormData.label: i18nc("General KRDP related settings", "General Settings")
-                Kirigami.FormData.isSection: true
-            }
+
             Item {
                 Kirigami.FormData.isSection: true
             }
