@@ -40,13 +40,26 @@ KCM.SimpleKCM {
                 QQC2.ItemDelegate {
                     id: itemDelegate
                     text: modelData
-                    contentItem: Kirigami.TitleSubtitle {
-                        implicitWidth: userListView.width - Kirigami.Units.gridUnit
-                        title: itemDelegate.text
+                    contentItem: RowLayout {
+                        Kirigami.TitleSubtitle {
+                            id: editUserButton
+                            implicitWidth: userListView.width - deleteUserButton.width - Kirigami.Units.gridUnit
+                            title: itemDelegate.text
+                        }
+                        QQC2.Button {
+                            id: deleteUserButton
+                            flat: true
+                            implicitWidth: Kirigami.Units.gridUnit * 2
+                            icon.name: "list-remove-user"
+                            text: i18nc("@label:button", "Remove user...")
+                            display: QQC2.AbstractButton.IconOnly
+                            onClicked: {
+                                console.log(itemDelegate.text, "deleted");
+                            }
+                        }
                     }
-
                     onClicked: {
-                        console.log(itemDelegate.text, "clicked");
+                        console.log(itemDelegate.text, "modified");
                     }
                 }
             }
@@ -63,8 +76,8 @@ KCM.SimpleKCM {
                     text: "Usernames"
                     actions: [
                         Kirigami.Action {
-                            icon.name: "list-add-symbolic"
-                            text: "Add user"
+                            icon.name: "list-add-user"
+                            text: i18nc("@label:button", "Add user...")
                             onTriggered: {
                                 console.log("Adding user woo!");
                             }
@@ -77,7 +90,6 @@ KCM.SimpleKCM {
         // Settings
         Kirigami.FormLayout {
             id: settingsLayout
-            twinFormLayouts: userLayout
 
             Item {
                 Kirigami.FormData.isSection: true
