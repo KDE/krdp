@@ -12,6 +12,9 @@ import org.kde.kcmutils as KCM
 
 KCM.SimpleKCM {
     id: root
+    property Kirigami.OverlaySheet editUserModal: EditUserModal {
+    }
+
     Connections {
         target: kcm
         function onKrdpServerSettingsChanged(): void {
@@ -22,6 +25,15 @@ KCM.SimpleKCM {
                 passwordField.text = password;
             }
         }
+    }
+
+    function modifyUser(user: string): void {
+        editUserModal.username = user;
+        editUserModal.open();
+    }
+
+    function addUser(): void {
+        modifyUser("");
     }
 
     ColumnLayout {
@@ -59,7 +71,7 @@ KCM.SimpleKCM {
                         }
                     }
                     onClicked: {
-                        console.log(itemDelegate.text, "modified");
+                        root.modifyUser(itemDelegate.text);
                     }
                 }
             }
@@ -79,7 +91,7 @@ KCM.SimpleKCM {
                             icon.name: "list-add-user"
                             text: i18nc("@label:button", "Add user...")
                             onTriggered: {
-                                console.log("Adding user woo!");
+                                root.addUser();
                             }
                         }
                     ]
