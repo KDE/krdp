@@ -117,8 +117,22 @@ KCM.SimpleKCM {
                 Kirigami.FormData.isSection: true
             }
 
+            QQC2.Switch {
+                id: autoGenCertSwitch
+                Kirigami.FormData.label: i18nc("@label:check", "Autogenerate certificates:")
+                checked: Settings.autogenerateCertificates
+                onCheckedChanged: {
+                    Settings.autogenerateCertificates = checked;
+                }
+                KCM.SettingStateBinding {
+                    configObject: Settings
+                    settingName: "autogenerateCertificates"
+                }
+            }
+
             RowLayout {
                 id: certLayout
+                visible: autoGenCertSwitch.checked ? false : true
                 spacing: Kirigami.Units.smallSpacing
                 Kirigami.FormData.label: i18nc("@label:textbox", "Certificate path:")
                 QQC2.TextField {
@@ -148,6 +162,7 @@ KCM.SimpleKCM {
                 id: certKeyLayout
                 spacing: Kirigami.Units.smallSpacing
                 Kirigami.FormData.label: i18nc("@label:textbox", "Certificate key path:")
+                visible: autoGenCertSwitch.checked ? false : true
                 QQC2.TextField {
                     id: certKeyPathField
                     implicitWidth: Kirigami.Units.gridUnit * 14
