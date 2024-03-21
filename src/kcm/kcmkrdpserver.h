@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "krdpserversettings.h"
 #include <KQuickManagedConfigModule>
 #include <qt6keychain/keychain.h>
 
@@ -18,8 +19,13 @@ public:
 
     Q_INVOKABLE QString toLocalFile(const QUrl url);
 
+    Q_INVOKABLE void modifyUser(const QString oldUsername, const QString newUsername, const QString newPassword);
+    Q_INVOKABLE void addUser(const QString username, const QString password);
+    Q_INVOKABLE void deleteUser(const QString username);
+
     Q_INVOKABLE void readPasswordFromWallet(const QString &user);
-    Q_INVOKABLE void writePasswordToWallet(const QString &user, const QString &password);
+    void writePasswordToWallet(const QString &user, const QString &password);
+    void deletePasswordFromWallet(const QString &user);
 
 public Q_SLOTS:
     void save() override;
@@ -27,4 +33,7 @@ public Q_SLOTS:
 Q_SIGNALS:
     void krdpServerSettingsChanged();
     void passwordLoaded(const QString &user, const QString &password);
+
+private:
+    KRDPServerSettings *m_serverSettings;
 };

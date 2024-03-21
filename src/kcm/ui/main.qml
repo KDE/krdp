@@ -18,22 +18,19 @@ KCM.SimpleKCM {
     Connections {
         target: kcm
         function onKrdpServerSettingsChanged(): void {
-            kcm.writePasswordToWallet(Settings.user, passwordField.text);
-        }
-        function onPasswordLoaded(user: string, password: string): void {
-            if (user === Settings.user) {
-                passwordField.text = password;
-            }
         }
     }
 
     function modifyUser(user: string): void {
-        editUserModal.username = user;
+        editUserModal.oldUsername = user;
         editUserModal.open();
     }
 
     function addUser(): void {
         modifyUser("");
+    }
+    function deleteUser(user: string): void {
+        kcm.deleteUser(user);
     }
 
     ColumnLayout {
@@ -66,7 +63,7 @@ KCM.SimpleKCM {
                             text: i18nc("@label:button", "Remove user...")
                             display: QQC2.AbstractButton.IconOnly
                             onClicked: {
-                                console.log(itemDelegate.text, "deleted");
+                                root.deleteUser(itemDelegate.text);
                             }
                         }
                     }

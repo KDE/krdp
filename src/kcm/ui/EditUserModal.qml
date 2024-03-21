@@ -8,20 +8,58 @@ import org.kde.kcmutils as KCM
 
 Kirigami.OverlaySheet {
     id: editUserModal
-    property string username
+    // if oldUsername is empty, we're adding a new user
+    property string oldUsername
+    property bool passwordChanged: false
+    property bool usernameChanged: false
 
     implicitWidth: Kirigami.Units.gridUnit * 15
     implicitHeight: Kirigami.Units.gridUnit * 10
     header: Kirigami.Heading {
-        text: username === "" ? i18nc("@title:window", "Add new user") : i18nc("@title:window", "Modify user")
+        text: oldUsername === "" ? i18nc("@title:window", "Add new user") : i18nc("@title:window", "Modify user")
+    }
+
+    Connections {
+        target: kcm
+        function onPasswordLoaded(user: string, password: string): void {
+            if (user === oldUsername) {
+                passwordField.text = password;
+            }
+        }
+    }
+
+    onAboutToShow: {
+        passwordChanged = false;
+        usernameChanged = false;
+        usernameField.text = oldUsername;
+        passwordField.text = "";
+        kcm.readPasswordFromWallet(oldUsername);
+    }
+
+    function saveUser(): void {
+        // add new user
+        if (oldUsername === "") {
+            kcm.addUser(usernameField.text, passwordField.text);
+            return;
+        }
+        // modify user
+        if (usernameChanged || passwordChanged) {
+            if (oldUsername === usernameField.text) {
+                kcm.modifyUser(oldUsername, "", passwordField.text);
+            } else {
+                kcm.modifyUser(oldUsername, usernameField.text, passwordField.text);
+            }
+            return;
+        }
     }
 
     footer: RowLayout {
         QQC2.Button {
             id: saveButton
+            enabled: usernameChanged || passwordChanged
             text: "Save"
             onClicked: {
-                console.log("old user:", username, "new name", usernameField.text, " saved");
+                editUserModal.saveUser();
                 editUserModal.close();
             }
         }
@@ -34,10 +72,13 @@ Kirigami.OverlaySheet {
             id: usernameField
             Layout.maximumWidth: Kirigami.Units.gridUnit * 8
             Kirigami.FormData.label: i18nc("@label:textbox", "Username:")
-            text: editUserModal.username
+            text: editUserModal.oldUsername
             KCM.SettingStateBinding {
                 configObject: Settings
                 settingName: "users"
+            }
+            onTextEdited: {
+                usernameChanged = true;
             }
         }
 
@@ -46,13 +87,8 @@ Kirigami.OverlaySheet {
             Layout.maximumWidth: Kirigami.Units.gridUnit * 8
             echoMode: TextInput.Password
             Kirigami.FormData.label: i18nc("@label:textbox", "Password:")
-            Component.onCompleted: {
-                if (username !== "") {
-                    kcm.readPasswordFromWallet(username);
-                }
-            }
             onTextEdited: {
-                kcm.needsSave = true;
+                passwordChanged = true;
             }
         }
     }
