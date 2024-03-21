@@ -78,6 +78,9 @@ void KRDPServerConfig::addUser(const QString username, const QString password)
 void KRDPServerConfig::modifyUser(const QString oldUsername, const QString newUsername, const QString newPassword)
 {
     // If we have new username, we're removing the old one and adding the new one
+    if (m_serverSettings->users().contains(newUsername)) {
+        return;
+    }
     if (!newUsername.isEmpty()) {
         auto userList = m_serverSettings->users();
         if (userList.contains(oldUsername)) {

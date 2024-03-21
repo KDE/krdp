@@ -12,8 +12,8 @@ import org.kde.kcmutils as KCM
 
 KCM.SimpleKCM {
     id: root
-    property Kirigami.OverlaySheet editUserModal: EditUserModal {
-    }
+    property Kirigami.OverlaySheet editUserModal: EditUserModal {}
+    property Kirigami.OverlaySheet deleteUserModal: DeleteUserModal {}
 
     Connections {
         target: kcm
@@ -30,7 +30,8 @@ KCM.SimpleKCM {
         modifyUser("");
     }
     function deleteUser(user: string): void {
-        kcm.deleteUser(user);
+        deleteUserModal.selectedUsername = user;
+        deleteUserModal.open();
     }
 
     ColumnLayout {
@@ -52,8 +53,19 @@ KCM.SimpleKCM {
                     contentItem: RowLayout {
                         Kirigami.TitleSubtitle {
                             id: editUserButton
-                            implicitWidth: userListView.width - deleteUserButton.width - Kirigami.Units.gridUnit
+                            implicitWidth: userListView.width - deleteUserButton.width - modifyUserButton.width - Kirigami.Units.gridUnit * 1.5
                             title: itemDelegate.text
+                        }
+                        QQC2.Button {
+                            id: modifyUserButton
+                            flat: true
+                            implicitWidth: Kirigami.Units.gridUnit * 2
+                            icon.name: "edit-entry-symbolic"
+                            text: i18nc("@label:button", "Modify user...")
+                            display: QQC2.AbstractButton.IconOnly
+                            onClicked: {
+                                root.modifyUser(itemDelegate.text);
+                            }
                         }
                         QQC2.Button {
                             id: deleteUserButton

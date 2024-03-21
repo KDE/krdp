@@ -56,7 +56,7 @@ Kirigami.OverlaySheet {
     footer: RowLayout {
         QQC2.Button {
             id: saveButton
-            enabled: usernameChanged || passwordChanged
+            enabled: (usernameChanged || passwordChanged) && (usernameField.text !== "" && passwordField.text !== "")
             text: "Save"
             onClicked: {
                 editUserModal.saveUser();
