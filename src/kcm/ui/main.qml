@@ -12,8 +12,10 @@ import org.kde.kcmutils as KCM
 
 KCM.SimpleKCM {
     id: root
-    property Kirigami.OverlaySheet editUserModal: EditUserModal {}
-    property Kirigami.OverlaySheet deleteUserModal: DeleteUserModal {}
+    property Kirigami.OverlaySheet editUserModal: EditUserModal {
+    }
+    property Kirigami.OverlaySheet deleteUserModal: DeleteUserModal {
+    }
 
     Connections {
         target: kcm

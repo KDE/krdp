@@ -29,6 +29,7 @@ Kirigami.OverlaySheet {
     }
 
     onAboutToShow: {
+        userExistsWarning.visible = false;
         passwordChanged = false;
         usernameChanged = false;
         usernameField.text = oldUsername;
@@ -39,17 +40,29 @@ Kirigami.OverlaySheet {
     function saveUser(): void {
         // add new user
         if (oldUsername === "") {
-            kcm.addUser(usernameField.text, passwordField.text);
-            return;
-        }
+            if (!kcm.userExists(usernameField.text)) {
+                kcm.addUser(usernameField.text, passwordField.text);
+                editUserModal.close();
+            } else {
+                userExistsWarning.visible = true;
+            }
+        } else
         // modify user
         if (usernameChanged || passwordChanged) {
+            // Keep old username
             if (oldUsername === usernameField.text) {
                 kcm.modifyUser(oldUsername, "", passwordField.text);
-            } else {
-                kcm.modifyUser(oldUsername, usernameField.text, passwordField.text);
+                editUserModal.close();
+            } else
+            // Change username
+            {
+                if (!kcm.userExists(usernameField.text)) {
+                    kcm.modifyUser(oldUsername, usernameField.text, passwordField.text);
+                    editUserModal.close();
+                } else {
+                    userExistsWarning.visible = true;
+                }
             }
-            return;
         }
     }
 
@@ -60,7 +73,6 @@ Kirigami.OverlaySheet {
             text: "Save"
             onClicked: {
                 editUserModal.saveUser();
-                editUserModal.close();
             }
         }
     }
@@ -68,6 +80,7 @@ Kirigami.OverlaySheet {
     Kirigami.FormLayout {
         id: form
         Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
+
         QQC2.TextField {
             id: usernameField
             Layout.maximumWidth: Kirigami.Units.gridUnit * 8
@@ -79,6 +92,16 @@ Kirigami.OverlaySheet {
             }
             onTextEdited: {
                 usernameChanged = true;
+                userExistsWarning.visible = false;
+            }
+        }
+
+        QQC2.Label {
+            id: userExistsWarning
+            text: i18nc("@info", "Username already exists!")
+            visible: false
+            onVisibleChanged: {
+                saveButton.enabled = !userExistsWarning.visible;
             }
         }
 
