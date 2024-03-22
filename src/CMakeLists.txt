@@ -78,3 +78,5 @@ set_target_properties(KRdp PROPERTIES
 install(TARGETS KRdp DESTINATION ${KDE_INSTALL_LIBDIR})
 
 ecm_qt_install_logging_categories(EXPORT KRdp DESTINATION ${KDE_INSTALL_LOGGINGCATEGORIESDIR})
+
+add_subdirectory(kcm)
