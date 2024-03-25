@@ -126,4 +126,6 @@ void KRDPServerConfig::save()
     Q_EMIT krdpServerSettingsChanged();
 }
 
+// TODO defaults should not clean the user list
+
 #include "kcmkrdpserver.moc"

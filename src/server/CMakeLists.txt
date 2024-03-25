@@ -3,9 +3,9 @@ add_executable(krdpserver)
 
 target_sources(krdpserver PRIVATE main.cpp)
 
-kconfig_target_kcfg_file(krdpserver FILE krdpserverrc.kcfg CLASS_NAME ServerConfig SINGLETON)
+kconfig_add_kcfg_files(krdpserver ../kcm/krdpserversettings.kcfgc GENERATE_MOC)
 
-target_link_libraries(krdpserver PRIVATE Qt6::Gui KF6::ConfigGui KF6::DBusAddons KRdp)
+target_link_libraries(krdpserver PRIVATE Qt6::Gui KF6::ConfigGui KF6::DBusAddons qt6keychain KRdp)
 
 if (BUILD_PLASMA_SESSION)
     target_compile_definitions(krdpserver PRIVATE -DWITH_PLASMA_SESSION)
