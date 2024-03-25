@@ -30,6 +30,7 @@ public:
 
 public Q_SLOTS:
     void save() override;
+    void defaults() override;
 
 Q_SIGNALS:
     void krdpServerSettingsChanged();

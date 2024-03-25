@@ -126,4 +126,14 @@ void KRDPServerConfig::save()
     Q_EMIT krdpServerSettingsChanged();
 }
 
+void KRDPServerConfig::defaults()
+{
+    // Do not reset list of users. This would not be needed
+    // if we can get the list of users from wallet, instead
+    // of saving it in this config
+    auto userList = m_serverSettings->users();
+    KQuickManagedConfigModule::defaults();
+    m_serverSettings->setUsers(userList);
+}
+
 #include "kcmkrdpserver.moc"
