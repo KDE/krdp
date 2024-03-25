@@ -39,7 +39,7 @@ void KRDPServerConfig::readPasswordFromWallet(const QString &user)
     readJob->setKey(QLatin1StringView(user.toLatin1()));
     connect(readJob, &QKeychain::ReadPasswordJob::finished, this, [this, user, readJob]() {
         if (readJob->error() != QKeychain::Error::NoError) {
-            qWarning(KRDPKCM) << "requestPassword: Failed to read password of " << user << " because of error: " << readJob->error();
+            qWarning(KRDPKCM) << "requestPassword: Failed to read password of " << user << " because of error: " << readJob->errorString();
             return;
         }
         Q_EMIT passwordLoaded(user, readJob->textData());
@@ -54,7 +54,7 @@ void KRDPServerConfig::writePasswordToWallet(const QString &user, const QString 
     writeJob->setTextData(password);
     writeJob->start();
     if (writeJob->error() != QKeychain::Error::NoError) {
-        qWarning(KRDPKCM) << "requestPassword: Failed to write password of " << user << " because of error: " << writeJob->error();
+        qWarning(KRDPKCM) << "requestPassword: Failed to write password of " << user << " because of error: " << writeJob->errorString();
     }
 }
 
@@ -64,7 +64,7 @@ void KRDPServerConfig::deletePasswordFromWallet(const QString &user)
     deleteJob->setKey(QLatin1StringView(user.toLatin1()));
     deleteJob->start();
     if (deleteJob->error() != QKeychain::Error::NoError) {
-        qWarning(KRDPKCM) << "requestPassword: Failed to delete password of " << user << " because of error: " << deleteJob->error();
+        qWarning(KRDPKCM) << "requestPassword: Failed to delete password of " << user << " because of error: " << deleteJob->errorString();
     }
 }
 
