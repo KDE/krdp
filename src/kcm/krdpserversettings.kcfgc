@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: CC0-1.0
+# SPDX-FileCopyrightText: 2024 Akseli Lahtinen <akselmo@akselmo.dev>
 File=krdpserversettings.kcfg
 ClassName=KRDPServerSettings
 Mutators=true
