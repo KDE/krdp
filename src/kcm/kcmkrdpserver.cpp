@@ -31,6 +31,9 @@ QString KRDPServerConfig::toLocalFile(const QUrl url)
 
 void KRDPServerConfig::readPasswordFromWallet(const QString &user)
 {
+    if (user.isEmpty()) {
+        return;
+    }
     const auto readJob = new QKeychain::ReadPasswordJob(passwordServiceName, this);
     readJob->setKey(QLatin1StringView(user.toLatin1()));
     connect(readJob, &QKeychain::ReadPasswordJob::finished, this, [this, user, readJob]() {
