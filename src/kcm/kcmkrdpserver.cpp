@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 
 #include "kcmkrdpserver.h"
+#include "krdpkcm_logging.h"
 #include "krdpserverdata.h"
 #include "krdpserversettings.h"
 
@@ -38,7 +39,7 @@ void KRDPServerConfig::readPasswordFromWallet(const QString &user)
     readJob->setKey(QLatin1StringView(user.toLatin1()));
     connect(readJob, &QKeychain::ReadPasswordJob::finished, this, [this, user, readJob]() {
         if (readJob->error() != QKeychain::Error::NoError) {
-            qWarning() << "requestPassword: Failed to read password of " << user << " because of error: " << readJob->error();
+            qWarning(KRDPKCM) << "requestPassword: Failed to read password of " << user << " because of error: " << readJob->error();
             return;
         }
         Q_EMIT passwordLoaded(user, readJob->textData());
@@ -53,7 +54,7 @@ void KRDPServerConfig::writePasswordToWallet(const QString &user, const QString 
     writeJob->setTextData(password);
     writeJob->start();
     if (writeJob->error() != QKeychain::Error::NoError) {
-        qWarning() << "requestPassword: Failed to write password of " << user << " because of error: " << writeJob->error();
+        qWarning(KRDPKCM) << "requestPassword: Failed to write password of " << user << " because of error: " << writeJob->error();
     }
 }
 
@@ -63,7 +64,7 @@ void KRDPServerConfig::deletePasswordFromWallet(const QString &user)
     deleteJob->setKey(QLatin1StringView(user.toLatin1()));
     deleteJob->start();
     if (deleteJob->error() != QKeychain::Error::NoError) {
-        qWarning() << "requestPassword: Failed to delete password of " << user << " because of error: " << deleteJob->error();
+        qWarning(KRDPKCM) << "requestPassword: Failed to delete password of " << user << " because of error: " << deleteJob->error();
     }
 }
 

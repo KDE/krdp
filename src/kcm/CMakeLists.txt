@@ -19,6 +19,15 @@ target_sources(kcmkrdpserver PRIVATE
    kcmkrdpserver.h
 )
 
+ecm_qt_declare_logging_category(kcmkrdpserver
+    HEADER krdpkcm_logging.h
+    IDENTIFIER KRDPKCM
+    CATEGORY_NAME org.kde.krdp.kcm
+    DESCRIPTION "KRDPKCM"
+    EXPORT kcmkrdpserver
+    DEFAULT_SEVERITY Debug
+)
+
 target_link_libraries(kcmkrdpserver PRIVATE
     Qt::Quick
     Qt::DBus
@@ -28,3 +37,5 @@ target_link_libraries(kcmkrdpserver PRIVATE
     KF6::KCMUtilsQuick
     KF6::I18n
 )
+
+ecm_qt_install_logging_categories(EXPORT kcmkrdpserver DESTINATION ${KDE_INSTALL_LOGGINGCATEGORIESDIR})
