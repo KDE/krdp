@@ -12,6 +12,9 @@ import org.kde.kcmutils as KCM
 
 KCM.SimpleKCM {
     id: root
+    leftPadding: 0
+    rightPadding: 0
+    topPadding: 0
     property Kirigami.OverlaySheet editUserModal: EditUserModal {
     }
     property Kirigami.OverlaySheet deleteUserModal: DeleteUserModal {
