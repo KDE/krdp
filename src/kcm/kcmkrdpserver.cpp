@@ -10,7 +10,7 @@
 #include <KPluginFactory>
 #include <qt6keychain/keychain.h>
 
-K_PLUGIN_FACTORY_WITH_JSON(KRDPServerConfigFactory, "kcmkrdpserver.json", registerPlugin<KRDPServerConfig>(); registerPlugin<KRDPServerData>();)
+K_PLUGIN_FACTORY_WITH_JSON(KRDPServerConfigFactory, "kcm_krdpserver.json", registerPlugin<KRDPServerConfig>(); registerPlugin<KRDPServerData>();)
 
 static const QString passwordServiceName = QLatin1StringView("KRDP");
 
