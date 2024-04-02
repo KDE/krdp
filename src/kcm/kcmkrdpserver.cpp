@@ -20,7 +20,6 @@ KRDPServerConfig::KRDPServerConfig(QObject *parent, const KPluginMetaData &data)
 {
     qmlRegisterSingletonInstance("org.kde.krdpserversettings.private", 1, 0, "Settings", m_serverSettings);
     setButtons(Help | Apply | Default);
-    load();
 }
 
 KRDPServerConfig::~KRDPServerConfig() = default;
