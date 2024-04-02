@@ -10,7 +10,7 @@ import org.kde.kirigami as Kirigami
 import org.kde.krdpserversettings.private 1.0
 import org.kde.kcmutils as KCM
 
-Kirigami.OverlaySheet {
+Kirigami.Dialog {
     id: editUserModal
     // if oldUsername is empty, we're adding a new user
     property string oldUsername
@@ -19,9 +19,7 @@ Kirigami.OverlaySheet {
 
     implicitWidth: Kirigami.Units.gridUnit * 15
     implicitHeight: Kirigami.Units.gridUnit * 10
-    header: Kirigami.Heading {
-        text: oldUsername === "" ? i18nc("@title:window", "Add new user") : i18nc("@title:window", "Modify user")
-    }
+    title: oldUsername === "" ? i18nc("@title:window", "Add new user") : i18nc("@title:window", "Modify user")
 
     Connections {
         target: kcm
@@ -70,14 +68,17 @@ Kirigami.OverlaySheet {
         }
     }
 
-    footer: RowLayout {
+    footer: QQC2.DialogButtonBox {
+        standardButtons: saveButton | QQC2.DialogButtonBox.Cancel
+        onAccepted: {
+            editUserModal.saveUser();
+        }
         QQC2.Button {
             id: saveButton
+            icon.name: "document-save"
             enabled: (usernameChanged || passwordChanged) && (usernameField.text !== "" && passwordField.text !== "")
-            text: "Save"
-            onClicked: {
-                editUserModal.saveUser();
-            }
+            text: i18nc("@label:button", "Save")
+            QQC2.DialogButtonBox.buttonRole: QQC2.DialogButtonBox.AcceptRole
         }
     }
 

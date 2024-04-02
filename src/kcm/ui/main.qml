@@ -15,9 +15,9 @@ KCM.SimpleKCM {
     leftPadding: 0
     rightPadding: 0
     topPadding: 0
-    property Kirigami.OverlaySheet editUserModal: EditUserModal {
+    property Kirigami.Dialog editUserModal: EditUserModal {
     }
-    property Kirigami.OverlaySheet deleteUserModal: DeleteUserModal {
+    property Kirigami.Dialog deleteUserModal: DeleteUserModal {
     }
 
     Connections {
