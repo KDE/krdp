@@ -6,8 +6,10 @@
 #include "krdpkcm_logging.h"
 #include "krdpserverdata.h"
 #include "krdpserversettings.h"
+#include <PipeWireRecord>
 
 #include <KPluginFactory>
+#include <pipewirerecord.h>
 #include <qt6keychain/keychain.h>
 
 K_PLUGIN_CLASS_WITH_JSON(KRDPServerConfig, "kcm_krdpserver.json")
@@ -20,6 +22,7 @@ KRDPServerConfig::KRDPServerConfig(QObject *parent, const KPluginMetaData &data)
 {
     qmlRegisterSingletonInstance("org.kde.krdpserversettings.private", 1, 0, "Settings", m_serverSettings);
     setButtons(Help | Apply | Default);
+    encoders();
 }
 
 KRDPServerConfig::~KRDPServerConfig() = default;
@@ -137,6 +140,15 @@ void KRDPServerConfig::defaults()
     auto userList = m_serverSettings->users();
     KQuickManagedConfigModule::defaults();
     m_serverSettings->setUsers(userList);
+}
+
+void KRDPServerConfig::encoders()
+{
+    auto asd = new PipeWireRecord();
+    const auto encoders = asd->suggestedEncoders();
+    for (auto a : encoders) {
+        qDebug() << "ENCODER DATA " << a;
+    }
 }
 
 #include "kcmkrdpserver.moc"
