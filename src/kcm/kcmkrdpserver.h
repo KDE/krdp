@@ -27,6 +27,7 @@ public:
     Q_INVOKABLE void readPasswordFromWallet(const QString &user);
     void writePasswordToWallet(const QString &user, const QString &password);
     void deletePasswordFromWallet(const QString &user);
+    void encoders();
 
 public Q_SLOTS:
     void save() override;
