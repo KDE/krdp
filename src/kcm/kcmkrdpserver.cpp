@@ -22,7 +22,7 @@ KRDPServerConfig::KRDPServerConfig(QObject *parent, const KPluginMetaData &data)
 {
     qmlRegisterSingletonInstance("org.kde.krdpserversettings.private", 1, 0, "Settings", m_serverSettings);
     setButtons(Help | Apply | Default);
-    encoders();
+    isH264Supported();
 }
 
 KRDPServerConfig::~KRDPServerConfig() = default;
@@ -142,13 +142,11 @@ void KRDPServerConfig::defaults()
     m_serverSettings->setUsers(userList);
 }
 
-void KRDPServerConfig::encoders()
+bool KRDPServerConfig::isH264Supported()
 {
-    auto asd = new PipeWireRecord();
-    const auto encoders = asd->suggestedEncoders();
-    for (auto a : encoders) {
-        qDebug() << "ENCODER DATA " << a;
-    }
+    auto recorder = new PipeWireRecord(this);
+    qDebug() << recorder->suggestedEncoders();
+    return recorder->suggestedEncoders().contains(PipeWireRecord::H264Baseline);
 }
 
 #include "kcmkrdpserver.moc"
