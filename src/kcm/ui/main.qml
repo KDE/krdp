@@ -40,6 +40,19 @@ KCM.SimpleKCM {
     }
 
     ColumnLayout {
+        Item {
+            implicitWidth: root.width - Kirigami.Units.gridUnit
+            implicitHeight: Kirigami.Units.gridUnit * 3
+            enabled: !kcm.isH264Supported()
+            visible: enabled
+            Kirigami.InlineMessage {
+                type: Kirigami.MessageType.Error
+                anchors.fill: parent
+                anchors.margins: Kirigami.Units.smallSpacing
+                visible: parent.enabled
+                text: i18nd("Error about missing encoding for H264", "Your device does not support H264 encoding, remote desktop won't work! Please consult your distribution how to enable it.")
+            }
+        }
 
         // User
         Kirigami.ScrollablePage {
