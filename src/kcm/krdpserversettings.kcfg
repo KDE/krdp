@@ -7,7 +7,6 @@
   <group name="General">
     <entry name="ListenAddress" type="String">
       <label>The address the server listens on</label>
-      <default>0.0.0.0</default>
     </entry>
     <entry name="ListenPort" type="Int">
       <label>The port the server listens on</label>

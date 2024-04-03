@@ -138,7 +138,7 @@ KCM.SimpleKCM {
                 id: addressField
                 Layout.maximumWidth: Kirigami.Units.gridUnit * 8
                 Kirigami.FormData.label: i18nc("@label:textbox", "Listen Address:")
-                text: Settings.listenAddress
+                text: kcm.listenAddress()
                 onTextEdited: {
                     Settings.listenAddress = text;
                 }

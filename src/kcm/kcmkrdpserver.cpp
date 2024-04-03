@@ -9,6 +9,7 @@
 #include <PipeWireRecord>
 
 #include <KPluginFactory>
+#include <QNetworkInterface>
 #include <pipewirerecord.h>
 #include <qt6keychain/keychain.h>
 
@@ -147,6 +148,20 @@ bool KRDPServerConfig::isH264Supported()
     auto recorder = new PipeWireRecord(this);
     qDebug() << recorder->suggestedEncoders();
     return recorder->suggestedEncoders().contains(PipeWireRecord::H264Baseline);
+}
+
+QString KRDPServerConfig::listenAddress()
+{
+    if (m_serverSettings->listenAddress().isEmpty()) {
+        for (const QHostAddress &address : QNetworkInterface::allAddresses()) {
+            if (address.protocol() == QAbstractSocket::IPv4Protocol && address != QHostAddress(QHostAddress::LocalHost)) {
+                return address.toString();
+            }
+        }
+        return QStringLiteral("0.0.0.0");
+    } else {
+        return m_serverSettings->listenAddress();
+    }
 }
 
 #include "kcmkrdpserver.moc"
