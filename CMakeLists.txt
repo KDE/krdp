@@ -38,6 +38,8 @@ find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
     CoreAddons
     KCMUtils
     I18n
+    DBusAddons
+    JobWidgets
 )
 
 find_package(FreeRDP 2.10 REQUIRED)

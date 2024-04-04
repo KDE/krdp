@@ -80,3 +80,4 @@ install(TARGETS KRdp DESTINATION ${KDE_INSTALL_LIBDIR})
 ecm_qt_install_logging_categories(EXPORT KRdp DESTINATION ${KDE_INSTALL_LOGGINGCATEGORIESDIR})
 
 add_subdirectory(kcm)
+add_subdirectory(service)
