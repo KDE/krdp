@@ -1,0 +1,6 @@
+[Unit]
+Description=KRDP Server
+
+[Service]
+ExecStart=@CMAKE_INSTALL_PREFIX@/bin/krdpserver
+Type=simple

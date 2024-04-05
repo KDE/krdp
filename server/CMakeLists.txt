@@ -11,8 +11,5 @@ if (BUILD_PLASMA_SESSION)
     target_compile_definitions(krdpserver PRIVATE -DWITH_PLASMA_SESSION)
 endif()
 
-configure_file(org.kde.krdp.desktop.cmake ${CMAKE_CURRENT_BINARY_DIR}/org.kde.krdp.desktop @ONLY)
-configure_file(org.kde.krdp.service.cmake ${CMAKE_CURRENT_BINARY_DIR}/org.kde.krdp.service @ONLY)
-
-install(TARGETS krdpserver DESTINATION ${KDE_INSTALL_BINDIR})
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.kde.krdp.desktop DESTINATION ${KDE_INSTALL_APPDIR})
+configure_file(plasma-krdp_server.service.in ${CMAKE_CURRENT_BINARY_DIR}/plasma-krdp_server.service @ONLY)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/plasma-krdp_server.service DESTINATION ${KDE_INSTALL_SYSTEMDUSERUNITDIR})
