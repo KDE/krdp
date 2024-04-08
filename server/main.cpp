@@ -6,23 +6,13 @@
 #include <filesystem>
 
 #include <QCommandLineParser>
-#include <QDebug>
 #include <QGuiApplication>
-#include <QProcess>
 
-#include <KDBusService>
 #include <KSharedConfig>
 
-#include "Cursor.h"
-#include "InputHandler.h"
-#include "PortalSession.h"
-#include "RdpConnection.h"
 #include "Server.h"
-#include "VideoStream.h"
-#ifdef WITH_PLASMA_SESSION
-#include "PlasmaScreencastV1Session.h"
-#endif
 
+#include "SessionController.h"
 #include "krdpserverrc.h"
 
 int main(int argc, char **argv)
@@ -70,116 +60,27 @@ int main(int argc, char **argv)
     auto certificate = std::filesystem::path(parserValueWithDefault(u"certificate", config->certificate()).toStdString());
     auto certificateKey = std::filesystem::path(parserValueWithDefault(u"certificate-key", config->certificateKey()).toStdString());
 
-    // auto certificate = std::filesystem::path(parser.value(u"certificate"_qs).toStdString());
-    // auto certificateKey = std::filesystem::path(parser.value(u"certificate-key"_qs).toStdString());
-    // bool certificateGenerated = false;
-    //
-    // if (!std::filesystem::exists(certificate) || !std::filesystem::exists(certificateKey)) {
-    //     qWarning() << "Could not find certificate and certificate key, generating temporary certificate...";
-    //     QProcess sslProcess;
-    //     sslProcess.start(u"openssl"_qs,
-    //                      {
-    //                          u"req"_qs,
-    //                          u"-nodes"_qs,
-    //                          u"-new"_qs,
-    //                          u"-x509"_qs,
-    //                          u"-keyout"_qs,
-    //                          u"/tmp/krdp.key"_qs,
-    //                          u"-out"_qs,
-    //                          u"/tmp/krdp.crt"_qs,
-    //                          u"-days"_qs,
-    //                          u"1"_qs,
-    //                          u"-batch"_qs,
-    //                      });
-    //     sslProcess.waitForFinished();
-    //
-    //     certificate = std::filesystem::path("/tmp/krdp.crt");
-    //     certificateKey = std::filesystem::path("/tmp/krdp.key");
-    //     certificateGenerated = true;
-    //
-    //     if (!std::filesystem::exists(certificate) || !std::filesystem::exists(certificateKey)) {
-    //         qCritical() << "Could not generate a certificate and no certificate provided. A valid TLS certificate and key should be provided.";
-    //         parser.showHelp(2);
-    //     } else {
-    //         qWarning() << "Temporary certificate generated; ready to accept connections.";
-    //     }
-    // }
-
-    quint32 monitorIndex = parser.value(u"monitor"_qs).toInt();
-
     KRdp::Server server;
-
     server.setAddress(address);
     server.setPort(port);
     server.setTlsCertificate(certificate);
     server.setTlsCertificateKey(certificateKey);
 
     if (parser.isSet(u"username"_qs)) {
-        // server.setUserMode(KRdp::Server::UserMode::LocalNoWallet);
         KRdp::User user;
         user.name = parser.value(u"username"_qs);
         user.password = parser.value(u"password"_qs);
         server.addUser(user);
     }
 
-    std::unique_ptr<KRdp::AbstractSession> session;
-#ifdef WITH_PLASMA_SESSION
-    if (parser.isSet(u"plasma"_qs)) {
-        session = std::unique_ptr<KRdp::AbstractSession>(new KRdp::PlasmaScreencastV1Session(&server));
-    } else
-#endif
-    {
-        session = std::unique_ptr<KRdp::AbstractSession>(new KRdp::PortalSession(&server));
-    }
-    KRdp::AbstractSession *portalSession = session.get();
-    portalSession->setActiveStream(monitorIndex);
-    if (parser.isSet(u"quality"_qs)) {
-        portalSession->setVideoQuality(parser.value(u"quality"_qs).toUShort());
-    }
-
-    QObject::connect(portalSession, &KRdp::AbstractSession::error, []() {
-        QCoreApplication::exit(-1);
-    });
-
-    QObject::connect(&server, &KRdp::Server::newConnection, [&portalSession](KRdp::RdpConnection *newConnection) {
-        QObject::connect(portalSession, &KRdp::AbstractSession::frameReceived, newConnection, [newConnection](const KRdp::VideoFrame &frame) {
-            newConnection->videoStream()->queueFrame(frame);
-        });
-
-        QObject::connect(portalSession, &KRdp::AbstractSession::cursorUpdate, newConnection, [newConnection](const PipeWireCursor &cursor) {
-            KRdp::Cursor::CursorUpdate update;
-            update.hotspot = cursor.hotspot;
-            update.image = cursor.texture;
-            newConnection->cursor()->update(update);
-        });
-
-        QObject::connect(newConnection->videoStream(), &KRdp::VideoStream::enabledChanged, portalSession, [newConnection, portalSession]() {
-            if (newConnection->videoStream()->enabled()) {
-                portalSession->requestStreamingEnable(newConnection->videoStream());
-            } else {
-                portalSession->requestStreamingDisable(newConnection->videoStream());
-            }
-        });
-
-        QObject::connect(newConnection->videoStream(), &KRdp::VideoStream::requestedFrameRateChanged, portalSession, [newConnection, portalSession]() {
-            portalSession->setVideoFrameRate(newConnection->videoStream()->requestedFrameRate());
-        });
-
-        QObject::connect(newConnection->inputHandler(), &KRdp::InputHandler::inputEvent, portalSession, [portalSession](QEvent *event) {
-            portalSession->sendEvent(event);
-        });
-    });
+    SessionController controller(&server);
+    controller.setUsePlasmaSession(parser.isSet(u"plasma"_qs));
+    controller.setMonitorIndex(parser.isSet(u"monitor"_qs) ? std::optional(parser.value(u"monitor"_qs).toInt()) : std::nullopt);
+    controller.setQuality(parser.isSet(u"quality"_qs) ? std::optional(parser.value(u"quality"_qs).toInt()) : std::nullopt);
 
     if (!server.start()) {
         return -1;
     }
 
-    // KDBusService::
-
-    auto result = application.exec();
-    // if (certificateGenerated) {
-    //     std::filesystem::remove(certificate);
-    //     std::filesystem::remove(certificateKey);
-    // }
-    return result;
+    return application.exec();
 }

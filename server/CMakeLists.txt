@@ -1,7 +1,7 @@
 
 add_executable(krdpserver)
 
-target_sources(krdpserver PRIVATE main.cpp)
+target_sources(krdpserver PRIVATE main.cpp SessionController.cpp)
 
 kconfig_target_kcfg_file(krdpserver FILE krdpserverrc.kcfg CLASS_NAME ServerConfig SINGLETON)
 
