@@ -9,8 +9,13 @@
 #include <PipeWireRecord>
 
 #include <KPluginFactory>
+#include <QDBusInterface>
+#include <QDir>
+#include <QFileInfo>
 #include <QNetworkInterface>
+#include <QProcess>
 #include <pipewirerecord.h>
+#include <qfileinfo.h>
 #include <qt6keychain/keychain.h>
 
 K_PLUGIN_CLASS_WITH_JSON(KRDPServerConfig, "kcm_krdpserver.json")
@@ -24,6 +29,9 @@ KRDPServerConfig::KRDPServerConfig(QObject *parent, const KPluginMetaData &data)
     qmlRegisterSingletonInstance("org.kde.krdpserversettings.private", 1, 0, "Settings", m_serverSettings);
     setButtons(Help | Apply | Default);
     isH264Supported();
+    if (m_serverSettings->autogenerateCertificates()) {
+        autogenerateCertificate();
+    }
 }
 
 KRDPServerConfig::~KRDPServerConfig() = default;
@@ -152,16 +160,88 @@ bool KRDPServerConfig::isH264Supported()
 
 QString KRDPServerConfig::listenAddress()
 {
+    // Prepare default address
     if (m_serverSettings->listenAddress().isEmpty()) {
+        bool localAddressFound = false;
         for (const QHostAddress &address : QNetworkInterface::allAddresses()) {
             if (address.protocol() == QAbstractSocket::IPv4Protocol && address != QHostAddress(QHostAddress::LocalHost)) {
-                return address.toString();
+                m_serverSettings->setListenAddress(address.toString());
+                m_serverSettings->save();
+                localAddressFound = true;
             }
         }
-        return QStringLiteral("0.0.0.0");
-    } else {
-        return m_serverSettings->listenAddress();
+        if (!localAddressFound) {
+            m_serverSettings->setListenAddress(QStringLiteral("0.0.0.0"));
+            m_serverSettings->save();
+        }
     }
+    return m_serverSettings->listenAddress();
+}
+
+void KRDPServerConfig::toggleAutoconnect(const bool enabled)
+{
+    QDBusInterface manager(QStringLiteral("org.freedesktop.systemd1"),
+                           QStringLiteral("/org/freedesktop/systemd1"),
+                           QStringLiteral("org.freedesktop.systemd1.Manager"));
+
+    qDebug(KRDPKCM) << "Setting KRDP Server service autostart on login to " << enabled << "over QDBus:";
+
+    if (enabled) {
+        qDebug(KRDPKCM) << manager.call(QStringLiteral("EnableUnitFiles"), QStringList(u"plasma-krdp_server.service"_qs), false, true);
+    } else {
+        qDebug(KRDPKCM) << manager.call(QStringLiteral("DisableUnitFiles"), QStringList(u"plasma-krdp_server.service"_qs), false);
+    }
+}
+
+void KRDPServerConfig::toggleServer(const bool enabled)
+{
+    QDBusInterface unit(QStringLiteral("org.freedesktop.systemd1"),
+                        QStringLiteral("/org/freedesktop/systemd1/unit/plasma_2dkrdp_5fserver_2eservice"),
+                        QStringLiteral("org.freedesktop.systemd1.Unit"));
+
+    qDebug(KRDPKCM) << "Toggling KRDP Server to " << enabled << "over QDBus:";
+    qDebug(KRDPKCM) << unit.call(enabled ? QStringLiteral("Start") : QStringLiteral("Stop"), QStringLiteral("replace"));
+}
+
+void KRDPServerConfig::autogenerateCertificate()
+{
+    if (!m_serverSettings->certificate().isEmpty() || !m_serverSettings->certificateKey().isEmpty()) {
+        return;
+    }
+    QDir(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)).mkpath(QStringLiteral("krdpserver"));
+    QString certificatePath(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QStringLiteral("/krdpserver/krdp.crt"));
+    QString certificateKeyPath(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QStringLiteral("/krdpserver/krdp.key"));
+    qDebug(KRDPKCM) << "Generating certificate files to: " << certificatePath << " and " << certificateKeyPath;
+    QProcess sslProcess;
+    sslProcess.start(u"openssl"_qs,
+                     {
+                         u"req"_qs,
+                         u"-nodes"_qs,
+                         u"-new"_qs,
+                         u"-x509"_qs,
+                         u"-keyout"_qs,
+                         certificateKeyPath,
+                         u"-out"_qs,
+                         certificatePath,
+                         u"-days"_qs,
+                         u"1"_qs,
+                         u"-batch"_qs,
+                     });
+    sslProcess.waitForFinished();
+
+    m_serverSettings->setCertificate(certificatePath);
+    m_serverSettings->setCertificateKey(certificateKeyPath);
+
+    // Check that the path is valid
+    if (QFileInfo(certificatePath).exists() && QFileInfo(certificateKeyPath).exists()) {
+        qDebug(KRDPKCM) << "Certificate generated; ready to accept connections.";
+        Q_EMIT generateCertificate(true);
+    } else {
+        qCritical(KRDPKCM) << "Could not generate a certificate. A valid TLS certificate and key should be provided.";
+        Q_EMIT generateCertificate(false);
+    }
+
+    m_serverSettings->save();
 }
 
 #include "kcmkrdpserver.moc"

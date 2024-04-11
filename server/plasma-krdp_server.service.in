@@ -1,6 +1,13 @@
 [Unit]
 Description=KRDP Server
+After=plasma-kwin_wayland.service plasma-kcminit.service
 
 [Service]
 ExecStart=@CMAKE_INSTALL_PREFIX@/bin/krdpserver
-Type=simple
+BusName=org.kde.krdpserver
+Restart=on-failure
+TimeoutSec=5sec
+Slice=session.slice
+
+[Install]
+WantedBy=plasma-core.target

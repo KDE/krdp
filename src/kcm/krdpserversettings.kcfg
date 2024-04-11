@@ -28,5 +28,9 @@
     <entry name="Users" type="StringList">
       <label>Users allowed to login, passwords are stored in KWallet</label>
     </entry>
+    <entry name="Autostart" type="Bool">
+      <label>Autostart the server on login</label>
+      <default>false</default>
+    </entry>
   </group>
 </kcfg>

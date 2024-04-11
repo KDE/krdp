@@ -23,6 +23,10 @@ KCM.SimpleKCM {
     Connections {
         target: kcm
         function onKrdpServerSettingsChanged(): void {
+            kcm.toggleAutoconnect(Settings.autostart);
+        }
+        function onGenerateCertificate(success: bool): void {
+            certificateError.enabled = !success;
         }
     }
 
@@ -41,6 +45,7 @@ KCM.SimpleKCM {
 
     ColumnLayout {
         Item {
+            id: encodingError
             implicitWidth: root.width - Kirigami.Units.gridUnit
             implicitHeight: Kirigami.Units.gridUnit * 3
             enabled: !kcm.isH264Supported()
@@ -54,13 +59,31 @@ KCM.SimpleKCM {
             }
         }
 
+        Item {
+            id: certificateError
+            implicitWidth: root.width - Kirigami.Units.gridUnit
+            implicitHeight: Kirigami.Units.gridUnit * 3
+            enabled: false
+            visible: enabled
+            Kirigami.InlineMessage {
+                type: Kirigami.MessageType.Error
+                anchors.fill: parent
+                anchors.margins: Kirigami.Units.smallSpacing
+                visible: parent.enabled
+                // TODO better text
+                text: i18nd("Error about autogenerating certificates failing", "Generating certificates automatically has failed!")
+            }
+        }
+
         // User
         Kirigami.ScrollablePage {
             id: userView
+            enabled: !toggleServerSwitch.checked
             Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
             clip: true
 
             verticalScrollBarPolicy: QQC2.ScrollBar.AlwaysOn
+            Layout.minimumHeight: root.height / 2
             Layout.maximumHeight: root.height / 2
 
             Component {
@@ -123,12 +146,48 @@ KCM.SimpleKCM {
                         }
                     ]
                 }
+                Kirigami.PlaceholderMessage {
+                    anchors.centerIn: parent
+                    visible: userListView.count === 0
+                    text: i18n("You need to add at least one user to use the KRDP server")
+                }
+            }
+        }
+
+        // Server toggle
+        Kirigami.FormLayout {
+            id: toggleLayout
+            enabled: userListView.count > 0
+            QQC2.Switch {
+                id: toggleServerSwitch
+                Kirigami.FormData.label: i18nc("@option:check", "Start RDP server:")
+                onCheckedChanged: kcm.toggleServer(toggleServerSwitch.checked)
+            }
+
+            QQC2.CheckBox {
+                id: autostartOnLogin
+                Kirigami.FormData.label: i18nc("@option:check", "Autostart on login:")
+                checked: Settings.autostart
+                onCheckedChanged: {
+                    Settings.autostart = checked;
+                    if (checked) {
+                        //TODO tell systemd to autostart this service on login
+                    }
+                }
+                KCM.SettingStateBinding {
+                    configObject: Settings
+                    settingName: "autostart"
+                }
             }
         }
 
         // Settings
         Kirigami.FormLayout {
             id: settingsLayout
+            enabled: !toggleServerSwitch.checked && userListView.count > 0
+            Item {
+                Kirigami.FormData.isSection: true
+            }
 
             Item {
                 Kirigami.FormData.isSection: true
@@ -174,6 +233,9 @@ KCM.SimpleKCM {
                 checked: Settings.autogenerateCertificates
                 onCheckedChanged: {
                     Settings.autogenerateCertificates = checked;
+                    if (checked) {
+                        kcm.autogenerateCertificate();
+                    }
                 }
                 KCM.SettingStateBinding {
                     configObject: Settings

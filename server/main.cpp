@@ -9,11 +9,12 @@
 #include <QGuiApplication>
 
 #include <KSharedConfig>
+#include <qt6keychain/keychain.h>
 
 #include "Server.h"
 
 #include "SessionController.h"
-#include "krdpserverrc.h"
+#include "krdpserversettings.h"
 
 int main(int argc, char **argv)
 {
@@ -63,14 +64,34 @@ int main(int argc, char **argv)
     KRdp::Server server;
     server.setAddress(address);
     server.setPort(port);
+
     server.setTlsCertificate(certificate);
     server.setTlsCertificateKey(certificateKey);
 
+    // Use parsed username/pw if set
     if (parser.isSet(u"username"_qs)) {
         KRdp::User user;
         user.name = parser.value(u"username"_qs);
         user.password = parser.value(u"password"_qs);
         server.addUser(user);
+    }
+    // Otherwise use KCM username list
+    else {
+        for (auto userName : config->users()) {
+            const auto readJob = new QKeychain::ReadPasswordJob(QLatin1StringView("KRDP"));
+            readJob->setKey(QLatin1StringView(userName.toLatin1()));
+            QObject::connect(readJob, &QKeychain::ReadPasswordJob::finished, [userName, readJob, &server]() {
+                KRdp::User user;
+                if (readJob->error() != QKeychain::Error::NoError) {
+                    qWarning() << "requestPassword: Failed to read password of " << userName << " because of error: " << readJob->error();
+                    return;
+                }
+                user.name = userName;
+                user.password = readJob->textData();
+                server.addUser(user);
+            });
+            readJob->start();
+        }
     }
 
     SessionController controller(&server);

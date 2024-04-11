@@ -30,6 +30,10 @@ public:
 
     Q_INVOKABLE bool isH264Supported();
     Q_INVOKABLE QString listenAddress();
+    Q_INVOKABLE void toggleAutoconnect(const bool enabled);
+    Q_INVOKABLE void toggleServer(const bool enabled);
+
+    Q_INVOKABLE void autogenerateCertificate();
 
 public Q_SLOTS:
     void save() override;
@@ -37,6 +41,7 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void krdpServerSettingsChanged();
+    void generateCertificate(bool success);
     void passwordLoaded(const QString &user, const QString &password);
 
 private:
