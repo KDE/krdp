@@ -69,6 +69,7 @@ target_link_libraries(KRdp PUBLIC
     K::KPipeWire
     K::KPipeWireRecord
     XKB::XKB
+    KF6::StatusNotifierItem
 )
 
 set_target_properties(KRdp PROPERTIES

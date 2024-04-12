@@ -5,6 +5,7 @@
 #pragma once
 
 #include <filesystem>
+#include <kstatusnotifieritem.h>
 #include <memory>
 
 #include <QTcpServer>
@@ -39,7 +40,7 @@ class KRDP_EXPORT Server : public QTcpServer
     Q_OBJECT
 
 public:
-    explicit Server(QObject *parent = nullptr);
+    explicit Server(QObject *parent = nullptr, KStatusNotifierItem *sni = nullptr);
     ~Server() override;
 
     /**
@@ -122,6 +123,7 @@ private:
 
     class Private;
     const std::unique_ptr<Private> d;
+    const std::unique_ptr<KStatusNotifierItem> m_sni;
 };
 
 }

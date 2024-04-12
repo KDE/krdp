@@ -16,6 +16,7 @@
 #include "RdpConnection.h"
 
 #include "krdp_logging.h"
+#include <KStatusNotifierItem>
 
 using namespace KRdp;
 
@@ -34,9 +35,10 @@ public:
     std::filesystem::path tlsCertificateKey;
 };
 
-Server::Server(QObject *parent)
+Server::Server(QObject *parent, KStatusNotifierItem *sni)
     : QTcpServer(parent)
     , d(std::make_unique<Private>())
+    , m_sni(sni)
 {
     winpr_InitializeSSL(WINPR_SSL_INIT_DEFAULT);
     WTSRegisterWtsApiFunctionTable(FreeRDP_InitWtsApi());
@@ -166,6 +168,9 @@ void Server::incomingConnection(qintptr handle)
     });
     d->sessions.push_back(std::move(session));
     Q_EMIT newConnection(sessionPtr);
+    if (m_sni) {
+        m_sni->setStatus(KStatusNotifierItem::Active);
+    }
 }
 
 rdp_settings *Server::rdpSettings() const

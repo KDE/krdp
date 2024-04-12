@@ -5,7 +5,7 @@ After=plasma-kwin_wayland.service plasma-kcminit.service
 [Service]
 ExecStart=@CMAKE_INSTALL_PREFIX@/bin/krdpserver &
 ExecStop=killall krdpserver
-Restart=no
+Restart=on-failure
 
 [Install]
 WantedBy=plasma-core.target
