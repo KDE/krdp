@@ -83,8 +83,8 @@ KCM.SimpleKCM {
             clip: true
 
             verticalScrollBarPolicy: QQC2.ScrollBar.AlwaysOn
-            Layout.minimumHeight: root.height / 2
-            Layout.maximumHeight: root.height / 2
+            Layout.minimumHeight: root.height / 2.5
+            Layout.maximumHeight: root.height / 2.5
 
             Component {
                 id: userComponent
