@@ -160,8 +160,11 @@ KCM.SimpleKCM {
             enabled: userListView.count > 0
             QQC2.Switch {
                 id: toggleServerSwitch
+                checked: kcm.isServerRunning()
                 Kirigami.FormData.label: i18nc("@option:check", "Start RDP server:")
-                onCheckedChanged: kcm.toggleServer(toggleServerSwitch.checked)
+                onCheckedChanged: {
+                    kcm.toggleServer(toggleServerSwitch.checked);
+                }
             }
 
             QQC2.CheckBox {
@@ -170,8 +173,9 @@ KCM.SimpleKCM {
                 checked: Settings.autostart
                 onCheckedChanged: {
                     Settings.autostart = checked;
-                    if (checked) {
-                        //TODO tell systemd to autostart this service on login
+                    if (checked)
+                    //TODO tell systemd to autostart this service on login
+                    {
                     }
                 }
                 KCM.SettingStateBinding {

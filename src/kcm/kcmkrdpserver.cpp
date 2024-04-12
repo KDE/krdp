@@ -15,6 +15,8 @@
 #include <QNetworkInterface>
 #include <QProcess>
 #include <pipewirerecord.h>
+#include <qdbusargument.h>
+#include <qdbusreply.h>
 #include <qfileinfo.h>
 #include <qt6keychain/keychain.h>
 
@@ -195,6 +197,10 @@ void KRDPServerConfig::toggleAutoconnect(const bool enabled)
 
 void KRDPServerConfig::toggleServer(const bool enabled)
 {
+    // No need to start the server again if it's already running
+    if (enabled && isServerRunning()) {
+        return;
+    }
     QDBusInterface unit(QStringLiteral("org.freedesktop.systemd1"),
                         QStringLiteral("/org/freedesktop/systemd1/unit/plasma_2dkrdp_5fserver_2eservice"),
                         QStringLiteral("org.freedesktop.systemd1.Unit"));
@@ -242,6 +248,20 @@ void KRDPServerConfig::autogenerateCertificate()
     }
 
     m_serverSettings->save();
+}
+
+bool KRDPServerConfig::isServerRunning()
+{
+    // Checks if there is PID, and if there is, process is running.
+
+    QDBusInterface msg(QStringLiteral("org.freedesktop.systemd1"),
+                       QStringLiteral("/org/freedesktop/systemd1/unit/plasma_2dkrdp_5fserver_2eservice"),
+                       QStringLiteral("org.freedesktop.DBus.Properties"));
+
+    QDBusReply<QVariant> response = msg.call(QStringLiteral("Get"), QStringLiteral("org.freedesktop.systemd1.Service"), QStringLiteral("MainPID"));
+    auto pid = response.value().toInt();
+
+    return pid > 0 ? true : false;
 }
 
 #include "kcmkrdpserver.moc"
