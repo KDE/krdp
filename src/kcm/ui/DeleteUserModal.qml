@@ -35,7 +35,7 @@ Kirigami.Dialog {
     }
 
     QQC2.Label {
-        text: i18nc("@info", "Are you sure you want to delete following user: <warning>%1</warning>?", selectedUsername)
+        text: i18nc("@info", "Are you sure you want to delete following user: %1?", selectedUsername)
         wrapMode: Text.Wrap
     }
 }
