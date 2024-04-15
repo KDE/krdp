@@ -161,7 +161,7 @@ KCM.SimpleKCM {
             QQC2.Switch {
                 id: toggleServerSwitch
                 checked: kcm.isServerRunning()
-                Kirigami.FormData.label: i18nc("@option:check", "Start RDP server:")
+                Kirigami.FormData.label: i18nc("@option:check", "Enable RDP server:")
                 onCheckedChanged: {
                     kcm.toggleServer(toggleServerSwitch.checked);
                 }
