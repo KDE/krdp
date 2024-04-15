@@ -16,7 +16,11 @@
 #include "RdpConnection.h"
 
 #include "krdp_logging.h"
+#include <KLocalizedString>
 #include <KStatusNotifierItem>
+#include <QAction>
+#include <QDBusInterface>
+#include <QObject>
 
 using namespace KRdp;
 
@@ -42,6 +46,9 @@ Server::Server(QObject *parent, KStatusNotifierItem *sni)
 {
     winpr_InitializeSSL(WINPR_SSL_INIT_DEFAULT);
     WTSRegisterWtsApiFunctionTable(FreeRDP_InitWtsApi());
+    auto quitAction = new QAction(i18n("Quit"), this);
+    connect(quitAction, &QAction::triggered, this, &Server::stopFromSNI);
+    sni->addAction(u"quitAction"_qs, quitAction);
 }
 
 Server::~Server()
@@ -176,6 +183,18 @@ void Server::incomingConnection(qintptr handle)
 rdp_settings *Server::rdpSettings() const
 {
     return d->settings;
+}
+
+void Server::stopFromSNI()
+{
+    // Uses dbus to stop the server service, like in the KCM
+    // This kills all krdpserver instances, like a "panic button"
+    qCDebug(KRDP) << "Stopping from SNI";
+    QDBusInterface unit(u"org.freedesktop.systemd1"_qs,
+                        u"/org/freedesktop/systemd1/unit/plasma_2dkrdp_5fserver_2eservice"_qs,
+                        u"org.freedesktop.systemd1.Unit"_qs);
+
+    unit.call(u"Stop"_qs);
 }
 
 #include "moc_Server.cpp"

@@ -124,6 +124,7 @@ private:
     class Private;
     const std::unique_ptr<Private> d;
     const std::unique_ptr<KStatusNotifierItem> m_sni;
+    void stopFromSNI();
 };
 
 }
