@@ -109,6 +109,9 @@ int main(int argc, char **argv)
     controller.setMonitorIndex(parser.isSet(u"monitor"_qs) ? std::optional(parser.value(u"monitor"_qs).toInt()) : std::nullopt);
     controller.setQuality(parser.isSet(u"quality"_qs) ? std::optional(parser.value(u"quality"_qs).toInt()) : std::nullopt);
 
+    window->setFlag(Qt::WindowDoesNotAcceptFocus);
+    window->setFlag(Qt::WindowTransparentForInput);
+    window->setFlag(Qt::BypassWindowManagerHint);
     window->show();
 
     if (!server.start()) {
