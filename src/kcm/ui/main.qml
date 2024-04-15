@@ -83,8 +83,8 @@ KCM.SimpleKCM {
             clip: true
 
             verticalScrollBarPolicy: QQC2.ScrollBar.AlwaysOn
-            Layout.minimumHeight: root.height / 2.5
-            Layout.maximumHeight: root.height / 2.5
+            Layout.minimumHeight: Kirigami.Units.gridUnit * 8
+            Layout.maximumHeight: Kirigami.Units.gridUnit * 15
 
             Component {
                 id: userComponent
