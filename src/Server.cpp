@@ -45,9 +45,11 @@ Server::Server(QObject *parent, KStatusNotifierItem *sni)
 {
     winpr_InitializeSSL(WINPR_SSL_INIT_DEFAULT);
     WTSRegisterWtsApiFunctionTable(FreeRDP_InitWtsApi());
-    auto quitAction = new QAction(i18n("Quit"), this);
-    connect(quitAction, &QAction::triggered, this, &Server::stopFromSNI);
-    sni->addAction(u"quitAction"_qs, quitAction);
+    if (m_sni) {
+        auto quitAction = new QAction(i18n("Quit"), this);
+        connect(quitAction, &QAction::triggered, this, &Server::stopFromSNI);
+        m_sni->addAction(u"quitAction"_qs, quitAction);
+    }
 }
 
 Server::~Server()
