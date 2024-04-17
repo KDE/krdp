@@ -22,8 +22,7 @@
 
 int main(int argc, char **argv)
 {
-    // has to be qapplication for sni?
-    QGuiApplication application{argc, argv};
+    QApplication application{argc, argv};
     application.setApplicationName(u"krdp-server"_qs);
     application.setApplicationDisplayName(u"KRDP Server"_qs);
 
@@ -66,14 +65,12 @@ int main(int argc, char **argv)
     auto certificate = std::filesystem::path(parserValueWithDefault(u"certificate", config->certificate()).toStdString());
     auto certificateKey = std::filesystem::path(parserValueWithDefault(u"certificate-key", config->certificateKey()).toStdString());
 
-    // Create status notifier item
-    // auto window(new QWindow);
-    // auto sni(new KStatusNotifierItem(u"krdpserver"_qs));
-    // sni->setTitle(u"RDP Server"_qs);
-    // sni->setIconByName(u"preferences-system-network-remote"_qs);
-    // sni->setStatus(KStatusNotifierItem::Passive);
+    auto sni(new KStatusNotifierItem(u"krdpserver"_qs));
+    sni->setTitle(u"RDP Server"_qs);
+    sni->setIconByName(u"preferences-system-network-remote"_qs);
+    sni->setStatus(KStatusNotifierItem::Passive);
 
-    KRdp::Server server(nullptr, nullptr);
+    KRdp::Server server(nullptr, sni);
     server.setAddress(address);
     server.setPort(port);
 
@@ -110,11 +107,6 @@ int main(int argc, char **argv)
     controller.setUsePlasmaSession(parser.isSet(u"plasma"_qs));
     controller.setMonitorIndex(parser.isSet(u"monitor"_qs) ? std::optional(parser.value(u"monitor"_qs).toInt()) : std::nullopt);
     controller.setQuality(parser.isSet(u"quality"_qs) ? std::optional(parser.value(u"quality"_qs).toInt()) : std::nullopt);
-
-    // window->setFlag(Qt::WindowDoesNotAcceptFocus);
-    // window->setFlag(Qt::WindowTransparentForInput);
-    // window->setFlag(Qt::BypassWindowManagerHint);
-    // window->show();
 
     if (!server.start()) {
         return -1;
