@@ -5,8 +5,8 @@
 #include <csignal>
 #include <filesystem>
 
-#include <QApplication>
 #include <QCommandLineParser>
+#include <QGuiApplication>
 
 #include <KSharedConfig>
 #include <qt6keychain/keychain.h>
@@ -21,7 +21,7 @@
 
 int main(int argc, char **argv)
 {
-    QApplication application{argc, argv};
+    QGuiApplication application{argc, argv};
     application.setApplicationName(u"krdp-server"_qs);
     application.setApplicationDisplayName(u"KRDP Server"_qs);
 

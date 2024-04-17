@@ -194,7 +194,7 @@ void PortalSession::onCreateSession(uint code, const QVariantMap &result)
         {QStringLiteral("persist_mode"), PermissionsPersistUntilExplicitlyRevoked},
     };
     KConfigGroup restorationGroup = KSharedConfig::openConfig()->group(QStringLiteral("General"));
-    const QString restoreToken = restorationGroup.readEntry("restorationToken");
+    const QString restoreToken = restorationGroup.readEntry(QStringLiteral("restorationToken"));
     if (!restoreToken.isEmpty()) {
         parameters[QStringLiteral("restore_token")] = restoreToken;
     }

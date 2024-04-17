@@ -102,7 +102,6 @@ public:
      */
     std::filesystem::path tlsCertificateKey() const;
     void setTlsCertificateKey(const std::filesystem::path &newTlsCertificateKey);
-    void generateTemporaryCertificate();
 
     /**
      * Emitted whenever a new connection is started.

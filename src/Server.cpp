@@ -4,7 +4,6 @@
 
 #include "Server.h"
 
-#include <QProcess>
 #include <vector>
 
 #include <QCoreApplication>
