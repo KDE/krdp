@@ -8,5 +8,5 @@
         "Name": "Remote Desktop"
     },
     "X-KDE-Keywords": "KRDP,remote desktop",
-    "X-KDE-System-Settings-Parent-Category": "hardware"
+    "X-KDE-System-Settings-Parent-Category": "network"
 }
