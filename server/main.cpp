@@ -49,6 +49,14 @@ int main(int argc, char **argv)
         QCoreApplication::exit(0);
     });
 
+    signal(SIGTERM, [](int) {
+        QCoreApplication::exit(0);
+    });
+
+    signal(SIGKILL, [](int) {
+        QCoreApplication::exit(0);
+    });
+
     auto config = ServerConfig::self();
 
     auto parserValueWithDefault = [&parser, config](QAnyStringView option, auto defaultValue) {
