@@ -154,6 +154,15 @@ KCM.SimpleKCM {
             }
         }
 
+        QQC2.Label {
+            text: i18n("This setting is used to setup a RDP server, that can be used to connect to this PC from any remote desktop client that supports RDP.")
+            Layout.preferredWidth: root.width - Kirigami.Units.gridUnit * 2
+            padding: Kirigami.Units.gridUnit
+            wrapMode: Text.WordWrap
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+        }
         // Server toggle
         Kirigami.FormLayout {
             id: toggleLayout
