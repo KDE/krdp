@@ -5,13 +5,13 @@
 #pragma once
 
 #include <filesystem>
-#include <kstatusnotifieritem.h>
 #include <memory>
 
 #include <QTcpServer>
 
 #include <freerdp/settings.h>
 
+#include "RdpConnection.h"
 #include "krdp_export.h"
 
 namespace KRdp
@@ -40,7 +40,7 @@ class KRDP_EXPORT Server : public QTcpServer
     Q_OBJECT
 
 public:
-    explicit Server(QObject *parent = nullptr, KStatusNotifierItem *sni = nullptr);
+    explicit Server(QObject *parent = nullptr);
     ~Server() override;
 
     /**
@@ -110,6 +110,8 @@ public:
      */
     Q_SIGNAL void newConnection(RdpConnection *connection);
 
+    Q_SIGNAL void connectionStateChanged(RdpConnection::State state);
+
 protected:
     /**
      * Overridden from QTcpServer
@@ -122,8 +124,6 @@ private:
 
     class Private;
     const std::unique_ptr<Private> d;
-    const std::unique_ptr<KStatusNotifierItem> m_sni;
-    void stopFromSNI();
 };
 
 }

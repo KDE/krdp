@@ -12,14 +12,7 @@
 #include <freerdp/freerdp.h>
 #include <winpr/ssl.h>
 
-#include "RdpConnection.h"
-
 #include "krdp_logging.h"
-#include <KLocalizedString>
-#include <KStatusNotifierItem>
-#include <QAction>
-#include <QDBusInterface>
-#include <QObject>
 
 using namespace KRdp;
 
@@ -38,18 +31,12 @@ public:
     std::filesystem::path tlsCertificateKey;
 };
 
-Server::Server(QObject *parent, KStatusNotifierItem *sni)
+Server::Server(QObject *parent)
     : QTcpServer(parent)
     , d(std::make_unique<Private>())
-    , m_sni(sni)
 {
     winpr_InitializeSSL(WINPR_SSL_INIT_DEFAULT);
     WTSRegisterWtsApiFunctionTable(FreeRDP_InitWtsApi());
-    if (m_sni) {
-        auto quitAction = new QAction(i18n("Quit"), this);
-        connect(quitAction, &QAction::triggered, this, &Server::stopFromSNI);
-        m_sni->addAction(u"quitAction"_qs, quitAction);
-    }
 }
 
 Server::~Server()
@@ -167,6 +154,9 @@ void Server::incomingConnection(qintptr handle)
     auto session = std::make_unique<RdpConnection>(this, handle);
     auto sessionPtr = session.get();
     connect(session.get(), &RdpConnection::stateChanged, this, [this, sessionPtr]() {
+        if (sessionPtr) {
+            Q_EMIT connectionStateChanged(sessionPtr->state());
+        }
         if (sessionPtr->state() == RdpConnection::State::Closed) {
             auto itr = std::find_if(d->sessions.begin(), d->sessions.end(), [sessionPtr](auto &session) {
                 return session.get() == sessionPtr;
@@ -176,26 +166,11 @@ void Server::incomingConnection(qintptr handle)
     });
     d->sessions.push_back(std::move(session));
     Q_EMIT newConnection(sessionPtr);
-    if (m_sni) {
-        m_sni->setStatus(KStatusNotifierItem::Active);
-    }
 }
 
 rdp_settings *Server::rdpSettings() const
 {
     return d->settings;
-}
-
-void Server::stopFromSNI()
-{
-    // Uses dbus to stop the server service, like in the KCM
-    // This kills all krdpserver instances, like a "panic button"
-    qCDebug(KRDP) << "Stopping from SNI";
-    QDBusInterface unit(u"org.freedesktop.systemd1"_qs,
-                        u"/org/freedesktop/systemd1/unit/plasma_2dkrdp_5fserver_2eservice"_qs,
-                        u"org.freedesktop.systemd1.Unit"_qs);
-
-    unit.call(u"Stop"_qs);
 }
 
 #include "moc_Server.cpp"

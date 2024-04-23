@@ -7,18 +7,13 @@
 
 #include <QApplication>
 #include <QCommandLineParser>
-#include <QGuiApplication>
 
 #include <KSharedConfig>
 #include <qt6keychain/keychain.h>
 
 #include "Server.h"
-
 #include "SessionController.h"
 #include "krdpserversettings.h"
-#include <KStatusNotifierItem>
-#include <QObject>
-#include <QWindow>
 
 int main(int argc, char **argv)
 {
@@ -53,13 +48,9 @@ int main(int argc, char **argv)
         QCoreApplication::exit(0);
     });
 
-    signal(SIGKILL, [](int) {
-        QCoreApplication::exit(0);
-    });
-
     auto config = ServerConfig::self();
 
-    auto parserValueWithDefault = [&parser, config](QAnyStringView option, auto defaultValue) {
+    auto parserValueWithDefault = [&parser](QAnyStringView option, auto defaultValue) {
         auto optionString = option.toString();
         if (parser.isSet(optionString)) {
             return QVariant(parser.value(optionString)).value<decltype(defaultValue)>();
@@ -73,12 +64,8 @@ int main(int argc, char **argv)
     auto certificate = std::filesystem::path(parserValueWithDefault(u"certificate", config->certificate()).toStdString());
     auto certificateKey = std::filesystem::path(parserValueWithDefault(u"certificate-key", config->certificateKey()).toStdString());
 
-    auto sni(new KStatusNotifierItem(u"krdpserver"_qs));
-    sni->setTitle(u"RDP Server"_qs);
-    sni->setIconByName(u"preferences-system-network-remote"_qs);
-    sni->setStatus(KStatusNotifierItem::Passive);
+    KRdp::Server server(nullptr);
 
-    KRdp::Server server(nullptr, sni);
     server.setAddress(address);
     server.setPort(port);
 

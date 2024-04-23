@@ -5,7 +5,10 @@
 
 #include <Cursor.h>
 #include <InputHandler.h>
+#include <KLocalizedString>
 #include <PortalSession.h>
+#include <QAction>
+#include <QDBusInterface>
 #include <RdpConnection.h>
 #include <Server.h>
 
@@ -73,6 +76,15 @@ SessionController::SessionController(KRdp::Server *server)
     : m_server(server)
 {
     connect(m_server, &KRdp::Server::newConnection, this, &SessionController::onNewConnection);
+    connect(m_server, &KRdp::Server::connectionStateChanged, this, &SessionController::setSNIStatus);
+    // Status notification item
+    m_sni = new KStatusNotifierItem(u"krdpserver"_qs, this);
+    m_sni->setTitle(i18n("RDP Server"));
+    m_sni->setIconByName(u"preferences-system-network-remote"_qs);
+    m_sni->setStatus(KStatusNotifierItem::Passive);
+    auto quitAction = new QAction(i18n("Quit"), this);
+    connect(quitAction, &QAction::triggered, this, &SessionController::stopFromSNI);
+    m_sni->addAction(u"quitAction"_qs, quitAction);
 }
 
 SessionController::~SessionController() noexcept
@@ -119,6 +131,39 @@ void SessionController::removeConnection(KRdp::RdpConnection *connection)
                                         return wrapper->connection == connection;
                                     }),
                      m_wrappers.end());
+}
+
+void SessionController::setSNIStatus(const KRdp::RdpConnection::State state)
+{
+    if (!m_sni) {
+        return;
+    }
+    switch (state) {
+    case KRdp::RdpConnection::State::Closed:
+    case KRdp::RdpConnection::State::Initial:
+        m_sni->setStatus(KStatusNotifierItem::Passive);
+        break;
+    case KRdp::RdpConnection::State::Starting:
+    case KRdp::RdpConnection::State::Running:
+    case KRdp::RdpConnection::State::Streaming:
+        m_sni->setStatus(KStatusNotifierItem::Active);
+        break;
+    default:
+        m_sni->setStatus(KStatusNotifierItem::Passive);
+        break;
+    }
+}
+
+void SessionController::stopFromSNI()
+{
+    // Uses dbus to stop the server service, like in the KCM
+    // This kills all krdpserver instances, like a "panic button"
+    qDebug() << "Stopping from SNI";
+    QDBusInterface unit(u"org.freedesktop.systemd1"_qs,
+                        u"/org/freedesktop/systemd1/unit/plasma_2dkrdp_5fserver_2eservice"_qs,
+                        u"org.freedesktop.systemd1.Unit"_qs);
+
+    unit.call(u"Stop"_qs);
 }
 
 #include "SessionController.moc"
