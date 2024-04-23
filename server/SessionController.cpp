@@ -99,10 +99,8 @@ void SessionController::onNewConnection(KRdp::RdpConnection *newConnection)
     auto wrapper = std::make_unique<SessionWrapper>(m_server, newConnection, m_usePlasmaSession);
     wrapper->session->setActiveStream(m_monitorIndex.value_or(-1));
 
-    connect(newConnection, &KRdp::RdpConnection::stateChanged, this, [this, newConnection]() {
-        if (newConnection->state() == KRdp::RdpConnection::State::Closed) {
-            removeConnection(newConnection);
-        }
+    connect(newConnection, &QObject::destroyed, this, [this, newConnection]() {
+        removeConnection(newConnection);
     });
 
     connect(wrapper->session.get(), &KRdp::AbstractSession::error, this, [this, newConnection] {
