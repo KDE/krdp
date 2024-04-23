@@ -32,7 +32,7 @@ KRDPServerConfig::KRDPServerConfig(QObject *parent, const KPluginMetaData &data)
     setButtons(Help | Apply | Default);
     isH264Supported();
     if (m_serverSettings->autogenerateCertificates()) {
-        autogenerateCertificate();
+        generateCertificate();
     }
 }
 
@@ -209,7 +209,7 @@ void KRDPServerConfig::toggleServer(const bool enabled)
     qDebug(KRDPKCM) << unit.call(enabled ? QStringLiteral("Start") : QStringLiteral("Stop"), QStringLiteral("replace"));
 }
 
-void KRDPServerConfig::autogenerateCertificate()
+void KRDPServerConfig::generateCertificate()
 {
     if (!m_serverSettings->certificate().isEmpty() || !m_serverSettings->certificateKey().isEmpty()) {
         return;

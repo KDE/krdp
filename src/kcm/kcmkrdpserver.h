@@ -33,7 +33,7 @@ public:
     Q_INVOKABLE void toggleAutoconnect(const bool enabled);
     Q_INVOKABLE void toggleServer(const bool enabled);
 
-    Q_INVOKABLE void autogenerateCertificate();
+    Q_INVOKABLE void generateCertificate();
     Q_INVOKABLE bool isServerRunning();
 
 public Q_SLOTS:
