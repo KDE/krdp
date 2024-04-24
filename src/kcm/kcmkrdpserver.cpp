@@ -156,7 +156,6 @@ void KRDPServerConfig::defaults()
 bool KRDPServerConfig::isH264Supported()
 {
     auto recorder = new PipeWireRecord(this);
-    qDebug() << recorder->suggestedEncoders();
     return recorder->suggestedEncoders().contains(PipeWireRecord::H264Baseline);
 }
 
