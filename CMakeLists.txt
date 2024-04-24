@@ -44,6 +44,12 @@ find_package(FreeRDP-Server REQUIRED)
 find_package(KPipeWire 5.27.80 REQUIRED)
 find_package(XKB REQUIRED)
 
+find_package(Qt${QT_MAJOR_VERSION}Keychain CONFIG)
+set_package_properties(Qt${QT_MAJOR_VERSION}Keychain PROPERTIES
+                                   DESCRIPTION "Provides support for secure credentials storage"
+                                   URL "https://github.com/frankosterfeld/qtkeychain"
+				   TYPE REQUIRED)
+
 if (BUILD_PLASMA_SESSION)
     find_package(PlasmaWaylandProtocols REQUIRED)
 endif()
