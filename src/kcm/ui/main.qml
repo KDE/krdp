@@ -211,10 +211,6 @@ KCM.SimpleKCM {
                 Kirigami.FormData.isSection: true
             }
 
-            Item {
-                Kirigami.FormData.isSection: true
-            }
-
             QQC2.TextField {
                 id: addressField
                 Layout.maximumWidth: Kirigami.Units.gridUnit * 8
