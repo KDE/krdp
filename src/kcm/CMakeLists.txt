@@ -12,7 +12,17 @@ kcmutils_generate_module_data(kcm_krdpserver
     SETTINGS_HEADERS krdpserversettings.h
     SETTINGS_CLASSES KRDPServerSettings
 )
-kconfig_add_kcfg_files(kcm_krdpserver krdpserversettings.kcfgc GENERATE_MOC)
+
+kconfig_target_kcfg_file(kcm_krdpserver
+    FILE krdpserversettings.kcfg
+    CLASS_NAME KRDPServerSettings
+    MUTATORS
+    DEFAULT_VALUE_GETTERS
+    GENERATE_PROPERTIES
+    PARENT_IN_CONSTRUCTOR
+    NOTIFIERS
+    GENERATE_MOC
+)
 
 target_sources(kcm_krdpserver PRIVATE
    kcmkrdpserver.cpp
