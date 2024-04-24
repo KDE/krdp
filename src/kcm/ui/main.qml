@@ -257,7 +257,7 @@ KCM.SimpleKCM {
                 onCheckedChanged: {
                     Settings.autogenerateCertificates = checked;
                     if (checked) {
-                        kcm.autogenerateCertificate();
+                        kcm.generateCertificate();
                     }
                 }
                 KCM.SettingStateBinding {
