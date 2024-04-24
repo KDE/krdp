@@ -15,9 +15,19 @@ KCM.SimpleKCM {
     leftPadding: 0
     rightPadding: 0
     topPadding: 0
-    property Kirigami.Dialog editUserModal: EditUserModal {
+
+    EditUserModal {
+        id: editUserModal
+        width: Kirigami.Units.gridUnit * 15
+        height: Kirigami.Units.gridUnit * 10
+        y: root.height / 3
     }
-    property Kirigami.Dialog deleteUserModal: DeleteUserModal {
+
+    DeleteUserModal {
+        id: deleteUserModal
+        width: Kirigami.Units.gridUnit * 15
+        height: Kirigami.Units.gridUnit * 10
+        y: root.height / 3
     }
 
     Connections {

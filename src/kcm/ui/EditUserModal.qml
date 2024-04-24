@@ -5,7 +5,6 @@
 import QtQuick
 import QtQuick.Controls as QQC2
 import QtQuick.Layouts
-import QtQuick.Dialogs as QtDialogs
 import org.kde.kirigami as Kirigami
 import org.kde.krdpserversettings.private 1.0
 import org.kde.kcmutils as KCM
@@ -17,8 +16,6 @@ Kirigami.Dialog {
     property bool passwordChanged: false
     property bool usernameChanged: false
 
-    implicitWidth: Kirigami.Units.gridUnit * 15
-    implicitHeight: Kirigami.Units.gridUnit * 10
     title: oldUsername === "" ? i18nc("@title:window", "Add new user") : i18nc("@title:window", "Modify user")
 
     Connections {
