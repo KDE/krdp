@@ -20,7 +20,7 @@ class SessionWrapper : public QObject
 {
     Q_OBJECT
 public:
-    SessionWrapper(KRdp::Server *server, KRdp::RdpConnection *conn, bool usePlasmaSession)
+    SessionWrapper(KRdp::Server *server, KRdp::RdpConnection *conn, bool usePlasmaSession, KStatusNotifierItem *sni)
     {
 #ifdef WITH_PLASMA_SESSION
         if (usePlasmaSession) {
@@ -31,6 +31,7 @@ public:
             session = std::make_unique<KRdp::PortalSession>(server);
         }
         connection = conn;
+        m_sni = sni;
 
         connect(session.get(), &KRdp::AbstractSession::frameReceived, connection->videoStream(), &KRdp::VideoStream::queueFrame);
         connect(session.get(), &KRdp::AbstractSession::cursorUpdate, this, &SessionWrapper::onCursorUpdate);
@@ -38,6 +39,7 @@ public:
         connect(connection->videoStream(), &KRdp::VideoStream::enabledChanged, this, &SessionWrapper::onVideoStreamEnabledChanged);
         connect(connection->videoStream(), &KRdp::VideoStream::requestedFrameRateChanged, this, &SessionWrapper::onRequestedFrameRateChanged);
         connect(connection->inputHandler(), &KRdp::InputHandler::inputEvent, session.get(), &KRdp::AbstractSession::sendEvent);
+        connect(connection, &KRdp::RdpConnection::stateChanged, this, &SessionWrapper::setSNIStatus);
     }
 
     void onCursorUpdate(const PipeWireCursor &cursor)
@@ -66,17 +68,42 @@ public:
         session->setVideoFrameRate(connection->videoStream()->requestedFrameRate());
     }
 
+    void setSNIStatus()
+    {
+        if (!m_sni) {
+            return;
+        }
+        if (!connection) {
+            m_sni->setStatus(KStatusNotifierItem::Passive);
+            return;
+        }
+        switch (connection->state()) {
+        case KRdp::RdpConnection::State::Closed:
+        case KRdp::RdpConnection::State::Initial:
+            m_sni->setStatus(KStatusNotifierItem::Passive);
+            break;
+        case KRdp::RdpConnection::State::Starting:
+        case KRdp::RdpConnection::State::Running:
+        case KRdp::RdpConnection::State::Streaming:
+            m_sni->setStatus(KStatusNotifierItem::Active);
+            break;
+        default:
+            m_sni->setStatus(KStatusNotifierItem::Passive);
+            break;
+        }
+    }
+
     Q_SIGNAL void sessionError();
 
     std::unique_ptr<KRdp::AbstractSession> session;
     QPointer<KRdp::RdpConnection> connection;
+    KStatusNotifierItem *m_sni;
 };
 
 SessionController::SessionController(KRdp::Server *server)
     : m_server(server)
 {
     connect(m_server, &KRdp::Server::newConnection, this, &SessionController::onNewConnection);
-    connect(m_server, &KRdp::Server::connectionStateChanged, this, &SessionController::setSNIStatus);
     // Status notification item
     m_sni = new KStatusNotifierItem(u"krdpserver"_qs, this);
     m_sni->setTitle(i18n("RDP Server"));
@@ -108,7 +135,7 @@ void SessionController::setQuality(const std::optional<int> &quality)
 
 void SessionController::onNewConnection(KRdp::RdpConnection *newConnection)
 {
-    auto wrapper = std::make_unique<SessionWrapper>(m_server, newConnection, m_usePlasmaSession);
+    auto wrapper = std::make_unique<SessionWrapper>(m_server, newConnection, m_usePlasmaSession, m_sni);
     wrapper->session->setActiveStream(m_monitorIndex.value_or(-1));
 
     connect(newConnection, &QObject::destroyed, this, [this, newConnection]() {
@@ -133,32 +160,11 @@ void SessionController::removeConnection(KRdp::RdpConnection *connection)
                      m_wrappers.end());
 }
 
-void SessionController::setSNIStatus(const KRdp::RdpConnection::State state)
-{
-    if (!m_sni) {
-        return;
-    }
-    switch (state) {
-    case KRdp::RdpConnection::State::Closed:
-    case KRdp::RdpConnection::State::Initial:
-        m_sni->setStatus(KStatusNotifierItem::Passive);
-        break;
-    case KRdp::RdpConnection::State::Starting:
-    case KRdp::RdpConnection::State::Running:
-    case KRdp::RdpConnection::State::Streaming:
-        m_sni->setStatus(KStatusNotifierItem::Active);
-        break;
-    default:
-        m_sni->setStatus(KStatusNotifierItem::Passive);
-        break;
-    }
-}
-
 void SessionController::stopFromSNI()
 {
     // Uses dbus to stop the server service, like in the KCM
     // This kills all krdpserver instances, like a "panic button"
-    qDebug() << "Stopping from SNI";
+    qWarning() << "Stopping from SNI";
     QDBusInterface unit(u"org.freedesktop.systemd1"_qs,
                         u"/org/freedesktop/systemd1/unit/plasma_2dkrdp_5fserver_2eservice"_qs,
                         u"org.freedesktop.systemd1.Unit"_qs);

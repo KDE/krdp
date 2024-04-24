@@ -110,8 +110,6 @@ public:
      */
     Q_SIGNAL void newConnection(RdpConnection *connection);
 
-    Q_SIGNAL void connectionStateChanged(RdpConnection::State state);
-
 protected:
     /**
      * Overridden from QTcpServer
