@@ -101,7 +101,7 @@ int main(int argc, char **argv)
     SessionController controller(&server);
     controller.setUsePlasmaSession(parser.isSet(u"plasma"_qs));
     controller.setMonitorIndex(parser.isSet(u"monitor"_qs) ? std::optional(parser.value(u"monitor"_qs).toInt()) : std::nullopt);
-    controller.setQuality(parser.isSet(u"quality"_qs) ? std::optional(parser.value(u"quality"_qs).toInt()) : std::nullopt);
+    controller.setQuality(parserValueWithDefault(u"quality", config->quality()));
 
     if (!server.start()) {
         return -1;
