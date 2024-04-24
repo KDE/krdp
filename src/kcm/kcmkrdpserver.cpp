@@ -188,9 +188,9 @@ void KRDPServerConfig::toggleAutoconnect(const bool enabled)
     qDebug(KRDPKCM) << "Setting KRDP Server service autostart on login to " << enabled << "over QDBus:";
 
     if (enabled) {
-        qDebug(KRDPKCM) << manager.call(QStringLiteral("EnableUnitFiles"), QStringList(u"plasma-krdp_server.service"_qs), false, true);
+        qDebug(KRDPKCM) << manager.asyncCall(QStringLiteral("EnableUnitFiles"), QStringList(u"plasma-krdp_server.service"_qs), false, true).reply();
     } else {
-        qDebug(KRDPKCM) << manager.call(QStringLiteral("DisableUnitFiles"), QStringList(u"plasma-krdp_server.service"_qs), false);
+        qDebug(KRDPKCM) << manager.asyncCall(QStringLiteral("DisableUnitFiles"), QStringList(u"plasma-krdp_server.service"_qs), false).reply();
     }
 }
 
@@ -205,7 +205,7 @@ void KRDPServerConfig::toggleServer(const bool enabled)
                         QStringLiteral("org.freedesktop.systemd1.Unit"));
 
     qDebug(KRDPKCM) << "Toggling KRDP Server to " << enabled << "over QDBus:";
-    qDebug(KRDPKCM) << unit.call(enabled ? QStringLiteral("Start") : QStringLiteral("Stop"), QStringLiteral("replace"));
+    qDebug(KRDPKCM) << unit.asyncCall(enabled ? QStringLiteral("Start") : QStringLiteral("Stop"), QStringLiteral("replace")).reply();
 }
 
 void KRDPServerConfig::generateCertificate()
@@ -257,7 +257,7 @@ bool KRDPServerConfig::isServerRunning()
                        QStringLiteral("/org/freedesktop/systemd1/unit/plasma_2dkrdp_5fserver_2eservice"),
                        QStringLiteral("org.freedesktop.DBus.Properties"));
 
-    QDBusReply<QVariant> response = msg.call(QStringLiteral("Get"), QStringLiteral("org.freedesktop.systemd1.Service"), QStringLiteral("MainPID"));
+    QDBusReply<QVariant> response = msg.asyncCall(QStringLiteral("Get"), QStringLiteral("org.freedesktop.systemd1.Service"), QStringLiteral("MainPID")).reply();
     auto pid = response.value().toInt();
 
     return pid > 0 ? true : false;
