@@ -18,5 +18,4 @@ Kirigami.PromptDialog {
         kcm.deleteUser(selectedUsername);
         deleteUserModal.close();
     }
-
 }

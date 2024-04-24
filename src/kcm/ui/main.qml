@@ -86,59 +86,58 @@ KCM.SimpleKCM {
         }
 
         // User
-        Kirigami.ScrollablePage {
+        Component {
+            id: userComponent
+            QQC2.ItemDelegate {
+                id: itemDelegate
+                text: modelData
+                contentItem: RowLayout {
+                    Kirigami.TitleSubtitle {
+                        id: editUserButton
+                        implicitWidth: userListView.width - deleteUserButton.width - modifyUserButton.width - Kirigami.Units.gridUnit * 1.5
+                        title: itemDelegate.text
+                    }
+                    QQC2.Button {
+                        id: modifyUserButton
+                        flat: true
+                        implicitWidth: Kirigami.Units.gridUnit * 2
+                        icon.name: "edit-entry-symbolic"
+                        text: i18nc("@label:button", "Modify user...")
+                        display: QQC2.AbstractButton.IconOnly
+                        onClicked: {
+                            root.modifyUser(itemDelegate.text);
+                        }
+                    }
+                    QQC2.Button {
+                        id: deleteUserButton
+                        flat: true
+                        implicitWidth: Kirigami.Units.gridUnit * 2
+                        icon.name: "list-remove-user"
+                        text: i18nc("@label:button", "Remove user...")
+                        display: QQC2.AbstractButton.IconOnly
+                        onClicked: {
+                            root.deleteUser(itemDelegate.text);
+                        }
+                    }
+                }
+                onClicked: {
+                    root.modifyUser(itemDelegate.text);
+                }
+            }
+        }
+        QQC2.ScrollView {
             id: userView
             enabled: !toggleServerSwitch.checked
             Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
             clip: true
-
-            verticalScrollBarPolicy: QQC2.ScrollBar.AlwaysOn
-            Layout.minimumHeight: Kirigami.Units.gridUnit * 8
+            implicitWidth: root.width
+            implicitHeight: Kirigami.Units.gridUnit * 10
+            QQC2.ScrollBar.vertical.policy: QQC2.ScrollBar.AlwaysOn
             Layout.maximumHeight: Kirigami.Units.gridUnit * 15
-
-            Component {
-                id: userComponent
-                QQC2.ItemDelegate {
-                    id: itemDelegate
-                    text: modelData
-                    contentItem: RowLayout {
-                        Kirigami.TitleSubtitle {
-                            id: editUserButton
-                            implicitWidth: userListView.width - deleteUserButton.width - modifyUserButton.width - Kirigami.Units.gridUnit * 1.5
-                            title: itemDelegate.text
-                        }
-                        QQC2.Button {
-                            id: modifyUserButton
-                            flat: true
-                            implicitWidth: Kirigami.Units.gridUnit * 2
-                            icon.name: "edit-entry-symbolic"
-                            text: i18nc("@label:button", "Modify user...")
-                            display: QQC2.AbstractButton.IconOnly
-                            onClicked: {
-                                root.modifyUser(itemDelegate.text);
-                            }
-                        }
-                        QQC2.Button {
-                            id: deleteUserButton
-                            flat: true
-                            implicitWidth: Kirigami.Units.gridUnit * 2
-                            icon.name: "list-remove-user"
-                            text: i18nc("@label:button", "Remove user...")
-                            display: QQC2.AbstractButton.IconOnly
-                            onClicked: {
-                                root.deleteUser(itemDelegate.text);
-                            }
-                        }
-                    }
-                    onClicked: {
-                        root.modifyUser(itemDelegate.text);
-                    }
-                }
-            }
 
             ListView {
                 id: userListView
-                anchors.fill: parent
+                height: parent.height
                 model: Settings.users
                 delegate: userComponent
                 spacing: Kirigami.Units.smallSpacing
