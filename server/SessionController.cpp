@@ -169,7 +169,7 @@ void SessionController::stopFromSNI()
                         u"/org/freedesktop/systemd1/unit/plasma_2dkrdp_5fserver_2eservice"_qs,
                         u"org.freedesktop.systemd1.Unit"_qs);
 
-    unit.call(u"Stop"_qs);
+    unit.asyncCall(u"Stop"_qs);
 }
 
 #include "SessionController.moc"
