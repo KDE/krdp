@@ -12,6 +12,8 @@
 #include <freerdp/freerdp.h>
 #include <winpr/ssl.h>
 
+#include "RdpConnection.h"
+
 #include "krdp_logging.h"
 
 using namespace KRdp;

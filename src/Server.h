@@ -11,7 +11,6 @@
 
 #include <freerdp/settings.h>
 
-#include "RdpConnection.h"
 #include "krdp_export.h"
 
 namespace KRdp
