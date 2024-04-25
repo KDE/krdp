@@ -6,7 +6,7 @@ import QtQuick
 import QtQuick.Controls as QQC2
 import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
-import org.kde.krdpserversettings.private 1.0
+import org.kde.krdpserversettings.private
 import org.kde.kcmutils as KCM
 
 Kirigami.Dialog {

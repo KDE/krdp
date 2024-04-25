@@ -13,6 +13,9 @@ class KRDPServerConfigImpl;
 class KRDPServerConfig : public KQuickManagedConfigModule
 {
     Q_OBJECT
+    Q_PROPERTY(KRDPServerSettings *settings READ settings NOTIFY settingsChanged FINAL)
+    QML_ELEMENT
+
 public:
     explicit KRDPServerConfig(QObject *parent, const KPluginMetaData &data);
     ~KRDPServerConfig() override;
@@ -36,6 +39,11 @@ public:
     Q_INVOKABLE void generateCertificate();
     Q_INVOKABLE bool isServerRunning();
 
+    KRDPServerSettings *settings() const
+    {
+        return m_serverSettings;
+    };
+
 public Q_SLOTS:
     void save() override;
     void defaults() override;
@@ -44,6 +52,7 @@ Q_SIGNALS:
     void krdpServerSettingsChanged();
     void generateCertificate(bool success);
     void passwordLoaded(const QString &user, const QString &password);
+    void settingsChanged();
 
 private:
     KRDPServerSettings *m_serverSettings;

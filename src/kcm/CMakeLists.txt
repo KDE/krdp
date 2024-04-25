@@ -1,7 +1,6 @@
 # SPDX-FileCopyrightText: 2024 Akseli Lahtinen <akselmo@akselmo.dev>
 #
 # SPDX-License-Identifier: BSD-2-Clause
-
 add_definitions(-DTRANSLATION_DOMAIN=\"kcm_krdpserver\")
 
 kcmutils_add_qml_kcm(kcm_krdpserver)
@@ -22,6 +21,11 @@ kconfig_target_kcfg_file(kcm_krdpserver
     PARENT_IN_CONSTRUCTOR
     NOTIFIERS
     GENERATE_MOC
+)
+
+ecm_add_qml_module(kcm_krdpserversettings
+    URI "org.kde.krdpserversettings.private"
+    GENERATE_PLUGIN_SOURCE
 )
 
 target_sources(kcm_krdpserver PRIVATE
@@ -50,3 +54,4 @@ target_link_libraries(kcm_krdpserver PRIVATE
 )
 
 ecm_qt_install_logging_categories(EXPORT kcm_krdpserver DESTINATION ${KDE_INSTALL_LOGGINGCATEGORIESDIR})
+ecm_finalize_qml_module(kcm_krdpserversettings DESTINATION ${KDE_INSTALL_QMLDIR})

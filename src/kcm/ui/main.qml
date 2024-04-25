@@ -7,7 +7,7 @@ import QtQuick.Controls as QQC2
 import QtQuick.Layouts
 import QtQuick.Dialogs as QtDialogs
 import org.kde.kirigami as Kirigami
-import org.kde.krdpserversettings.private 1.0
+import org.kde.krdpserversettings.private as Config
 import org.kde.kcmutils as KCM
 
 KCM.SimpleKCM {
@@ -15,6 +15,21 @@ KCM.SimpleKCM {
     leftPadding: 0
     rightPadding: 0
     topPadding: 0
+
+    Component.onCompleted: {
+        console.warn(listProperty(Config.settings));
+    }
+
+    function listProperty(item)
+{
+    for (var p in item)
+    {
+        if( typeof item[p] != "function" )
+            if(p != "objectName")
+                console.log(p + ":" + item[p]);
+    }
+
+}
 
     EditUserModal {
         id: editUserModal

@@ -28,7 +28,7 @@ KRDPServerConfig::KRDPServerConfig(QObject *parent, const KPluginMetaData &data)
     : KQuickManagedConfigModule(parent, data)
     , m_serverSettings(new KRDPServerSettings(this))
 {
-    qmlRegisterSingletonInstance("org.kde.krdpserversettings.private", 1, 0, "Settings", m_serverSettings);
+    // qmlRegisterSingletonInstance("org.kde.krdpserversettings.private", 1, 0, "Settings", m_serverSettings);
     setButtons(Help | Apply | Default);
     isH264Supported();
     if (m_serverSettings->autogenerateCertificates()) {
