@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: None
+# SPDX-License-Identifier: CC0-1.0
+
 [Desktop Entry]
 Type=Application
 Exec=@CMAKE_INSTALL_PREFIX@/bin/krdpserver
