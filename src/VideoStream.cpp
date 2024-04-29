@@ -30,8 +30,6 @@ namespace KRdp
 namespace clk = std::chrono;
 
 // Maximum number of frames to contain in the queue.
-constexpr qsizetype MaxQueueSize = 10;
-
 constexpr clk::system_clock::duration FrameRateEstimateAveragePeriod = clk::seconds(1);
 
 struct RdpCapsInformation {
@@ -136,7 +134,7 @@ public:
     QQueue<VideoFrame> frameQueue;
     QSet<uint32_t> pendingFrames;
 
-    int maximumFrameRate = 60;
+    int maximumFrameRate = 120;
     int requestedFrameRate = 60;
     QQueue<FrameRateEstimate> frameRateEstimates;
     clk::system_clock::time_point lastFrameRateEstimation;
@@ -188,14 +186,18 @@ bool VideoStream::initialize()
 
     d->frameSubmissionThread = std::jthread([this](std::stop_token token) {
         while (!token.stop_requested()) {
+            VideoFrame nextFrame;
             {
                 std::unique_lock lock(d->frameQueueMutex);
                 if (!d->frameQueue.isEmpty()) {
-                    sendFrame(d->frameQueue.takeFirst());
+                    nextFrame = d->frameQueue.takeFirst();
                 }
             }
-
-            std::this_thread::sleep_for(std::chrono::milliseconds(1000) / d->requestedFrameRate);
+            if (nextFrame.size.isEmpty()) {
+                std::this_thread::sleep_for(std::chrono::milliseconds(1000) / d->requestedFrameRate);
+                continue;
+            }
+            sendFrame(nextFrame);
         }
     });
 
@@ -228,10 +230,6 @@ void VideoStream::queueFrame(const KRdp::VideoFrame &frame)
 
     std::lock_guard lock(d->frameQueueMutex);
     d->frameQueue.append(frame);
-
-    while (d->frameQueue.size() > MaxQueueSize) {
-        d->frameQueue.pop_front();
-    }
 }
 
 void VideoStream::reset()
@@ -547,8 +545,13 @@ void VideoStream::updateRequestedFrameRate()
     });
     auto average = sum / d->frameRateEstimates.size();
 
-    if (average != d->requestedFrameRate) {
-        d->requestedFrameRate = average;
+    // we want some headroom so we can always clear our current load
+    // and handle any other latency
+    constexpr qreal targetFrameRateSaturation = 0.5;
+    auto frameRate = std::max(1.0, average * targetFrameRateSaturation);
+
+    if (frameRate != d->requestedFrameRate) {
+        d->requestedFrameRate = frameRate;
         Q_EMIT requestedFrameRateChanged();
     }
 }
