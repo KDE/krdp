@@ -269,14 +269,18 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
             }
             auto stream = streams.at(activeStream() >= 0 ? activeStream() : 0);
 
-            setLogicalSize(qdbus_cast<QSize>(stream.map.value(u"size"_qs)));
+            auto screenSize = qdbus_cast<QSize>(stream.map.value(u"size"_qs));
+            setLogicalSize(screenSize);
+            // if quality <= 75..
+            setSize(screenSize.scaled(screenSize.width() / 2, screenSize.height() / 2, Qt::AspectRatioMode::KeepAspectRatio));
             auto fd = reply.value();
             auto encodedStream = this->stream();
             encodedStream->setNodeId(stream.nodeId);
             encodedStream->setFd(fd.takeFileDescriptor());
             encodedStream->setEncoder(PipeWireEncodedStream::H264Baseline);
             connect(encodedStream, &PipeWireEncodedStream::newPacket, this, &PortalSession::onPacketReceived);
-            connect(encodedStream, &PipeWireEncodedStream::sizeChanged, this, &PortalSession::setSize);
+            // This overrides the set size. Is it even needed since we dont support screen resize during rdp?
+            // connect(encodedStream, &PipeWireEncodedStream::sizeChanged, this, &PortalSession::setSize);
             connect(encodedStream, &PipeWireEncodedStream::cursorChanged, this, &PortalSession::cursorUpdate);
             setStarted(true);
         } else {
