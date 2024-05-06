@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include "RdpConnection.h"
+#include <KStatusNotifierItem>
 #include <vector>
 
 #include <QObject>
@@ -26,6 +28,8 @@ public:
     void setUsePlasmaSession(bool plasma);
     void setMonitorIndex(const std::optional<int> &index);
     void setQuality(const std::optional<int> &quality);
+    void setSNIStatus(const KRdp::RdpConnection::State state);
+    void stopFromSNI();
 
 private:
     void onNewConnection(KRdp::RdpConnection *newConnection);
@@ -37,4 +41,6 @@ private:
     std::optional<int> m_quality;
 
     std::vector<std::unique_ptr<SessionWrapper>> m_wrappers;
+
+    KStatusNotifierItem *m_sni;
 };

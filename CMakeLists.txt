@@ -33,7 +33,10 @@ include(ECMEnableSanitizers)
 option(BUILD_EXAMPLES "Build example applications" ON)
 option(BUILD_PLASMA_SESSION "Build support for Plasma Screencasting extensions" ON)
 
-find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED Core Gui Network DBus WaylandClient)
+find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED Core Quick Gui Network DBus WaylandClient Qml)
+
+find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS Config DBusAddons KCMUtils I18n CoreAddons StatusNotifierItem)
+
 
 find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS Config DBusAddons)
 
@@ -42,6 +45,12 @@ find_package(WinPR REQUIRED)
 find_package(FreeRDP-Server REQUIRED)
 find_package(KPipeWire 5.27.80 REQUIRED)
 find_package(XKB REQUIRED)
+
+find_package(Qt6Keychain CONFIG)
+set_package_properties(Qt6Keychain PROPERTIES
+                                   DESCRIPTION "Provides support for secure credentials storage"
+                                   URL "https://github.com/frankosterfeld/qtkeychain"
+				   TYPE REQUIRED)
 
 if (BUILD_PLASMA_SESSION)
     find_package(PlasmaWaylandProtocols REQUIRED)
