@@ -83,7 +83,7 @@ KCM.SimpleKCM {
                 anchors.fill: parent
                 anchors.margins: Kirigami.Units.smallSpacing
                 visible: parent.enabled
-                text: i18nd("Error about missing encoding for H264", "Your device does not support H264 encoding, remote desktop won't work! Please consult your distribution how to enable it.")
+                text: i18nc("@info:status", "Remote desktop cannot be enabled because your system does not support H264 video encoding. Please contact your distribution regarding how to enable it.")
             }
         }
 
@@ -99,7 +99,7 @@ KCM.SimpleKCM {
                 anchors.margins: Kirigami.Units.smallSpacing
                 visible: parent.enabled
                 // TODO better text
-                text: i18nd("Error about autogenerating certificates failing", "Generating certificates automatically has failed!")
+                text: i18nc("@info:status", "Generating certificates automatically has failed!")
             }
         }
 
