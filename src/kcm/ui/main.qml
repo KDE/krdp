@@ -22,7 +22,6 @@ KCM.SimpleKCM {
         parent: root
         width: Kirigami.Units.gridUnit * 15
         height: Kirigami.Units.gridUnit * 10
-        y: root.height / 3
     }
 
     DeleteUserModal {
@@ -30,7 +29,6 @@ KCM.SimpleKCM {
         parent: root
         width: Kirigami.Units.gridUnit * 15
         height: Kirigami.Units.gridUnit * 10
-        y: root.height / 3
     }
 
     KeychainErrorDialog {
@@ -38,7 +36,6 @@ KCM.SimpleKCM {
         parent: root
         width: Kirigami.Units.gridUnit * 15
         height: Kirigami.Units.gridUnit * 10
-        y: root.height / 3
     }
 
     Connections {
