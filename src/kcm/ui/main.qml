@@ -11,9 +11,6 @@ import org.kde.kcmutils as KCM
 
 KCM.SimpleKCM {
     id: root
-    leftPadding: 0
-    rightPadding: 0
-    topPadding: 0
 
     property var settings: kcm.settings()
 
@@ -93,9 +90,8 @@ KCM.SimpleKCM {
         spacing: Kirigami.Units.smallSpacing
 
         QQC2.Label {
-            Layout.topMargin: Kirigami.Units.gridUnit
             text: i18n("Set up remote login to connect using apps supporting the “RDP” remote desktop protocol.")
-            Layout.preferredWidth: userViewFrame.width - Kirigami.Units.gridUnit * 2
+            Layout.preferredWidth: userViewFrame.width
             padding: Kirigami.Units.gridUnit
             wrapMode: Text.WordWrap
             verticalAlignment: Text.AlignVCenter
