@@ -1,11 +1,23 @@
 {
     "KPlugin": {
         "Description": "Configure Remote Desktop",
+        "Description[ca]": "Configuració d'escriptori remot",
+        "Description[es]": "Configurar el escritorio remoto",
+        "Description[nl]": "Bureaublad op afstand configureren",
+        "Description[sl]": "Konfiguriraj odaljeno namizje",
+        "Description[uk]": "Налаштовування віддаленої стільниці",
+        "Description[x-test]": "xxConfigure Remote Desktopxx",
         "FormFactors": [
             "desktop"
         ],
         "Icon": "preferences-system-network-remote",
-        "Name": "Remote Desktop"
+        "Name": "Remote Desktop",
+        "Name[ca]": "Escriptori remot",
+        "Name[es]": "Escritorio remoto",
+        "Name[nl]": "Bureaublad op afstand",
+        "Name[sl]": "Oddaljeno namizje",
+        "Name[uk]": "Віддалена стільниця",
+        "Name[x-test]": "xxRemote Desktopxx"
     },
     "X-KDE-Keywords": "KRDP,remote desktop",
     "X-KDE-System-Settings-Parent-Category": "network"
