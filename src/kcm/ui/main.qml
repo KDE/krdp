@@ -183,7 +183,7 @@ KCM.SimpleKCM {
                     headerPositioning: ListView.OverlayHeader
                     header: Kirigami.InlineViewHeader {
                         width: parent.width
-                        text: "Usernames"
+                        text: i18nc("@title", "Usernames")
                         actions: [
                             Kirigami.Action {
                                 icon.name: "list-add-user"
