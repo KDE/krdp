@@ -44,10 +44,10 @@ KCM.SimpleKCM {
             kcm.toggleAutoconnect(settings.autostart);
         }
         function onGenerateCertificateSucceeded(): void {
-            certificateError.enabled = false;
+            certificateError.visible = false;
         }
         function onGenerateCertificateFailed(): void {
-            certificateError.enabled = true;
+            certificateError.visible = true;
         }
         function onKeychainError(errorText: string): void {
             keychainErrorDialog.errorText = errorText;
@@ -68,37 +68,29 @@ KCM.SimpleKCM {
         deleteUserModal.open();
     }
 
-    ColumnLayout {
-        Item {
-            id: encodingError
-            implicitWidth: root.width - Kirigami.Units.gridUnit
-            implicitHeight: Kirigami.Units.gridUnit * 3
-            enabled: !kcm.isH264Supported()
-            visible: enabled
-            Kirigami.InlineMessage {
-                type: Kirigami.MessageType.Error
-                anchors.fill: parent
-                anchors.margins: Kirigami.Units.smallSpacing
-                visible: parent.enabled
-                text: i18nc("@info:status", "Remote desktop cannot be enabled because your system does not support H264 video encoding. Please contact your distribution regarding how to enable it.")
-            }
+    header: ColumnLayout {
+        spacing: 0
+
+        Kirigami.InlineMessage {
+            type: Kirigami.MessageType.Error
+            Layout.fillWidth: true
+            Layout.margins: Kirigami.Units.mediumSpacing
+            visible: !kcm.isH264Supported()
+            text: i18nc("@info:status", "Remote desktop cannot be enabled because your system does not support H264 video encoding. Please contact your distribution regarding how to enable it.")
         }
 
-        Item {
+        Kirigami.InlineMessage {
             id: certificateError
-            implicitWidth: root.width - Kirigami.Units.gridUnit
-            implicitHeight: Kirigami.Units.gridUnit * 3
-            enabled: false
-            visible: enabled
-            Kirigami.InlineMessage {
-                type: Kirigami.MessageType.Error
-                anchors.fill: parent
-                anchors.margins: Kirigami.Units.smallSpacing
-                visible: parent.enabled
-                // TODO better text
-                text: i18nc("@info:status", "Generating certificates automatically has failed!")
-            }
+            type: Kirigami.MessageType.Error
+            Layout.fillWidth: true
+            Layout.margins: Kirigami.Units.mediumSpacing
+            // TODO better text
+            text: i18nc("@info:status", "Generating certificates automatically has failed!")
         }
+    }
+
+    ColumnLayout {
+        spacing: Kirigami.Units.smallSpacing
 
         QQC2.Label {
             Layout.topMargin: Kirigami.Units.gridUnit
