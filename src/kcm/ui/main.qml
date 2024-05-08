@@ -20,22 +20,22 @@ KCM.SimpleKCM {
     EditUserModal {
         id: editUserModal
         parent: root
-        width: Kirigami.Units.gridUnit * 15
-        height: Kirigami.Units.gridUnit * 10
+        implicitWidth: Math.max(Kirigami.Units.gridUnit * 15, Math.round(root.width / 2))
+        implicitHeight: Kirigami.Units.gridUnit * 10
     }
 
     DeleteUserModal {
         id: deleteUserModal
         parent: root
-        width: Kirigami.Units.gridUnit * 15
-        height: Kirigami.Units.gridUnit * 10
+        implicitWidth: Math.max(Kirigami.Units.gridUnit * 15, Math.round(root.width / 2))
+        implicitHeight: Kirigami.Units.gridUnit * 10
     }
 
     KeychainErrorDialog {
         id: keychainErrorDialog
         parent: root
-        width: Kirigami.Units.gridUnit * 15
-        height: Kirigami.Units.gridUnit * 10
+        implicitWidth: Math.max(Kirigami.Units.gridUnit * 15, Math.round(root.width / 2))
+        implicitHeight: Kirigami.Units.gridUnit * 10
     }
 
     Connections {

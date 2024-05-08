@@ -85,8 +85,8 @@ Kirigami.Dialog {
 
         QQC2.TextField {
             id: usernameField
-            Layout.maximumWidth: Kirigami.Units.gridUnit * 8
             Kirigami.FormData.label: i18nc("@label:textbox", "Username:")
+            Layout.fillWidth: true
             text: editUserModal.oldUsername
             KCM.SettingStateBinding {
                 configObject: root.settings
@@ -109,8 +109,8 @@ Kirigami.Dialog {
 
         Kirigami.PasswordField {
             id: passwordField
-            Layout.maximumWidth: Kirigami.Units.gridUnit * 8
             Kirigami.FormData.label: i18nc("@label:textbox", "Password:")
+            Layout.fillWidth: true
             onTextEdited: {
                 passwordChanged = true;
             }
