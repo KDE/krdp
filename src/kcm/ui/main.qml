@@ -98,61 +98,6 @@ KCM.SimpleKCM {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
         }
 
-        // User
-        Component {
-            id: userComponent
-            QQC2.ItemDelegate {
-                id: itemDelegate
-                width: userListView.width
-                text: modelData
-                hoverEnabled: !toggleServerSwitch.checked
-                contentItem: RowLayout {
-                    spacing: Kirigami.Units.mediumSpacing
-
-                    QQC2.Label {
-                        Layout.fillHeight: true
-                        Layout.fillWidth: true
-                        text: itemDelegate.text
-                        verticalAlignment: Text.AlignVCenter
-                        elide: Text.ElideRight
-                    }
-
-                    QQC2.Button {
-                        id: modifyUserButton
-                        icon.name: "edit-entry-symbolic"
-                        text: i18nc("@action:button", "Modify user…")
-                        display: QQC2.AbstractButton.IconOnly
-                        onClicked: {
-                            root.modifyUser(itemDelegate.text);
-                        }
-                        QQC2.ToolTip {
-                            text: modifyUserButton.text
-                            visible: modifyUserButton.hovered
-                                  || (Kirigami.Settings.tabletMode && modifyUserButton.pressed)
-                        }
-                    }
-
-                    QQC2.Button {
-                        id: deleteUserButton
-                        icon.name: "list-remove-user-symbolic"
-                        text: i18nc("@action:button", "Remove user…")
-                        display: QQC2.AbstractButton.IconOnly
-                        onClicked: {
-                            root.deleteUser(itemDelegate.text);
-                        }
-                        QQC2.ToolTip {
-                            text: deleteUserButton.text
-                            visible: deleteUserButton.hovered
-                                  || (Kirigami.Settings.tabletMode && deleteUserButton.pressed)
-                        }
-                    }
-                }
-                onClicked: {
-                    root.modifyUser(itemDelegate.text);
-                }
-            }
-        }
-
         QQC2.ScrollView {
             id: userViewFrame
             Layout.maximumHeight: Kirigami.Units.gridUnit * 15
@@ -171,7 +116,57 @@ KCM.SimpleKCM {
             contentItem: ListView {
                 id: userListView
                 model: settings.users
-                delegate: userComponent
+
+                delegate: QQC2.ItemDelegate {
+                    id: itemDelegate
+                    width: userListView.width
+                    text: modelData
+                    hoverEnabled: !toggleServerSwitch.checked
+                    contentItem: RowLayout {
+                        spacing: Kirigami.Units.mediumSpacing
+
+                        QQC2.Label {
+                            Layout.fillHeight: true
+                            Layout.fillWidth: true
+                            text: itemDelegate.text
+                            verticalAlignment: Text.AlignVCenter
+                            elide: Text.ElideRight
+                        }
+
+                        QQC2.Button {
+                            id: modifyUserButton
+                            icon.name: "edit-entry-symbolic"
+                            text: i18nc("@action:button", "Modify user…")
+                            display: QQC2.AbstractButton.IconOnly
+                            onClicked: {
+                                root.modifyUser(itemDelegate.text);
+                            }
+                            QQC2.ToolTip {
+                                text: modifyUserButton.text
+                                visible: modifyUserButton.hovered
+                                || (Kirigami.Settings.tabletMode && modifyUserButton.pressed)
+                            }
+                        }
+
+                        QQC2.Button {
+                            id: deleteUserButton
+                            icon.name: "list-remove-user-symbolic"
+                            text: i18nc("@action:button", "Remove user…")
+                            display: QQC2.AbstractButton.IconOnly
+                            onClicked: {
+                                root.deleteUser(itemDelegate.text);
+                            }
+                            QQC2.ToolTip {
+                                text: deleteUserButton.text
+                                visible: deleteUserButton.hovered
+                                || (Kirigami.Settings.tabletMode && deleteUserButton.pressed)
+                            }
+                        }
+                    }
+                    onClicked: {
+                        root.modifyUser(itemDelegate.text);
+                    }
+                }
 
                 headerPositioning: ListView.OverlayHeader
                 header: Kirigami.InlineViewHeader {
