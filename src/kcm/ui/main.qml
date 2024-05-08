@@ -107,33 +107,47 @@ KCM.SimpleKCM {
             id: userComponent
             QQC2.ItemDelegate {
                 id: itemDelegate
+                width: userListView.width
                 text: modelData
+                hoverEnabled: !toggleServerSwitch.checked
                 contentItem: RowLayout {
-                    Kirigami.TitleSubtitle {
-                        id: editUserButton
-                        implicitWidth: userListView.width - deleteUserButton.width - modifyUserButton.width - Kirigami.Units.gridUnit * 1.5
-                        title: itemDelegate.text
+                    spacing: Kirigami.Units.mediumSpacing
+
+                    QQC2.Label {
+                        Layout.fillHeight: true
+                        Layout.fillWidth: true
+                        text: itemDelegate.text
+                        verticalAlignment: Text.AlignVCenter
+                        elide: Text.ElideRight
                     }
+
                     QQC2.Button {
                         id: modifyUserButton
-                        flat: true
-                        implicitWidth: Kirigami.Units.gridUnit * 2
                         icon.name: "edit-entry-symbolic"
-                        text: i18nc("@label:button", "Modify user…")
+                        text: i18nc("@action:button", "Modify user…")
                         display: QQC2.AbstractButton.IconOnly
                         onClicked: {
                             root.modifyUser(itemDelegate.text);
                         }
+                        QQC2.ToolTip {
+                            text: modifyUserButton.text
+                            visible: modifyUserButton.hovered
+                                  || (Kirigami.Settings.tabletMode && modifyUserButton.pressed)
+                        }
                     }
+
                     QQC2.Button {
                         id: deleteUserButton
-                        flat: true
-                        implicitWidth: Kirigami.Units.gridUnit * 2
-                        icon.name: "list-remove-user"
-                        text: i18nc("@label:button", "Remove user…")
+                        icon.name: "list-remove-user-symbolic"
+                        text: i18nc("@action:button", "Remove user…")
                         display: QQC2.AbstractButton.IconOnly
                         onClicked: {
                             root.deleteUser(itemDelegate.text);
+                        }
+                        QQC2.ToolTip {
+                            text: deleteUserButton.text
+                            visible: deleteUserButton.hovered
+                                  || (Kirigami.Settings.tabletMode && deleteUserButton.pressed)
                         }
                     }
                 }
