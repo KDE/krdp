@@ -9,6 +9,8 @@ Kirigami.PromptDialog {
     id: deleteUserModal
     // if oldUsername is empty, we're adding a new user
     property string selectedUsername
+
+    showCloseButton: false
     title: i18nc("@title:window", "Discard user?")
     subtitle: i18nc("@info", "Are you sure you want to discard following user: %1?", selectedUsername)
 

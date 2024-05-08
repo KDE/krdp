@@ -15,6 +15,7 @@ Kirigami.Dialog {
     property bool passwordChanged: false
     property bool usernameChanged: false
 
+    showCloseButton: false
     title: oldUsername === "" ? i18nc("@title:window", "Add new user") : i18nc("@title:window", "Modify user")
 
     Connections {
