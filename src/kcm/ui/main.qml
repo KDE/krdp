@@ -153,53 +153,49 @@ KCM.SimpleKCM {
                 }
             }
         }
-        QQC2.Frame {
+
+        QQC2.ScrollView {
             id: userViewFrame
             Layout.maximumHeight: Kirigami.Units.gridUnit * 15
             Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
             Layout.preferredWidth: root.width - Kirigami.Units.gridUnit * 5
             Layout.preferredHeight: Kirigami.Units.gridUnit * 10
+            enabled: !toggleServerSwitch.checked
             clip: true
-            padding: 2
 
-            background: Rectangle {
-                color: Kirigami.Theme.alternateBackgroundColor
-                border.color: Kirigami.ColorUtils.linearInterpolation(Kirigami.Theme.backgroundColor, Kirigami.Theme.textColor, Kirigami.Theme.frameContrast)
-                radius: Kirigami.Units.cornerRadius
+            Component.onCompleted: {
+                if (background) {
+                    background.visible = true;
+                }
             }
 
-            contentItem: QQC2.ScrollView {
-                id: userView
-                containmentMask: userViewFrame
-                enabled: !toggleServerSwitch.checked
-                QQC2.ScrollBar.vertical.policy: QQC2.ScrollBar.AlwaysOn
+            contentItem: ListView {
+                id: userListView
+                model: settings.users
+                delegate: userComponent
 
-                ListView {
-                    id: userListView
-                    height: parent.height - Kirigami.Units.gridUnit
-                    model: settings.users
-                    delegate: userComponent
-                    spacing: Kirigami.Units.smallSpacing
-                    headerPositioning: ListView.OverlayHeader
-                    header: Kirigami.InlineViewHeader {
-                        width: parent.width
-                        text: i18nc("@title", "Usernames")
-                        actions: [
-                            Kirigami.Action {
-                                icon.name: "list-add-user"
-                                text: i18nc("@label:button", "Add user…")
-                                onTriggered: {
-                                    root.addUser();
-                                }
+                headerPositioning: ListView.OverlayHeader
+                header: Kirigami.InlineViewHeader {
+                    width: userListView.width
+                    text: i18nc("@title", "Usernames")
+                    actions: [
+                        Kirigami.Action {
+                            icon.name: "list-add-user"
+                            text: i18nc("@label:button", "Add user…")
+                            onTriggered: {
+                                root.addUser();
                             }
-                        ]
-                    }
-                    Kirigami.PlaceholderMessage {
-                        anchors.centerIn: parent
-                        visible: userListView.count === 0
-                        text: i18nc("@info:placeholder", "Add at least one account for remote login")
-                    }
+                        }
+                    ]
                 }
+            }
+
+            Kirigami.PlaceholderMessage {
+                width: parent.width - (Kirigami.Units.largeSpacing * 4)
+                anchors.centerIn: parent
+                anchors.verticalCenterOffset: Kirigami.Units.gridUnit * 2
+                visible: userListView.count === 0
+                text: i18nc("@info:placeholder", "Add at least one account for remote login")
             }
         }
 
