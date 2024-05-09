@@ -83,12 +83,13 @@ KCM.SimpleKCM {
     }
 
     ColumnLayout {
-        spacing: Kirigami.Units.smallSpacing
+        id: contentColumn
+        spacing: Kirigami.Units.gridUnit
 
         QQC2.Label {
             text: i18n("Set up remote login to connect using apps supporting the “RDP” remote desktop protocol.")
             Layout.preferredWidth: userViewFrame.width
-            padding: Kirigami.Units.gridUnit
+            Layout.topMargin: contentColumn.spacing
             wrapMode: Text.WordWrap
             verticalAlignment: Text.AlignVCenter
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
@@ -192,7 +193,6 @@ KCM.SimpleKCM {
 
         // Server toggle
         Kirigami.FormLayout {
-            Layout.topMargin: Kirigami.Units.gridUnit
             id: toggleLayout
             twinFormLayouts: settingsLayout
 
@@ -225,9 +225,6 @@ KCM.SimpleKCM {
             id: settingsLayout
             twinFormLayouts: toggleLayout
             enabled: !toggleServerSwitch.checked && userListView.count > 0
-            Item {
-                Kirigami.FormData.isSection: true
-            }
 
             QQC2.TextField {
                 id: addressField
