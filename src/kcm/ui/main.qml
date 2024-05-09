@@ -84,12 +84,12 @@ KCM.SimpleKCM {
 
     ColumnLayout {
         id: contentColumn
-        spacing: Kirigami.Units.gridUnit
+        spacing: 0
 
         QQC2.Label {
             text: i18n("Set up remote login to connect using apps supporting the “RDP” remote desktop protocol.")
             Layout.preferredWidth: userViewFrame.width
-            Layout.topMargin: contentColumn.spacing
+            Layout.margins: Kirigami.Units.gridUnit
             wrapMode: Text.WordWrap
             verticalAlignment: Text.AlignVCenter
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
@@ -197,10 +197,15 @@ KCM.SimpleKCM {
             twinFormLayouts: settingsLayout
 
             enabled: userListView.count > 0
+
+            Item {
+                Kirigami.FormData.isSection: true
+                Kirigami.FormData.label: i18nc("title:group Group of RDP server settings", "RDP Server")
+            }
             QQC2.Switch {
                 id: toggleServerSwitch
                 checked: kcm.isServerRunning()
-                Kirigami.FormData.label: i18nc("@option:check", "Enable RDP server:")
+                text: i18nc("@option:check Enable RDP server", "Enable")
                 onToggled: {
                     kcm.toggleServer(toggleServerSwitch.checked);
                 }
@@ -208,7 +213,7 @@ KCM.SimpleKCM {
 
             QQC2.CheckBox {
                 id: autostartOnLogin
-                Kirigami.FormData.label: i18nc("@option:check", "Autostart on login:")
+                text: i18nc("@option:check", "Autostart on login")
                 checked: settings.autostart
                 onToggled: {
                     settings.autostart = checked;
@@ -226,8 +231,15 @@ KCM.SimpleKCM {
 
             readonly property bool showAdvancedCertUI: !autoGenCertSwitch.checked
 
+            Layout.topMargin: Kirigami.Units.largeSpacing // copy typical spacing between FormLayout sections
+
             twinFormLayouts: toggleLayout
             enabled: !toggleServerSwitch.checked && userListView.count > 0
+
+            Item {
+                Kirigami.FormData.isSection: true
+                Kirigami.FormData.label: i18nc("title:group Group of RDP server settings", "Connection Settings")
+            }
 
             QQC2.TextField {
                 id: addressField
@@ -259,13 +271,49 @@ KCM.SimpleKCM {
                 }
             }
 
+            ColumnLayout {
+                enabled: !toggleServerSwitch.checked && userListView.count > 0
+                Layout.preferredWidth: certKeyLayout.width
+
+                Kirigami.FormData.label: i18nc("@label:textbox", "Video quality:")
+                Kirigami.FormData.buddyFor: qualitySlider
+                QQC2.Slider {
+                    id: qualitySlider
+                    Layout.fillWidth: true
+                    from: 0
+                    to: 100
+                    stepSize: 1
+                    value: settings.quality
+                    onMoved: {
+                        settings.quality = value;
+                    }
+                    KCM.SettingStateBinding {
+                        configObject: settings
+                        settingName: "quality"
+                    }
+                }
+                RowLayout {
+                    QQC2.Label {
+                        text: i18nc("@label:slider", "Responsiveness")
+                    }
+                    Item {
+                        Layout.fillWidth: true
+                    }
+                    QQC2.Label {
+                        text: i18nc("@label:slider", "Quality")
+                    }
+                }
+            }
+
+
             Item {
                 Kirigami.FormData.isSection: true
+                Kirigami.FormData.label: i18nc("title:group Group of RDP server settings", "Security Certificates")
             }
 
             QQC2.CheckBox {
                 id: autoGenCertSwitch
-                Kirigami.FormData.label: i18nc("@label:check", "Autogenerate certificates:")
+                text: i18nc("@label:check generate security certificates automatically", "Generate automatically")
                 checked: settings.autogenerateCertificates
                 onToggled: {
                     settings.autogenerateCertificates = checked;
@@ -331,43 +379,6 @@ KCM.SimpleKCM {
                     onClicked: {
                         certLoader.key = true;
                         certLoader.active = true;
-                    }
-                }
-            }
-
-            Item {
-                Kirigami.FormData.isSection: true
-            }
-            ColumnLayout {
-                enabled: !toggleServerSwitch.checked && userListView.count > 0
-                Layout.preferredWidth: certKeyLayout.width
-
-                Kirigami.FormData.label: i18nc("@label:textbox", "Video quality:")
-                Kirigami.FormData.buddyFor: qualitySlider
-                QQC2.Slider {
-                    id: qualitySlider
-                    Layout.fillWidth: true
-                    from: 0
-                    to: 100
-                    stepSize: 1
-                    value: settings.quality
-                    onMoved: {
-                        settings.quality = value;
-                    }
-                    KCM.SettingStateBinding {
-                        configObject: settings
-                        settingName: "quality"
-                    }
-                }
-                RowLayout {
-                    QQC2.Label {
-                        text: i18nc("@label:slider", "Responsiveness")
-                    }
-                    Item {
-                        Layout.fillWidth: true
-                    }
-                    QQC2.Label {
-                        text: i18nc("@label:slider", "Quality")
                     }
                 }
             }
