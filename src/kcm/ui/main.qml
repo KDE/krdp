@@ -119,7 +119,7 @@ KCM.ScrollViewKCM {
             text: i18nc("@title", "Usernames")
             actions: [
                 Kirigami.Action {
-                    icon.name: "list-add-user"
+                    icon.name: "list-add-user-symbolic"
                     text: i18nc("@label:button", "Add User…")
                     onTriggered: {
                         root.addUser();
