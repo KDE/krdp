@@ -131,9 +131,9 @@ KCM.ScrollViewKCM {
         Kirigami.PlaceholderMessage {
             width: parent.width - (Kirigami.Units.largeSpacing * 4)
             anchors.centerIn: parent
-            anchors.verticalCenterOffset: Kirigami.Units.gridUnit * 2
             visible: userListView.count === 0
-            text: i18nc("@info:placeholder", "Add at least one account for remote login")
+            icon.name: "list-add-user-symbolic"
+            text: i18nc("@info:placeholder", "Add at least one user account to enable remote login")
         }
 
         model: settings.users
