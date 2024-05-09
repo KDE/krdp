@@ -109,8 +109,32 @@ KCM.SimpleKCM {
                 }
             }
 
+            Kirigami.PlaceholderMessage {
+                width: parent.width - (Kirigami.Units.largeSpacing * 4)
+                anchors.centerIn: parent
+                anchors.verticalCenterOffset: Kirigami.Units.gridUnit * 2
+                visible: userListView.count === 0
+                text: i18nc("@info:placeholder", "Add at least one account for remote login")
+            }
+
             contentItem: ListView {
                 id: userListView
+
+                headerPositioning: ListView.OverlayHeader
+                header: Kirigami.InlineViewHeader {
+                    width: userListView.width
+                    text: i18nc("@title", "Usernames")
+                    actions: [
+                        Kirigami.Action {
+                            icon.name: "list-add-user"
+                            text: i18nc("@label:button", "Add user…")
+                            onTriggered: {
+                                root.addUser();
+                            }
+                        }
+                    ]
+                }
+
                 model: settings.users
 
                 delegate: QQC2.ItemDelegate {
@@ -163,29 +187,6 @@ KCM.SimpleKCM {
                         root.modifyUser(itemDelegate.text);
                     }
                 }
-
-                headerPositioning: ListView.OverlayHeader
-                header: Kirigami.InlineViewHeader {
-                    width: userListView.width
-                    text: i18nc("@title", "Usernames")
-                    actions: [
-                        Kirigami.Action {
-                            icon.name: "list-add-user"
-                            text: i18nc("@label:button", "Add user…")
-                            onTriggered: {
-                                root.addUser();
-                            }
-                        }
-                    ]
-                }
-            }
-
-            Kirigami.PlaceholderMessage {
-                width: parent.width - (Kirigami.Units.largeSpacing * 4)
-                anchors.centerIn: parent
-                anchors.verticalCenterOffset: Kirigami.Units.gridUnit * 2
-                visible: userListView.count === 0
-                text: i18nc("@info:placeholder", "Add at least one account for remote login")
             }
         }
 
