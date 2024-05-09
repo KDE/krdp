@@ -68,8 +68,8 @@ KCM.ScrollViewKCM {
             enabled: userListView.count > 0
             checkable: true
             checked: kcm.isServerRunning()
-            onTriggered: {
-                kcm.toggleServer(toggleServerSwitch.checked);
+            onTriggered: (source) => {
+                kcm.toggleServer(source.checked);
             }
             displayComponent: QQC2.Switch {
                 action: toggleServerSwitch
@@ -121,7 +121,7 @@ KCM.ScrollViewKCM {
                 Kirigami.Action {
                     icon.name: "list-add-user-symbolic"
                     text: i18nc("@label:button", "Add User…")
-                    onTriggered: {
+                    onTriggered: (source) => {
                         root.addUser();
                     }
                 }
