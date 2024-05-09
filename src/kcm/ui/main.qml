@@ -9,7 +9,7 @@ import QtQuick.Dialogs as QtDialogs
 import org.kde.kirigami as Kirigami
 import org.kde.kcmutils as KCM
 
-KCM.SimpleKCM {
+KCM.ScrollViewKCM {
     id: root
 
     property var settings: kcm.settings()
@@ -80,116 +80,102 @@ KCM.SimpleKCM {
             // TODO better text
             text: i18nc("@info:status", "Generating certificates automatically has failed!")
         }
-    }
-
-    ColumnLayout {
-        id: contentColumn
-        spacing: 0
 
         QQC2.Label {
             text: i18n("Set up remote login to connect using apps supporting the “RDP” remote desktop protocol.")
-            Layout.preferredWidth: userViewFrame.width
-            Layout.margins: Kirigami.Units.gridUnit
+            // Layout.preferredWidth: userViewFrame.width
+            // Layout.margins: Kirigami.Units.gridUnit
             wrapMode: Text.WordWrap
             verticalAlignment: Text.AlignVCenter
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
         }
+    }
 
-        QQC2.ScrollView {
-            id: userViewFrame
-            Layout.maximumHeight: Kirigami.Units.gridUnit * 15
-            Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
-            Layout.preferredWidth: root.width - Kirigami.Units.gridUnit * 5
-            Layout.preferredHeight: Kirigami.Units.gridUnit * 10
-            enabled: !toggleServerSwitch.checked
-            clip: true
+    view: ListView {
+        id: userListView
 
-            Component.onCompleted: {
-                if (background) {
-                    background.visible = true;
-                }
-            }
+        clip: true
+        enabled: !toggleServerSwitch.checked
 
-            Kirigami.PlaceholderMessage {
-                width: parent.width - (Kirigami.Units.largeSpacing * 4)
-                anchors.centerIn: parent
-                anchors.verticalCenterOffset: Kirigami.Units.gridUnit * 2
-                visible: userListView.count === 0
-                text: i18nc("@info:placeholder", "Add at least one account for remote login")
-            }
-
-            contentItem: ListView {
-                id: userListView
-
-                headerPositioning: ListView.OverlayHeader
-                header: Kirigami.InlineViewHeader {
-                    width: userListView.width
-                    text: i18nc("@title", "Usernames")
-                    actions: [
-                        Kirigami.Action {
-                            icon.name: "list-add-user"
-                            text: i18nc("@label:button", "Add user…")
-                            onTriggered: {
-                                root.addUser();
-                            }
-                        }
-                    ]
-                }
-
-                model: settings.users
-
-                delegate: QQC2.ItemDelegate {
-                    id: itemDelegate
-                    width: userListView.width
-                    text: modelData
-                    hoverEnabled: !toggleServerSwitch.checked
-                    contentItem: RowLayout {
-                        spacing: Kirigami.Units.mediumSpacing
-
-                        QQC2.Label {
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                            text: itemDelegate.text
-                            verticalAlignment: Text.AlignVCenter
-                            elide: Text.ElideRight
-                        }
-
-                        QQC2.Button {
-                            id: modifyUserButton
-                            icon.name: "edit-entry-symbolic"
-                            text: i18nc("@action:button", "Modify user…")
-                            display: QQC2.AbstractButton.IconOnly
-                            onClicked: {
-                                root.modifyUser(itemDelegate.text);
-                            }
-                            QQC2.ToolTip {
-                                text: modifyUserButton.text
-                                visible: modifyUserButton.hovered
-                                || (Kirigami.Settings.tabletMode && modifyUserButton.pressed)
-                            }
-                        }
-
-                        QQC2.Button {
-                            id: deleteUserButton
-                            icon.name: "list-remove-user-symbolic"
-                            text: i18nc("@action:button", "Remove user…")
-                            display: QQC2.AbstractButton.IconOnly
-                            onClicked: {
-                                root.deleteUser(itemDelegate.text);
-                            }
-                            QQC2.ToolTip {
-                                text: deleteUserButton.text
-                                visible: deleteUserButton.hovered
-                                || (Kirigami.Settings.tabletMode && deleteUserButton.pressed)
-                            }
-                        }
+        headerPositioning: ListView.OverlayHeader
+        header: Kirigami.InlineViewHeader {
+            width: userListView.width
+            text: i18nc("@title", "Usernames")
+            actions: [
+                Kirigami.Action {
+                    icon.name: "list-add-user"
+                    text: i18nc("@label:button", "Add user…")
+                    onTriggered: {
+                        root.addUser();
                     }
+                }
+            ]
+        }
+
+        Kirigami.PlaceholderMessage {
+            width: parent.width - (Kirigami.Units.largeSpacing * 4)
+            anchors.centerIn: parent
+            anchors.verticalCenterOffset: Kirigami.Units.gridUnit * 2
+            visible: userListView.count === 0
+            text: i18nc("@info:placeholder", "Add at least one account for remote login")
+        }
+
+        model: settings.users
+
+        delegate: QQC2.ItemDelegate {
+            id: itemDelegate
+            width: userListView.width
+            text: modelData
+            hoverEnabled: !toggleServerSwitch.checked
+            contentItem: RowLayout {
+                spacing: Kirigami.Units.mediumSpacing
+
+                QQC2.Label {
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    text: itemDelegate.text
+                    verticalAlignment: Text.AlignVCenter
+                    elide: Text.ElideRight
+                }
+
+                QQC2.Button {
+                    id: modifyUserButton
+                    icon.name: "edit-entry-symbolic"
+                    text: i18nc("@action:button", "Modify user…")
+                    display: QQC2.AbstractButton.IconOnly
                     onClicked: {
                         root.modifyUser(itemDelegate.text);
                     }
+                    QQC2.ToolTip {
+                        text: modifyUserButton.text
+                        visible: modifyUserButton.hovered
+                        || (Kirigami.Settings.tabletMode && modifyUserButton.pressed)
+                    }
+                }
+
+                QQC2.Button {
+                    id: deleteUserButton
+                    icon.name: "list-remove-user-symbolic"
+                    text: i18nc("@action:button", "Remove user…")
+                    display: QQC2.AbstractButton.IconOnly
+                    onClicked: {
+                        root.deleteUser(itemDelegate.text);
+                    }
+                    QQC2.ToolTip {
+                        text: deleteUserButton.text
+                        visible: deleteUserButton.hovered
+                        || (Kirigami.Settings.tabletMode && deleteUserButton.pressed)
+                    }
                 }
             }
+            onClicked: {
+                root.modifyUser(itemDelegate.text);
+            }
         }
+    }
+
+    footer: ColumnLayout {
+        spacing: 0
 
         // Server toggle
         Kirigami.FormLayout {
