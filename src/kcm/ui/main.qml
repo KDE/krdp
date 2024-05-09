@@ -17,22 +17,18 @@ KCM.SimpleKCM {
     EditUserModal {
         id: editUserModal
         parent: root
+        // This dialog benefits from being able to stretch with the window; let it
         implicitWidth: Math.max(Kirigami.Units.gridUnit * 15, Math.round(root.width / 2))
-        implicitHeight: Kirigami.Units.gridUnit * 10
     }
 
     DeleteUserModal {
         id: deleteUserModal
         parent: root
-        implicitWidth: Math.max(Kirigami.Units.gridUnit * 15, Math.round(root.width / 2))
-        implicitHeight: Kirigami.Units.gridUnit * 10
     }
 
     KeychainErrorDialog {
         id: keychainErrorDialog
         parent: root
-        implicitWidth: Math.max(Kirigami.Units.gridUnit * 15, Math.round(root.width / 2))
-        implicitHeight: Kirigami.Units.gridUnit * 10
     }
 
     Connections {
