@@ -223,6 +223,9 @@ KCM.SimpleKCM {
         // Settings
         Kirigami.FormLayout {
             id: settingsLayout
+
+            readonly property bool showAdvancedCertUI: !autoGenCertSwitch.checked
+
             twinFormLayouts: toggleLayout
             enabled: !toggleServerSwitch.checked && userListView.count > 0
 
@@ -278,7 +281,7 @@ KCM.SimpleKCM {
 
             RowLayout {
                 id: certLayout
-                enabled: autoGenCertSwitch.checked ? false : true
+                visible: settingsLayout.showAdvancedCertUI
                 spacing: Kirigami.Units.smallSpacing
                 Kirigami.FormData.label: i18nc("@label:textbox", "Certificate path:")
                 QQC2.TextField {
@@ -308,7 +311,7 @@ KCM.SimpleKCM {
                 id: certKeyLayout
                 spacing: Kirigami.Units.smallSpacing
                 Kirigami.FormData.label: i18nc("@label:textbox", "Certificate key path:")
-                enabled: autoGenCertSwitch.checked ? false : true
+                visible: settingsLayout.showAdvancedCertUI
                 QQC2.TextField {
                     id: certKeyPathField
                     implicitWidth: Kirigami.Units.gridUnit * 14
