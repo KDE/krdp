@@ -201,7 +201,7 @@ KCM.SimpleKCM {
                 id: toggleServerSwitch
                 checked: kcm.isServerRunning()
                 Kirigami.FormData.label: i18nc("@option:check", "Enable RDP server:")
-                onCheckedChanged: {
+                onToggled: {
                     kcm.toggleServer(toggleServerSwitch.checked);
                 }
             }
@@ -210,7 +210,7 @@ KCM.SimpleKCM {
                 id: autostartOnLogin
                 Kirigami.FormData.label: i18nc("@option:check", "Autostart on login:")
                 checked: settings.autostart
-                onCheckedChanged: {
+                onToggled: {
                     settings.autostart = checked;
                 }
                 KCM.SettingStateBinding {
@@ -264,7 +264,7 @@ KCM.SimpleKCM {
                 id: autoGenCertSwitch
                 Kirigami.FormData.label: i18nc("@label:check", "Autogenerate certificates:")
                 checked: settings.autogenerateCertificates
-                onCheckedChanged: {
+                onToggled: {
                     settings.autogenerateCertificates = checked;
                     if (checked) {
                         kcm.generateCertificate();
@@ -348,7 +348,7 @@ KCM.SimpleKCM {
                     to: 100
                     stepSize: 1
                     value: settings.quality
-                    onValueChanged: {
+                    onMoved: {
                         settings.quality = value;
                     }
                     KCM.SettingStateBinding {
