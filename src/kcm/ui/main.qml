@@ -14,6 +14,8 @@ KCM.ScrollViewKCM {
 
     property var settings: kcm.settings()
 
+    extraFooterTopPadding: true // This makes separator below scrollview visible
+
     EditUserModal {
         id: editUserModal
         parent: root
