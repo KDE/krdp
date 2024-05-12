@@ -13,6 +13,7 @@
         "Description[uk]": "Налаштовування віддаленої стільниці",
         "Description[x-test]": "xxConfigure Remote Desktopxx",
         "Description[zh_CN]": "配置远程桌面",
+        "Description[zh_TW]": "設定遠端桌面",
         "FormFactors": [
             "desktop"
         ],
@@ -29,7 +30,8 @@
         "Name[tr]": "Uzak Masaüstü",
         "Name[uk]": "Віддалена стільниця",
         "Name[x-test]": "xxRemote Desktopxx",
-        "Name[zh_CN]": "远程桌面"
+        "Name[zh_CN]": "远程桌面",
+        "Name[zh_TW]": "遠端桌面"
     },
     "X-KDE-Keywords": "KRDP,remote desktop",
     "X-KDE-System-Settings-Parent-Category": "network"
