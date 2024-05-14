@@ -93,7 +93,7 @@ Kirigami.Dialog {
                 settingName: "users"
             }
             onTextEdited: {
-                usernameChanged = usernameField.text === oldUsername ? false : true;
+                usernameChanged = usernameField.text !== oldUsername;
                 userExistsWarning.visible = false;
             }
         }
