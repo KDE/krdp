@@ -85,6 +85,8 @@ void AbstractSession::setVideoFrameRate(quint32 framerate)
     d->frameRate = framerate;
     if (d->encodedStream) {
         d->encodedStream->setMaxFramerate({framerate, 1});
+        // this buffers 1 second of frames and drops after that
+        d->encodedStream->setMaxPendingFrames(framerate);
     }
 }
 
