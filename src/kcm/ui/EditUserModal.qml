@@ -22,7 +22,7 @@ Kirigami.Dialog {
     Connections {
         target: kcm
         function onPasswordLoaded(user: string, password: string): void {
-            if (user === oldUsername) {
+            if (user === editUserModal.oldUsername) {
                 passwordField.text = password;
             }
         }
@@ -63,7 +63,7 @@ Kirigami.Dialog {
         QQC2.Button {
             id: saveButton
             icon.name: "document-save"
-            enabled: (usernameChanged || passwordChanged)
+            enabled: (editUserModal.usernameChanged || editUserModal.passwordChanged)
                   && (usernameField.text !== "" && passwordField.text !== "")
                   && !editUserModal.usernameAlreadyExistsError
             text: i18nc("@label:button", "Save")
@@ -85,7 +85,7 @@ Kirigami.Dialog {
                 settingName: "users"
             }
             onTextEdited: {
-                usernameChanged = usernameField.text !== oldUsername;
+                editUserModal.usernameChanged = usernameField.text !== editUserModal.oldUsername;
                 editUserModal.usernameAlreadyExistsError = kcm.userExists(usernameField.text)
                                                         && usernameField.text !== editUserModal.oldUsername
             }
@@ -101,7 +101,7 @@ Kirigami.Dialog {
             Kirigami.FormData.label: i18nc("@label:textbox", "Password:")
             Layout.fillWidth: true
             onTextEdited: {
-                passwordChanged = true;
+                editUserModal.passwordChanged = true;
             }
         }
     }
