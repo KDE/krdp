@@ -14,6 +14,7 @@ Kirigami.Dialog {
     property string oldUsername
     property bool passwordChanged: false
     property bool usernameChanged: false
+    property bool usernameAlreadyExistsError: false
 
     showCloseButton: false
     title: oldUsername === "" ? i18nc("@title:window", "Add new user") : i18nc("@title:window", "Modify user")
@@ -28,7 +29,6 @@ Kirigami.Dialog {
     }
 
     onAboutToShow: {
-        userExistsWarning.visible = false;
         passwordChanged = false;
         usernameChanged = false;
         usernameField.text = oldUsername;
@@ -39,30 +39,20 @@ Kirigami.Dialog {
     function saveUser(): void {
         // add new user
         if (oldUsername === "") {
-            if (!kcm.userExists(usernameField.text)) {
-                kcm.addUser(usernameField.text, passwordField.text);
-                editUserModal.close();
-            } else {
-                userExistsWarning.visible = true;
-            }
+            kcm.addUser(usernameField.text, passwordField.text);
         } else
         // modify user
         if (usernameChanged || passwordChanged) {
             // Keep old username
             if (oldUsername === usernameField.text) {
                 kcm.modifyUser(oldUsername, "", passwordField.text);
-                editUserModal.close();
             } else
             // Change username
             {
-                if (!kcm.userExists(usernameField.text)) {
-                    kcm.modifyUser(oldUsername, usernameField.text, passwordField.text);
-                    editUserModal.close();
-                } else {
-                    userExistsWarning.visible = true;
-                }
+                kcm.modifyUser(oldUsername, usernameField.text, passwordField.text);
             }
         }
+        editUserModal.close();
     }
 
     footer: QQC2.DialogButtonBox {
@@ -73,7 +63,9 @@ Kirigami.Dialog {
         QQC2.Button {
             id: saveButton
             icon.name: "document-save"
-            enabled: (usernameChanged || passwordChanged) && (usernameField.text !== "" && passwordField.text !== "")
+            enabled: (usernameChanged || passwordChanged)
+                  && (usernameField.text !== "" && passwordField.text !== "")
+                  && !editUserModal.usernameAlreadyExistsError
             text: i18nc("@label:button", "Save")
             QQC2.DialogButtonBox.buttonRole: QQC2.DialogButtonBox.AcceptRole
         }
@@ -94,17 +86,14 @@ Kirigami.Dialog {
             }
             onTextEdited: {
                 usernameChanged = usernameField.text !== oldUsername;
-                userExistsWarning.visible = false;
+                editUserModal.usernameAlreadyExistsError = kcm.userExists(usernameField.text)
+                                                        && usernameField.text !== editUserModal.oldUsername
             }
         }
 
         QQC2.Label {
-            id: userExistsWarning
             text: i18nc("@info", "Username already exists!")
-            visible: false
-            onVisibleChanged: {
-                saveButton.enabled = !userExistsWarning.visible;
-            }
+            visible: editUserModal.usernameAlreadyExistsError
         }
 
         Kirigami.PasswordField {
