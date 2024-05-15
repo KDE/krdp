@@ -240,7 +240,7 @@ void KRDPServerConfig::generateCertificate()
     m_serverSettings->setCertificateKey(certificateKeyPath);
 
     // Check that the path is valid
-    if (QFileInfo(certificatePath).exists() && QFileInfo(certificateKeyPath).exists()) {
+    if (QFileInfo::exists(certificatePath) && QFileInfo::exists(certificateKeyPath)) {
         qDebug(KRDPKCM) << "Certificate generated; ready to accept connections.";
         Q_EMIT generateCertificateSucceeded();
     } else {
