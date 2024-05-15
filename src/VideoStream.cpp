@@ -339,8 +339,8 @@ uint32_t VideoStream::onFrameAcknowledge(const RDPGFX_FRAME_ACKNOWLEDGE_PDU *fra
 {
     auto id = frameAcknowledge->frameId;
 
-    auto itr = d->pendingFrames.find(id);
-    if (itr == d->pendingFrames.end()) {
+    auto itr = d->pendingFrames.constFind(id);
+    if (itr == d->pendingFrames.cend()) {
         qCWarning(KRDP) << "Got frame acknowledge for an unknown frame";
         return CHANNEL_RC_OK;
     }
@@ -538,9 +538,9 @@ void VideoStream::updateRequestedFrameRate()
                                                [now](const auto &estimate) {
                                                    return (estimate.timeStamp - now) > FrameRateEstimateAveragePeriod;
                                                }),
-                                d->frameRateEstimates.end());
+                                d->frameRateEstimates.cend());
 
-    auto sum = std::accumulate(d->frameRateEstimates.begin(), d->frameRateEstimates.end(), 0, [](int acc, const auto &estimate) {
+    auto sum = std::accumulate(d->frameRateEstimates.cbegin(), d->frameRateEstimates.cend(), 0, [](int acc, const auto &estimate) {
         return acc + estimate.estimate;
     });
     auto average = sum / d->frameRateEstimates.size();

@@ -105,7 +105,7 @@ void Cursor::update(const Cursor::CursorUpdate &update)
 
     // Evict least recently used cursor from the cache if it has grown too large.
     if (d->cursorCache.size() >= d->session->rdpPeer()->settings->PointerCacheSize) {
-        auto lru = std::min_element(d->cursorCache.begin(), d->cursorCache.end(), [](const CursorUpdate &first, const CursorUpdate &second) {
+        auto lru = std::min_element(d->cursorCache.cbegin(), d->cursorCache.cend(), [](const CursorUpdate &first, const CursorUpdate &second) {
             return first.lastUsed < second.lastUsed;
         });
         newCursor.cacheId = lru->cacheId;
