@@ -34,7 +34,7 @@ BOOL newPeerContext(freerdp_peer *peer, rdpContext *context)
     return TRUE;
 }
 
-void freePeerContext(freerdp_peer *peer, rdpContext *context)
+void freePeerContext(freerdp_peer * /*peer*/, rdpContext *context)
 {
     auto peerContext = reinterpret_cast<KRdp::PeerContext *>(context);
 

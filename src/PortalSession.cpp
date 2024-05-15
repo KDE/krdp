@@ -219,7 +219,7 @@ void PortalSession::onDevicesSelected(uint code, const QVariantMap & /*result*/)
     new PortalRequest(d->screencastInterface->SelectSources(d->sessionPath, parameters), this, &PortalSession::onSourcesSelected);
 }
 
-void PortalSession::onSourcesSelected(uint code, const QVariantMap &result)
+void PortalSession::onSourcesSelected(uint code, const QVariantMap & /*result*/)
 {
     if (code != 0) {
         qCWarning(KRDP) << "Could not select sources for screencast session, error code" << code;

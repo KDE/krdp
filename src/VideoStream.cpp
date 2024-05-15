@@ -82,7 +82,7 @@ uint32_t gfxCapsAdvertise(RdpgfxServerContext *context, const RDPGFX_CAPS_ADVERT
     return stream->onCapsAdvertise(capsAdvertise);
 }
 
-uint32_t gfxCacheImportOffer(RdpgfxServerContext *context, const RDPGFX_CACHE_IMPORT_OFFER_PDU *cacheImportOffer)
+uint32_t gfxCacheImportOffer(RdpgfxServerContext *context, const RDPGFX_CACHE_IMPORT_OFFER_PDU * /*cacheImportOffer*/)
 {
     RDPGFX_CACHE_IMPORT_REPLY_PDU cacheImportReply;
     return context->CacheImportReply(context, &cacheImportReply);

@@ -102,7 +102,7 @@ void InputHandler::initialize(rdpInput *input)
     input->UnicodeKeyboardEvent = inputUnicodeKeyboardEvent;
 }
 
-bool InputHandler::synchronizeEvent(uint32_t flags)
+bool InputHandler::synchronizeEvent(uint32_t /*flags*/)
 {
     // TODO: This syncs caps/num/scroll lock keys, do we actually want to?
     return true;
