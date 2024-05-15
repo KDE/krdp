@@ -81,7 +81,8 @@ int main(int argc, char **argv)
     }
     // Otherwise use KCM username list
     else {
-        for (auto userName : config->users()) {
+        const auto users = config->users();
+        for (const auto &userName : users) {
             const auto readJob = new QKeychain::ReadPasswordJob(QLatin1StringView("KRDP"));
             readJob->setKey(QLatin1StringView(userName.toLatin1()));
             QObject::connect(readJob, &QKeychain::ReadPasswordJob::finished, &server, [userName, readJob, &server]() {
