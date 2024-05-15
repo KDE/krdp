@@ -40,19 +40,19 @@ namespace
 struct XKBStateDeleter {
     void operator()(struct xkb_state *state) const
     {
-        return xkb_state_unref(state);
+        xkb_state_unref(state);
     }
 };
 struct XKBKeymapDeleter {
     void operator()(struct xkb_keymap *keymap) const
     {
-        return xkb_keymap_unref(keymap);
+        xkb_keymap_unref(keymap);
     }
 };
 struct XKBContextDeleter {
     void operator()(struct xkb_context *context) const
     {
-        return xkb_context_unref(context);
+        xkb_context_unref(context);
     }
 };
 using ScopedXKBState = std::unique_ptr<struct xkb_state, XKBStateDeleter>;
