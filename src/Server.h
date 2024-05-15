@@ -107,7 +107,7 @@ public:
      *
      * \param connection The new connection that was just started.
      */
-    Q_SIGNAL void newConnection(RdpConnection *connection);
+    Q_SIGNAL void newConnectionCreated(RdpConnection *connection);
 
 protected:
     /**

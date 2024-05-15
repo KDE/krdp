@@ -103,7 +103,7 @@ public:
 SessionController::SessionController(KRdp::Server *server)
     : m_server(server)
 {
-    connect(m_server, &KRdp::Server::newConnection, this, &SessionController::onNewConnection);
+    connect(m_server, &KRdp::Server::newConnectionCreated, this, &SessionController::onNewConnection);
     // Status notification item
     m_sni = new KStatusNotifierItem(u"krdpserver"_qs, this);
     m_sni->setTitle(i18n("RDP Server"));

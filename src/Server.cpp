@@ -164,7 +164,7 @@ void Server::incomingConnection(qintptr handle)
         }
     });
     d->sessions.push_back(std::move(session));
-    Q_EMIT newConnection(sessionPtr);
+    Q_EMIT newConnectionCreated(sessionPtr);
 }
 
 rdp_settings *Server::rdpSettings() const
