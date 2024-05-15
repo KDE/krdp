@@ -60,6 +60,6 @@ private:
     const std::unique_ptr<Private> d;
 };
 
-}
-
 size_t qHash(const KRdp::Cursor::CursorUpdate &update, size_t seed = 0);
+
+}
