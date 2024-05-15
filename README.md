@@ -2,6 +2,8 @@
 
 Library and examples for creating an RDP server.
 
+![Remote Desktop Settings Window](https://cdn.kde.org/screenshots/krdp/krdp-settings.png)
+
 # Running the example server
 
 The example server requires a username and password to be provided on the command line, which will be used when connecting from an RDP client. They can be provided using the `-u` and `-p` command line parameters, respectively. For example:
