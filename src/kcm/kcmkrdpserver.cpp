@@ -37,7 +37,7 @@ KRDPServerConfig::KRDPServerConfig(QObject *parent, const KPluginMetaData &data)
 
 KRDPServerConfig::~KRDPServerConfig() = default;
 
-QString KRDPServerConfig::toLocalFile(const QUrl url)
+QString KRDPServerConfig::toLocalFile(const QUrl &url)
 {
     return url.toLocalFile();
 }
@@ -83,7 +83,7 @@ void KRDPServerConfig::deletePasswordFromWallet(const QString &user)
     }
 }
 
-void KRDPServerConfig::addUser(const QString username, const QString password)
+void KRDPServerConfig::addUser(const QString &username, const QString &password)
 {
     if (!username.isEmpty()) {
         auto userList = m_serverSettings->users();
@@ -94,7 +94,7 @@ void KRDPServerConfig::addUser(const QString username, const QString password)
     save();
 }
 
-void KRDPServerConfig::modifyUser(const QString oldUsername, const QString newUsername, const QString newPassword)
+void KRDPServerConfig::modifyUser(const QString &oldUsername, const QString &newUsername, const QString &newPassword)
 {
     // Don't do anything if the new user is already in the list as a failsafe
     if (userExists(newUsername)) {
@@ -120,7 +120,7 @@ void KRDPServerConfig::modifyUser(const QString oldUsername, const QString newUs
     save();
 }
 
-void KRDPServerConfig::deleteUser(const QString username)
+void KRDPServerConfig::deleteUser(const QString &username)
 {
     // Remove the old username
     if (!username.isEmpty()) {
@@ -134,7 +134,7 @@ void KRDPServerConfig::deleteUser(const QString username)
     save();
 }
 
-bool KRDPServerConfig::userExists(const QString username)
+bool KRDPServerConfig::userExists(const QString &username)
 {
     return m_serverSettings->users().contains(username);
 }

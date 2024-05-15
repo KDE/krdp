@@ -17,12 +17,12 @@ public:
     explicit KRDPServerConfig(QObject *parent, const KPluginMetaData &data);
     ~KRDPServerConfig() override;
 
-    Q_INVOKABLE QString toLocalFile(const QUrl url);
+    Q_INVOKABLE QString toLocalFile(const QUrl &url);
 
-    Q_INVOKABLE void modifyUser(const QString oldUsername, const QString newUsername, const QString newPassword);
-    Q_INVOKABLE void addUser(const QString username, const QString password);
-    Q_INVOKABLE void deleteUser(const QString username);
-    Q_INVOKABLE bool userExists(const QString username);
+    Q_INVOKABLE void modifyUser(const QString &oldUsername, const QString &newUsername, const QString &newPassword);
+    Q_INVOKABLE void addUser(const QString &username, const QString &password);
+    Q_INVOKABLE void deleteUser(const QString &username);
+    Q_INVOKABLE bool userExists(const QString &username);
 
     Q_INVOKABLE void readPasswordFromWallet(const QString &user);
     void writePasswordToWallet(const QString &user, const QString &password);
