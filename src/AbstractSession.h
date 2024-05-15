@@ -64,8 +64,8 @@ protected:
     int activeStream() const;
 
     void setStarted(bool started);
-    void setSize(const QSize &size);
-    void setLogicalSize(const QSize &size);
+    void setSize(QSize size);
+    void setLogicalSize(QSize size);
     PipeWireEncodedStream *stream();
 
 private:

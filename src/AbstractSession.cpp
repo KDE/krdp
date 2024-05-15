@@ -90,12 +90,12 @@ void AbstractSession::setVideoFrameRate(quint32 framerate)
     }
 }
 
-void AbstractSession::setSize(const QSize &size)
+void AbstractSession::setSize(QSize size)
 {
     d->size = size;
 }
 
-void AbstractSession::setLogicalSize(const QSize &size)
+void AbstractSession::setLogicalSize(QSize size)
 {
     d->logicalSize = size;
 }

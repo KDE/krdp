@@ -138,7 +138,7 @@ ScreencastingStream *Screencasting::createWorkspaceStream(Screencasting::CursorM
     return createRegionStream(workspace, 1, mode);
 }
 
-ScreencastingStream *Screencasting::createRegionStream(const QRect &g, qreal scale, Screencasting::CursorMode mode)
+ScreencastingStream *Screencasting::createRegionStream(QRect g, qreal scale, Screencasting::CursorMode mode)
 {
     auto stream = new ScreencastingStream(this);
     stream->d->init(d->stream_region(g.x(), g.y(), g.width(), g.height(), wl_fixed_from_double(scale), mode));

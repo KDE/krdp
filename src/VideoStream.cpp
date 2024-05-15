@@ -355,7 +355,7 @@ uint32_t VideoStream::onFrameAcknowledge(const RDPGFX_FRAME_ACKNOWLEDGE_PDU *fra
     return CHANNEL_RC_OK;
 }
 
-void VideoStream::performReset(const QSize &size)
+void VideoStream::performReset(QSize size)
 {
     RDPGFX_RESET_GRAPHICS_PDU resetGraphicsPdu;
     resetGraphicsPdu.width = size.width();
