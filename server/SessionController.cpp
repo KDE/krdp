@@ -21,6 +21,7 @@ class SessionWrapper : public QObject
     Q_OBJECT
 public:
     SessionWrapper(KRdp::Server *server, KRdp::RdpConnection *conn, bool usePlasmaSession, KStatusNotifierItem *sni)
+        : connection(conn)
     {
 #ifdef WITH_PLASMA_SESSION
         if (usePlasmaSession) {
@@ -30,7 +31,6 @@ public:
         {
             session = std::make_unique<KRdp::PortalSession>(server);
         }
-        connection = conn;
         m_sni = sni;
 
         connect(session.get(), &KRdp::AbstractSession::frameReceived, connection->videoStream(), &KRdp::VideoStream::queueFrame);

@@ -32,9 +32,8 @@ class PortalRequest : public QObject
 public:
     template<typename ContextType, typename Callback>
     PortalRequest(const QDBusPendingCall &call, ContextType *context, Callback callback)
+        : m_context(context)
     {
-        m_context = context;
-
         if constexpr (std::is_member_function_pointer<Callback>::value) {
             m_callback = std::bind(callback, context, std::placeholders::_1, std::placeholders::_2);
         } else {
