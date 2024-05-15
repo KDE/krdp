@@ -84,7 +84,7 @@ int main(int argc, char **argv)
         for (auto userName : config->users()) {
             const auto readJob = new QKeychain::ReadPasswordJob(QLatin1StringView("KRDP"));
             readJob->setKey(QLatin1StringView(userName.toLatin1()));
-            QObject::connect(readJob, &QKeychain::ReadPasswordJob::finished, [userName, readJob, &server]() {
+            QObject::connect(readJob, &QKeychain::ReadPasswordJob::finished, &server, [userName, readJob, &server]() {
                 KRdp::User user;
                 if (readJob->error() != QKeychain::Error::NoError) {
                     qWarning() << "requestPassword: Failed to read password of " << userName << " because of error: " << readJob->error();
