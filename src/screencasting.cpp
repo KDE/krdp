@@ -128,8 +128,6 @@ ScreencastingStream *Screencasting::createWorkspaceStream(Screencasting::CursorM
         return createOutputStream(outputs.first(), mode);
     }
 
-    QRegion r;
-
     QRect workspace;
     const auto screens = qGuiApp->screens();
     for (QScreen *screen : screens) {
