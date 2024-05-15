@@ -35,6 +35,31 @@ modules:
         url: https://github.com/FreeRDP/FreeRDP
         tag: 2.10.0
 
+-   name: libsecret
+    buildsystem: meson
+    sources:
+    -   type: archive
+        url: "https://download.gnome.org/sources/libsecret/0.20/libsecret-0.20.5.tar.xz"
+        sha256: "3fb3ce340fcd7db54d87c893e69bfc2b1f6e4d4b279065ffe66dac9f0fd12b4d"
+    config-opts:
+    -   "-Dgcrypt=false"
+    -   "-Dgtk_doc=false"
+    -   "-Dintrospection=false"
+    -   "-Dmanpage=false"
+    -   "-Dvapi=false"
+
+-   name: qtkeychain
+    buildsystem: cmake-ninja
+    sources:
+    -   type: archive
+        url: "https://github.com/frankosterfeld/qtkeychain/archive/0.14.2.tar.gz"
+        sha256: "cf2e972b783ba66334a79a30f6b3a1ea794a1dc574d6c3bebae5ffd2f0399571"
+    config-opts:
+    -   "-DCMAKE_INSTALL_LIBDIR=/app/lib"
+    -   "-DLIB_INSTALL_DIR=/app/lib"
+    -   "-DBUILD_TRANSLATIONS=NO"
+    -   "-DBUILD_WITH_QT6=ON"
+
 -   name: extra-cmake-modules
     config-opts:
     -   "-DENABLE_TESTING=OFF"
