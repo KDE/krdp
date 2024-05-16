@@ -274,6 +274,7 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
             auto encodedStream = this->stream();
             encodedStream->setNodeId(stream.nodeId);
             encodedStream->setFd(fd.takeFileDescriptor());
+            encodedStream->setEncodingPreference(PipeWireBaseEncodedStream::EncodingPreference::Speed);
             encodedStream->setEncoder(PipeWireEncodedStream::H264Baseline);
             connect(encodedStream, &PipeWireEncodedStream::newPacket, this, &PortalSession::onPacketReceived);
             connect(encodedStream, &PipeWireEncodedStream::sizeChanged, this, &PortalSession::setSize);

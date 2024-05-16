@@ -170,6 +170,7 @@ PlasmaScreencastV1Session::PlasmaScreencastV1Session(Server *server)
         setLogicalSize(d->request->size());
         auto encodedStream = stream();
         encodedStream->setNodeId(nodeId);
+        encodedStream->setEncodingPreference(PipeWireBaseEncodedStream::EncodingPreference::Speed);
         encodedStream->setEncoder(PipeWireEncodedStream::H264Baseline);
         connect(encodedStream, &PipeWireEncodedStream::newPacket, this, &PlasmaScreencastV1Session::onPacketReceived);
         connect(encodedStream, &PipeWireEncodedStream::sizeChanged, this, &PlasmaScreencastV1Session::setSize);
