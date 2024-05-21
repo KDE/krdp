@@ -127,21 +127,21 @@ bool InputHandler::mouseEvent(uint16_t x, uint16_t y, uint16_t flags)
             axis = (~axis & WheelRotationMask) + 1;
         }
         axis *= flags & PTR_FLAGS_WHEEL_NEGATIVE ? 1 : -1;
-        QWheelEvent event{QPointF{}, position, QPoint{}, QPoint{0, axis}, Qt::NoButton, Qt::KeyboardModifiers{}, Qt::NoScrollPhase, false};
-        Q_EMIT inputEvent(&event);
+        auto event =
+            std::make_shared<QWheelEvent>(QPointF{}, position, QPoint{}, QPoint{0, axis}, Qt::NoButton, Qt::KeyboardModifiers{}, Qt::NoScrollPhase, false);
+        Q_EMIT inputEvent(event);
         return true;
     }
 
+    std::shared_ptr<QMouseEvent> event;
     if (flags & PTR_FLAGS_DOWN) {
-        QMouseEvent event{QEvent::MouseButtonPress, QPointF{}, position, button, button, Qt::NoModifier};
-        Q_EMIT inputEvent(&event);
+        event = std::make_shared<QMouseEvent>(QEvent::MouseButtonPress, QPointF{}, position, button, button, Qt::NoModifier);
     } else if (flags & PTR_FLAGS_MOVE) {
-        QMouseEvent event{QEvent::MouseMove, QPointF{}, position, button, button, Qt::NoModifier};
-        Q_EMIT inputEvent(&event);
+        event = std::make_shared<QMouseEvent>(QEvent::MouseMove, QPointF{}, position, button, button, Qt::NoModifier);
     } else {
-        QMouseEvent event{QEvent::MouseButtonRelease, QPointF{}, position, button, button, Qt::NoModifier};
-        Q_EMIT inputEvent(&event);
+        event = std::make_shared<QMouseEvent>(QEvent::MouseButtonRelease, QPointF{}, position, button, button, Qt::NoModifier);
     }
+    Q_EMIT inputEvent(event);
 
     return true;
 }
@@ -161,13 +161,14 @@ bool InputHandler::extendedMouseEvent(uint16_t x, uint16_t y, uint16_t flags)
         return false;
     }
 
+    std::shared_ptr<QMouseEvent> event;
     if (flags & PTR_XFLAGS_DOWN) {
-        QMouseEvent event{QEvent::MouseButtonPress, QPointF{}, QPointF(x, y), button, button, Qt::KeyboardModifiers{}};
-        Q_EMIT inputEvent(&event);
+        event = std::make_shared<QMouseEvent>(QEvent::MouseButtonPress, QPointF{}, QPointF(x, y), button, button, Qt::KeyboardModifiers{});
+
     } else {
-        QMouseEvent event{QEvent::MouseButtonRelease, QPointF{}, QPointF(x, y), button, button, Qt::KeyboardModifiers{}};
-        Q_EMIT inputEvent(&event);
+        event = std::make_shared<QMouseEvent>(QEvent::MouseButtonRelease, QPointF{}, QPointF(x, y), button, button, Qt::KeyboardModifiers{});
     }
+    Q_EMIT inputEvent(event);
 
     return true;
 }
@@ -181,8 +182,8 @@ bool InputHandler::keyboardEvent(uint16_t code, uint16_t flags)
 
     auto type = flags & KBD_FLAGS_DOWN ? QEvent::KeyPress : QEvent::KeyRelease;
 
-    QKeyEvent event{type, 0, Qt::KeyboardModifiers{}, keycode, 0, 0};
-    Q_EMIT inputEvent(&event);
+    auto event = std::make_shared<QKeyEvent>(type, 0, Qt::KeyboardModifiers{}, keycode, 0, 0);
+    Q_EMIT inputEvent(event);
 
     return true;
 }
@@ -197,8 +198,8 @@ bool InputHandler::unicodeKeyboardEvent(uint16_t code, uint16_t flags)
 
     auto type = flags & KBD_FLAGS_DOWN ? QEvent::KeyPress : QEvent::KeyRelease;
 
-    QKeyEvent event{type, 0, Qt::KeyboardModifiers{}, 0, keysym, 0};
-    Q_EMIT inputEvent(&event);
+    auto event = std::make_shared<QKeyEvent>(type, 0, Qt::KeyboardModifiers{}, 0, keysym, 0);
+    Q_EMIT inputEvent(event);
 
     return true;
 }

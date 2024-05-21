@@ -41,7 +41,8 @@ public:
      *
      * \param event The input event that was received.
      */
-    Q_SIGNAL void inputEvent(QInputEvent *event);
+    // Note: Intentional pass-by-value to ensure lifetime of the shared_ptr is extended.
+    Q_SIGNAL void inputEvent(std::shared_ptr<QInputEvent> event);
 
 private:
     // FreeRDP callbacks that need to call the event handler functions in the

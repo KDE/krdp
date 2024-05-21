@@ -42,7 +42,7 @@ public:
      *
      * \param event The new event to send.
      */
-    void sendEvent(QEvent *event) override;
+    void sendEvent(const std::shared_ptr<QEvent> &event) override;
 
 private:
     void onCreateSession(uint code, const QVariantMap &result);

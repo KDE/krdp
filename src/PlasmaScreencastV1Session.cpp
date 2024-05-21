@@ -185,7 +185,7 @@ PlasmaScreencastV1Session::~PlasmaScreencastV1Session()
     qCDebug(KRDP) << "Closing Plasma Remote Session";
 }
 
-void PlasmaScreencastV1Session::sendEvent(QEvent *event)
+void PlasmaScreencastV1Session::sendEvent(const std::shared_ptr<QEvent> &event)
 {
     auto encodedStream = stream();
     if (!encodedStream || !encodedStream->isActive()) {
@@ -195,7 +195,7 @@ void PlasmaScreencastV1Session::sendEvent(QEvent *event)
     switch (event->type()) {
     case QEvent::MouseButtonPress:
     case QEvent::MouseButtonRelease: {
-        auto me = static_cast<QMouseEvent *>(event);
+        auto me = std::static_pointer_cast<QMouseEvent>(event);
         int button = 0;
         if (me->button() == Qt::LeftButton) {
             button = BTN_LEFT;
@@ -212,20 +212,20 @@ void PlasmaScreencastV1Session::sendEvent(QEvent *event)
         break;
     }
     case QEvent::MouseMove: {
-        auto me = static_cast<QMouseEvent *>(event);
+        auto me = std::static_pointer_cast<QMouseEvent>(event);
         auto position = me->globalPosition();
         auto logicalPosition = QPointF{(position.x() / size().width()) * logicalSize().width(), (position.y() / size().height()) * logicalSize().height()};
         d->remoteInterface->pointer_motion_absolute(logicalPosition.x(), logicalPosition.y());
         break;
     }
     case QEvent::Wheel: {
-        auto we = static_cast<QWheelEvent *>(event);
+        auto we = std::static_pointer_cast<QWheelEvent>(event);
         d->remoteInterface->axis(0, we->angleDelta().y() / 120);
         break;
     }
     case QEvent::KeyPress:
     case QEvent::KeyRelease: {
-        auto ke = static_cast<QKeyEvent *>(event);
+        auto ke = std::static_pointer_cast<QKeyEvent>(event);
         auto state = ke->type() == QEvent::KeyPress ? 1 : 0;
 
         if (ke->nativeScanCode()) {

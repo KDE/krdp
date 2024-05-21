@@ -35,7 +35,7 @@ public:
      *
      * \param event The new event to send.
      */
-    virtual void sendEvent(QEvent *event) = 0;
+    virtual void sendEvent(const std::shared_ptr<QEvent> &event) = 0;
 
 Q_SIGNALS:
     void started();

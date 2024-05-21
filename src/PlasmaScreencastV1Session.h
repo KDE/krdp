@@ -33,7 +33,7 @@ public:
     PlasmaScreencastV1Session(Server *server);
     ~PlasmaScreencastV1Session() override;
 
-    void sendEvent(QEvent *event) override;
+    void sendEvent(const std::shared_ptr<QEvent> &event) override;
 
 private:
     void onPacketReceived(const PipeWireEncodedStream::Packet &data);
