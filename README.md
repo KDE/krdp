@@ -2,7 +2,27 @@
 
 Library and examples for creating an RDP server.
 
+
+# Remote Desktop KCM
+
 ![Remote Desktop Settings Window](https://cdn.kde.org/screenshots/krdp/krdp-settings.png)
+
+Remote Desktop System Settings page (KCM) that lives in the Networking category.
+
+Features:
+- User can toggle the server (running the`krdpserver` binary) on and off using a toggle switch.
+- The server can be set to auto-start at session login.
+- The KCM uses SystemD DBus messages to toggle the server on and off and auto-start it.
+- User can easily add, modify, and remove usernames and passwords that are allowed to connect to the server.
+- User can change the port of the server.
+    - Do note that the address is currently set to `0.0.0.0`, which means any interface that accepts connections for `krdpserver` will work.
+- Certificates can be auto-generated (this is done by default), or the user can supply their own certificates.
+- Video quality can be changed between responsiveness and quality.
+    - Do note that in software encoding mode, the quality slider might not necessarily do anything. This seems to be an encoder issue.
+- The KCM will do some basic sanity-checking and warn the user about the following issues:
+    - Password manager inaccessible (for KRDP user passwords)
+    - No supported H264 encoder
+    - Failures with generating certificates
 
 # Running the example server
 
