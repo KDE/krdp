@@ -10,9 +10,6 @@ SPDX-License-Identifier: BSD-2-Clause
       http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
   <kcfgfile name="krdpserverrc"/>
   <group name="General">
-    <entry name="ListenAddress" type="String">
-      <label>The address the server listens on</label>
-    </entry>
     <entry name="ListenPort" type="Int">
       <label>The port the server listens on</label>
       <default>3389</default>

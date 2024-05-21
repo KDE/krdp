@@ -70,7 +70,7 @@ KCM.ScrollViewKCM {
             enabled: userListView.count > 0
             checkable: true
             checked: kcm.isServerRunning()
-            onTriggered: (source) => {
+            onTriggered: source => {
                 kcm.toggleServer(source.checked);
             }
             displayComponent: QQC2.Switch {
@@ -80,12 +80,12 @@ KCM.ScrollViewKCM {
     ]
 
     header: ColumnLayout {
-        spacing: 0
+        spacing: Kirigami.Units.mediumSpacing
+        Layout.margins: Kirigami.Units.mediumSpacing
 
         Kirigami.InlineMessage {
             type: Kirigami.MessageType.Error
             Layout.fillWidth: true
-            Layout.margins: Kirigami.Units.mediumSpacing
             visible: !kcm.isH264Supported()
             text: i18nc("@info:status", "Remote desktop cannot be enabled because your system does not support H264 video encoding. Please contact your distribution regarding how to enable it.")
         }
@@ -94,7 +94,6 @@ KCM.ScrollViewKCM {
             id: certificateError
             type: Kirigami.MessageType.Error
             Layout.fillWidth: true
-            Layout.margins: Kirigami.Units.mediumSpacing
             // TODO better text
             text: i18nc("@info:status", "Generating certificates automatically has failed!")
         }
@@ -102,10 +101,44 @@ KCM.ScrollViewKCM {
         QQC2.Label {
             text: i18n("Set up remote login to connect using apps supporting the “RDP” remote desktop protocol.")
             Layout.fillWidth: true
-            Layout.margins: Kirigami.Units.mediumSpacing
             wrapMode: Text.WordWrap
             verticalAlignment: Text.AlignVCenter
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            Layout.alignment: Qt.AlignHCenter
+        }
+        QQC2.Label {
+            visible: toggleServerSwitch.checked
+            text: i18nc("@info:usagetip", "Use any of the following addresses to connect to this device:")
+            Layout.fillWidth: true
+            wrapMode: Text.WordWrap
+            verticalAlignment: Text.AlignVCenter
+            Layout.alignment: Qt.AlignHCenter
+        }
+        Repeater {
+            model: kcm.listenAddressList()
+            RowLayout {
+                visible: toggleServerSwitch.checked
+                spacing: Kirigami.Units.mediumSpacing
+                Kirigami.SelectableLabel {
+                    id: addressLabel
+                    text: modelData
+                    Layout.leftMargin: Kirigami.Units.gridUnit
+                    Layout.alignment: Qt.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                }
+                QQC2.Button {
+                    id: copyAddressButton
+                    icon.name: "edit-copy-symbolic"
+                    text: i18nc("@action:button", "Copy Address to Clipboard")
+                    display: QQC2.AbstractButton.IconOnly
+                    onClicked: {
+                        kcm.copyAddressToClipboard(addressLabel.text);
+                    }
+                    QQC2.ToolTip {
+                        text: copyAddressButton.text
+                        visible: copyAddressButton.hovered || (Kirigami.Settings.tabletMode && copyAddressButton.pressed)
+                    }
+                }
+            }
         }
     }
 
@@ -123,7 +156,7 @@ KCM.ScrollViewKCM {
                 Kirigami.Action {
                     icon.name: "list-add-user-symbolic"
                     text: i18nc("@label:button", "Add User…")
-                    onTriggered: (source) => {
+                    onTriggered: source => {
                         root.addUser();
                     }
                 }
@@ -166,8 +199,7 @@ KCM.ScrollViewKCM {
                     }
                     QQC2.ToolTip {
                         text: modifyUserButton.text
-                        visible: modifyUserButton.hovered
-                        || (Kirigami.Settings.tabletMode && modifyUserButton.pressed)
+                        visible: modifyUserButton.hovered || (Kirigami.Settings.tabletMode && modifyUserButton.pressed)
                     }
                 }
 
@@ -181,8 +213,7 @@ KCM.ScrollViewKCM {
                     }
                     QQC2.ToolTip {
                         text: deleteUserButton.text
-                        visible: deleteUserButton.hovered
-                        || (Kirigami.Settings.tabletMode && deleteUserButton.pressed)
+                        visible: deleteUserButton.hovered || (Kirigami.Settings.tabletMode && deleteUserButton.pressed)
                     }
                 }
             }
@@ -214,20 +245,6 @@ KCM.ScrollViewKCM {
             KCM.SettingStateBinding {
                 configObject: settings
                 settingName: "autostart"
-            }
-        }
-
-        QQC2.TextField {
-            id: addressField
-            Layout.maximumWidth: Kirigami.Units.gridUnit * 8
-            Kirigami.FormData.label: i18nc("@label:textbox", "Listening Address:")
-            text: kcm.listenAddress()
-            onTextEdited: {
-                settings.listenAddress = text;
-            }
-            KCM.SettingStateBinding {
-                configObject: settings
-                settingName: "listenAddress"
             }
         }
 
@@ -280,7 +297,6 @@ KCM.ScrollViewKCM {
                 }
             }
         }
-
 
         Item {
             Kirigami.FormData.isSection: true

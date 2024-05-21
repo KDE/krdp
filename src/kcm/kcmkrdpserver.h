@@ -29,12 +29,13 @@ public:
     void deletePasswordFromWallet(const QString &user);
 
     Q_INVOKABLE bool isH264Supported();
-    Q_INVOKABLE QString listenAddress();
+    Q_INVOKABLE QStringList listenAddressList();
     Q_INVOKABLE void toggleAutoconnect(const bool enabled);
     Q_INVOKABLE void toggleServer(const bool enabled);
 
     Q_INVOKABLE void generateCertificate();
     Q_INVOKABLE bool isServerRunning();
+    Q_INVOKABLE void copyAddressToClipboard(const QString &address);
     Q_INVOKABLE KRDPServerSettings *settings() const
     {
         return m_serverSettings;

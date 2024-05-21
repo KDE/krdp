@@ -59,7 +59,9 @@ int main(int argc, char **argv)
         }
     };
 
-    auto address = QHostAddress(parserValueWithDefault(u"address", config->listenAddress()));
+    // Using 0.0.0.0 address as a default, since it's a catch-all address, so any
+    // address the interface accepts connections from will work.
+    auto address = QHostAddress(parserValueWithDefault(u"address", u"0.0.0.0"_qs));
     auto port = parserValueWithDefault(u"port", config->listenPort());
     auto certificate = std::filesystem::path(parserValueWithDefault(u"certificate", config->certificate()).toStdString());
     auto certificateKey = std::filesystem::path(parserValueWithDefault(u"certificate-key", config->certificateKey()).toStdString());

@@ -9,15 +9,15 @@
 #include <PipeWireRecord>
 
 #include <KPluginFactory>
+#include <QClipboard>
+#include <QDBusArgument>
 #include <QDBusInterface>
+#include <QDBusReply>
 #include <QDir>
 #include <QFileInfo>
+#include <QGuiApplication>
 #include <QNetworkInterface>
 #include <QProcess>
-#include <pipewirerecord.h>
-#include <qdbusargument.h>
-#include <qdbusreply.h>
-#include <qfileinfo.h>
 #include <qt6keychain/keychain.h>
 
 K_PLUGIN_CLASS_WITH_JSON(KRDPServerConfig, "kcm_krdpserver.json")
@@ -161,24 +161,22 @@ bool KRDPServerConfig::isH264Supported()
     return recorder->suggestedEncoders().contains(PipeWireRecord::H264Baseline);
 }
 
-QString KRDPServerConfig::listenAddress()
+QStringList KRDPServerConfig::listenAddressList()
 {
+    QStringList addressList;
     // Prepare default address
-    if (m_serverSettings->listenAddress().isEmpty()) {
-        bool localAddressFound = false;
-        for (const QHostAddress &address : QNetworkInterface::allAddresses()) {
-            if (address.protocol() == QAbstractSocket::IPv4Protocol && address != QHostAddress(QHostAddress::LocalHost)) {
-                m_serverSettings->setListenAddress(address.toString());
-                m_serverSettings->save();
-                localAddressFound = true;
+    const auto interfaces = QNetworkInterface::allInterfaces();
+    for (const auto &interface : interfaces) {
+        if (!interface.flags().testAnyFlag(QNetworkInterface::IsLoopBack)) {
+            for (auto &address : interface.addressEntries()) {
+                // Show only private ip addresses
+                if (address.ip().isPrivateUse()) {
+                    addressList.append(address.ip().toString());
+                }
             }
         }
-        if (!localAddressFound) {
-            m_serverSettings->setListenAddress(QStringLiteral("0.0.0.0"));
-            m_serverSettings->save();
-        }
     }
-    return m_serverSettings->listenAddress();
+    return addressList;
 }
 
 void KRDPServerConfig::toggleAutoconnect(const bool enabled)
@@ -263,6 +261,11 @@ bool KRDPServerConfig::isServerRunning()
     auto pid = response.value().toInt();
 
     return pid > 0 ? true : false;
+}
+
+void KRDPServerConfig::copyAddressToClipboard(const QString &address)
+{
+    QGuiApplication::clipboard()->setText(address.trimmed());
 }
 
 #include "kcmkrdpserver.moc"
