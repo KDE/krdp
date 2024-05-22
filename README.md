@@ -1,7 +1,40 @@
 # KRdp
 
-Library and examples for creating an RDP server.
+KRdp is a library implementing the necessary supporting code to use FreeRDP
+with a KDE Plasma session. In addition, there is a server that makes use of
+this library to expose a running Plasma session through RDP and a KCM that
+allows one to configure the server.
 
+KRdp supports receiving input from a client and sending video to the client.
+Video is implemented as an H.264 video stream using the Graphics Pipeline
+protocol extension, which means your client requires support for that. For
+authentication, only the NLA protocol is supported, which is the most modern
+and secure. It also means all traffic is encrypted, since NLA requires using a
+TLS connection.
+
+# The Library
+
+The main entrypoint for the library is `KRdp::Server`, which creates a
+listening socket and listens for incoming connections. For each incoming
+connection, a new instance of `KRdp::RdpConnection` is created.
+`KRdp::RdpConnection` handles the core RDP communication with a specific
+client, making use of separate classes for other parts of the protocol.
+
+`KRdp::RdpConnection` needs to be fed new frames to send to the client. To help
+with that, an instance of a subclass of `KRdp::AbstractSession` can be created.
+There are currently two possible subclasses, `KRdp::PortalSession` and
+`KRdp::PlasmaScreencastV1Session`. `KRdp::PortalSession` will use the
+FreeDesktop Remote Desktop portal to request a video stream for the server and
+also use that portal to send the client's input to the server.
+`KRdp::PlasmaScreencastV1Session` does the same but using the Plasma Screencast
+wayland protocol, which may be restricted for security or not be implemented.
+
+# The Server
+
+The server is a simple binary that makes use of the library to expose the
+current Plasma session over the RDP protocol. It can be run standalone or
+started as a user service through systemd. By default it will use the Remote
+Desktop portal for video streaming and input.
 
 # Remote Desktop KCM
 
@@ -23,84 +56,3 @@ Features:
     - Password manager inaccessible (for KRDP user passwords)
     - No supported H264 encoder
     - Failures with generating certificates
-
-# Running the example server
-
-The example server requires a username and password to be provided on the command line, which will be used when connecting from an RDP client. They can be provided using the `-u` and `-p` command line parameters, respectively. For example:
-
-```
-krdpserver -u user -p test
-```
-
-The server will then listen on all interfaces on port 3389, and clients can connect with the username "user" and the password "pass".
-
-# Connecting to the example server
-
-To connect to the server, make sure to pass the username and password the server was started with.
-
-Currently, the main client that has been used for testing and is confirmed to work is the FreeRDP client. Launch the FreeRDP client with the following command: `xfreerdp /u:<username> /p:<password> -clipboard /v:<ip_address>:3389`, filling in the username, password and IP address as appropriate. If testing locally, substitute `localhost` for an IP address.
-
-# Security considerations
-
-In addition, a valid TLS certificate and key are required to encrypt the communication between client and server. The server will look for a file called `server.crt` and `server.key` in the current working directory, but a different path can be provided using the `--certificate` and `--certificate-key` command line parameters. If no valid certificate is found using any of these methods, the server will internally generate a self-signed certificate and use that.
-
-# Command Line Options
-
-The following command line options are available for the example server:
-
-<dl>
-    <dt>-u, --username <username></dt>
-    <dd>The username to use when a client tries to login. Required.</dd>
-    <dt>-p, --password <password></dt>
-    <dd>The password to require when a client tries to login. Required.</dd>
-    <dt>--port <port></dt>
-    <dd>The port to listen on for connections. Defaults to 3389.</dd>
-    <dt>--certificate <certificate></dt>
-    <dd>The path to a TLS certificate file to use. If not supplied or it cannot be found a temporary self-signed certificate will be generated.</dd>
-    <dt>--certificate-key <certificate-key></dt>  
-    <dd>The path to the TLS certificate key that matches the provided certificate.</dd>
-    <dt>--monitor <monitor></dt>The index of the monitor to use for streaming video. If not supplied the whole workspace is used.</dd>
-    <dt>--quality <quality></dt>
-    <dd>Set the video quality, from 0 (lowest) to 100 (highest).</dd>
-</dl>
-
-# Known Working and Not-Working Clients
-
-The following clients are known to work with the server:
-
-- XFreeRDP and wlFreeRDP from the FreeRDP project.
-- Reminna, a remote desktop client for Gnome.
-- Thincast Remote Desktop Client
-- Windows Remote Desktop client, at least as shipped with a recent Windows 10.
-
-The following clients are known not to work:
-
-- Krdc, KDE's remote desktop client. While it supports RDP it does not support
-the graphics pipeline.
-- Microsoft's Remote Desktop client for Android. While it should support H.264
-it seems to not enable it.
-
-# Known Issues and Limitations
-
-- Only video streaming and remote input is supported.
-- Only the NLA security type of RDP is supported.
-- Only one username and password combination is supported for login.
-- Only the "Graphics Pipeline" extension of the RDP protocol is
-implemented for video streaming. This extension allows using H.264 for video
-streaming, but it means only clients supporting that extension are supported.
-- H.264 encoding is done using hardware encoding if possible, but currently we
-only support using VAAPI for this. Most notably this means hardware encoding on
-NVidia hardware can not be used and software encoding will be used instead.
-Additionally, on certain hardware there are limits to what size of frame can be
-encoded by the hardware. In both cases, encoding will fall back to software
-encoding.
-- KDE's implementation of the Remote Desktop portal is rather limited as
-shipped with Plasma 5.27. Most notably it does not allow selecting which screen
-to stream, nor does it have an option to remember the setup and reuse it when
-the same application requests a new connection. As a workaround, the server
-will open a remote desktop session on startup and reuse that session for all
-RDP connections. Additionally, monitor selection can be done using the
-`--monitor` command line option.
-- Input on a high DPI screen may be offset incorrectly. This is due to a bug in
-the Remote Desktop Portal that has been fixed in the meantime. The fix will be 
-released with KDE Plasma 5.27.8.
