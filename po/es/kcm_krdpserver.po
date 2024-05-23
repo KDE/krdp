@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcm_krdpserver\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-05-22 00:40+0000\n"
-"PO-Revision-Date: 2024-05-19 16:30+0200\n"
+"PO-Revision-Date: 2024-05-22 03:58+0200\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -161,12 +161,13 @@ msgstr ""
 msgctxt "@info:usagetip"
 msgid "Use any of the following addresses to connect to this device:"
 msgstr ""
+"Use una de las siguientes direcciones para conectarse a este dispositivo:"
 
 #: ui/main.qml:131
 #, kde-format
 msgctxt "@action:button"
 msgid "Copy Address to Clipboard"
-msgstr ""
+msgstr "Copiar dirección al portapapeles"
 
 #: ui/main.qml:154
 #, kde-format

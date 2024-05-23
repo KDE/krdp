@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-05-22 00:40+0000\n"
-"PO-Revision-Date: 2024-05-19 11:04+0300\n"
+"PO-Revision-Date: 2024-05-22 06:28+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -155,13 +155,13 @@ msgstr ""
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Use any of the following addresses to connect to this device:"
-msgstr ""
+msgstr "אפשר להשתמש בכל אחת מהכתובות הבאות כדי להתחבר למכשיר הזה:"
 
 #: ui/main.qml:131
 #, kde-format
 msgctxt "@action:button"
 msgid "Copy Address to Clipboard"
-msgstr ""
+msgstr "העתקת הכתובת ללוח הגזירים"
 
 #: ui/main.qml:154
 #, kde-format

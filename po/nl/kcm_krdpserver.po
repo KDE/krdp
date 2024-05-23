@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-05-22 00:40+0000\n"
-"PO-Revision-Date: 2024-05-18 17:41+0200\n"
+"PO-Revision-Date: 2024-05-22 13:52+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -159,12 +159,13 @@ msgstr ""
 msgctxt "@info:usagetip"
 msgid "Use any of the following addresses to connect to this device:"
 msgstr ""
+"Een van de volgende adressen gebruiken om met dit apparaat te verbinden:"
 
 #: ui/main.qml:131
 #, kde-format
 msgctxt "@action:button"
 msgid "Copy Address to Clipboard"
-msgstr ""
+msgstr "Adres kopiëren naar klembord"
 
 #: ui/main.qml:154
 #, kde-format
