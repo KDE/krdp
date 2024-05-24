@@ -81,8 +81,10 @@ KCM.ScrollViewKCM {
 
     headerPaddingEnabled: false // Let the InlineMessages touch the edges
     header: ColumnLayout {
-        spacing: Kirigami.Units.mediumSpacing
-        Layout.margins: Kirigami.Units.mediumSpacing
+        id: headerLayout
+        readonly property int spacings: Kirigami.Units.mediumSpacing
+        spacing: 0
+        Layout.margins: spacings
 
         Kirigami.InlineMessage {
             type: Kirigami.MessageType.Error
@@ -101,44 +103,64 @@ KCM.ScrollViewKCM {
             text: i18nc("@info:status", "Generating certificates automatically has failed!")
         }
 
-        QQC2.Label {
-            text: i18n("Set up remote login to connect using apps supporting the “RDP” remote desktop protocol.")
-            Layout.fillWidth: true
-            wrapMode: Text.WordWrap
-            verticalAlignment: Text.AlignVCenter
-            Layout.alignment: Qt.AlignHCenter
-        }
-        QQC2.Label {
-            visible: toggleServerSwitch.checked
-            text: i18nc("@info:usagetip", "Use any of the following addresses to connect to this device:")
-            Layout.fillWidth: true
-            wrapMode: Text.WordWrap
-            verticalAlignment: Text.AlignVCenter
-            Layout.alignment: Qt.AlignHCenter
-        }
-        Repeater {
-            model: kcm.listenAddressList()
-            RowLayout {
+        // Non-InlineMessage header content does need margins; put it all in here
+        // so we can do that in a single place
+        ColumnLayout {
+            spacing: headerLayout.spacings
+            Layout.margins: headerLayout.spacings
+
+            QQC2.Label {
+                text: i18n("Set up remote login to connect using apps supporting the “RDP” remote desktop protocol.")
+                Layout.fillWidth: true
+                wrapMode: Text.WordWrap
+                verticalAlignment: Text.AlignVCenter
+                Layout.alignment: Qt.AlignHCenter
+            }
+
+            QQC2.Label {
                 visible: toggleServerSwitch.checked
-                spacing: Kirigami.Units.mediumSpacing
-                Kirigami.SelectableLabel {
-                    id: addressLabel
-                    text: modelData
-                    Layout.leftMargin: Kirigami.Units.gridUnit
-                    Layout.alignment: Qt.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                }
-                QQC2.Button {
-                    id: copyAddressButton
-                    icon.name: "edit-copy-symbolic"
-                    text: i18nc("@action:button", "Copy Address to Clipboard")
-                    display: QQC2.AbstractButton.IconOnly
-                    onClicked: {
-                        kcm.copyAddressToClipboard(addressLabel.text);
-                    }
-                    QQC2.ToolTip {
-                        text: copyAddressButton.text
-                        visible: copyAddressButton.hovered || (Kirigami.Settings.tabletMode && copyAddressButton.pressed)
+                text: i18nc("@info:usagetip", "Use any of the following addresses to connect to this device:")
+                Layout.fillWidth: true
+                wrapMode: Text.WordWrap
+                verticalAlignment: Text.AlignVCenter
+                Layout.alignment: Qt.AlignHCenter
+            }
+
+            // ...But here we want zero spacing again since otherwise the delegates
+            // take up too much vertical space
+            ColumnLayout {
+                spacing: 0
+                Layout.fillWidth: true
+                visible: toggleServerSwitch.checked
+
+                Repeater {
+                    id: addressesRepeater
+                    model: kcm.listenAddressList()
+
+                    RowLayout {
+                        spacing: Kirigami.Units.mediumSpacing
+
+                        Kirigami.SelectableLabel {
+                            id: addressLabel
+                            text: modelData
+                            Layout.leftMargin: Kirigami.Units.gridUnit
+                            Layout.alignment: Qt.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                        }
+
+                        QQC2.Button {
+                            id: copyAddressButton
+                            icon.name: "edit-copy-symbolic"
+                            text: i18nc("@action:button", "Copy Address to Clipboard")
+                            display: QQC2.AbstractButton.IconOnly
+                            onClicked: {
+                                kcm.copyAddressToClipboard(addressLabel.text);
+                            }
+                            QQC2.ToolTip {
+                                text: copyAddressButton.text
+                                visible: copyAddressButton.hovered || (Kirigami.Settings.tabletMode && copyAddressButton.pressed)
+                            }
+                        }
                     }
                 }
             }
