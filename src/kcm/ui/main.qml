@@ -82,7 +82,7 @@ KCM.ScrollViewKCM {
     headerPaddingEnabled: false // Let the InlineMessages touch the edges
     header: ColumnLayout {
         id: headerLayout
-        readonly property int spacings: Kirigami.Units.mediumSpacing
+        readonly property int spacings: Kirigami.Units.largeSpacing
         spacing: 0
         Layout.margins: spacings
 
