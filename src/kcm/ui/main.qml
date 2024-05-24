@@ -79,12 +79,14 @@ KCM.ScrollViewKCM {
         }
     ]
 
+    headerPaddingEnabled: false // Let the InlineMessages touch the edges
     header: ColumnLayout {
         spacing: Kirigami.Units.mediumSpacing
         Layout.margins: Kirigami.Units.mediumSpacing
 
         Kirigami.InlineMessage {
             type: Kirigami.MessageType.Error
+            position: Kirigami.InlineMessage.Position.Header
             Layout.fillWidth: true
             visible: !kcm.isH264Supported()
             text: i18nc("@info:status", "Remote desktop cannot be enabled because your system does not support H264 video encoding. Please contact your distribution regarding how to enable it.")
@@ -93,6 +95,7 @@ KCM.ScrollViewKCM {
         Kirigami.InlineMessage {
             id: certificateError
             type: Kirigami.MessageType.Error
+            position: Kirigami.InlineMessage.Position.Header
             Layout.fillWidth: true
             // TODO better text
             text: i18nc("@info:status", "Generating certificates automatically has failed!")
