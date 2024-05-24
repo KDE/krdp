@@ -5,7 +5,7 @@ set(PROJECT_VERSION "6.0.80")
 
 cmake_minimum_required(VERSION 3.16)
 
-set(QT_MIN_VERSION "6.6.0")
+set(QT_MIN_VERSION "6.7.0")
 set(KF6_MIN_VERSION "6.2.0")
 set(KDE_COMPILERSETTINGS_LEVEL "5.85")
 
