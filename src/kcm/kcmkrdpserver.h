@@ -34,7 +34,7 @@ public:
     Q_INVOKABLE void toggleServer(const bool enabled);
 
     Q_INVOKABLE void generateCertificate();
-    Q_INVOKABLE bool isServerRunning();
+    Q_INVOKABLE void checkServerRunning();
     Q_INVOKABLE void copyAddressToClipboard(const QString &address);
     Q_INVOKABLE KRDPServerSettings *settings() const
     {
@@ -51,6 +51,7 @@ Q_SIGNALS:
     void generateCertificateFailed();
     void passwordLoaded(const QString &user, const QString &password);
     void keychainError(const QString &errorText);
+    void serverRunning(const bool &isServerRunning);
 
 private:
     KRDPServerSettings *m_serverSettings;

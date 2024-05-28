@@ -48,6 +48,9 @@ KCM.ScrollViewKCM {
             keychainErrorDialog.errorText = errorText;
             keychainErrorDialog.open();
         }
+        function onServerRunning(isServerRunning: bool): void {
+            toggleServerSwitch.checked = isServerRunning;
+        }
     }
 
     function modifyUser(user: string): void {
@@ -69,7 +72,9 @@ KCM.ScrollViewKCM {
             text: i18nc("@option:check Enable RDP server", "Enable RDP server")
             enabled: userListView.count > 0
             checkable: true
-            checked: kcm.isServerRunning()
+            Component.onCompleted: {
+                kcm.checkServerRunning();
+            }
             onTriggered: source => {
                 kcm.toggleServer(source.checked);
             }

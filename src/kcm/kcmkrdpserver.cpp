@@ -11,7 +11,7 @@
 #include <KPluginFactory>
 #include <QClipboard>
 #include <QDBusArgument>
-#include <QDBusInterface>
+#include <QDBusConnection>
 #include <QDBusReply>
 #include <QDir>
 #include <QFileInfo>
@@ -23,6 +23,12 @@
 K_PLUGIN_CLASS_WITH_JSON(KRDPServerConfig, "kcm_krdpserver.json")
 
 static const QString passwordServiceName = QLatin1StringView("KRDP");
+static const QString dbusSystemdDestination = u"org.freedesktop.systemd1"_qs;
+static const QString dbusSystemdPath = u"/org/freedesktop/systemd1"_qs;
+static const QString dbusKrdpServerServicePath = u"/org/freedesktop/systemd1/unit/plasma_2dkrdp_5fserver_2eservice"_qs;
+static const QString dbusSystemdUnitInterface = u"org.freedesktop.systemd1.Unit"_qs;
+static const QString dbusSystemdManagerInterface = u"org.freedesktop.systemd1.Manager"_qs;
+static const QString dbusSystemdPropertiesInterface = u"org.freedesktop.DBus.Properties"_qs;
 
 KRDPServerConfig::KRDPServerConfig(QObject *parent, const KPluginMetaData &data)
     : KQuickManagedConfigModule(parent, data)
@@ -181,31 +187,27 @@ QStringList KRDPServerConfig::listenAddressList()
 
 void KRDPServerConfig::toggleAutoconnect(const bool enabled)
 {
-    QDBusInterface manager(QStringLiteral("org.freedesktop.systemd1"),
-                           QStringLiteral("/org/freedesktop/systemd1"),
-                           QStringLiteral("org.freedesktop.systemd1.Manager"));
+    qDebug(KRDPKCM) << "Setting KRDP Server service autostart on login to " << enabled << "over QDBus";
 
-    qDebug(KRDPKCM) << "Setting KRDP Server service autostart on login to " << enabled << "over QDBus:";
-
+    auto msg = QDBusMessage::createMethodCall(dbusSystemdDestination,
+                                              dbusSystemdPath,
+                                              dbusSystemdManagerInterface,
+                                              enabled ? u"EnableUnitFiles"_qs : u"DisableUnitFiles"_qs);
     if (enabled) {
-        qDebug(KRDPKCM) << manager.asyncCall(QStringLiteral("EnableUnitFiles"), QStringList(u"plasma-krdp_server.service"_qs), false, true).reply();
+        msg.setArguments({QStringList(u"plasma-krdp_server.service"_qs), false, true});
     } else {
-        qDebug(KRDPKCM) << manager.asyncCall(QStringLiteral("DisableUnitFiles"), QStringList(u"plasma-krdp_server.service"_qs), false).reply();
+        msg.setArguments({QStringList(u"plasma-krdp_server.service"_qs), false});
     }
+    QDBusConnection::sessionBus().asyncCall(msg);
 }
 
 void KRDPServerConfig::toggleServer(const bool enabled)
 {
-    // No need to start the server again if it's already running
-    if (enabled && isServerRunning()) {
-        return;
-    }
-    QDBusInterface unit(QStringLiteral("org.freedesktop.systemd1"),
-                        QStringLiteral("/org/freedesktop/systemd1/unit/plasma_2dkrdp_5fserver_2eservice"),
-                        QStringLiteral("org.freedesktop.systemd1.Unit"));
+    auto msg = QDBusMessage::createMethodCall(dbusSystemdDestination, dbusKrdpServerServicePath, dbusSystemdUnitInterface, enabled ? u"Start"_qs : u"Stop"_qs);
 
-    qDebug(KRDPKCM) << "Toggling KRDP Server to " << enabled << "over QDBus:";
-    qDebug(KRDPKCM) << unit.asyncCall(enabled ? QStringLiteral("Start") : QStringLiteral("Stop"), QStringLiteral("replace")).reply();
+    msg.setArguments({u"replace"_qs});
+    qDebug(KRDPKCM) << "Toggling KRDP Server to " << enabled << "over QDBus";
+    QDBusConnection::sessionBus().asyncCall(msg);
 }
 
 void KRDPServerConfig::generateCertificate()
@@ -213,9 +215,9 @@ void KRDPServerConfig::generateCertificate()
     if (!m_serverSettings->certificate().isEmpty() || !m_serverSettings->certificateKey().isEmpty()) {
         return;
     }
-    QDir(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)).mkpath(QStringLiteral("krdpserver"));
-    QString certificatePath(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QStringLiteral("/krdpserver/krdp.crt"));
-    QString certificateKeyPath(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QStringLiteral("/krdpserver/krdp.key"));
+    QDir(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)).mkpath(u"krdpserver"_qs);
+    QString certificatePath(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + u"/krdpserver/krdp.crt"_qs);
+    QString certificateKeyPath(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + u"/krdpserver/krdp.key"_qs);
     qDebug(KRDPKCM) << "Generating certificate files to: " << certificatePath << " and " << certificateKeyPath;
     QProcess sslProcess;
     sslProcess.start(u"openssl"_qs,
@@ -249,18 +251,20 @@ void KRDPServerConfig::generateCertificate()
     m_serverSettings->save();
 }
 
-bool KRDPServerConfig::isServerRunning()
+void KRDPServerConfig::checkServerRunning()
 {
     // Checks if there is PID, and if there is, process is running.
+    auto msg = QDBusMessage::createMethodCall(dbusSystemdDestination, dbusKrdpServerServicePath, dbusSystemdPropertiesInterface, u"Get"_qs);
+    msg.setArguments({u"org.freedesktop.systemd1.Service"_qs, u"MainPID"_qs});
 
-    QDBusInterface msg(QStringLiteral("org.freedesktop.systemd1"),
-                       QStringLiteral("/org/freedesktop/systemd1/unit/plasma_2dkrdp_5fserver_2eservice"),
-                       QStringLiteral("org.freedesktop.DBus.Properties"));
+    QDBusPendingCall pcall = QDBusConnection::sessionBus().asyncCall(msg);
+    auto watcher = new QDBusPendingCallWatcher(pcall, this);
 
-    QDBusReply<QVariant> response = msg.asyncCall(QStringLiteral("Get"), QStringLiteral("org.freedesktop.systemd1.Service"), QStringLiteral("MainPID")).reply();
-    auto pid = response.value().toInt();
-
-    return pid > 0 ? true : false;
+    connect(watcher, &QDBusPendingCallWatcher::finished, this, [&](QDBusPendingCallWatcher *w) {
+        QDBusPendingReply<QVariant> reply(*w);
+        Q_EMIT serverRunning(reply.value().toInt() > 0 ? true : false);
+        w->deleteLater();
+    });
 }
 
 void KRDPServerConfig::copyAddressToClipboard(const QString &address)
