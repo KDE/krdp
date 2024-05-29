@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-25 00:40+0000\n"
+"POT-Creation-Date: 2024-05-29 00:39+0000\n"
 "PO-Revision-Date: 2024-05-22 09:38+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -120,13 +120,13 @@ msgctxt "@info"
 msgid "Received following error with password keychain: %1"
 msgstr "Prejel naslednjo napako z geslom verige ključev: %1"
 
-#: ui/main.qml:69
+#: ui/main.qml:72
 #, kde-format
 msgctxt "@option:check Enable RDP server"
 msgid "Enable RDP server"
 msgstr "Omogoči strežnik RDP"
 
-#: ui/main.qml:94
+#: ui/main.qml:99
 #, kde-format
 msgctxt "@info:status"
 msgid ""
@@ -136,13 +136,13 @@ msgstr ""
 "Oddaljenega namizja ni možno omogočiti, ker vaš sistem ne podpira video "
 "kodiranja H264. Obrnite se na vašo distribucijo, kako to omogočite."
 
-#: ui/main.qml:103
+#: ui/main.qml:108
 #, kde-format
 msgctxt "@info:status"
 msgid "Generating certificates automatically has failed!"
 msgstr "Generiranje potrdil samodejno ni uspelo!"
 
-#: ui/main.qml:113
+#: ui/main.qml:118
 #, kde-format
 msgid ""
 "Set up remote login to connect using apps supporting the “RDP” remote "
@@ -151,127 +151,127 @@ msgstr ""
 "Nastavite oddaljeno prijavo za povezavo za aplikacijami, ki podpirajo "
 "oddaljeni protokol namizja \"RDP\"."
 
-#: ui/main.qml:122
+#: ui/main.qml:127
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Use any of the following addresses to connect to this device:"
 msgstr "Za povezavo s to napravo uporabi katerega koli od naslednjih naslovov:"
 
-#: ui/main.qml:154
+#: ui/main.qml:159
 #, kde-format
 msgctxt "@action:button"
 msgid "Copy Address to Clipboard"
 msgstr "Kopiraj naslov na odložišče"
 
-#: ui/main.qml:179
+#: ui/main.qml:184
 #, kde-format
 msgctxt "@title"
 msgid "Usernames"
 msgstr "Uporabniška imena"
 
-#: ui/main.qml:183
+#: ui/main.qml:188
 #, kde-format
 msgctxt "@label:button"
 msgid "Add User…"
 msgstr "Dodaj uporabnika…"
 
-#: ui/main.qml:196
+#: ui/main.qml:201
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "Add at least one user account to enable remote login"
 msgstr "Dodajte vsaj en uporabniški račun, da omogočite oddaljeno prijavo"
 
-#: ui/main.qml:220
+#: ui/main.qml:225
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify user…"
 msgstr "Spremeni uporabnika…"
 
-#: ui/main.qml:234
+#: ui/main.qml:239
 #, kde-format
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "Odstrani uporabnika…"
 
-#: ui/main.qml:260
+#: ui/main.qml:265
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Server Settings"
 msgstr "Nastavitve strežnika"
 
-#: ui/main.qml:265
+#: ui/main.qml:270
 #, kde-format
 msgctxt "@option:check"
 msgid "Autostart on login"
 msgstr "Samodejni zagon ob prijavi"
 
-#: ui/main.qml:281
+#: ui/main.qml:286
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Listening Port:"
 msgstr "Vrata poslušanja:"
 
-#: ui/main.qml:296
+#: ui/main.qml:301
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Video quality:"
 msgstr "Kakovost videa:"
 
-#: ui/main.qml:315
+#: ui/main.qml:320
 #, kde-format
 msgctxt "@label:slider"
 msgid "Responsiveness"
 msgstr "Odzivnost"
 
-#: ui/main.qml:321
+#: ui/main.qml:326
 #, kde-format
 msgctxt "@label:slider"
 msgid "Quality"
 msgstr "Kakovost"
 
-#: ui/main.qml:328
+#: ui/main.qml:333
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Security Certificates"
 msgstr "Varnostna potrdila"
 
-#: ui/main.qml:333
+#: ui/main.qml:338
 #, kde-format
 msgctxt "@label:check generate security certificates automatically"
 msgid "Generate automatically"
 msgstr "Generiraj samodejno"
 
-#: ui/main.qml:351
+#: ui/main.qml:356
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate path:"
 msgstr "Pot potrdila:"
 
-#: ui/main.qml:366
+#: ui/main.qml:371
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate File…"
 msgstr "Izberite datoteko potrdila…"
 
-#: ui/main.qml:378
+#: ui/main.qml:383
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate key path:"
 msgstr "Pot ključa potrdila:"
 
-#: ui/main.qml:394
+#: ui/main.qml:399
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate Key File…"
 msgstr "Izberite datoteko ključa potrdila…"
 
-#: ui/main.qml:410
+#: ui/main.qml:415
 #, kde-format
 msgctxt "@title:window"
 msgid "Select Certificate Key file"
 msgstr "Izberi datoteko ključa potrdila"
 
-#: ui/main.qml:410
+#: ui/main.qml:415
 #, kde-format
 msgctxt "@title:window"
 msgid "Select Certificate file"
