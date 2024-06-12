@@ -33,6 +33,7 @@ public:
         connect(connection->videoStream(), &KRdp::VideoStream::requestedFrameRateChanged, this, &SessionWrapper::onRequestedFrameRateChanged);
         connect(connection->inputHandler(), &KRdp::InputHandler::inputEvent, session.get(), &KRdp::AbstractSession::sendEvent);
         connect(connection, &KRdp::RdpConnection::stateChanged, this, &SessionWrapper::setSNIStatus);
+        connect(connection, &QObject::destroyed, this, &SessionWrapper::onConnectionDestroyed);
     }
 
     void onCursorUpdate(const PipeWireCursor &cursor)
@@ -61,6 +62,11 @@ public:
         session->setVideoFrameRate(connection->videoStream()->requestedFrameRate());
     }
 
+    void onConnectionDestroyed()
+    {
+        Q_EMIT connectionDestroyed(this);
+    }
+
     void setSNIStatus()
     {
         if (!m_sni) {
@@ -87,6 +93,7 @@ public:
     }
 
     Q_SIGNAL void sessionError();
+    Q_SIGNAL void connectionDestroyed(SessionWrapper *wrapper);
 
     std::unique_ptr<KRdp::AbstractSession> session;
     QPointer<KRdp::RdpConnection> connection;
@@ -145,26 +152,20 @@ void SessionController::onNewConnection(KRdp::RdpConnection *newConnection)
     wrapper->session->setActiveStream(m_monitorIndex.value_or(-1));
     wrapper->session->setVideoQuality(m_quality.value());
 
-    connect(newConnection, &QObject::destroyed, this, [this, newConnection]() {
-        removeConnection(newConnection);
+    connect(wrapper.get(), &SessionWrapper::connectionDestroyed, this, [this](SessionWrapper *wrapper) {
+        m_wrappers.erase(std::remove_if(m_wrappers.begin(),
+                                        m_wrappers.end(),
+                                        [wrapper](std::unique_ptr<SessionWrapper> &entry) {
+                                            return entry.get() == wrapper;
+                                        }),
+                         m_wrappers.end());
     });
 
-    connect(wrapper->session.get(), &KRdp::AbstractSession::error, this, [this, newConnection] {
+    connect(wrapper.get(), &SessionWrapper::sessionError, this, [newConnection] {
         newConnection->close(KRdp::RdpConnection::CloseReason::None);
-        removeConnection(newConnection);
     });
 
     m_wrappers.push_back(std::move(wrapper));
-}
-
-void SessionController::removeConnection(KRdp::RdpConnection *connection)
-{
-    m_wrappers.erase(std::remove_if(m_wrappers.begin(),
-                                    m_wrappers.end(),
-                                    [connection](std::unique_ptr<SessionWrapper> &wrapper) {
-                                        return wrapper->connection == connection;
-                                    }),
-                     m_wrappers.end());
 }
 
 void SessionController::stopFromSNI()

@@ -37,7 +37,6 @@ public:
 
 private:
     void onNewConnection(KRdp::RdpConnection *newConnection);
-    void removeConnection(KRdp::RdpConnection *connection);
     std::unique_ptr<KRdp::AbstractSession> makeSession();
 
     KRdp::Server *m_server = nullptr;
