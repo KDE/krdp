@@ -22,10 +22,14 @@ class SessionController : public QObject
 {
     Q_OBJECT
 public:
-    SessionController(KRdp::Server *server);
+    enum class SessionType {
+        Portal,
+        Plasma,
+    };
+
+    SessionController(KRdp::Server *server, SessionType sessionType);
     ~SessionController() override;
 
-    void setUsePlasmaSession(bool plasma);
     void setMonitorIndex(const std::optional<int> &index);
     void setQuality(const std::optional<int> &quality);
     void setSNIStatus(const KRdp::RdpConnection::State state);
@@ -34,11 +38,14 @@ public:
 private:
     void onNewConnection(KRdp::RdpConnection *newConnection);
     void removeConnection(KRdp::RdpConnection *connection);
+    std::unique_ptr<KRdp::AbstractSession> makeSession();
 
     KRdp::Server *m_server = nullptr;
-    bool m_usePlasmaSession = false;
+    SessionType m_sessionType;
     std::optional<int> m_monitorIndex;
     std::optional<int> m_quality;
+
+    std::unique_ptr<KRdp::AbstractSession> m_initializationSession;
 
     std::vector<std::unique_ptr<SessionWrapper>> m_wrappers;
 
