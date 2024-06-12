@@ -20,17 +20,10 @@ class SessionWrapper : public QObject
 {
     Q_OBJECT
 public:
-    SessionWrapper(KRdp::Server *server, KRdp::RdpConnection *conn, bool usePlasmaSession, KStatusNotifierItem *sni)
-        : connection(conn)
+    SessionWrapper(KRdp::RdpConnection *conn, std::unique_ptr<KRdp::AbstractSession> &&sess, KStatusNotifierItem *sni)
+        : session(std::move(sess))
+        , connection(conn)
     {
-#ifdef WITH_PLASMA_SESSION
-        if (usePlasmaSession) {
-            session = std::make_unique<KRdp::PlasmaScreencastV1Session>(server);
-        } else
-#endif
-        {
-            session = std::make_unique<KRdp::PortalSession>(server);
-        }
         m_sni = sni;
 
         connect(session.get(), &KRdp::AbstractSession::frameReceived, connection->videoStream(), &KRdp::VideoStream::queueFrame);
@@ -100,8 +93,9 @@ public:
     KStatusNotifierItem *m_sni;
 };
 
-SessionController::SessionController(KRdp::Server *server)
+SessionController::SessionController(KRdp::Server *server, SessionType sessionType)
     : m_server(server)
+    , m_sessionType(sessionType)
 {
     connect(m_server, &KRdp::Server::newConnectionCreated, this, &SessionController::onNewConnection);
     // Status notification item
@@ -112,15 +106,27 @@ SessionController::SessionController(KRdp::Server *server)
     auto quitAction = new QAction(i18n("Quit"), this);
     connect(quitAction, &QAction::triggered, this, &SessionController::stopFromSNI);
     m_sni->addAction(u"quitAction"_qs, quitAction);
+
+    // Create a single temporary session to request permissions from the portal
+    // on startup.
+    if (sessionType == SessionType::Portal) {
+        m_initializationSession = makeSession();
+
+        auto cleanup = [this]() {
+            auto session = m_initializationSession.release();
+            session->deleteLater();
+        };
+
+        // Destroy the session after we've successfully connected, we just use
+        // it to get permissions. Reusing it is going to lead to problems with
+        // reconnection.
+        connect(m_initializationSession.get(), &KRdp::AbstractSession::started, this, cleanup);
+        connect(m_initializationSession.get(), &KRdp::AbstractSession::error, this, cleanup);
+    }
 }
 
 SessionController::~SessionController() noexcept
 {
-}
-
-void SessionController::setUsePlasmaSession(bool plasma)
-{
-    m_usePlasmaSession = plasma;
 }
 
 void SessionController::setMonitorIndex(const std::optional<int> &index)
@@ -135,7 +141,7 @@ void SessionController::setQuality(const std::optional<int> &quality)
 
 void SessionController::onNewConnection(KRdp::RdpConnection *newConnection)
 {
-    auto wrapper = std::make_unique<SessionWrapper>(m_server, newConnection, m_usePlasmaSession, m_sni);
+    auto wrapper = std::make_unique<SessionWrapper>(newConnection, makeSession(), m_sni);
     wrapper->session->setActiveStream(m_monitorIndex.value_or(-1));
     wrapper->session->setVideoQuality(m_quality.value());
 
@@ -170,6 +176,18 @@ void SessionController::stopFromSNI()
                         u"org.freedesktop.systemd1.Unit"_qs);
 
     unit.asyncCall(u"Stop"_qs);
+}
+
+std::unique_ptr<KRdp::AbstractSession> SessionController::makeSession()
+{
+#ifdef WITH_PLASMA_SESSION
+    if (m_sessionType == SessionType::Plasma) {
+        return std::make_unique<KRdp::PlasmaScreencastV1Session>(m_server);
+    } else
+#endif
+    {
+        return std::make_unique<KRdp::PortalSession>(m_server);
+    }
 }
 
 #include "SessionController.moc"
