@@ -2,7 +2,8 @@
 # SPDX-FileCopyrightText: 2024 Akseli Lahtinen <akselmo@akselmo.dev>
 [Unit]
 Description=KRDP Server
-After=plasma-kwin_wayland.service plasma-kcminit.service
+After=graphical-session.target
+Requires=plasma-xdg-desktop-portal-kde.service
 
 [Service]
 Type=exec
@@ -10,4 +11,4 @@ ExecStart=@CMAKE_INSTALL_PREFIX@/bin/krdpserver
 Restart=on-abnormal
 
 [Install]
-WantedBy=plasma-core.target
+WantedBy=graphical-session.target
