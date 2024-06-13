@@ -39,6 +39,13 @@ KRDPServerConfig::KRDPServerConfig(QObject *parent, const KPluginMetaData &data)
     if (m_serverSettings->autogenerateCertificates()) {
         generateCertificate();
     }
+
+    QDBusConnection::sessionBus().connect(dbusSystemdDestination,
+                                          dbusKrdpServerServicePath,
+                                          dbusSystemdPropertiesInterface,
+                                          u"PropertiesChanged"_qs,
+                                          this,
+                                          SLOT(servicePropertiesChanged()));
 }
 
 KRDPServerConfig::~KRDPServerConfig() = default;
@@ -270,6 +277,11 @@ void KRDPServerConfig::checkServerRunning()
 void KRDPServerConfig::copyAddressToClipboard(const QString &address)
 {
     QGuiApplication::clipboard()->setText(address.trimmed());
+}
+
+void KRDPServerConfig::servicePropertiesChanged()
+{
+    checkServerRunning();
 }
 
 #include "kcmkrdpserver.moc"

@@ -55,4 +55,5 @@ Q_SIGNALS:
 
 private:
     KRDPServerSettings *m_serverSettings;
+    Q_SLOT void servicePropertiesChanged();
 };
