@@ -32,7 +32,6 @@ public:
         connect(connection->videoStream(), &KRdp::VideoStream::enabledChanged, this, &SessionWrapper::onVideoStreamEnabledChanged);
         connect(connection->videoStream(), &KRdp::VideoStream::requestedFrameRateChanged, this, &SessionWrapper::onRequestedFrameRateChanged);
         connect(connection->inputHandler(), &KRdp::InputHandler::inputEvent, session.get(), &KRdp::AbstractSession::sendEvent);
-        connect(connection, &KRdp::RdpConnection::stateChanged, this, &SessionWrapper::setSNIStatus);
         connect(connection, &QObject::destroyed, this, &SessionWrapper::onConnectionDestroyed);
     }
 
@@ -65,31 +64,6 @@ public:
     void onConnectionDestroyed()
     {
         Q_EMIT connectionDestroyed(this);
-    }
-
-    void setSNIStatus()
-    {
-        if (!m_sni) {
-            return;
-        }
-        if (!connection) {
-            m_sni->setStatus(KStatusNotifierItem::Passive);
-            return;
-        }
-        switch (connection->state()) {
-        case KRdp::RdpConnection::State::Closed:
-        case KRdp::RdpConnection::State::Initial:
-            m_sni->setStatus(KStatusNotifierItem::Passive);
-            break;
-        case KRdp::RdpConnection::State::Starting:
-        case KRdp::RdpConnection::State::Running:
-        case KRdp::RdpConnection::State::Streaming:
-            m_sni->setStatus(KStatusNotifierItem::Active);
-            break;
-        default:
-            m_sni->setStatus(KStatusNotifierItem::Passive);
-            break;
-        }
     }
 
     Q_SIGNAL void sessionError();
