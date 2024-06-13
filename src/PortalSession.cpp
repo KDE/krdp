@@ -279,6 +279,12 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
             connect(encodedStream, &PipeWireEncodedStream::newPacket, this, &PortalSession::onPacketReceived);
             connect(encodedStream, &PipeWireEncodedStream::sizeChanged, this, &PortalSession::setSize);
             connect(encodedStream, &PipeWireEncodedStream::cursorChanged, this, &PortalSession::cursorUpdate);
+            QDBusConnection::sessionBus().connect(u"org.freedesktop.portal.Desktop"_qs,
+                                                  d->sessionPath.path(),
+                                                  u"org.freedesktop.portal.Session"_qs,
+                                                  u"Closed"_qs,
+                                                  this,
+                                                  SLOT(onSessionClosed()));
             setStarted(true);
         } else {
             qCWarning(KRDP) << "Could not open pipewire remote";
@@ -286,6 +292,12 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
         }
         watcher->deleteLater();
     });
+}
+
+void PortalSession::onSessionClosed()
+{
+    qCWarning(KRDP) << "Portal session was closed!";
+    Q_EMIT error();
 }
 
 void PortalSession::onPacketReceived(const PipeWireEncodedStream::Packet &data)
