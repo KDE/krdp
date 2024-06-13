@@ -9,6 +9,7 @@
 #include <PortalSession.h>
 #include <QAction>
 #include <QDBusInterface>
+#include <QMenu>
 #include <RdpConnection.h>
 #include <Server.h>
 
@@ -81,12 +82,17 @@ SessionController::SessionController(KRdp::Server *server, SessionType sessionTy
     connect(m_server, &KRdp::Server::newConnectionCreated, this, &SessionController::onNewConnection);
     // Status notification item
     m_sni = new KStatusNotifierItem(u"krdpserver"_qs, this);
+    auto menu = new QMenu(u"quitMenu"_qs);
+    // Disable default quit button since it has confirmation dialog
+    m_sni->setStandardActionsEnabled(false);
     m_sni->setTitle(i18n("RDP Server"));
     m_sni->setIconByName(u"preferences-system-network-remote"_qs);
     m_sni->setStatus(KStatusNotifierItem::Passive);
-    auto quitAction = new QAction(i18n("Quit"), this);
+    auto quitAction = new QAction(i18n("Quit"), menu);
+    quitAction->setIcon(QIcon::fromTheme(QStringLiteral("application-exit")));
     connect(quitAction, &QAction::triggered, this, &SessionController::stopFromSNI);
-    m_sni->addAction(u"quitAction"_qs, quitAction);
+    menu->addAction(quitAction);
+    m_sni->setContextMenu(menu);
 
     // Create a single temporary session to request permissions from the portal
     // on startup.
@@ -151,6 +157,7 @@ void SessionController::stopFromSNI()
                         u"org.freedesktop.systemd1.Unit"_qs);
 
     unit.asyncCall(u"Stop"_qs);
+    QCoreApplication::quit();
 }
 
 std::unique_ptr<KRdp::AbstractSession> SessionController::makeSession()
