@@ -8,6 +8,7 @@
 #include <KLocalizedString>
 #include <PortalSession.h>
 #include <QAction>
+#include <QCoreApplication>
 #include <QDBusInterface>
 #include <QMenu>
 #include <RdpConnection.h>
