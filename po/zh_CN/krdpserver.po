@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-14 02:25+0000\n"
+"POT-Creation-Date: 2024-06-15 02:27+0000\n"
 "PO-Revision-Date: 2024-05-28 19:22\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -59,12 +59,12 @@ msgstr "用户允许登录，密码保存在 KWallet"
 msgid "Autostart the server on login"
 msgstr "登录时自动启动服务器"
 
-#: SessionController.cpp:88
+#: SessionController.cpp:89
 #, kde-format
 msgid "RDP Server"
 msgstr "RDP 服务器"
 
-#: SessionController.cpp:91
+#: SessionController.cpp:92
 #, kde-format
 msgid "Quit"
 msgstr "退出"
