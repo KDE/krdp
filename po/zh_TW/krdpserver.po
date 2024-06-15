@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-14 00:40+0000\n"
+"POT-Creation-Date: 2024-06-15 00:40+0000\n"
 "PO-Revision-Date: 2024-05-30 20:43+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -59,12 +59,12 @@ msgstr "允許登入的使用者，密碼會儲存在 KWallet 中"
 msgid "Autostart the server on login"
 msgstr "登入時自動啟動伺服器"
 
-#: SessionController.cpp:88
+#: SessionController.cpp:89
 #, kde-format
 msgid "RDP Server"
 msgstr "RDP 伺服器"
 
-#: SessionController.cpp:91
+#: SessionController.cpp:92
 #, kde-format
 msgid "Quit"
 msgstr "離開"

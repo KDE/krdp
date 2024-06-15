@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-14 00:40+0000\n"
+"POT-Creation-Date: 2024-06-15 00:40+0000\n"
 "PO-Revision-Date: 2024-05-27 07:08+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <kde-i18n-doc@kde.org>\n"
@@ -61,12 +61,12 @@ msgstr "Uporabnikom je dovoljena prijava, gesla so shranjena v KWalletu"
 msgid "Autostart the server on login"
 msgstr "Samodejni zagon strežnika ob prijavi"
 
-#: SessionController.cpp:88
+#: SessionController.cpp:89
 #, kde-format
 msgid "RDP Server"
 msgstr "Strežnik RDP"
 
-#: SessionController.cpp:91
+#: SessionController.cpp:92
 #, kde-format
 msgid "Quit"
 msgstr "Zapusti"
