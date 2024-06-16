@@ -41,8 +41,8 @@ find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS Config DBusAddons KCMUti
 find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS Config DBusAddons)
 
 find_package(FreeRDP 2.10 REQUIRED)
-find_package(WinPR REQUIRED)
-find_package(FreeRDP-Server REQUIRED)
+find_package(WinPR 2.10 REQUIRED)
+find_package(FreeRDP-Server 2.10 REQUIRED)
 find_package(KPipeWire 5.27.80 REQUIRED)
 find_package(XKB REQUIRED)
 
