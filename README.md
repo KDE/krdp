@@ -75,8 +75,6 @@ The following clients are known to work with the server:
 
 The following clients are known not to work:
 
-- Krdc, KDE's remote desktop client. While it supports RDP it does not support
-the graphics pipeline.
 - Microsoft's Remote Desktop client for Android. While it should support H.264
 it seems to not enable it.
 
