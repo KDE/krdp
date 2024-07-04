@@ -184,8 +184,9 @@ KCM.ScrollViewKCM {
             text: i18nc("@title", "Usernames")
             actions: [
                 Kirigami.Action {
-                    icon.name: "list-add-user-symbolic"
-                    text: i18nc("@label:button", "Add User…")
+                    icon.name: "list-add-symbolic"
+                    text: i18nc("@action:button", "Add New…")
+                    Accessible.name: i18nc("@action:button", "Add New User Account…")
                     onTriggered: source => {
                         root.addUser();
                     }
@@ -199,6 +200,7 @@ KCM.ScrollViewKCM {
             visible: userListView.count === 0
             icon.name: "list-add-user-symbolic"
             text: i18nc("@info:placeholder", "Add at least one user account to enable remote login")
+            explanation: xi18nc("@info:placeholder", "Click <interface>Add New…</interface> to add one")
         }
 
         model: settings.users
@@ -208,6 +210,8 @@ KCM.ScrollViewKCM {
             width: userListView.width
             text: modelData
             hoverEnabled: !toggleServerSwitch.checked
+            // Help line up text and actions
+            Kirigami.Theme.useAlternateBackgroundColor: true
             contentItem: RowLayout {
                 spacing: Kirigami.Units.mediumSpacing
 
@@ -235,7 +239,7 @@ KCM.ScrollViewKCM {
 
                 QQC2.Button {
                     id: deleteUserButton
-                    icon.name: "list-remove-user-symbolic"
+                    icon.name: "edit-delete-remove-symbolic"
                     text: i18nc("@action:button", "Remove user…")
                     display: QQC2.AbstractButton.IconOnly
                     onClicked: {
