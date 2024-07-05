@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-29 00:39+0000\n"
+"POT-Creation-Date: 2024-07-05 00:40+0000\n"
 "PO-Revision-Date: 2024-06-21 15:46+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
@@ -169,109 +169,125 @@ msgid "Usernames"
 msgstr "Användarnamn"
 
 #: ui/main.qml:188
-#, kde-format
-msgctxt "@label:button"
-msgid "Add User…"
+#, fuzzy, kde-format
+#| msgctxt "@label:button"
+#| msgid "Add User…"
+msgctxt "@action:button"
+msgid "Add New…"
 msgstr "Lägg till användare…"
 
-#: ui/main.qml:201
+#: ui/main.qml:189
+#, fuzzy, kde-format
+#| msgctxt "@label:button"
+#| msgid "Add User…"
+msgctxt "@action:button"
+msgid "Add New User Account…"
+msgstr "Lägg till användare…"
+
+#: ui/main.qml:202
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "Add at least one user account to enable remote login"
 msgstr ""
 "Lägg till åtminstone ett användarkonto för att aktivera fjärrinloggning"
 
-#: ui/main.qml:225
+#: ui/main.qml:203
+#, kde-kuit-format
+msgctxt "@info:placeholder"
+msgid "Click <interface>Add New…</interface> to add one"
+msgstr ""
+
+#: ui/main.qml:229
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify user…"
 msgstr "Ändra användare…"
 
-#: ui/main.qml:239
+#: ui/main.qml:243
 #, kde-format
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "Ta bort användare…"
 
-#: ui/main.qml:265
+#: ui/main.qml:269
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Server Settings"
 msgstr "Serverinställningar"
 
-#: ui/main.qml:270
+#: ui/main.qml:274
 #, kde-format
 msgctxt "@option:check"
 msgid "Autostart on login"
 msgstr "Starta automatiskt vid inloggning"
 
-#: ui/main.qml:286
+#: ui/main.qml:290
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Listening Port:"
 msgstr "Port att lyssna på:"
 
-#: ui/main.qml:301
+#: ui/main.qml:305
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Video quality:"
 msgstr "Videokvalitet:"
 
-#: ui/main.qml:320
+#: ui/main.qml:324
 #, kde-format
 msgctxt "@label:slider"
 msgid "Responsiveness"
 msgstr "Svarstid"
 
-#: ui/main.qml:326
+#: ui/main.qml:330
 #, kde-format
 msgctxt "@label:slider"
 msgid "Quality"
 msgstr "Kvalitet"
 
-#: ui/main.qml:333
+#: ui/main.qml:337
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Security Certificates"
 msgstr "Säkerhetscertifikat"
 
-#: ui/main.qml:338
+#: ui/main.qml:342
 #, kde-format
 msgctxt "@label:check generate security certificates automatically"
 msgid "Generate automatically"
 msgstr "Automatiskt genererade"
 
-#: ui/main.qml:356
+#: ui/main.qml:360
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate path:"
 msgstr "Certifikatsökväg:"
 
-#: ui/main.qml:371
+#: ui/main.qml:375
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate File…"
 msgstr "Välj certifikatfil…"
 
-#: ui/main.qml:383
+#: ui/main.qml:387
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate key path:"
 msgstr "Certifikatnyckelsökväg:"
 
-#: ui/main.qml:399
+#: ui/main.qml:403
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate Key File…"
 msgstr "Välj certifikatnyckelfil…"
 
-#: ui/main.qml:415
+#: ui/main.qml:419
 #, kde-format
 msgctxt "@title:window"
 msgid "Select Certificate Key file"
 msgstr "Markera certifikatnyckelfil"
 
-#: ui/main.qml:415
+#: ui/main.qml:419
 #, kde-format
 msgctxt "@title:window"
 msgid "Select Certificate file"
