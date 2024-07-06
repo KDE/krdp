@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-07-05 00:40+0000\n"
-"PO-Revision-Date: 2024-07-05 01:24+0300\n"
+"PO-Revision-Date: 2024-07-05 14:04+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -172,20 +172,16 @@ msgid "Usernames"
 msgstr "Kullanıcı Adları"
 
 #: ui/main.qml:188
-#, fuzzy, kde-format
-#| msgctxt "@label:button"
-#| msgid "Add User…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add New…"
-msgstr "Kullanıcı Ekle…"
+msgstr "Yeni Ekle…"
 
 #: ui/main.qml:189
-#, fuzzy, kde-format
-#| msgctxt "@label:button"
-#| msgid "Add User…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add New User Account…"
-msgstr "Kullanıcı Ekle…"
+msgstr "Yeni Kullanıcı Hesabı Ekle…"
 
 #: ui/main.qml:202
 #, kde-format
@@ -199,6 +195,7 @@ msgstr ""
 msgctxt "@info:placeholder"
 msgid "Click <interface>Add New…</interface> to add one"
 msgstr ""
+"Bir tane eklemek için <interface>Yeni Ekle…</interface> düğmesine tıklayın"
 
 #: ui/main.qml:229
 #, kde-format

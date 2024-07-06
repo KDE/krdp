@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-07-05 00:40+0000\n"
-"PO-Revision-Date: 2024-05-22 13:52+0200\n"
+"PO-Revision-Date: 2024-07-05 11:37+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.02.2\n"
+"X-Generator: Lokalize 24.05.1\n"
 
 #. i18n: ectx: label, entry (ListenPort), group (General)
 #: krdpserversettings.kcfg:14
@@ -174,20 +174,16 @@ msgid "Usernames"
 msgstr "Gebruikersnamen"
 
 #: ui/main.qml:188
-#, fuzzy, kde-format
-#| msgctxt "@label:button"
-#| msgid "Add User…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add New…"
-msgstr "Gebruiker toevoegen…"
+msgstr "Nieuwe toevoegen…"
 
 #: ui/main.qml:189
-#, fuzzy, kde-format
-#| msgctxt "@label:button"
-#| msgid "Add User…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add New User Account…"
-msgstr "Gebruiker toevoegen…"
+msgstr "Nieuw gebruikersaccount toevoegen…"
 
 #: ui/main.qml:202
 #, kde-format
@@ -202,6 +198,7 @@ msgstr ""
 msgctxt "@info:placeholder"
 msgid "Click <interface>Add New…</interface> to add one"
 msgstr ""
+"Klik op <interface>Nieuwe toevoegen…</interface> om er een toe te voegen"
 
 #: ui/main.qml:229
 #, kde-format

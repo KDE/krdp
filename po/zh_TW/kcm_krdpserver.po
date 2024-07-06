@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-07-05 00:40+0000\n"
-"PO-Revision-Date: 2024-05-30 20:51+0900\n"
+"PO-Revision-Date: 2024-07-05 15:42+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
@@ -167,20 +167,16 @@ msgid "Usernames"
 msgstr "使用者名稱"
 
 #: ui/main.qml:188
-#, fuzzy, kde-format
-#| msgctxt "@label:button"
-#| msgid "Add User…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add New…"
-msgstr "新增使用者…"
+msgstr "新增…"
 
 #: ui/main.qml:189
-#, fuzzy, kde-format
-#| msgctxt "@label:button"
-#| msgid "Add User…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add New User Account…"
-msgstr "新增使用者…"
+msgstr "新增使用者帳號…"
 
 #: ui/main.qml:202
 #, kde-format
@@ -192,7 +188,7 @@ msgstr "新增至少一個使用者帳號來啟用遠端登入"
 #, kde-kuit-format
 msgctxt "@info:placeholder"
 msgid "Click <interface>Add New…</interface> to add one"
-msgstr ""
+msgstr "點擊 <interface>新增…</interface> 來新增一個"
 
 #: ui/main.qml:229
 #, kde-format

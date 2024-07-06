@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-07-05 00:40+0000\n"
-"PO-Revision-Date: 2024-05-22 09:38+0200\n"
+"PO-Revision-Date: 2024-07-05 07:26+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -170,20 +170,16 @@ msgid "Usernames"
 msgstr "Uporabniška imena"
 
 #: ui/main.qml:188
-#, fuzzy, kde-format
-#| msgctxt "@label:button"
-#| msgid "Add User…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add New…"
-msgstr "Dodaj uporabnika…"
+msgstr "Dodaj novega…"
 
 #: ui/main.qml:189
-#, fuzzy, kde-format
-#| msgctxt "@label:button"
-#| msgid "Add User…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add New User Account…"
-msgstr "Dodaj uporabnika…"
+msgstr "Dodaj novi uporabniški račun…"
 
 #: ui/main.qml:202
 #, kde-format
@@ -195,7 +191,7 @@ msgstr "Dodajte vsaj en uporabniški račun, da omogočite oddaljeno prijavo"
 #, kde-kuit-format
 msgctxt "@info:placeholder"
 msgid "Click <interface>Add New…</interface> to add one"
-msgstr ""
+msgstr "Kliknite <interface>Dodaj novega…</interface> da dodate enega"
 
 #: ui/main.qml:229
 #, kde-format

@@ -167,20 +167,16 @@ msgid "Usernames"
 msgstr "用户名"
 
 #: ui/main.qml:188
-#, fuzzy, kde-format
-#| msgctxt "@label:button"
-#| msgid "Add User…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add New…"
-msgstr "添加用户…"
+msgstr ""
 
 #: ui/main.qml:189
-#, fuzzy, kde-format
-#| msgctxt "@label:button"
-#| msgid "Add User…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add New User Account…"
-msgstr "添加用户…"
+msgstr ""
 
 #: ui/main.qml:202
 #, kde-format

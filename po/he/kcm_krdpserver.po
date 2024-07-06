@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-07-05 00:40+0000\n"
-"PO-Revision-Date: 2024-05-22 06:28+0300\n"
+"PO-Revision-Date: 2024-07-05 08:02+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
-"X-Generator: Lokalize 24.02.2\n"
+"X-Generator: Lokalize 24.05.1\n"
 
 #. i18n: ectx: label, entry (ListenPort), group (General)
 #: krdpserversettings.kcfg:14
@@ -170,20 +170,16 @@ msgid "Usernames"
 msgstr "שמות משתמשים"
 
 #: ui/main.qml:188
-#, fuzzy, kde-format
-#| msgctxt "@label:button"
-#| msgid "Add User…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add New…"
-msgstr "הוספת משתמש…"
+msgstr "הוספת חדש…"
 
 #: ui/main.qml:189
-#, fuzzy, kde-format
-#| msgctxt "@label:button"
-#| msgid "Add User…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add New User Account…"
-msgstr "הוספת משתמש…"
+msgstr "הוספת חשבון משתמש חדש…"
 
 #: ui/main.qml:202
 #, kde-format
@@ -195,7 +191,7 @@ msgstr "להוסיף לפחות חשבון משתמש אחד כדי להפעיל
 #, kde-kuit-format
 msgctxt "@info:placeholder"
 msgid "Click <interface>Add New…</interface> to add one"
-msgstr ""
+msgstr "לחיצה על <interface>הוספת חדש…</interface> תאפשר להוסיף אחד"
 
 #: ui/main.qml:229
 #, kde-format

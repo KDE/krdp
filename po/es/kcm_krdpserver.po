@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcm_krdpserver\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-07-05 00:40+0000\n"
-"PO-Revision-Date: 2024-05-22 03:58+0200\n"
+"PO-Revision-Date: 2024-07-05 14:17+0200\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.02.2\n"
+"X-Generator: Lokalize 24.05.1\n"
 
 #. i18n: ectx: label, entry (ListenPort), group (General)
 #: krdpserversettings.kcfg:14
@@ -176,20 +176,16 @@ msgid "Usernames"
 msgstr "Nombres de usuarios"
 
 #: ui/main.qml:188
-#, fuzzy, kde-format
-#| msgctxt "@label:button"
-#| msgid "Add User…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add New…"
-msgstr "Añadir usuario..."
+msgstr "Añadir nuevo..."
 
 #: ui/main.qml:189
-#, fuzzy, kde-format
-#| msgctxt "@label:button"
-#| msgid "Add User…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add New User Account…"
-msgstr "Añadir usuario..."
+msgstr "Añadir nueva cuenta de usuario..."
 
 #: ui/main.qml:202
 #, kde-format
@@ -202,7 +198,7 @@ msgstr ""
 #, kde-kuit-format
 msgctxt "@info:placeholder"
 msgid "Click <interface>Add New…</interface> to add one"
-msgstr ""
+msgstr "Pulse <interface>Añadir nuevo...</interface> para añadir uno"
 
 #: ui/main.qml:229
 #, kde-format

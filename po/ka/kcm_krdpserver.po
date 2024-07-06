@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-07-05 00:40+0000\n"
-"PO-Revision-Date: 2024-05-22 04:39+0200\n"
+"PO-Revision-Date: 2024-07-05 05:34+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -172,20 +172,16 @@ msgid "Usernames"
 msgstr "მომხმარებლის სახელები"
 
 #: ui/main.qml:188
-#, fuzzy, kde-format
-#| msgctxt "@label:button"
-#| msgid "Add User…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add New…"
-msgstr "მომხმარებლის დამატება…"
+msgstr "ახლის დამატება…"
 
 #: ui/main.qml:189
-#, fuzzy, kde-format
-#| msgctxt "@label:button"
-#| msgid "Add User…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add New User Account…"
-msgstr "მომხმარებლის დამატება…"
+msgstr "ახალი მომხმარებლის ანგარიშის დამატება…"
 
 #: ui/main.qml:202
 #, kde-format
@@ -198,6 +194,7 @@ msgstr "დაშორებული შესვლის ჩასართ�
 msgctxt "@info:placeholder"
 msgid "Click <interface>Add New…</interface> to add one"
 msgstr ""
+"დააწკაპუნეთ ღილაკზე <interface>ახლის დამატება…</interface> ახლის დასამატებლად"
 
 #: ui/main.qml:229
 #, kde-format

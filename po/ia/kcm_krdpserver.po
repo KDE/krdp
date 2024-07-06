@@ -1,13 +1,13 @@
-# Copyright (C) YEAR This file is copyright:
+# Copyright (C) 2024 This file is copyright:
 # This file is distributed under the same license as the krdp package.
 #
-# giovanni <g.sora@tiscali.it>, 2024.
+# SPDX-FileCopyrightText: 2024 giovanni <g.sora@tiscali.it>
 msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-07-05 00:40+0000\n"
-"PO-Revision-Date: 2024-06-07 10:24+0200\n"
+"PO-Revision-Date: 2024-07-05 15:58+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Lokalize 23.08.5\n"
 
 #. i18n: ectx: label, entry (ListenPort), group (General)
 #: krdpserversettings.kcfg:14
@@ -171,20 +171,16 @@ msgid "Usernames"
 msgstr "Nomines de usator"
 
 #: ui/main.qml:188
-#, fuzzy, kde-format
-#| msgctxt "@label:button"
-#| msgid "Add User…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add New…"
-msgstr "Adde usator..."
+msgstr "Adde Nove …"
 
 #: ui/main.qml:189
-#, fuzzy, kde-format
-#| msgctxt "@label:button"
-#| msgid "Add User…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add New User Account…"
-msgstr "Adde usator..."
+msgstr "Adde conto de nove usator…"
 
 #: ui/main.qml:202
 #, kde-format
@@ -196,7 +192,7 @@ msgstr "Adde al minu un conto de usator per habilitar accesso remote"
 #, kde-kuit-format
 msgctxt "@info:placeholder"
 msgid "Click <interface>Add New…</interface> to add one"
-msgstr ""
+msgstr "Clicca <interface>Adde Nove…</interface> per adder un"
 
 #: ui/main.qml:229
 #, kde-format
