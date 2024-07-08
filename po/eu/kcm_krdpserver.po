@@ -1,7 +1,7 @@
 # Translation for kcm_krdpserver.po to Euskara/Basque (eu).
 # Copyright (C) 2024 This file is copyright:
 # This file is distributed under the same license as the krdp package.
-# KDE euskaratzeko proiektuko arduraduna <xalba@ni.eus>.
+# SPDX-FileCopyrightText: 2024 KDE euskaratzeko proiektuko arduraduna <xalba@ni.eus>
 #
 # Translators:
 # SPDX-FileCopyrightText: 2024 Iñigo Salvador Azurmendi <xalba@ni.eus>
@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-07-05 00:40+0000\n"
-"PO-Revision-Date: 2024-06-22 12:06+0200\n"
+"PO-Revision-Date: 2024-07-07 11:11+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 24.05.0\n"
+"X-Generator: Lokalize 24.05.2\n"
 
 #. i18n: ectx: label, entry (ListenPort), group (General)
 #: krdpserversettings.kcfg:14
@@ -174,20 +174,16 @@ msgid "Usernames"
 msgstr "Erabiltzaile-izenak"
 
 #: ui/main.qml:188
-#, fuzzy, kde-format
-#| msgctxt "@label:button"
-#| msgid "Add User…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add New…"
-msgstr "Gehitu erabiltzailea..."
+msgstr "Gehitu ...berria"
 
 #: ui/main.qml:189
-#, fuzzy, kde-format
-#| msgctxt "@label:button"
-#| msgid "Add User…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add New User Account…"
-msgstr "Gehitu erabiltzailea..."
+msgstr "Gehitu erabiltzaile-kontu berria..."
 
 #: ui/main.qml:202
 #, kde-format
@@ -199,19 +195,19 @@ msgstr "Gehitu gutxienez erabiltzaile kontu bat urrunetik saio-hastea gaitzeko"
 #, kde-kuit-format
 msgctxt "@info:placeholder"
 msgid "Click <interface>Add New…</interface> to add one"
-msgstr ""
+msgstr "Klik egin <interface> Gehitu …berria</interface>n bat gehitzeko"
 
 #: ui/main.qml:229
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify user…"
-msgstr "Aldatu erabiltzailea..."
+msgstr "Aldatu ...erabiltzailea"
 
 #: ui/main.qml:243
 #, kde-format
 msgctxt "@action:button"
 msgid "Remove user…"
-msgstr "Kendu erabiltzailea..."
+msgstr "Kendu ...erabiltzailea"
 
 #: ui/main.qml:269
 #, kde-format

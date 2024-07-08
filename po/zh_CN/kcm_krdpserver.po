@@ -170,13 +170,13 @@ msgstr "用户名"
 #, kde-format
 msgctxt "@action:button"
 msgid "Add New…"
-msgstr ""
+msgstr "新增…"
 
 #: ui/main.qml:189
 #, kde-format
 msgctxt "@action:button"
 msgid "Add New User Account…"
-msgstr ""
+msgstr "新增用户账户…"
 
 #: ui/main.qml:202
 #, kde-format
@@ -188,7 +188,7 @@ msgstr "请添加至少一个用户账户以启用远程登录"
 #, kde-kuit-format
 msgctxt "@info:placeholder"
 msgid "Click <interface>Add New…</interface> to add one"
-msgstr ""
+msgstr "点击 <interface>新增…</interface> 添加一个用户账户"
 
 #: ui/main.qml:229
 #, kde-format
