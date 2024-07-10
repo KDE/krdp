@@ -70,7 +70,6 @@ KCM.ScrollViewKCM {
         Kirigami.Action {
             id: toggleServerSwitch
             text: i18nc("@option:check Enable RDP server", "Enable RDP server")
-            enabled: userListView.count > 0
             checkable: true
             Component.onCompleted: {
                 kcm.checkServerRunning();
