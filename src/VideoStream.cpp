@@ -401,10 +401,6 @@ void VideoStream::sendFrame(const VideoFrame &frame)
 
     d->session->networkDetection()->startBandwidthMeasure();
 
-    // auto alignedSize = QSize{
-    //     frame.size.width() + (frame.size.width() % 16 > 0 ? 16 - frame.size.width() : 0),
-    //     frame.size.height() + (frame.size.height() % 16 > 0 ? 16 - frame.size.height() : 0)
-    // };
     auto frameId = d->frameId++;
 
     d->encodedFrames++;
@@ -425,12 +421,8 @@ void VideoStream::sendFrame(const VideoFrame &frame)
     surfaceCommand.codecId = RDPGFX_CODECID_AVC420;
     surfaceCommand.format = PIXEL_FORMAT_BGRX32;
 
-    // auto damageRect = frame.damage.boundingRect();
-
     surfaceCommand.left = 0;
     surfaceCommand.top = 0;
-    // surfaceCommand.right = damageRect.x() + damageRect.width();
-    // surfaceCommand.bottom = damageRect.y() + damageRect.height();
     surfaceCommand.right = frame.size.width();
     surfaceCommand.bottom = frame.size.height();
     surfaceCommand.length = 0;
@@ -455,59 +447,12 @@ void VideoStream::sendFrame(const VideoFrame &frame)
     qualities[0].p = 0;
     qualities[0].qualityVal = 100;
 
-    // for (int i = 0; i < frame.damage.rectCount(); ++i) {
-    //     auto rect = *(frame.damage.begin() + i);
-    //     rects[i].left = rect.x();
-    //     rects[i].top = rect.y();
-    //     rects[i].right = rect.x() + rect.width();
-    //     rects[i].bottom = rect.y() + rect.height();
-    //
-    //     qualities[i].qp = 22;
-    //     qualities[i].p = 0;
-    //     qualities[i].qualityVal = 100;
-    // }
-
     d->gfxContext->StartFrame(d->gfxContext.get(), &startFramePdu);
     d->gfxContext->SurfaceCommand(d->gfxContext.get(), &surfaceCommand);
-
-    // RDPGFX_SURFACE_TO_SURFACE_PDU surfacePdu;
-    // surfacePdu.surfaceIdSrc = d->surface.id;
-    // surfacePdu.surfaceIdDest = d->surface.id;
-    //
-    // RDPGFX_POINT16 destinationPosition;
-    //
-    // for (int i = 0; i < frame.damage.rectCount(); ++i) {
-    //     auto rect = *(frame.damage.begin() + i);
-    //     destinationPosition.x = rect.x();
-    //     destinationPosition.y = rect.y();
-    //     surfacePdu.destPts = &destinationPosition;
-    //     surfacePdu.destPtsCount = 1;
-    //     surfacePdu.rectSrc = rects[i];
-    //
-    //     d->gfxContext->SurfaceToSurface(d->gfxContext, &surfacePdu);
-    // }
 
     d->gfxContext->EndFrame(d->gfxContext.get(), &endFramePdu);
 
     d->session->networkDetection()->stopBandwidthMeasure();
-
-    // rdpUpdate *update = d->session->rdpPeer()->context->update;
-    //
-    // const SURFACE_FRAME_MARKER beginMarker {
-    //     .frameAction = SURFACECMD_FRAMEACTION_BEGIN,
-    //     .frameId = d->frameId,
-    // };
-    // update->SurfaceFrameMarker(update->context, &beginMarker);
-    //
-    // SURFACE_BITS_COMMAND surfaceBits;
-    //
-    // update->SurfaceBits(update->context, &surfaceBits);
-    //
-    // const SURFACE_FRAME_MARKER endMarker {
-    //     .frameAction = SURFACECMD_FRAMEACTION_END,
-    //     .frameId = d->frameId,
-    // };
-    // update->SurfaceFrameMarker(update->context, &endMarker);
 }
 
 void VideoStream::updateRequestedFrameRate()
