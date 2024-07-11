@@ -203,7 +203,7 @@ void RdpConnection::setState(KRdp::RdpConnection::State newState)
     }
 
     d->state = newState;
-    Q_EMIT stateChanged();
+    Q_EMIT stateChanged(newState);
 }
 
 void RdpConnection::close(RdpConnection::CloseReason reason)

@@ -71,7 +71,7 @@ public:
      * The current session state.
      */
     State state() const;
-    Q_SIGNAL void stateChanged();
+    Q_SIGNAL void stateChanged(State newState);
 
     /**
      * Close the connection

@@ -155,8 +155,8 @@ void Server::incomingConnection(qintptr handle)
 {
     auto session = std::make_unique<RdpConnection>(this, handle);
     auto sessionPtr = session.get();
-    connect(session.get(), &RdpConnection::stateChanged, this, [this, sessionPtr]() {
-        if (sessionPtr->state() == RdpConnection::State::Closed) {
+    connect(sessionPtr, &RdpConnection::stateChanged, this, [this, sessionPtr](RdpConnection::State state) {
+        if (state == RdpConnection::State::Closed) {
             auto itr = std::find_if(d->sessions.begin(), d->sessions.end(), [sessionPtr](auto &session) {
                 return session.get() == sessionPtr;
             });
