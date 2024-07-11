@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-07-05 00:40+0000\n"
+"POT-Creation-Date: 2024-07-11 00:40+0000\n"
 "PO-Revision-Date: 2024-07-05 13:47+0100\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
 "Language-Team: British English\n"
@@ -125,7 +125,7 @@ msgctxt "@option:check Enable RDP server"
 msgid "Enable RDP server"
 msgstr "Enable RDP server"
 
-#: ui/main.qml:99
+#: ui/main.qml:98
 #, kde-format
 msgctxt "@info:status"
 msgid ""
@@ -135,13 +135,13 @@ msgstr ""
 "Remote desktop cannot be enabled because your system does not support H264 "
 "video encoding. Please contact your distribution regarding how to enable it."
 
-#: ui/main.qml:108
+#: ui/main.qml:107
 #, kde-format
 msgctxt "@info:status"
 msgid "Generating certificates automatically has failed!"
 msgstr "Generating certificates automatically has failed!"
 
-#: ui/main.qml:118
+#: ui/main.qml:117
 #, kde-format
 msgid ""
 "Set up remote login to connect using apps supporting the “RDP” remote "
@@ -150,139 +150,139 @@ msgstr ""
 "Set up remote login to connect using apps supporting the “RDP” remote "
 "desktop protocol."
 
-#: ui/main.qml:127
+#: ui/main.qml:126
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Use any of the following addresses to connect to this device:"
 msgstr "Use any of the following addresses to connect to this device:"
 
-#: ui/main.qml:159
+#: ui/main.qml:158
 #, kde-format
 msgctxt "@action:button"
 msgid "Copy Address to Clipboard"
 msgstr "Copy Address to Clipboard"
 
-#: ui/main.qml:184
+#: ui/main.qml:183
 #, kde-format
 msgctxt "@title"
 msgid "Usernames"
 msgstr "Usernames"
 
-#: ui/main.qml:188
+#: ui/main.qml:187
 #, kde-format
 msgctxt "@action:button"
 msgid "Add New…"
 msgstr "Add New…"
 
-#: ui/main.qml:189
+#: ui/main.qml:188
 #, kde-format
 msgctxt "@action:button"
 msgid "Add New User Account…"
 msgstr "Add New User Account…"
 
-#: ui/main.qml:202
+#: ui/main.qml:201
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "Add at least one user account to enable remote login"
 msgstr "Add at least one user account to enable remote login"
 
-#: ui/main.qml:203
+#: ui/main.qml:202
 #, kde-kuit-format
 msgctxt "@info:placeholder"
 msgid "Click <interface>Add New…</interface> to add one"
 msgstr "Click <interface>Add New…</interface> to add one"
 
-#: ui/main.qml:229
+#: ui/main.qml:228
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify user…"
 msgstr "Modify user…"
 
-#: ui/main.qml:243
+#: ui/main.qml:242
 #, kde-format
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "Remove user…"
 
-#: ui/main.qml:269
+#: ui/main.qml:268
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Server Settings"
 msgstr "Server Settings"
 
-#: ui/main.qml:274
+#: ui/main.qml:273
 #, kde-format
 msgctxt "@option:check"
 msgid "Autostart on login"
 msgstr "Autostart on login"
 
-#: ui/main.qml:290
+#: ui/main.qml:289
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Listening Port:"
 msgstr "Listening Port:"
 
-#: ui/main.qml:305
+#: ui/main.qml:304
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Video quality:"
 msgstr "Video quality:"
 
-#: ui/main.qml:324
+#: ui/main.qml:323
 #, kde-format
 msgctxt "@label:slider"
 msgid "Responsiveness"
 msgstr "Responsiveness"
 
-#: ui/main.qml:330
+#: ui/main.qml:329
 #, kde-format
 msgctxt "@label:slider"
 msgid "Quality"
 msgstr "Quality"
 
-#: ui/main.qml:337
+#: ui/main.qml:336
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Security Certificates"
 msgstr "Security Certificates"
 
-#: ui/main.qml:342
+#: ui/main.qml:341
 #, kde-format
 msgctxt "@label:check generate security certificates automatically"
 msgid "Generate automatically"
 msgstr "Generate automatically"
 
-#: ui/main.qml:360
+#: ui/main.qml:359
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate path:"
 msgstr "Certificate path:"
 
-#: ui/main.qml:375
+#: ui/main.qml:374
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate File…"
 msgstr "Choose Certificate File…"
 
-#: ui/main.qml:387
+#: ui/main.qml:386
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate key path:"
 msgstr "Certificate key path:"
 
-#: ui/main.qml:403
+#: ui/main.qml:402
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate Key File…"
 msgstr "Choose Certificate Key File…"
 
-#: ui/main.qml:419
+#: ui/main.qml:418
 #, kde-format
 msgctxt "@title:window"
 msgid "Select Certificate Key file"
 msgstr "Select Certificate Key file"
 
-#: ui/main.qml:419
+#: ui/main.qml:418
 #, kde-format
 msgctxt "@title:window"
 msgid "Select Certificate file"

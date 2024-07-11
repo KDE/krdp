@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-07-05 00:40+0000\n"
+"POT-Creation-Date: 2024-07-11 00:40+0000\n"
 "PO-Revision-Date: 2024-07-05 05:34+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -126,7 +126,7 @@ msgctxt "@option:check Enable RDP server"
 msgid "Enable RDP server"
 msgstr "RDP სერვერის ჩართვა"
 
-#: ui/main.qml:99
+#: ui/main.qml:98
 #, kde-format
 msgctxt "@info:status"
 msgid ""
@@ -137,13 +137,13 @@ msgstr ""
 "ვიდეო კოდირების მხარდაჭერა არ გააჩნია. დაუკავშირდით დისტრიბუტივის "
 "მომწოდებელს, რომ ჩართოთ ის."
 
-#: ui/main.qml:108
+#: ui/main.qml:107
 #, kde-format
 msgctxt "@info:status"
 msgid "Generating certificates automatically has failed!"
 msgstr "სერტიფიკატების ავტომატური გენერაცია ჩავარდა!"
 
-#: ui/main.qml:118
+#: ui/main.qml:117
 #, kde-format
 msgid ""
 "Set up remote login to connect using apps supporting the “RDP” remote "
@@ -152,141 +152,141 @@ msgstr ""
 "დაშორებული შესვლა პროგრამებით, რომელსაც დაშორებული სამუშაო მაგიდის \"RDP\" "
 "მხარდაჭერა გააჩნიათ."
 
-#: ui/main.qml:127
+#: ui/main.qml:126
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Use any of the following addresses to connect to this device:"
 msgstr ""
 "გამოიყენეთ ნებისმიერი ამ მისამართებიდან, რომ ამ მოწყობილობას დაუკავშირდეთ:"
 
-#: ui/main.qml:159
+#: ui/main.qml:158
 #, kde-format
 msgctxt "@action:button"
 msgid "Copy Address to Clipboard"
 msgstr "მისამართის ბუფერში კოპირება"
 
-#: ui/main.qml:184
+#: ui/main.qml:183
 #, kde-format
 msgctxt "@title"
 msgid "Usernames"
 msgstr "მომხმარებლის სახელები"
 
-#: ui/main.qml:188
+#: ui/main.qml:187
 #, kde-format
 msgctxt "@action:button"
 msgid "Add New…"
 msgstr "ახლის დამატება…"
 
-#: ui/main.qml:189
+#: ui/main.qml:188
 #, kde-format
 msgctxt "@action:button"
 msgid "Add New User Account…"
 msgstr "ახალი მომხმარებლის ანგარიშის დამატება…"
 
-#: ui/main.qml:202
+#: ui/main.qml:201
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "Add at least one user account to enable remote login"
 msgstr "დაშორებული შესვლის ჩასართავად, დაამატეთ ერთი მომხმარებელი მაინც"
 
-#: ui/main.qml:203
+#: ui/main.qml:202
 #, kde-kuit-format
 msgctxt "@info:placeholder"
 msgid "Click <interface>Add New…</interface> to add one"
 msgstr ""
 "დააწკაპუნეთ ღილაკზე <interface>ახლის დამატება…</interface> ახლის დასამატებლად"
 
-#: ui/main.qml:229
+#: ui/main.qml:228
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify user…"
 msgstr "მომხმარებლის ჩასწორება…"
 
-#: ui/main.qml:243
+#: ui/main.qml:242
 #, kde-format
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "მომხმარებლის წაშლა…"
 
-#: ui/main.qml:269
+#: ui/main.qml:268
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Server Settings"
 msgstr "სერვერის მორგება"
 
-#: ui/main.qml:274
+#: ui/main.qml:273
 #, kde-format
 msgctxt "@option:check"
 msgid "Autostart on login"
 msgstr "ავტოგაშვება შესვლისას"
 
-#: ui/main.qml:290
+#: ui/main.qml:289
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Listening Port:"
 msgstr "მოსასმენი პორტი:"
 
-#: ui/main.qml:305
+#: ui/main.qml:304
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Video quality:"
 msgstr "ვიდეოს ხარისხი:"
 
-#: ui/main.qml:324
+#: ui/main.qml:323
 #, kde-format
 msgctxt "@label:slider"
 msgid "Responsiveness"
 msgstr "მგრძობიარობა"
 
-#: ui/main.qml:330
+#: ui/main.qml:329
 #, kde-format
 msgctxt "@label:slider"
 msgid "Quality"
 msgstr "ხარისხი"
 
-#: ui/main.qml:337
+#: ui/main.qml:336
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Security Certificates"
 msgstr "უსაფრთხოების სერტიფიკატები"
 
-#: ui/main.qml:342
+#: ui/main.qml:341
 #, kde-format
 msgctxt "@label:check generate security certificates automatically"
 msgid "Generate automatically"
 msgstr "ავტომატური გენერაცია"
 
-#: ui/main.qml:360
+#: ui/main.qml:359
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate path:"
 msgstr "სერტიფიკატის ბილიკი:"
 
-#: ui/main.qml:375
+#: ui/main.qml:374
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate File…"
 msgstr "აირჩიეთ სერტიფიკატის ფაილი…"
 
-#: ui/main.qml:387
+#: ui/main.qml:386
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate key path:"
 msgstr "სერტიფიკატის გასაღების ბილიკი:"
 
-#: ui/main.qml:403
+#: ui/main.qml:402
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate Key File…"
 msgstr "აირჩიეთ სერტიფიკატის გასაღების ფაილი…"
 
-#: ui/main.qml:419
+#: ui/main.qml:418
 #, kde-format
 msgctxt "@title:window"
 msgid "Select Certificate Key file"
 msgstr "აირჩიეთ სერტიფიკატის გასაღების ფაილი"
 
-#: ui/main.qml:419
+#: ui/main.qml:418
 #, kde-format
 msgctxt "@title:window"
 msgid "Select Certificate file"

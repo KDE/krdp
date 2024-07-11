@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-07-05 00:40+0000\n"
+"POT-Creation-Date: 2024-07-11 00:40+0000\n"
 "PO-Revision-Date: 2024-07-05 09:32+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -129,7 +129,7 @@ msgctxt "@option:check Enable RDP server"
 msgid "Enable RDP server"
 msgstr "Activa el servidor RDP"
 
-#: ui/main.qml:99
+#: ui/main.qml:98
 #, kde-format
 msgctxt "@info:status"
 msgid ""
@@ -140,13 +140,13 @@ msgstr ""
 "codificació de vídeo H264. Poseu-vos en contacte amb la vostra distribució "
 "sobre com activar-la."
 
-#: ui/main.qml:108
+#: ui/main.qml:107
 #, kde-format
 msgctxt "@info:status"
 msgid "Generating certificates automatically has failed!"
 msgstr "Ha fallat la generació automàtica de certificats!"
 
-#: ui/main.qml:118
+#: ui/main.qml:117
 #, kde-format
 msgid ""
 "Set up remote login to connect using apps supporting the “RDP” remote "
@@ -155,141 +155,141 @@ msgstr ""
 "Configureu l'inici de sessió remot per a connectar-vos utilitzant les "
 "aplicacions que admeten el protocol d'escriptori remot «RDP»."
 
-#: ui/main.qml:127
+#: ui/main.qml:126
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Use any of the following addresses to connect to this device:"
 msgstr ""
 "Usa qualsevol de les adreces següents per a connectar a aquest dispositiu:"
 
-#: ui/main.qml:159
+#: ui/main.qml:158
 #, kde-format
 msgctxt "@action:button"
 msgid "Copy Address to Clipboard"
 msgstr "Copia l'adreça al porta-retalls"
 
-#: ui/main.qml:184
+#: ui/main.qml:183
 #, kde-format
 msgctxt "@title"
 msgid "Usernames"
 msgstr "Noms d'usuari"
 
-#: ui/main.qml:188
+#: ui/main.qml:187
 #, kde-format
 msgctxt "@action:button"
 msgid "Add New…"
 msgstr "Afegeix nou…"
 
-#: ui/main.qml:189
+#: ui/main.qml:188
 #, kde-format
 msgctxt "@action:button"
 msgid "Add New User Account…"
 msgstr "Afegeix un compte nou d'usuari…"
 
-#: ui/main.qml:202
+#: ui/main.qml:201
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "Add at least one user account to enable remote login"
 msgstr ""
 "Afegeix almenys un compte d'usuari per a activar l'inici de sessió remot"
 
-#: ui/main.qml:203
+#: ui/main.qml:202
 #, kde-kuit-format
 msgctxt "@info:placeholder"
 msgid "Click <interface>Add New…</interface> to add one"
 msgstr "Feu clic a <interface>Afegeix nou…</interface> per afegir-ne un"
 
-#: ui/main.qml:229
+#: ui/main.qml:228
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify user…"
 msgstr "Modifica l'usuari…"
 
-#: ui/main.qml:243
+#: ui/main.qml:242
 #, kde-format
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "Elimina l'usuari…"
 
-#: ui/main.qml:269
+#: ui/main.qml:268
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Server Settings"
 msgstr "Configuració del servidor"
 
-#: ui/main.qml:274
+#: ui/main.qml:273
 #, kde-format
 msgctxt "@option:check"
 msgid "Autostart on login"
 msgstr "Inicia automàticament en iniciar la sessió"
 
-#: ui/main.qml:290
+#: ui/main.qml:289
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Listening Port:"
 msgstr "Port que rep les connexions:"
 
-#: ui/main.qml:305
+#: ui/main.qml:304
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Video quality:"
 msgstr "Qualitat del vídeo:"
 
-#: ui/main.qml:324
+#: ui/main.qml:323
 #, kde-format
 msgctxt "@label:slider"
 msgid "Responsiveness"
 msgstr "Fluïdesa de la resposta"
 
-#: ui/main.qml:330
+#: ui/main.qml:329
 #, kde-format
 msgctxt "@label:slider"
 msgid "Quality"
 msgstr "Qualitat"
 
-#: ui/main.qml:337
+#: ui/main.qml:336
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Security Certificates"
 msgstr "Certificats de seguretat"
 
-#: ui/main.qml:342
+#: ui/main.qml:341
 #, kde-format
 msgctxt "@label:check generate security certificates automatically"
 msgid "Generate automatically"
 msgstr "Genera automàticament"
 
-#: ui/main.qml:360
+#: ui/main.qml:359
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate path:"
 msgstr "Camí del certificat:"
 
-#: ui/main.qml:375
+#: ui/main.qml:374
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate File…"
 msgstr "Trieu un fitxer de certificat…"
 
-#: ui/main.qml:387
+#: ui/main.qml:386
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate key path:"
 msgstr "Camí de la clau del certificat:"
 
-#: ui/main.qml:403
+#: ui/main.qml:402
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate Key File…"
 msgstr "Trieu un fitxer de clau de certificat…"
 
-#: ui/main.qml:419
+#: ui/main.qml:418
 #, kde-format
 msgctxt "@title:window"
 msgid "Select Certificate Key file"
 msgstr "Selecció de fitxer de clau de certificat"
 
-#: ui/main.qml:419
+#: ui/main.qml:418
 #, kde-format
 msgctxt "@title:window"
 msgid "Select Certificate file"
