@@ -82,12 +82,6 @@ uint32_t gfxCapsAdvertise(RdpgfxServerContext *context, const RDPGFX_CAPS_ADVERT
     return stream->onCapsAdvertise(capsAdvertise);
 }
 
-uint32_t gfxCacheImportOffer(RdpgfxServerContext *context, const RDPGFX_CACHE_IMPORT_OFFER_PDU * /*cacheImportOffer*/)
-{
-    RDPGFX_CACHE_IMPORT_REPLY_PDU cacheImportReply;
-    return context->CacheImportReply(context, &cacheImportReply);
-}
-
 uint32_t gfxFrameAcknowledge(RdpgfxServerContext *context, const RDPGFX_FRAME_ACKNOWLEDGE_PDU *frameAcknowledge)
 {
     auto stream = reinterpret_cast<VideoStream *>(context->custom);
@@ -170,7 +164,6 @@ bool VideoStream::initialize()
 
     d->gfxContext->ChannelIdAssigned = gfxChannelIdAssigned;
     d->gfxContext->CapsAdvertise = gfxCapsAdvertise;
-    d->gfxContext->CacheImportOffer = gfxCacheImportOffer;
     d->gfxContext->FrameAcknowledge = gfxFrameAcknowledge;
     d->gfxContext->QoeFrameAcknowledge = gfxQoEFrameAcknowledge;
 
