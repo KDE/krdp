@@ -1,13 +1,11 @@
 # Translation of kcm_krdpserver to Norwegian Nynorsk
 #
-# SPDX-FileCopyrightText: 2024 Karl Ove Hufthammer <karl@huftis.org>
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-29 03:09+0000\n"
-"PO-Revision-Date: 2024-07-08 21:25+0200\n"
+"POT-Creation-Date: 2024-07-11 02:28+0000\n"
+"PO-Revision-Date: 2024-07-10 20:43+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
 "Language: nn\n"
@@ -120,7 +118,7 @@ msgstr "Nøkkelring-feil"
 #, kde-format
 msgctxt "@info"
 msgid "Received following error with password keychain: %1"
-msgstr ""
+msgstr "Fekk følgjande feilmelding med passord-nøkkelring: %1"
 
 #: ui/main.qml:72
 #, kde-format
@@ -128,148 +126,153 @@ msgctxt "@option:check Enable RDP server"
 msgid "Enable RDP server"
 msgstr "Bruk RDP-tenar"
 
-#: ui/main.qml:95
+#: ui/main.qml:94
 #, kde-format
 msgctxt "@info:status"
 msgid ""
 "Remote desktop cannot be enabled because your system does not support H264 "
 "video encoding. Please contact your distribution regarding how to enable it."
 msgstr ""
+"Kan ikkje ta i bruk eksternt skrivebord, då systemet ditt ikkje støttar "
+"H.264-videokoding. Undersøk med distribusjonen din om korleis du kan leggja "
+"til slik støtte."
 
-#: ui/main.qml:103
+#: ui/main.qml:102
 #, kde-format
 msgctxt "@info:status"
 msgid "Generating certificates automatically has failed!"
-msgstr ""
+msgstr "Feil ved automatisk generering av sertifikat"
 
-#: ui/main.qml:107
+#: ui/main.qml:106
 #, kde-format
 msgid ""
 "Set up remote login to connect using apps supporting the “RDP” remote "
 "desktop protocol."
 msgstr ""
+"Set opp ekstern innlogging for å kopla til med appar som støttar «eksternt "
+"skrivebord»-protokollen RDP."
 
-#: ui/main.qml:115
+#: ui/main.qml:114
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Use any of the following addresses to connect to this device:"
 msgstr "Bruk ei av desse adressene til å kopla til eininga:"
 
-#: ui/main.qml:136
+#: ui/main.qml:135
 #, kde-format
 msgctxt "@action:button"
 msgid "Copy Address to Clipboard"
 msgstr "Kopier adressa til utklippstavla"
 
-#: ui/main.qml:159
+#: ui/main.qml:158
 #, kde-format
 msgctxt "@title"
 msgid "Usernames"
 msgstr "Brukarnamn"
 
-#: ui/main.qml:163
+#: ui/main.qml:162
 #, kde-format
 msgctxt "@label:button"
 msgid "Add User…"
 msgstr "Legg til brukar …"
 
-#: ui/main.qml:176
+#: ui/main.qml:175
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "Add at least one user account to enable remote login"
 msgstr "Treng minst éin brukarkonto for å kunna slå på fjerninnlogging"
 
-#: ui/main.qml:200
+#: ui/main.qml:199
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify user…"
 msgstr "Endra brukar …"
 
-#: ui/main.qml:214
+#: ui/main.qml:213
 #, kde-format
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "Fjern brukar …"
 
-#: ui/main.qml:240
+#: ui/main.qml:239
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Server Settings"
 msgstr "Tenarinnstillingar"
 
-#: ui/main.qml:245
+#: ui/main.qml:244
 #, kde-format
 msgctxt "@option:check"
 msgid "Autostart on login"
 msgstr "Start automatisk ved innlogging"
 
-#: ui/main.qml:261
+#: ui/main.qml:260
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Listening Port:"
 msgstr "Lytteport:"
 
-#: ui/main.qml:276
+#: ui/main.qml:275
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Video quality:"
 msgstr "Videokvalitet:"
 
-#: ui/main.qml:295
+#: ui/main.qml:294
 #, kde-format
 msgctxt "@label:slider"
 msgid "Responsiveness"
 msgstr "Reaksjonsevne"
 
-#: ui/main.qml:301
+#: ui/main.qml:300
 #, kde-format
 msgctxt "@label:slider"
 msgid "Quality"
 msgstr "Kvalitet"
 
-#: ui/main.qml:308
+#: ui/main.qml:307
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Security Certificates"
 msgstr "Tryggleikssertifikat"
 
-#: ui/main.qml:313
+#: ui/main.qml:312
 #, kde-format
 msgctxt "@label:check generate security certificates automatically"
 msgid "Generate automatically"
 msgstr "Generer automatisk"
 
-#: ui/main.qml:331
+#: ui/main.qml:330
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate path:"
 msgstr "Sertifikatadresse:"
 
-#: ui/main.qml:346
+#: ui/main.qml:345
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate File…"
 msgstr "Vel sertifikatfil …"
 
-#: ui/main.qml:358
+#: ui/main.qml:357
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate key path:"
 msgstr "Adresse til sertifikatnøkkel:"
 
-#: ui/main.qml:374
+#: ui/main.qml:373
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate Key File…"
 msgstr "Vel sertifikatnøkkelfil …"
 
-#: ui/main.qml:390
+#: ui/main.qml:389
 #, kde-format
 msgctxt "@title:window"
 msgid "Select Certificate Key file"
 msgstr "Vel sertifikatnøkkelfil"
 
-#: ui/main.qml:390
+#: ui/main.qml:389
 #, kde-format
 msgctxt "@title:window"
 msgid "Select Certificate file"

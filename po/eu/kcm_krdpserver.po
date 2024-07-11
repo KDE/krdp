@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-29 03:09+0000\n"
+"POT-Creation-Date: 2024-07-11 02:28+0000\n"
 "PO-Revision-Date: 2024-07-07 11:11+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -130,7 +130,7 @@ msgctxt "@option:check Enable RDP server"
 msgid "Enable RDP server"
 msgstr "Gaitu RDP zerbitzaria"
 
-#: ui/main.qml:95
+#: ui/main.qml:94
 #, kde-format
 msgctxt "@info:status"
 msgid ""
@@ -140,13 +140,13 @@ msgstr ""
 "Urruneko mahaigaina ezin da gaitu zure sistemak H264 bideo-kodeketa onartzen "
 "ez duelako. Jar zaitez zure banatzailearekin harremanean nola gaitu jakiteko."
 
-#: ui/main.qml:103
+#: ui/main.qml:102
 #, kde-format
 msgctxt "@info:status"
 msgid "Generating certificates automatically has failed!"
 msgstr "Ziurtagiriak automatikoki sortzea huts egin du!"
 
-#: ui/main.qml:107
+#: ui/main.qml:106
 #, kde-format
 msgid ""
 "Set up remote login to connect using apps supporting the “RDP” remote "
@@ -155,127 +155,127 @@ msgstr ""
 "Ezar ezazu urrunetik saio-hastea, \"RDP\", urruneko mahaigain protokoloa "
 "onartzen duten aplikazioak erabiliz konektatzeko."
 
-#: ui/main.qml:115
+#: ui/main.qml:114
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Use any of the following addresses to connect to this device:"
 msgstr "Erabili ondoko helbideetako edozein gailu honetara konektatzeko:"
 
-#: ui/main.qml:136
+#: ui/main.qml:135
 #, kde-format
 msgctxt "@action:button"
 msgid "Copy Address to Clipboard"
 msgstr "Kopiatu helbidea arbelera"
 
-#: ui/main.qml:159
+#: ui/main.qml:158
 #, kde-format
 msgctxt "@title"
 msgid "Usernames"
 msgstr "Erabiltzaile-izenak"
 
-#: ui/main.qml:163
+#: ui/main.qml:162
 #, kde-format
 msgctxt "@label:button"
 msgid "Add User…"
 msgstr "Gehitu erabiltzailea..."
 
-#: ui/main.qml:176
+#: ui/main.qml:175
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "Add at least one user account to enable remote login"
 msgstr "Gehitu gutxienez erabiltzaile kontu bat urrunetik saio-hastea gaitzeko"
 
-#: ui/main.qml:200
+#: ui/main.qml:199
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify user…"
 msgstr "Aldatu ...erabiltzailea"
 
-#: ui/main.qml:214
+#: ui/main.qml:213
 #, kde-format
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "Kendu ...erabiltzailea"
 
-#: ui/main.qml:240
+#: ui/main.qml:239
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Server Settings"
 msgstr "Zerbitzariaren ezarpenak"
 
-#: ui/main.qml:245
+#: ui/main.qml:244
 #, kde-format
 msgctxt "@option:check"
 msgid "Autostart on login"
 msgstr "Automatikoki abiarazi saioa hastean"
 
-#: ui/main.qml:261
+#: ui/main.qml:260
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Listening Port:"
 msgstr "Entzuteko ataka:"
 
-#: ui/main.qml:276
+#: ui/main.qml:275
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Video quality:"
 msgstr "Bideo-kalitatea:"
 
-#: ui/main.qml:295
+#: ui/main.qml:294
 #, kde-format
 msgctxt "@label:slider"
 msgid "Responsiveness"
 msgstr "Erantzuteko gaitasuna"
 
-#: ui/main.qml:301
+#: ui/main.qml:300
 #, kde-format
 msgctxt "@label:slider"
 msgid "Quality"
 msgstr "Kalitatea"
 
-#: ui/main.qml:308
+#: ui/main.qml:307
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Security Certificates"
 msgstr "Segurtasun ziurtagiriak"
 
-#: ui/main.qml:313
+#: ui/main.qml:312
 #, kde-format
 msgctxt "@label:check generate security certificates automatically"
 msgid "Generate automatically"
 msgstr "Automatikoki sortu"
 
-#: ui/main.qml:331
+#: ui/main.qml:330
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate path:"
 msgstr "Ziurtagiriaren bide-izena:"
 
-#: ui/main.qml:346
+#: ui/main.qml:345
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate File…"
 msgstr "Hautatu ziurtagiriaren fitxategia..."
 
-#: ui/main.qml:358
+#: ui/main.qml:357
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate key path:"
 msgstr "Ziurtagiri-gakoaren bide-izena:"
 
-#: ui/main.qml:374
+#: ui/main.qml:373
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate Key File…"
 msgstr "Hautatu ziurtagiri-gakoaren fitxategia..."
 
-#: ui/main.qml:390
+#: ui/main.qml:389
 #, kde-format
 msgctxt "@title:window"
 msgid "Select Certificate Key file"
 msgstr "Hautatu ziurtagiri-gakoaren fitxategia"
 
-#: ui/main.qml:390
+#: ui/main.qml:389
 #, kde-format
 msgctxt "@title:window"
 msgid "Select Certificate file"

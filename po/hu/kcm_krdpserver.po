@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-29 03:09+0000\n"
+"POT-Creation-Date: 2024-07-11 02:28+0000\n"
 "PO-Revision-Date: 2024-05-31 22:37+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -127,7 +127,7 @@ msgctxt "@option:check Enable RDP server"
 msgid "Enable RDP server"
 msgstr "RDP kiszolgáló engedélyezése"
 
-#: ui/main.qml:95
+#: ui/main.qml:94
 #, kde-format
 msgctxt "@info:status"
 msgid ""
@@ -138,13 +138,13 @@ msgstr ""
 "videókódolást. Lépjen kapcsolatba a disztribúciójával az engedélyezés módját "
 "illetően."
 
-#: ui/main.qml:103
+#: ui/main.qml:102
 #, kde-format
 msgctxt "@info:status"
 msgid "Generating certificates automatically has failed!"
 msgstr "A tanúsítványok automatikus generálása nem sikerült."
 
-#: ui/main.qml:107
+#: ui/main.qml:106
 #, kde-format
 msgid ""
 "Set up remote login to connect using apps supporting the “RDP” remote "
@@ -153,32 +153,32 @@ msgstr ""
 "Távoli bejelentkezés beállítása az „RDP” távoli asztal protokollt támogató "
 "alkalmazások használatával történő csatlakozáshoz."
 
-#: ui/main.qml:115
+#: ui/main.qml:114
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Use any of the following addresses to connect to this device:"
 msgstr ""
 "A következő címek bármelyikét használhatja az eszközhöz való csatlakozáshoz:"
 
-#: ui/main.qml:136
+#: ui/main.qml:135
 #, kde-format
 msgctxt "@action:button"
 msgid "Copy Address to Clipboard"
 msgstr "Cím másolása a vágólapra"
 
-#: ui/main.qml:159
+#: ui/main.qml:158
 #, kde-format
 msgctxt "@title"
 msgid "Usernames"
 msgstr "Felhasználónevek"
 
-#: ui/main.qml:163
+#: ui/main.qml:162
 #, kde-format
 msgctxt "@label:button"
 msgid "Add User…"
 msgstr "Felhasználó hozzáadása…"
 
-#: ui/main.qml:176
+#: ui/main.qml:175
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "Add at least one user account to enable remote login"
@@ -186,97 +186,97 @@ msgstr ""
 "Adjon hozzá legalább egy felhasználói fiókot a távoli bejelentkezés "
 "engedélyezéséhez"
 
-#: ui/main.qml:200
+#: ui/main.qml:199
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify user…"
 msgstr "Felhasználó módosítása…"
 
-#: ui/main.qml:214
+#: ui/main.qml:213
 #, kde-format
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "Felhasználó eltávolítása…"
 
-#: ui/main.qml:240
+#: ui/main.qml:239
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Server Settings"
 msgstr "Kiszolgálóbeállítások"
 
-#: ui/main.qml:245
+#: ui/main.qml:244
 #, kde-format
 msgctxt "@option:check"
 msgid "Autostart on login"
 msgstr "Automatikus indítás bejelentkezéskor"
 
-#: ui/main.qml:261
+#: ui/main.qml:260
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Listening Port:"
 msgstr "Port:"
 
-#: ui/main.qml:276
+#: ui/main.qml:275
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Video quality:"
 msgstr "Videóminőség:"
 
-#: ui/main.qml:295
+#: ui/main.qml:294
 #, kde-format
 msgctxt "@label:slider"
 msgid "Responsiveness"
 msgstr "Reszponzivitás"
 
-#: ui/main.qml:301
+#: ui/main.qml:300
 #, kde-format
 msgctxt "@label:slider"
 msgid "Quality"
 msgstr "Minőség"
 
-#: ui/main.qml:308
+#: ui/main.qml:307
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Security Certificates"
 msgstr "Biztonsági tanúsítványok"
 
-#: ui/main.qml:313
+#: ui/main.qml:312
 #, kde-format
 msgctxt "@label:check generate security certificates automatically"
 msgid "Generate automatically"
 msgstr "Automatikus generálás"
 
-#: ui/main.qml:331
+#: ui/main.qml:330
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate path:"
 msgstr "Tanúsítvány útvonala:"
 
-#: ui/main.qml:346
+#: ui/main.qml:345
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate File…"
 msgstr "Tanúsítványfájl kiválasztása…"
 
-#: ui/main.qml:358
+#: ui/main.qml:357
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate key path:"
 msgstr "Tanúsítványkulcs útvonala:"
 
-#: ui/main.qml:374
+#: ui/main.qml:373
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate Key File…"
 msgstr "Tanúsítványkulcsfájl kiválasztása…"
 
-#: ui/main.qml:390
+#: ui/main.qml:389
 #, kde-format
 msgctxt "@title:window"
 msgid "Select Certificate Key file"
 msgstr "Válassza ki a tanúsítványkulcsfájlt"
 
-#: ui/main.qml:390
+#: ui/main.qml:389
 #, kde-format
 msgctxt "@title:window"
 msgid "Select Certificate file"
