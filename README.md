@@ -69,7 +69,7 @@ The following command line options are available for the example server:
 The following clients are known to work with the server:
 
 - XFreeRDP and wlFreeRDP from the FreeRDP project.
-- Reminna, a remote desktop client for Gnome.
+- Remmina, a remote desktop client for Gnome.
 - Thincast Remote Desktop Client
 - Windows Remote Desktop client, at least as shipped with a recent Windows 10.
 
