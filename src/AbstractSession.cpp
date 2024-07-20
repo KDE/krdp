@@ -76,7 +76,7 @@ void AbstractSession::setStreamingEnabled(bool enable)
 {
     d->enabled = enable;
     if (d->encodedStream) {
-        d->encodedStream->setActive(enable);
+        d->encodedStream->setActive(enable && d->started);
     }
 }
 
@@ -132,12 +132,7 @@ void AbstractSession::requestStreamingEnable(QObject *requester)
 {
     d->enableRequests.insert(requester);
     connect(requester, &QObject::destroyed, this, &AbstractSession::requestStreamingDisable);
-    if (d->enableRequests.size() > 0) {
-        d->enabled = true;
-        if (d->encodedStream) {
-            d->encodedStream->setActive(true);
-        }
-    }
+    setStreamingEnabled(true);
 }
 
 void AbstractSession::requestStreamingDisable(QObject *requester)
@@ -148,10 +143,7 @@ void AbstractSession::requestStreamingDisable(QObject *requester)
     disconnect(requester, &QObject::destroyed, this, &AbstractSession::requestStreamingDisable);
     d->enableRequests.remove(requester);
     if (d->enableRequests.size() == 0) {
-        d->enabled = false;
-        if (d->encodedStream) {
-            d->encodedStream->setActive(false);
-        }
+        setStreamingEnabled(false);
     }
 }
 
