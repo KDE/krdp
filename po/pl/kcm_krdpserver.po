@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-07-11 00:40+0000\n"
-"PO-Revision-Date: 2024-05-26 11:22+0200\n"
+"PO-Revision-Date: 2024-07-21 07:03+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
@@ -16,6 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
+"X-Generator: Lokalize 23.08.5\n"
 
 #. i18n: ectx: label, entry (ListenPort), group (General)
 #: krdpserversettings.kcfg:14
@@ -171,20 +172,16 @@ msgid "Usernames"
 msgstr "Nazwy użytkowników"
 
 #: ui/main.qml:187
-#, fuzzy, kde-format
-#| msgctxt "@label:button"
-#| msgid "Add User…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add New…"
-msgstr "Dodaj użytkownika…"
+msgstr "Dodaj nowy…"
 
 #: ui/main.qml:188
-#, fuzzy, kde-format
-#| msgctxt "@label:button"
-#| msgid "Add User…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add New User Account…"
-msgstr "Dodaj użytkownika…"
+msgstr "Dodaj konto nowego użytkownika…"
 
 #: ui/main.qml:201
 #, kde-format
@@ -196,7 +193,7 @@ msgstr "Dodaj co najmniej jedno konto użytkownika, aby móc wchodzić zdalne"
 #, kde-kuit-format
 msgctxt "@info:placeholder"
 msgid "Click <interface>Add New…</interface> to add one"
-msgstr ""
+msgstr "Naciśnij <interface>Dodaj nowy…</interface>, aby dodać nowy"
 
 #: ui/main.qml:228
 #, kde-format
