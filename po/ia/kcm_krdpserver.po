@@ -133,7 +133,7 @@ msgid ""
 "Remote desktop cannot be enabled because your system does not support H264 "
 "video encoding. Please contact your distribution regarding how to enable it."
 msgstr ""
-"Scriptorios remote nonpote esser habilitate proque tu systema non supporta "
+"Scriptorios remote non pote esser habilitate proque tu systema non supporta "
 "codification video H264. Pro favor tu continge tu distribution re como "
 "habilitar lo."
 
