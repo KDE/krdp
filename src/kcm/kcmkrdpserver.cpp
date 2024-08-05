@@ -217,6 +217,19 @@ void KRDPServerConfig::toggleServer(const bool enabled)
     QDBusConnection::sessionBus().asyncCall(msg);
 }
 
+void KRDPServerConfig::restartServer()
+{
+    qDebug(KRDPKCM) << "Restarting KRDP Server";
+    auto restartMsg = QDBusMessage::createMethodCall(dbusSystemdDestination, dbusKrdpServerServicePath, dbusSystemdUnitInterface, u"Restart"_qs);
+    restartMsg.setArguments({u"replace"_qs});
+    auto pendingCall = QDBusConnection::sessionBus().asyncCall(restartMsg);
+    auto watcher = new QDBusPendingCallWatcher(pendingCall, this);
+    connect(watcher, &QDBusPendingCallWatcher::finished, this, [&](QDBusPendingCallWatcher *w) {
+        checkServerRunning();
+        w->deleteLater();
+    });
+}
+
 void KRDPServerConfig::generateCertificate()
 {
     if (!m_serverSettings->certificate().isEmpty() || !m_serverSettings->certificateKey().isEmpty()) {

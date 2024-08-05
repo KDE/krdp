@@ -36,6 +36,7 @@ KCM.ScrollViewKCM {
     Connections {
         target: kcm
         function onKrdpServerSettingsChanged(): void {
+            restartServerWarning.visible = toggleServerSwitch.checked;
             kcm.toggleAutoconnect(settings.autostart);
         }
         function onGenerateCertificateSucceeded(): void {
@@ -76,6 +77,10 @@ KCM.ScrollViewKCM {
             }
             onTriggered: source => {
                 kcm.toggleServer(source.checked);
+                if (!source.checked) {
+                    // If we manually toggle the check off, always turn off the warning
+                    restartServerWarning.visible = false;
+                }
             }
             displayComponent: QQC2.Switch {
                 action: toggleServerSwitch
@@ -89,6 +94,25 @@ KCM.ScrollViewKCM {
         readonly property int spacings: Kirigami.Units.largeSpacing
         spacing: 0
         Layout.margins: spacings
+
+        Kirigami.InlineMessage {
+            id: restartServerWarning
+            type: Kirigami.MessageType.Warning
+            position: Kirigami.InlineMessage.Position.Header
+            Layout.fillWidth: true
+            visible: false
+            text: i18nc("@info:status", "Restart the server to apply changed settings. This may disconnect active connections.")
+            actions: [
+                Kirigami.Action {
+                    icon.name: "system-reboot-symbolic"
+                    text: i18n("Restart Server")
+                    onTriggered: source => {
+                        kcm.restartServer();
+                        restartServerWarning.visible = false;
+                    }
+                }
+            ]
+        }
 
         Kirigami.InlineMessage {
             type: Kirigami.MessageType.Error
@@ -173,10 +197,7 @@ KCM.ScrollViewKCM {
 
     view: ListView {
         id: userListView
-
         clip: true
-        enabled: !toggleServerSwitch.checked
-
         headerPositioning: ListView.OverlayHeader
         header: Kirigami.InlineViewHeader {
             width: userListView.width
@@ -208,7 +229,6 @@ KCM.ScrollViewKCM {
             id: itemDelegate
             width: userListView.width
             text: modelData
-            hoverEnabled: !toggleServerSwitch.checked
             // Help line up text and actions
             Kirigami.Theme.useAlternateBackgroundColor: true
             contentItem: RowLayout {
@@ -261,8 +281,6 @@ KCM.ScrollViewKCM {
 
         readonly property bool showAdvancedCertUI: !autoGenCertSwitch.checked
 
-        enabled: !toggleServerSwitch.checked && userListView.count > 0
-
         Item {
             Kirigami.FormData.isSection: true
             Kirigami.FormData.label: i18nc("title:group Group of RDP server settings", "Server Settings")
@@ -298,7 +316,7 @@ KCM.ScrollViewKCM {
         }
 
         ColumnLayout {
-            enabled: !toggleServerSwitch.checked && userListView.count > 0
+            enabled: userListView.count > 0
             Layout.preferredWidth: certKeyLayout.width
 
             Kirigami.FormData.label: i18nc("@label:textbox", "Video quality:")

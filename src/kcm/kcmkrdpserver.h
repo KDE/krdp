@@ -32,6 +32,7 @@ public:
     Q_INVOKABLE QStringList listenAddressList();
     Q_INVOKABLE void toggleAutoconnect(const bool enabled);
     Q_INVOKABLE void toggleServer(const bool enabled);
+    Q_INVOKABLE void restartServer();
 
     Q_INVOKABLE void generateCertificate();
     Q_INVOKABLE void checkServerRunning();
