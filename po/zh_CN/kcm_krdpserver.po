@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-07-11 00:40+0000\n"
+"POT-Creation-Date: 2024-08-06 00:40+0000\n"
 "PO-Revision-Date: 2024-05-19 19:42\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -119,13 +119,26 @@ msgctxt "@info"
 msgid "Received following error with password keychain: %1"
 msgstr "收到以下密码密钥链错误：%1"
 
-#: ui/main.qml:72
+#: ui/main.qml:73
 #, kde-format
 msgctxt "@option:check Enable RDP server"
 msgid "Enable RDP server"
 msgstr "启用 RDP 服务器"
 
-#: ui/main.qml:98
+#: ui/main.qml:104
+#, kde-format
+msgctxt "@info:status"
+msgid ""
+"Restart the server to apply changed settings. This may disconnect active "
+"connections."
+msgstr ""
+
+#: ui/main.qml:108
+#, kde-format
+msgid "Restart Server"
+msgstr ""
+
+#: ui/main.qml:122
 #, kde-format
 msgctxt "@info:status"
 msgid ""
@@ -135,152 +148,152 @@ msgstr ""
 "无法启用远程桌面，因为您的系统不支持 H264 视频编码。请联系您的发行版以了解如"
 "何启用该编解码器。"
 
-#: ui/main.qml:107
+#: ui/main.qml:131
 #, kde-format
 msgctxt "@info:status"
 msgid "Generating certificates automatically has failed!"
 msgstr "自动生成证书失败！"
 
-#: ui/main.qml:117
+#: ui/main.qml:141
 #, kde-format
 msgid ""
 "Set up remote login to connect using apps supporting the “RDP” remote "
 "desktop protocol."
 msgstr "设置远程登录以使用支持 RDP 远程桌面协议的应用。"
 
-#: ui/main.qml:126
+#: ui/main.qml:150
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Use any of the following addresses to connect to this device:"
 msgstr "使用以下任何地址以连接到此设备："
 
-#: ui/main.qml:158
+#: ui/main.qml:182
 #, kde-format
 msgctxt "@action:button"
 msgid "Copy Address to Clipboard"
 msgstr "复制地址到剪贴板"
 
-#: ui/main.qml:183
+#: ui/main.qml:204
 #, kde-format
 msgctxt "@title"
 msgid "Usernames"
 msgstr "用户名"
 
-#: ui/main.qml:187
+#: ui/main.qml:208
 #, kde-format
 msgctxt "@action:button"
 msgid "Add New…"
 msgstr "新增…"
 
-#: ui/main.qml:188
+#: ui/main.qml:209
 #, kde-format
 msgctxt "@action:button"
 msgid "Add New User Account…"
 msgstr "新增用户账户…"
 
-#: ui/main.qml:201
+#: ui/main.qml:222
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "Add at least one user account to enable remote login"
 msgstr "请添加至少一个用户账户以启用远程登录"
 
-#: ui/main.qml:202
+#: ui/main.qml:223
 #, kde-kuit-format
 msgctxt "@info:placeholder"
 msgid "Click <interface>Add New…</interface> to add one"
 msgstr "点击 <interface>新增…</interface> 添加一个用户账户"
 
-#: ui/main.qml:228
+#: ui/main.qml:248
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify user…"
 msgstr "修改用户…"
 
-#: ui/main.qml:242
+#: ui/main.qml:262
 #, kde-format
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "移除用户…"
 
-#: ui/main.qml:268
+#: ui/main.qml:286
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Server Settings"
 msgstr "服务器设置"
 
-#: ui/main.qml:273
+#: ui/main.qml:291
 #, kde-format
 msgctxt "@option:check"
 msgid "Autostart on login"
 msgstr "登录时自动启动"
 
-#: ui/main.qml:289
+#: ui/main.qml:307
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Listening Port:"
 msgstr "监听端口："
 
-#: ui/main.qml:304
+#: ui/main.qml:322
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Video quality:"
 msgstr "视频画质："
 
-#: ui/main.qml:323
+#: ui/main.qml:341
 #, kde-format
 msgctxt "@label:slider"
 msgid "Responsiveness"
 msgstr "响应速度"
 
-#: ui/main.qml:329
+#: ui/main.qml:347
 #, kde-format
 msgctxt "@label:slider"
 msgid "Quality"
 msgstr "画质"
 
-#: ui/main.qml:336
+#: ui/main.qml:354
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Security Certificates"
 msgstr "安全证书"
 
-#: ui/main.qml:341
+#: ui/main.qml:359
 #, kde-format
 msgctxt "@label:check generate security certificates automatically"
 msgid "Generate automatically"
 msgstr "自动生成"
 
-#: ui/main.qml:359
+#: ui/main.qml:377
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate path:"
 msgstr "证书路径："
 
-#: ui/main.qml:374
+#: ui/main.qml:392
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate File…"
 msgstr "选择证书文件…"
 
-#: ui/main.qml:386
+#: ui/main.qml:404
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate key path:"
 msgstr "证书密钥路径："
 
-#: ui/main.qml:402
+#: ui/main.qml:420
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate Key File…"
 msgstr "选择证书密钥文件…"
 
-#: ui/main.qml:418
+#: ui/main.qml:436
 #, kde-format
 msgctxt "@title:window"
 msgid "Select Certificate Key file"
 msgstr "选择证书密钥文件"
 
-#: ui/main.qml:418
+#: ui/main.qml:436
 #, kde-format
 msgctxt "@title:window"
 msgid "Select Certificate file"
