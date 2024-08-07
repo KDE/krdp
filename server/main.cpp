@@ -8,11 +8,15 @@
 #include <QApplication>
 #include <QCommandLineParser>
 
+#include <KAboutData>
+#include <KCrash>
 #include <KSharedConfig>
+
 #include <qt6keychain/keychain.h>
 
 #include "Server.h"
 #include "SessionController.h"
+#include "krdp_version.h"
 #include "krdpserversettings.h"
 
 int main(int argc, char **argv)
@@ -20,6 +24,11 @@ int main(int argc, char **argv)
     QApplication application{argc, argv};
     application.setApplicationName(u"krdp-server"_qs);
     application.setApplicationDisplayName(u"KRDP Server"_qs);
+
+    KAboutData about(u"krdp-server"_qs, u"KRDP Server"_qs, QStringLiteral(KRdp_VERSION_STRING));
+    KAboutData::setApplicationData(about);
+
+    KCrash::initialize();
 
     QCommandLineParser parser;
     parser.setApplicationDescription(

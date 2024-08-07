@@ -35,10 +35,7 @@ option(BUILD_PLASMA_SESSION "Build support for Plasma Screencasting extensions" 
 
 find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED Core Quick Gui Network DBus WaylandClient Qml)
 
-find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS Config DBusAddons KCMUtils I18n CoreAddons StatusNotifierItem)
-
-
-find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS Config DBusAddons)
+find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS Config DBusAddons KCMUtils I18n CoreAddons StatusNotifierItem Crash)
 
 find_package(FreeRDP 2.10 REQUIRED)
 find_package(WinPR 2.10 REQUIRED)
