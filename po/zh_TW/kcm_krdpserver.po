@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-08-06 00:40+0000\n"
-"PO-Revision-Date: 2024-07-05 15:42+0900\n"
+"PO-Revision-Date: 2024-08-09 03:46+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
@@ -131,12 +131,12 @@ msgctxt "@info:status"
 msgid ""
 "Restart the server to apply changed settings. This may disconnect active "
 "connections."
-msgstr ""
+msgstr "重新啟動伺服器來套用已變更的設定。這可能會使作用中的連線斷線。"
 
 #: ui/main.qml:108
 #, kde-format
 msgid "Restart Server"
-msgstr ""
+msgstr "重新啟動伺服器"
 
 #: ui/main.qml:122
 #, kde-format

@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-08-06 00:40+0000\n"
-"PO-Revision-Date: 2024-07-21 07:03+0200\n"
+"PO-Revision-Date: 2024-08-10 12:26+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
@@ -133,11 +133,13 @@ msgid ""
 "Restart the server to apply changed settings. This may disconnect active "
 "connections."
 msgstr ""
+"Uruchom serwer ponownie, aby zastosować zmiany. Może to rozłączyć nawiązane "
+"połączenia."
 
 #: ui/main.qml:108
 #, kde-format
 msgid "Restart Server"
-msgstr ""
+msgstr "Uruchom serwer ponownie"
 
 #: ui/main.qml:122
 #, kde-format
