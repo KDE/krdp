@@ -4,10 +4,14 @@
 add_library(KRdp)
 
 if (BUILD_PLASMA_SESSION)
+    if (Qt6_VERSION VERSION_GREATER_EQUAL "6.8.0")
+        set(private_code_option  "PRIVATE_CODE")
+    endif()
     qt6_generate_wayland_protocol_client_sources(KRdp FILES
         ${PLASMA_WAYLAND_PROTOCOLS_DIR}/zkde-screencast-unstable-v1.xml
         ${PLASMA_WAYLAND_PROTOCOLS_DIR}/fake-input.xml
         ${Wayland_DATADIR}/wayland.xml
+        ${private_code_option}
     )
     target_sources(KRdp PRIVATE screencasting.cpp PlasmaScreencastV1Session.cpp)
 endif()
