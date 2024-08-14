@@ -79,7 +79,7 @@ public:
      * \param reason The reason to close the connection. May set error state if
      *               it is something different than CloseReason::None.
      */
-    void close(CloseReason reason = CloseReason::None);
+    void closeConnection(CloseReason reason = CloseReason::None);
 
     /**
      * The InputHandler instance associated with this session.
@@ -95,6 +95,8 @@ public:
     Cursor *cursor() const;
 
     NetworkDetection *networkDetection() const;
+
+    qintptr connectionSocketHandle;
 
 private:
     friend BOOL peerCapabilities(freerdp_peer *);

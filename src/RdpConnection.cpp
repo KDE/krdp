@@ -8,6 +8,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include "RdpConnection.h"
+#include "AbstractSession.h"
 
 #include <filesystem>
 #include <optional>
@@ -159,6 +160,7 @@ RdpConnection::RdpConnection(Server *server, qintptr socketHandle)
     , d(std::make_unique<Private>())
 {
     d->server = server;
+    connectionSocketHandle = socketHandle;
     d->socketHandle = socketHandle;
 
     d->inputHandler = std::make_unique<InputHandler>(this);
@@ -177,7 +179,7 @@ RdpConnection::RdpConnection(Server *server, qintptr socketHandle)
 
 RdpConnection::~RdpConnection()
 {
-    if (d->state == State::Streaming) {
+    if (d->state == State::Streaming || d->state == State::Running) {
         d->peer->Close(d->peer);
     }
 
@@ -206,7 +208,7 @@ void RdpConnection::setState(KRdp::RdpConnection::State newState)
     Q_EMIT stateChanged(newState);
 }
 
-void RdpConnection::close(RdpConnection::CloseReason reason)
+void RdpConnection::closeConnection(RdpConnection::CloseReason reason)
 {
     switch (reason) {
     case CloseReason::VideoInitFailed:
@@ -216,7 +218,12 @@ void RdpConnection::close(RdpConnection::CloseReason reason)
         break;
     }
 
-    d->peer->Close(d->peer);
+    if (d->state == State::Running || d->state == State::Streaming) {
+        d->peer->Close(d->peer);
+    } else {
+        close(connectionSocketHandle);
+        onClose();
+    }
 }
 
 InputHandler *RdpConnection::inputHandler() const
@@ -246,6 +253,7 @@ void RdpConnection::initialize()
     d->peer = freerdp_peer_new(d->socketHandle);
     if (!d->peer) {
         qCWarning(KRDP) << "Failed to create peer";
+        closeConnection();
         return;
     }
 
@@ -262,6 +270,7 @@ void RdpConnection::initialize()
 #endif
     if (!result) {
         qCWarning(KRDP) << "Failed to create peer context";
+        closeConnection();
         return;
     }
 
@@ -273,6 +282,7 @@ void RdpConnection::initialize()
     createSamFile(d->samFile, d->server->users());
     if (!freerdp_settings_set_string(settings, FreeRDP_NtlmSamFile, d->samFile.fileName().toUtf8().data())) {
         qCWarning(KRDP) << "Failed to set SAM database";
+        closeConnection();
         return;
     }
 
@@ -351,6 +361,7 @@ void RdpConnection::initialize()
 
     if (!d->peer->Initialize(d->peer)) {
         qCWarning(KRDP) << "Unable to initialize peer";
+        closeConnection();
         return;
     }
 

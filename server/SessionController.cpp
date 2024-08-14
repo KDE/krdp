@@ -134,6 +134,8 @@ void SessionController::onNewConnection(KRdp::RdpConnection *newConnection)
     wrapper->session->setVideoQuality(m_quality.value());
 
     connect(wrapper.get(), &SessionWrapper::connectionDestroyed, this, [this](SessionWrapper *wrapper) {
+        qWarning() << "SessionWrapper::connectionDestroyed";
+        wrapper->session->requestStreamingDisable(this);
         m_wrappers.erase(std::remove_if(m_wrappers.begin(),
                                         m_wrappers.end(),
                                         [wrapper](std::unique_ptr<SessionWrapper> &entry) {
@@ -143,7 +145,8 @@ void SessionController::onNewConnection(KRdp::RdpConnection *newConnection)
     });
 
     connect(wrapper.get(), &SessionWrapper::sessionError, this, [newConnection] {
-        newConnection->close(KRdp::RdpConnection::CloseReason::None);
+        qWarning() << "SessionWrapper::sessionError";
+        newConnection->closeConnection(KRdp::RdpConnection::CloseReason::None);
     });
 
     m_wrappers.push_back(std::move(wrapper));
