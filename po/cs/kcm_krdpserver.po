@@ -136,7 +136,7 @@ msgstr ""
 #: ui/main.qml:108
 #, kde-format
 msgid "Restart Server"
-msgstr ""
+msgstr "Restartovat server"
 
 #: ui/main.qml:122
 #, kde-format
