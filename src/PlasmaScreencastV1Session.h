@@ -33,6 +33,8 @@ public:
     PlasmaScreencastV1Session(Server *server);
     ~PlasmaScreencastV1Session() override;
 
+    void start() override;
+
     void sendEvent(const std::shared_ptr<QEvent> &event) override;
 
 private:

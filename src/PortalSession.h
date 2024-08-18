@@ -37,6 +37,7 @@ public:
     explicit PortalSession(Server *server);
     ~PortalSession() override;
 
+    void start() override;
     /**
      * Send a new event to the portal.
      *

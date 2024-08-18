@@ -162,6 +162,16 @@ PlasmaScreencastV1Session::PlasmaScreencastV1Session(Server *server)
     : AbstractSession(server)
     , d(std::make_unique<Private>())
 {
+    d->remoteInterface = new FakeInput();
+}
+
+PlasmaScreencastV1Session::~PlasmaScreencastV1Session()
+{
+    qCDebug(KRDP) << "Closing Plasma Remote Session";
+}
+
+void PlasmaScreencastV1Session::start()
+{
     d->request = d->m_screencasting.createWorkspaceStream(Screencasting::Metadata);
     connect(d->request, &ScreencastingStream::failed, this, &PlasmaScreencastV1Session::error);
     connect(d->request, &ScreencastingStream::created, this, [this](uint nodeId) {
@@ -177,12 +187,6 @@ PlasmaScreencastV1Session::PlasmaScreencastV1Session(Server *server)
         connect(encodedStream, &PipeWireEncodedStream::cursorChanged, this, &PlasmaScreencastV1Session::cursorUpdate);
         setStarted(true);
     });
-    d->remoteInterface = new FakeInput();
-}
-
-PlasmaScreencastV1Session::~PlasmaScreencastV1Session()
-{
-    qCDebug(KRDP) << "Closing Plasma Remote Session";
 }
 
 void PlasmaScreencastV1Session::sendEvent(const std::shared_ptr<QEvent> &event)

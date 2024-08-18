@@ -21,6 +21,11 @@ public:
     AbstractSession(Server *server);
     ~AbstractSession() override;
 
+    /**
+     * Properties have been initialised and we can start the session
+     */
+    virtual void start() = 0;
+
     bool streamingEnabled() const;
     void setStreamingEnabled(bool enable);
     void setVideoFrameRate(quint32 framerate);

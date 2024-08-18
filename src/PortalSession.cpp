@@ -96,14 +96,6 @@ PortalSession::PortalSession(Server *server)
         qCWarning(KRDP) << "Could not connect to Freedesktop Remote Desktop Portal";
         return;
     }
-
-    qCDebug(KRDP) << "Initializing Freedesktop Portal Session";
-
-    auto parameters = QVariantMap{
-        {QStringLiteral("handle_token"), createHandleToken()},
-        {QStringLiteral("session_handle_token"), createHandleToken()},
-    };
-    new PortalRequest(d->remoteInterface->CreateSession(parameters), this, &PortalSession::onCreateSession);
 }
 
 PortalSession::~PortalSession()
@@ -119,6 +111,17 @@ PortalSession::~PortalSession()
     QDBusConnection::sessionBus().asyncCall(closeMessage);
 
     qCDebug(KRDP) << "Closing Freedesktop Portal Session";
+}
+
+void PortalSession::start()
+{
+    qCDebug(KRDP) << "Initializing Freedesktop Portal Session";
+
+    auto parameters = QVariantMap{
+        {QStringLiteral("handle_token"), createHandleToken()},
+        {QStringLiteral("session_handle_token"), createHandleToken()},
+    };
+    new PortalRequest(d->remoteInterface->CreateSession(parameters), this, &PortalSession::onCreateSession);
 }
 
 void PortalSession::sendEvent(const std::shared_ptr<QEvent> &event)
