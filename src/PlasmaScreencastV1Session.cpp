@@ -172,7 +172,11 @@ PlasmaScreencastV1Session::~PlasmaScreencastV1Session()
 
 void PlasmaScreencastV1Session::start()
 {
-    d->request = d->m_screencasting.createWorkspaceStream(Screencasting::Metadata);
+    if (auto vm = virtualMonitor()) {
+        d->request = d->m_screencasting.createVirtualMonitorStream(vm->name, vm->size, vm->dpr, Screencasting::Metadata);
+    } else if (!activeStream()) {
+        d->request = d->m_screencasting.createWorkspaceStream(Screencasting::Metadata);
+    }
     connect(d->request, &ScreencastingStream::failed, this, &PlasmaScreencastV1Session::error);
     connect(d->request, &ScreencastingStream::created, this, [this](uint nodeId) {
         qCDebug(KRDP) << "Started Plasma session";

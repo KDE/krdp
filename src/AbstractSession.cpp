@@ -18,6 +18,7 @@ public:
     std::unique_ptr<PipeWireEncodedStream> encodedStream;
 
     std::optional<int> activeStream;
+    std::optional<VirtualMonitor> virtualMonitor;
     bool started = false;
     bool enabled = false;
     QSize size;
@@ -51,9 +52,21 @@ int AbstractSession::activeStream() const
     return d->activeStream.value_or(-1);
 }
 
+std::optional<VirtualMonitor> AbstractSession::virtualMonitor() const
+{
+    return d->virtualMonitor;
+}
+
 void AbstractSession::setActiveStream(int stream)
 {
+    Q_ASSERT(!d->virtualMonitor);
     d->activeStream = stream;
+}
+
+void AbstractSession::setVirtualMonitor(const VirtualMonitor &virtualMonitor)
+{
+    Q_ASSERT(!d->activeStream.has_value());
+    d->virtualMonitor = virtualMonitor;
 }
 
 void AbstractSession::setVideoQuality(quint8 quality)

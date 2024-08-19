@@ -122,6 +122,11 @@ void SessionController::setMonitorIndex(const std::optional<int> &index)
     m_monitorIndex = index;
 }
 
+void SessionController::setVirtualMonitor(const KRdp::VirtualMonitor &virtualMonitor)
+{
+    m_virtualMonitor = virtualMonitor;
+}
+
 void SessionController::setQuality(const std::optional<int> &quality)
 {
     m_quality = quality;
@@ -130,7 +135,11 @@ void SessionController::setQuality(const std::optional<int> &quality)
 void SessionController::onNewConnection(KRdp::RdpConnection *newConnection)
 {
     auto wrapper = std::make_unique<SessionWrapper>(newConnection, makeSession(), m_sni);
-    wrapper->session->setActiveStream(m_monitorIndex.value_or(-1));
+    if (m_virtualMonitor) {
+        wrapper->session->setVirtualMonitor(*m_virtualMonitor);
+    } else {
+        wrapper->session->setActiveStream(m_monitorIndex.value_or(-1));
+    }
     wrapper->session->setVideoQuality(m_quality.value());
 
     connect(wrapper.get(), &SessionWrapper::connectionDestroyed, this, [this](SessionWrapper *wrapper) {

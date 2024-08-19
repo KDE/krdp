@@ -213,11 +213,13 @@ void PortalSession::onDevicesSelected(uint code, const QVariantMap & /*result*/)
         return;
     }
 
-    auto parameters = QVariantMap{
-        {QStringLiteral("types"), 1u}, // only MONITOR is supported
-        {QStringLiteral("multiple"), activeStream() >= 0},
-        {QStringLiteral("handle_token"), createHandleToken()},
-    };
+    QVariantMap parameters;
+    if (virtualMonitor()) {
+        parameters = {{QStringLiteral("types"), 4u}}; // VIRTUAL
+    } else {
+        parameters = {{QStringLiteral("types"), 1u}, // MONITOR
+                      {QStringLiteral("multiple"), activeStream() >= 0}};
+    }
 
     new PortalRequest(d->screencastInterface->SelectSources(d->sessionPath, parameters), this, &PortalSession::onSourcesSelected);
 }

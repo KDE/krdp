@@ -14,6 +14,12 @@ namespace KRdp
 {
 class Server;
 
+struct VirtualMonitor {
+    QString name;
+    QSize size;
+    qreal dpr;
+};
+
 class KRDP_EXPORT AbstractSession : public QObject
 {
     Q_OBJECT
@@ -30,6 +36,7 @@ public:
     void setStreamingEnabled(bool enable);
     void setVideoFrameRate(quint32 framerate);
     void setActiveStream(int stream);
+    void setVirtualMonitor(const VirtualMonitor &vm);
     void setVideoQuality(quint8 quality);
 
     void requestStreamingEnable(QObject *requester);
@@ -66,6 +73,7 @@ Q_SIGNALS:
 protected:
     QSize size() const;
     QSize logicalSize() const;
+    std::optional<VirtualMonitor> virtualMonitor() const;
     int activeStream() const;
 
     void setStarted(bool started);

@@ -144,6 +144,13 @@ ScreencastingStream *Screencasting::createRegionStream(QRect g, qreal scale, Scr
     return stream;
 }
 
+ScreencastingStream *Screencasting::createVirtualMonitorStream(const QString &name, const QSize &resolution, qreal dpr, Screencasting::CursorMode mode)
+{
+    auto stream = new ScreencastingStream(this);
+    stream->d->init(d->stream_virtual_output(name, resolution.width(), resolution.height(), wl_fixed_from_double(dpr), mode));
+    return stream;
+}
+
 void Screencasting::destroy()
 {
     d.reset(nullptr);

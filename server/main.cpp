@@ -7,6 +7,7 @@
 
 #include <QApplication>
 #include <QCommandLineParser>
+#include <QRegularExpression>
 
 #include <KAboutData>
 #include <KCrash>
@@ -42,6 +43,10 @@ int main(int argc, char **argv)
         {u"certificate"_qs, u"The TLS certificate file to use."_qs, u"certificate"_qs, u"server.crt"_qs},
         {u"certificate-key"_qs, u"The TLS certificate key to use."_qs, u"certificate-key"_qs, u"server.key"_qs},
         {u"monitor"_qs, u"The index of the monitor to use when streaming."_qs, u"monitor"_qs, u"-1"_qs},
+        {u"virtual-monitor"_qs,
+         u"Creates a new virtual output to connect to (WIDTHxHEIGHT@SCALE, e.g. 1920x1080@1). Incompatible with --monitor."_qs,
+         u"data"_qs,
+         u"1920x1080@1"_qs},
         {u"quality"_qs, u"Encoding quality of the stream, from 0 (lowest) to 100 (highest)"_qs, u"quality"_qs},
 #ifdef WITH_PLASMA_SESSION
         {u"plasma"_qs, u"Use Plasma protocols instead of XDP"_qs},
@@ -112,7 +117,18 @@ int main(int argc, char **argv)
     }
 
     SessionController controller(&server, parser.isSet(u"plasma"_qs) ? SessionController::SessionType::Plasma : SessionController::SessionType::Portal);
-    controller.setMonitorIndex(parser.isSet(u"monitor"_qs) ? std::optional(parser.value(u"monitor"_qs).toInt()) : std::nullopt);
+    if (parser.isSet(u"virtual-monitor"_qs)) {
+        const QString vmData = parser.value(u"virtual-monitor"_qs);
+        const QRegularExpression rx(uR"(\d+)x(\d+)@([\d.]+)"_qs);
+        const auto match = rx.match(vmData);
+        if (!match.hasMatch()) {
+            qWarning() << "failed to parse" << vmData << ".  Should be WIDTHxHEIGHT@SCALE";
+            return 1;
+        }
+        controller.setVirtualMonitor({vmData, {match.capturedView(1).toInt(), match.capturedView(2).toInt()}, match.capturedView(3).toDouble()});
+    } else {
+        controller.setMonitorIndex(parser.isSet(u"monitor"_qs) ? std::optional(parser.value(u"monitor"_qs).toInt()) : std::nullopt);
+    }
     controller.setQuality(parserValueWithDefault(u"quality", config->quality()));
 
     if (!server.start()) {

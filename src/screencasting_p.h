@@ -48,6 +48,7 @@ public:
     ScreencastingStream *createOutputStream(QScreen *screen, CursorMode mode);
     ScreencastingStream *createWorkspaceStream(CursorMode mode);
     ScreencastingStream *createRegionStream(QRect g, qreal scale, CursorMode mode);
+    ScreencastingStream *createVirtualMonitorStream(const QString &name, const QSize &resolution, qreal dpr, CursorMode mode);
 
     void destroy();
 

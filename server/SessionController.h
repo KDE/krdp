@@ -4,6 +4,7 @@
 #pragma once
 
 #include "RdpConnection.h"
+#include <AbstractSession.h>
 #include <KStatusNotifierItem>
 #include <vector>
 
@@ -30,6 +31,7 @@ public:
     SessionController(KRdp::Server *server, SessionType sessionType);
     ~SessionController() override;
 
+    void setVirtualMonitor(const KRdp::VirtualMonitor &vm);
     void setMonitorIndex(const std::optional<int> &index);
     void setQuality(const std::optional<int> &quality);
     void setSNIStatus(const KRdp::RdpConnection::State state);
@@ -43,6 +45,7 @@ private:
     SessionType m_sessionType;
     std::optional<int> m_monitorIndex;
     std::optional<int> m_quality;
+    std::optional<KRdp::VirtualMonitor> m_virtualMonitor;
 
     std::unique_ptr<KRdp::AbstractSession> m_initializationSession;
 
