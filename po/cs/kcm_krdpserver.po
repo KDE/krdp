@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-08-06 00:40+0000\n"
-"PO-Revision-Date: 2024-07-08 16:54+0200\n"
+"PO-Revision-Date: 2024-08-28 11:21+0200\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Lokalize 24.05.1\n"
+"X-Generator: Lokalize 24.08.0\n"
 
 #. i18n: ectx: label, entry (ListenPort), group (General)
 #: krdpserversettings.kcfg:14
@@ -123,7 +123,7 @@ msgstr ""
 #, kde-format
 msgctxt "@option:check Enable RDP server"
 msgid "Enable RDP server"
-msgstr ""
+msgstr "Povolit server RDP"
 
 #: ui/main.qml:104
 #, kde-format
@@ -175,7 +175,7 @@ msgstr "Kopírovat adresu do schránky"
 #, kde-format
 msgctxt "@title"
 msgid "Usernames"
-msgstr ""
+msgstr "Uživatelská jména"
 
 #: ui/main.qml:208
 #, kde-format
@@ -205,7 +205,7 @@ msgstr "Klikněte na tlačítko <interface>Přidat nové...</interface> pro při
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify user…"
-msgstr ""
+msgstr "Upravit uživatele…"
 
 #: ui/main.qml:262
 #, kde-format
@@ -223,7 +223,7 @@ msgstr "Nastavení serveru"
 #, kde-format
 msgctxt "@option:check"
 msgid "Autostart on login"
-msgstr ""
+msgstr "Automaticky spustit při přihlášení"
 
 #: ui/main.qml:307
 #, kde-format
@@ -253,37 +253,37 @@ msgstr "Kvalita"
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Security Certificates"
-msgstr ""
+msgstr "Bezpečnostní certifikáty"
 
 #: ui/main.qml:359
 #, kde-format
 msgctxt "@label:check generate security certificates automatically"
 msgid "Generate automatically"
-msgstr ""
+msgstr "Generovat automaticky"
 
 #: ui/main.qml:377
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate path:"
-msgstr ""
+msgstr "Cesta k certifikátu:"
 
 #: ui/main.qml:392
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate File…"
-msgstr ""
+msgstr "Vyberte soubor certifikátu…"
 
 #: ui/main.qml:404
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate key path:"
-msgstr ""
+msgstr "Cesta ke klíči certifikátu:"
 
 #: ui/main.qml:420
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate Key File…"
-msgstr ""
+msgstr "Vyberte soubor klíče certifikátu…"
 
 #: ui/main.qml:436
 #, kde-format
