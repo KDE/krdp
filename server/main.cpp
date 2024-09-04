@@ -119,7 +119,7 @@ int main(int argc, char **argv)
     SessionController controller(&server, parser.isSet(u"plasma"_qs) ? SessionController::SessionType::Plasma : SessionController::SessionType::Portal);
     if (parser.isSet(u"virtual-monitor"_qs)) {
         const QString vmData = parser.value(u"virtual-monitor"_qs);
-        const QRegularExpression rx(uR"(\d+)x(\d+)@([\d.]+)"_qs);
+        const QRegularExpression rx(uR"((\d+)x(\d+)@([\d.]+))"_qs);
         const auto match = rx.match(vmData);
         if (!match.hasMatch()) {
             qWarning() << "failed to parse" << vmData << ".  Should be WIDTHxHEIGHT@SCALE";
