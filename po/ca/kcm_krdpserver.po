@@ -309,10 +309,3 @@ msgstr "Selecció de fitxer de clau de certificat"
 msgctxt "@title:window"
 msgid "Select Certificate file"
 msgstr "Selecció del fitxer de certificat"
-
-#~ msgid "The address the server listens on"
-#~ msgstr "L'adreça que escolta el servidor"
-
-#~ msgctxt "@label:textbox"
-#~ msgid "Listening Address:"
-#~ msgstr "Adreça d'escolta:"
