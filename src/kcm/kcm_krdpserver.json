@@ -66,5 +66,15 @@
         "Name[zh_TW]": "遠端桌面"
     },
     "X-KDE-Keywords": "KRDP,remote desktop",
+    "X-KDE-Keywords[ca]": "KRDP,escriptori remot",
+    "X-KDE-Keywords[he]": "שולחן עבודה מרוחק,KRDP",
+    "X-KDE-Keywords[ia]": "KRDP, Scriptorio remote",
+    "X-KDE-Keywords[ka]": "დაშორებული სამუშაო მაგიდა, KRDP",
+    "X-KDE-Keywords[nl]": "KRDP,bureaublad op afstand",
+    "X-KDE-Keywords[sl]": "KRDP,oddaljeno namizje",
+    "X-KDE-Keywords[sv]": "KRDP,fjärrskrivbord",
+    "X-KDE-Keywords[tr]": "uzak masaüstü,krdp,rdp",
+    "X-KDE-Keywords[uk]": "KRDP,remote desktop,віддалена стільниця",
+    "X-KDE-Keywords[x-test]": "xxKRDPxx,xxremote desktopxx",
     "X-KDE-System-Settings-Parent-Category": "network"
 }
