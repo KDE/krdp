@@ -66,5 +66,9 @@
         "Name[zh_TW]": "遠端桌面"
     },
     "X-KDE-Keywords": "KRDP,remote desktop",
+    "X-KDE-Keywords[ca]": "KRDP,escriptori remot",
+    "X-KDE-Keywords[sl]": "KRDP,oddaljeno namizje",
+    "X-KDE-Keywords[sv]": "KRDP,fjärrskrivbord",
+    "X-KDE-Keywords[tr]": "uzak masaüstü,krdp,rdp",
     "X-KDE-System-Settings-Parent-Category": "network"
 }
