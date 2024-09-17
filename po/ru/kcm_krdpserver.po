@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-08-06 00:40+0000\n"
-"PO-Revision-Date: 2024-09-11 15:47+0300\n"
+"PO-Revision-Date: 2024-09-16 16:28+0300\n"
 "Last-Translator: Olesya Gerasimenko <translation-team@basealt.ru>\n"
 "Language-Team: Basealt Translation Team\n"
 "Language: ru\n"
@@ -133,11 +133,13 @@ msgid ""
 "Restart the server to apply changed settings. This may disconnect active "
 "connections."
 msgstr ""
+"Перезапустить сервер для применения изменённых параметров. Это может "
+"привести к разрыву активных соединений."
 
 #: ui/main.qml:108
 #, kde-format
 msgid "Restart Server"
-msgstr ""
+msgstr "Перезапустить сервер"
 
 #: ui/main.qml:122
 #, kde-format
@@ -185,16 +187,16 @@ msgid "Usernames"
 msgstr "Имена пользователей"
 
 #: ui/main.qml:208
-#, fuzzy, kde-format
+#, kde-format
 msgctxt "@action:button"
 msgid "Add New…"
-msgstr "Добавить пользователя…"
+msgstr "Добавить…"
 
 #: ui/main.qml:209
-#, fuzzy, kde-format
+#, kde-format
 msgctxt "@action:button"
 msgid "Add New User Account…"
-msgstr "Добавить пользователя…"
+msgstr "Добавить учётную запись пользователя…"
 
 #: ui/main.qml:222
 #, kde-format
@@ -209,6 +211,7 @@ msgstr ""
 msgctxt "@info:placeholder"
 msgid "Click <interface>Add New…</interface> to add one"
 msgstr ""
+"Для добавления пользователя нажмите кнопку <interface>Добавить…</interface>"
 
 #: ui/main.qml:248
 #, kde-format
