@@ -78,10 +78,12 @@
     "X-KDE-Keywords[ia]": "KRDP, Scriptorio remote",
     "X-KDE-Keywords[it]": "KRDP,desktop remoto",
     "X-KDE-Keywords[ka]": "KRDP,remote desktop,დაშორებული სამუშაო მაგიდა",
+    "X-KDE-Keywords[pl]": "KRDP,pulpit zdalny",
     "X-KDE-Keywords[ru]": "KRDP,удалённый рабочий стол",
     "X-KDE-Keywords[sl]": "KRDP,oddaljeno namizje",
     "X-KDE-Keywords[sv]": "KRDP,fjärrskrivbord",
     "X-KDE-Keywords[tr]": "uzak masaüstü,krdp,rdp",
+    "X-KDE-Keywords[uk]": "KRDP,remote desktop,віддалена стільниця",
     "X-KDE-Keywords[zh_TW]": "KRDP,遠端桌面",
     "X-KDE-System-Settings-Parent-Category": "network"
 }
