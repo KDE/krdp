@@ -2,6 +2,7 @@
     "KPlugin": {
         "Description": "Configure Remote Desktop",
         "Description[ar]": "اضبط سطح المكتب بعيد",
+        "Description[bg]": "Настройване на отдалечено работно място",
         "Description[ca@valencia]": "Configureu escriptori remot",
         "Description[ca]": "Configuració d'escriptori remot",
         "Description[cs]": "Nastavit vzdálenou plochu",
@@ -36,6 +37,7 @@
         "Icon": "preferences-system-network-remote",
         "Name": "Remote Desktop",
         "Name[ar]": "سطح المكتب بعيد",
+        "Name[bg]": "Отдалечено работно място",
         "Name[ca@valencia]": "Escriptori remot",
         "Name[ca]": "Escriptori remot",
         "Name[cs]": "Vzdálená plocha",
@@ -66,6 +68,7 @@
         "Name[zh_TW]": "遠端桌面"
     },
     "X-KDE-Keywords": "KRDP,remote desktop",
+    "X-KDE-Keywords[bg]": "KRDP,отдалечено работно място",
     "X-KDE-Keywords[ca@valencia]": "KRDP,escriptori remot",
     "X-KDE-Keywords[ca]": "KRDP,escriptori remot",
     "X-KDE-Keywords[cs]": "KRDP,vzdálená plocha",
@@ -75,6 +78,7 @@
     "X-KDE-Keywords[fr]": "KRDP, bureau à distance",
     "X-KDE-Keywords[gl]": "KRDP,escritorio remoto",
     "X-KDE-Keywords[he]": "שולחן עבודה מרוחק,KRDP",
+    "X-KDE-Keywords[hu]": "KRDP,távoli asztal",
     "X-KDE-Keywords[ia]": "KRDP, Scriptorio remote",
     "X-KDE-Keywords[it]": "KRDP,desktop remoto",
     "X-KDE-Keywords[ka]": "KRDP,remote desktop,დაშორებული სამუშაო მაგიდა",
