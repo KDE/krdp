@@ -68,6 +68,7 @@
         "Name[zh_TW]": "遠端桌面"
     },
     "X-KDE-Keywords": "KRDP,remote desktop",
+    "X-KDE-Keywords[ar]": "سطح المكتب بعيد,كردب",
     "X-KDE-Keywords[bg]": "KRDP,отдалечено работно място",
     "X-KDE-Keywords[ca@valencia]": "KRDP,escriptori remot",
     "X-KDE-Keywords[ca]": "KRDP,escriptori remot",
