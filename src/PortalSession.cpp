@@ -196,10 +196,10 @@ void PortalSession::onCreateSession(uint code, const QVariantMap &result)
         {QStringLiteral("handle_token"), createHandleToken()},
         {QStringLiteral("persist_mode"), PermissionsPersistUntilExplicitlyRevoked},
     };
-    KConfigGroup restorationGroup = KSharedConfig::openConfig(QStringLiteral("krdpserverrc"))->group(QStringLiteral("General"));
+    KConfigGroup restorationGroup = KSharedConfig::openStateConfig()->group(QStringLiteral("General"));
     QString restoreToken = restorationGroup.readEntry(QStringLiteral("restorationToken"));
 
-    // this is a compatibility path for krdp < 6.3 that used a different name
+    // this is a compatibility path for krdp < 6.3 that used a different name and in .config
     // in 6.4 onwards it can be killed
     if (restoreToken.isEmpty()) {
         KConfigGroup restorationGroup = KSharedConfig::openConfig(QStringLiteral("krdp-serverrc"))->group(QStringLiteral("General"));
@@ -260,7 +260,7 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
         return;
     }
 
-    KConfigGroup restorationGroup = KSharedConfig::openConfig(QStringLiteral("krdpserverrc"))->group(QStringLiteral("General"));
+    KConfigGroup restorationGroup = KSharedConfig::openStateConfig()->group(QStringLiteral("General"));
     restorationGroup.writeEntry("restorationToken", result.value(QStringLiteral("restore_token")));
 
     const auto streams = qdbus_cast<QList<PortalSessionStream>>(result.value(QStringLiteral("streams")));
