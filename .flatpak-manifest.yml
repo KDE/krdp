@@ -60,14 +60,6 @@ modules:
     -   "-DBUILD_TRANSLATIONS=NO"
     -   "-DBUILD_WITH_QT6=ON"
 
--   name: extra-cmake-modules
-    config-opts:
-    -   "-DENABLE_TESTING=OFF"
-    buildsystem: cmake-ninja
-    sources:
-    -   type: git
-        url: https://invent.kde.org/frameworks/extra-cmake-modules.git
-
 -   name: kpipewire
     config-opts:
     -   "-DBUILD_TESTING=OFF"
@@ -75,15 +67,6 @@ modules:
     sources:
     -   type: git
         url: https://invent.kde.org/plasma/kpipewire
-
-# Temporary addition until SDK is updated
--   name: kconfig
-    config-opts:
-    -   "-DBUILD_TESTING=OFF"
-    buildsystem: cmake-ninja
-    sources:
-    -   type: git
-        url: https://invent.kde.org/frameworks/kconfig
 
 -   name: krdp
     buildsystem: cmake-ninja
