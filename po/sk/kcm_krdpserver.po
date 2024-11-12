@@ -1,18 +1,18 @@
 # translation of kcm_krdpserver.po to Slovak
-# Roman Paholik <wizzardsk@gmail.com>, 2024.
+# SPDX-FileCopyrightText: 2024 Roman Paholik <wizzardsk@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_krdpserver\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-08-06 00:40+0000\n"
-"PO-Revision-Date: 2017-11-01 11:06+0100\n"
-"Last-Translator: Roman Paholik <wizzardsk@gmail.com>\n"
+"PO-Revision-Date: 2024-11-11 17:49+0100\n"
+"Last-Translator: Roman Paholík <wizzardsk@gmail.com>\n"
 "Language-Team: Slovak <kde-sk@linux.sk>\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 2.0\n"
+"X-Generator: Lokalize 24.08.3\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. i18n: ectx: label, entry (ListenPort), group (General)
@@ -73,7 +73,7 @@ msgstr ""
 #, kde-format
 msgctxt "@title:window"
 msgid "Add new user"
-msgstr ""
+msgstr "Pridať nového používateľa"
 
 #: ui/EditUserModal.qml:20
 #, kde-format
@@ -85,13 +85,13 @@ msgstr ""
 #, kde-format
 msgctxt "@label:button"
 msgid "Save"
-msgstr ""
+msgstr "Uložiť"
 
 #: ui/EditUserModal.qml:78
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Username:"
-msgstr ""
+msgstr "Užívateľské meno:"
 
 #: ui/EditUserModal.qml:92
 #, kde-format
@@ -103,7 +103,7 @@ msgstr ""
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Password:"
-msgstr ""
+msgstr "Heslo:"
 
 #: ui/KeychainErrorDialog.qml:14
 #, kde-format
@@ -134,7 +134,7 @@ msgstr ""
 #: ui/main.qml:108
 #, kde-format
 msgid "Restart Server"
-msgstr ""
+msgstr "Reštartovať server"
 
 #: ui/main.qml:122
 #, kde-format
@@ -179,7 +179,7 @@ msgstr ""
 #, kde-format
 msgctxt "@action:button"
 msgid "Add New…"
-msgstr ""
+msgstr "Pridať nový..."
 
 #: ui/main.qml:209
 #, kde-format
@@ -227,13 +227,13 @@ msgstr ""
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Listening Port:"
-msgstr ""
+msgstr "Počúvať na porte:"
 
 #: ui/main.qml:322
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Video quality:"
-msgstr ""
+msgstr "Kvalita videa:"
 
 #: ui/main.qml:341
 #, kde-format
@@ -245,7 +245,7 @@ msgstr ""
 #, kde-format
 msgctxt "@label:slider"
 msgid "Quality"
-msgstr ""
+msgstr "Kvalita"
 
 #: ui/main.qml:354
 #, kde-format
@@ -293,4 +293,4 @@ msgstr ""
 #, kde-format
 msgctxt "@title:window"
 msgid "Select Certificate file"
-msgstr ""
+msgstr "Vyberte súbor certifikátu"
