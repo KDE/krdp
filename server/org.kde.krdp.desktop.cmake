@@ -6,6 +6,7 @@ Type=Application
 Exec=@CMAKE_INSTALL_PREFIX@/bin/krdpserver
 Icon=krfb
 Terminal=false
+NoDisplay=true
 Name=KRdp
 Name[ar]=كي أردبي
 Name[ast]=KRdp
