@@ -36,7 +36,7 @@ The server will then listen on all interfaces on port 3389, and clients can conn
 
 # Connecting to the example server
 
-To connect to the server, make sure to pass the username and password the server was started with.
+To connect to the server, make sure to pass the username and password the server was started with. Note that the username is case-sensitive; this may be especially unexpected for those using Microsoft Windows RDP clients to connect, as system usernames on that platform are generally not case-sensitive.
 
 Currently, the main client that has been used for testing and is confirmed to work is the FreeRDP client. Launch the FreeRDP client with the following command: `xfreerdp /u:<username> /p:<password> -clipboard /v:<ip_address>:3389`, filling in the username, password and IP address as appropriate. If testing locally, substitute `localhost` for an IP address.
 
