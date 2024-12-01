@@ -157,7 +157,13 @@ void PortalSession::sendEvent(const std::shared_ptr<QEvent> &event)
     }
     case QEvent::Wheel: {
         auto we = std::static_pointer_cast<QWheelEvent>(event);
-        d->remoteInterface->NotifyPointerAxisDiscrete(d->sessionPath, QVariantMap{}, 0, we->angleDelta().y() / 120);
+        auto delta = we->angleDelta();
+        if (delta.y() != 0) {
+            d->remoteInterface->NotifyPointerAxisDiscrete(d->sessionPath, QVariantMap{}, 0 /* Vertical */, delta.y() / 120);
+        }
+        if (delta.x() != 0) {
+            d->remoteInterface->NotifyPointerAxisDiscrete(d->sessionPath, QVariantMap{}, 1 /* Horizontal */, delta.x() / 120);
+        }
         break;
     }
     case QEvent::KeyPress:

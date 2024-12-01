@@ -117,15 +117,22 @@ bool InputHandler::mouseEvent(uint16_t x, uint16_t y, uint16_t flags)
         button = Qt::MiddleButton;
     }
 
-    if (flags & PTR_FLAGS_WHEEL || flags & PTR_FLAGS_WHEEL_NEGATIVE) {
+    if (flags & PTR_FLAGS_WHEEL || flags & PTR_FLAGS_HWHEEL) {
         auto axis = flags & WheelRotationMask;
         if (axis & PTR_FLAGS_WHEEL_NEGATIVE) {
             axis = (~axis & WheelRotationMask) + 1;
         }
         axis *= flags & PTR_FLAGS_WHEEL_NEGATIVE ? 1 : -1;
-        auto event =
-            std::make_shared<QWheelEvent>(position, QPointF{}, QPoint{}, QPoint{0, axis}, Qt::NoButton, Qt::KeyboardModifiers{}, Qt::NoScrollPhase, false);
-        Q_EMIT inputEvent(event);
+        if (flags & PTR_FLAGS_WHEEL) {
+            auto event =
+                std::make_shared<QWheelEvent>(position, QPointF{}, QPoint{}, QPoint{0, axis}, Qt::NoButton, Qt::KeyboardModifiers{}, Qt::NoScrollPhase, false);
+            Q_EMIT inputEvent(event);
+        }
+        if (flags & PTR_FLAGS_HWHEEL) {
+            auto event =
+                std::make_shared<QWheelEvent>(position, QPointF{}, QPoint{}, QPoint{-axis, 0}, Qt::NoButton, Qt::KeyboardModifiers{}, Qt::NoScrollPhase, false);
+            Q_EMIT inputEvent(event);
+        }
         return true;
     }
 

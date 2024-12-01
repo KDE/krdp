@@ -228,7 +228,13 @@ void PlasmaScreencastV1Session::sendEvent(const std::shared_ptr<QEvent> &event)
     }
     case QEvent::Wheel: {
         auto we = std::static_pointer_cast<QWheelEvent>(event);
-        d->remoteInterface->axis(0, we->angleDelta().y() / 120);
+        auto delta = we->angleDelta();
+        if (delta.y() != 0) {
+            d->remoteInterface->axis(WL_POINTER_AXIS_VERTICAL_SCROLL, delta.y() / 120);
+        }
+        if (delta.x() != 0) {
+            d->remoteInterface->axis(WL_POINTER_AXIS_HORIZONTAL_SCROLL, delta.x() / 120);
+        }
         break;
     }
     case QEvent::KeyPress:
