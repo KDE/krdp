@@ -160,6 +160,7 @@ void Server::incomingConnection(qintptr handle)
             auto itr = std::find_if(d->sessions.begin(), d->sessions.end(), [sessionPtr](auto &session) {
                 return session.get() == sessionPtr;
             });
+            (*itr)->close();
             d->sessions.erase(itr);
         }
     });
