@@ -98,5 +98,8 @@
     "X-KDE-Keywords[uk]": "KRDP,remote desktop,віддалена стільниця",
     "X-KDE-Keywords[zh_CN]": "KRDP,remote desktop,yuancheng,yuanchengzhuomian,远程,远程桌面",
     "X-KDE-Keywords[zh_TW]": "KRDP,遠端桌面",
-    "X-KDE-System-Settings-Parent-Category": "network"
+    "X-KDE-System-Settings-Parent-Category": "network",
+    "X-KDE-OnlyShowOnQtPlatforms": [
+        "wayland"
+    ]
 }
