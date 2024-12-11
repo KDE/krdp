@@ -22,6 +22,7 @@
 
 #include <freerdp/channels/wtsvc.h>
 #include <freerdp/freerdp.h>
+#include <freerdp/server/cliprdr.h>
 
 #ifdef FREERDP3
 #include <freerdp/channels/drdynvc.h>
@@ -29,6 +30,7 @@
 #define DRDYNVC_SVC_CHANNEL_NAME "drdynvc"
 #endif
 
+#include "Clipboard.h"
 #include "Cursor.h"
 #include "InputHandler.h"
 #include "NetworkDetection.h"
@@ -146,6 +148,7 @@ public:
     std::unique_ptr<VideoStream> videoStream;
     std::unique_ptr<Cursor> cursor;
     std::unique_ptr<NetworkDetection> networkDetection;
+    std::unique_ptr<Clipboard> clipboard;
 
     freerdp_peer *peer = nullptr;
 
@@ -171,6 +174,7 @@ RdpConnection::RdpConnection(Server *server, qintptr socketHandle)
     });
     d->cursor = std::make_unique<Cursor>(this);
     d->networkDetection = std::make_unique<NetworkDetection>(this);
+    d->clipboard = std::make_unique<Clipboard>(this);
 
     QMetaObject::invokeMethod(this, &RdpConnection::initialize, Qt::QueuedConnection);
 }
@@ -232,6 +236,11 @@ KRdp::VideoStream *RdpConnection::videoStream() const
 Cursor *RdpConnection::cursor() const
 {
     return d->cursor.get();
+}
+
+Clipboard *RdpConnection::clipboard() const
+{
+    return d->clipboard.get();
 }
 
 NetworkDetection *RdpConnection::networkDetection() const
@@ -402,6 +411,11 @@ void RdpConnection::run(std::stop_token stopToken)
                 } else {
                     break;
                 }
+                if (WTSVirtualChannelManagerIsChannelJoined(context->virtualChannelManager, CLIPRDR_SVC_CHANNEL_NAME)) {
+                    if (!d->clipboard->initialize()) {
+                        break;
+                    }
+                }
             }
         }
 
@@ -457,6 +471,7 @@ bool RdpConnection::onPostConnect()
 
 bool RdpConnection::onClose()
 {
+    d->clipboard->close();
     d->videoStream->close();
     setState(State::Closed);
     return true;
