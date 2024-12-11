@@ -18,6 +18,8 @@ endif()
 
 target_sources(KRdp PRIVATE
     AbstractSession.cpp
+    Clipboard.cpp
+    Clipboard.h
     RdpConnection.cpp
     Server.cpp
     Server.h

@@ -13,6 +13,7 @@ class RdpConnection;
 class InputHandler;
 class VideoStream;
 class NetworkDetection;
+class Clipboard;
 
 /**
  * Extension of the FreeRDP Peer Context used to store extra data for KRdp.
@@ -27,6 +28,7 @@ struct PeerContext {
     InputHandler *inputHandler = nullptr;
     VideoStream *stream = nullptr;
     NetworkDetection *networkDetection = nullptr;
+    Clipboard *clipboard = nullptr;
 
     HANDLE virtualChannelManager = nullptr;
 };
