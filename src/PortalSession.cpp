@@ -5,6 +5,7 @@
 #include "PortalSession.h"
 
 #include <QGuiApplication>
+#include <QMimeData>
 #include <QMouseEvent>
 #include <QQueue>
 
@@ -12,6 +13,7 @@
 
 #include <KConfigGroup>
 #include <KSharedConfig>
+#include <KSystemClipboard>
 
 #include "PortalSession_p.h"
 #include "VideoFrame.h"
@@ -75,6 +77,8 @@ public:
     std::unique_ptr<OrgFreedesktopPortalRemoteDesktopInterface> remoteInterface;
     std::unique_ptr<OrgFreedesktopPortalScreenCastInterface> screencastInterface;
 
+    bool ignoreNextSystemClipboardChange = false;
+
     QDBusObjectPath sessionPath;
 };
 
@@ -89,6 +93,29 @@ PortalSession::PortalSession()
 {
     d->remoteInterface = std::make_unique<OrgFreedesktopPortalRemoteDesktopInterface>(dbusService, dbusPath, QDBusConnection::sessionBus());
     d->screencastInterface = std::make_unique<OrgFreedesktopPortalScreenCastInterface>(dbusService, dbusPath, QDBusConnection::sessionBus());
+
+    connect(KSystemClipboard::instance(), &KSystemClipboard::changed, this, [this](auto mode) {
+        if (mode != QClipboard::Clipboard) {
+            return;
+        }
+
+        auto data = KSystemClipboard::instance()->mimeData(mode);
+        if (!data) {
+            return;
+        }
+
+        // KSystemClipboard takes ownership of any QMimeData passed to it but
+        // does not relinquish ownership over anything it returns. So manually
+        // copy over the contents to a new instance of QMimeData so we can keep
+        // the semantics the same.
+        auto newData = new QMimeData();
+        const auto formats = data->formats();
+        for (auto format : formats) {
+            newData->setData(format, data->data(format));
+        }
+
+        Q_EMIT clipboardDataChanged(newData);
+    });
 
     if (!d->remoteInterface->isValid() || !d->screencastInterface->isValid()) {
         qCWarning(KRDP) << "Could not connect to Freedesktop Remote Desktop Portal";
@@ -181,6 +208,11 @@ void PortalSession::sendEvent(const std::shared_ptr<QEvent> &event)
     default:
         break;
     }
+}
+
+void PortalSession::setClipboardData(QMimeData *data)
+{
+    KSystemClipboard::instance()->setMimeData(data, QClipboard::Clipboard);
 }
 
 void PortalSession::onCreateSession(uint code, const QVariantMap &result)
@@ -303,6 +335,7 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
                                                   u"Closed"_qs,
                                                   this,
                                                   SLOT(onSessionClosed()));
+
             setStarted(true);
         } else {
             qCWarning(KRDP) << "Could not open pipewire remote";

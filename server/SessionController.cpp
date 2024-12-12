@@ -3,14 +3,17 @@
 
 #include "SessionController.h"
 
-#include <Cursor.h>
-#include <InputHandler.h>
-#include <KLocalizedString>
-#include <PortalSession.h>
 #include <QAction>
 #include <QCoreApplication>
 #include <QDBusInterface>
 #include <QMenu>
+
+#include <KLocalizedString>
+
+#include <Clipboard.h>
+#include <Cursor.h>
+#include <InputHandler.h>
+#include <PortalSession.h>
 #include <RdpConnection.h>
 #include <Server.h>
 
@@ -33,9 +36,13 @@ public:
         connect(session.get(), &KRdp::AbstractSession::frameReceived, connection->videoStream(), &KRdp::VideoStream::queueFrame);
         connect(session.get(), &KRdp::AbstractSession::cursorUpdate, this, &SessionWrapper::onCursorUpdate);
         connect(session.get(), &KRdp::AbstractSession::error, this, &SessionWrapper::sessionError);
+        connect(session.get(), &KRdp::AbstractSession::clipboardDataChanged, connection->clipboard(), &KRdp::Clipboard::setServerData);
+
         connect(connection->videoStream(), &KRdp::VideoStream::enabledChanged, this, &SessionWrapper::onVideoStreamEnabledChanged);
         connect(connection->videoStream(), &KRdp::VideoStream::requestedFrameRateChanged, this, &SessionWrapper::onRequestedFrameRateChanged);
         connect(connection->inputHandler(), &KRdp::InputHandler::inputEvent, session.get(), &KRdp::AbstractSession::sendEvent);
+        connect(connection->clipboard(), &KRdp::Clipboard::clientDataChanged, session.get(), &KRdp::AbstractSession::setClipboardData);
+
         connect(connection, &QObject::destroyed, this, &SessionWrapper::onConnectionDestroyed);
     }
 

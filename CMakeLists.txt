@@ -40,7 +40,7 @@ if (Qt6Gui_VERSION VERSION_GREATER_EQUAL "6.10.0")
     find_package(Qt6GuiPrivate ${REQUIRED_QT_VERSION} REQUIRED NO_MODULE)
 endif()
 
-find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS Config DBusAddons KCMUtils I18n CoreAddons StatusNotifierItem Crash)
+find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS Config DBusAddons KCMUtils I18n CoreAddons StatusNotifierItem Crash GuiAddons)
 
 find_package(FreeRDP 3.1 REQUIRED)
 find_package(WinPR 3.1 REQUIRED)

@@ -9,6 +9,8 @@
 #include <PipeWireEncodedStream>
 #include <PipeWireSourceStream>
 
+class QMimeData;
+
 namespace KRdp
 {
 struct VideoFrame;
@@ -43,6 +45,13 @@ public:
     void requestStreamingDisable(QObject *requester);
 
     /**
+     * Set the system's clipboard data.
+     *
+     * The data is provided by the remote RDP client.
+     */
+    virtual void setClipboardData(QMimeData *data) = 0;
+
+    /**
      * Send a new event to the portal.
      *
      * \param event The new event to send.
@@ -69,6 +78,11 @@ Q_SIGNALS:
      * stream.
      */
     void cursorUpdate(const PipeWireCursor &cursor);
+
+    /**
+     * Emitted whenever the system's clipboard data changes.
+     */
+    void clipboardDataChanged(const QMimeData *data);
 
 protected:
     QSize size() const;

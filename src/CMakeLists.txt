@@ -70,6 +70,7 @@ target_link_libraries(KRdp PUBLIC
     freerdp
     winpr
     freerdp-server
+    KF6::GuiAddons
     KF6::ConfigCore
     K::KPipeWire
     K::KPipeWireRecord

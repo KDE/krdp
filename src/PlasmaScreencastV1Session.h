@@ -36,6 +36,7 @@ public:
     void start() override;
 
     void sendEvent(const std::shared_ptr<QEvent> &event) override;
+    void setClipboardData(QMimeData *data) override;
 
 private:
     void onPacketReceived(const PipeWireEncodedStream::Packet &data);

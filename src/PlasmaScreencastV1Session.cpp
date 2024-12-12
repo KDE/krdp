@@ -276,6 +276,10 @@ void PlasmaScreencastV1Session::sendEvent(const std::shared_ptr<QEvent> &event)
     }
 }
 
+void PlasmaScreencastV1Session::setClipboardData(QMimeData *data)
+{
+}
+
 void PlasmaScreencastV1Session::onPacketReceived(const PipeWireEncodedStream::Packet &data)
 {
     VideoFrame frameData;
