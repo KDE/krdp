@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <QMimeData>
 #include <QObject>
 
 #include <freerdp/freerdp.h>
@@ -34,10 +35,14 @@ public:
 
     bool enabled();
 
+    void setServerData(const QMimeData *data);
+
+    Q_SIGNAL void clientDataChanged(QMimeData *clientData);
+
 private:
+    void sendServerData();
+
     class Private;
     const std::unique_ptr<Private> d;
-
-    bool m_enabled;
 };
 }
