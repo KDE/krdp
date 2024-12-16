@@ -29,6 +29,7 @@ include(ECMAddTests)
 include(ECMSetupVersion)
 include(ECMQtDeclareLoggingCategory)
 include(ECMEnableSanitizers)
+include(ECMDeprecationSettings)
 
 option(BUILD_EXAMPLES "Build example applications" ON)
 option(BUILD_PLASMA_SESSION "Build support for Plasma Screencasting extensions" ON)
@@ -57,6 +58,11 @@ set(EXCLUDE_DEPRECATED_BEFORE_AND_AT 0 CACHE STRING "Control the range of deprec
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
+
+
+ecm_set_disabled_deprecation_versions(QT 6.7.0
+    KF 6.9.0
+)
 
 add_subdirectory(src)
 add_subdirectory(server)
