@@ -3,19 +3,21 @@
 # This file is distributed under the same license as the krdp package.
 # Kali <EMAIL@ADDRESS>, 2024.
 #
+# SPDX-FileCopyrightText: 2024 kali <skkalwar999@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-08-06 00:40+0000\n"
-"PO-Revision-Date: 2024-12-13 19:09+0530\n"
-"Last-Translator: Kali <EMAIL@ADDRESS>\n"
-"Language-Team: Sanskrit\n"
+"PO-Revision-Date: 2024-12-20 21:52+0530\n"
+"Last-Translator: kali <skkalwar999@gmail.com>\n"
+"Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
 "Language: sa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n>2);\n"
+"X-Generator: Lokalize 24.08.2\n"
 
 #. i18n: ectx: label, entry (ListenPort), group (General)
 #: krdpserversettings.kcfg:14
@@ -93,7 +95,7 @@ msgstr "रक्ष्"
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Username:"
-msgstr "उपयोक्तृनाम : १."
+msgstr "उपयोक्तृनाम :"
 
 #: ui/EditUserModal.qml:92
 #, kde-format
@@ -233,13 +235,13 @@ msgstr "स्वतःप्रारम्भः प्रवेशः अस�
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Listening Port:"
-msgstr "श्रवण पोर्ट् : १."
+msgstr "श्रवण पोर्ट् :"
 
 #: ui/main.qml:322
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Video quality:"
-msgstr "विडियो गुणवत्ता : १."
+msgstr "विडियो गुणवत्ता :"
 
 #: ui/main.qml:341
 #, kde-format
@@ -269,7 +271,7 @@ msgstr "स्वयमेव जनयति"
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate path:"
-msgstr "प्रमाणपत्रमार्गः : १."
+msgstr "प्रमाणपत्रमार्गः :"
 
 #: ui/main.qml:392
 #, kde-format
@@ -281,7 +283,7 @@ msgstr "प्रमाणपत्रसञ्चिकां चिनोत�
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate key path:"
-msgstr "प्रमाणपत्रकुंजीमार्गः : १."
+msgstr "प्रमाणपत्रकुंजीमार्गः :"
 
 #: ui/main.qml:420
 #, kde-format
