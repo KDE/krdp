@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-08-06 00:40+0000\n"
-"PO-Revision-Date: 2024-07-06 06:58+0200\n"
+"PO-Revision-Date: 2024-12-28 17:41+0100\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: Esperanto <kde-i18n-doc@kde.org>\n"
 "Language: eo\n"
@@ -133,11 +133,13 @@ msgid ""
 "Restart the server to apply changed settings. This may disconnect active "
 "connections."
 msgstr ""
+"Restartigi la servilon por apliki ŝanĝitajn metojn. Ĉi tio povus malkonekti "
+"aktivajn konektojn."
 
 #: ui/main.qml:108
 #, kde-format
 msgid "Restart Server"
-msgstr ""
+msgstr "Restartigi Servilon"
 
 #: ui/main.qml:122
 #, kde-format
