@@ -37,7 +37,9 @@
         "Description[zh_CN]": "配置远程桌面",
         "Description[zh_TW]": "設定遠端桌面",
         "FormFactors": [
-            "desktop"
+            "desktop",
+            "handset",
+            "phone"
         ],
         "Icon": "preferences-system-network-remote",
         "Name": "Remote Desktop",
