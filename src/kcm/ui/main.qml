@@ -350,26 +350,7 @@ KCM.ScrollViewKCM {
         }
     }
 
-    Loader {
+    CertLoader {
         id: certLoader
-        property bool key
-        active: false
-        sourceComponent: QtDialogs.FileDialog {
-            id: fileDialog
-            title: key ? i18nc("@title:window", "Select Certificate Key file") : i18nc("@title:window", "Select Certificate file")
-            Component.onCompleted: open()
-            onAccepted: {
-                var file = kcm.toLocalFile(selectedFile);
-                if (key) {
-                    certKeyPathField.text = file;
-                } else {
-                    certPathField.text = file;
-                }
-                certLoader.active = false;
-            }
-            onRejected: {
-                certLoader.active = false;
-            }
-        }
     }
 }
