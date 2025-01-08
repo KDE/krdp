@@ -57,4 +57,5 @@ Q_SIGNALS:
 private:
     KRDPServerSettings *m_serverSettings;
     Q_SLOT void servicePropertiesChanged();
+    bool m_isH264Supported { false };
 };

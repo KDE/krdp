@@ -35,7 +35,10 @@ KRDPServerConfig::KRDPServerConfig(QObject *parent, const KPluginMetaData &data)
     , m_serverSettings(new KRDPServerSettings(this))
 {
     setButtons(Help | Apply | Default);
-    isH264Supported();
+
+    auto recorder = PipeWireRecord();
+    m_isH264Supported = recorder.suggestedEncoders().contains(PipeWireRecord::H264Baseline);
+
     if (m_serverSettings->autogenerateCertificates()) {
         generateCertificate();
     }
@@ -170,8 +173,7 @@ void KRDPServerConfig::defaults()
 
 bool KRDPServerConfig::isH264Supported()
 {
-    auto recorder = new PipeWireRecord(this);
-    return recorder->suggestedEncoders().contains(PipeWireRecord::H264Baseline);
+    return m_isH264Supported;
 }
 
 QStringList KRDPServerConfig::listenAddressList()
