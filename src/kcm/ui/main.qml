@@ -95,40 +95,14 @@ KCM.ScrollViewKCM {
         spacing: 0
         Layout.margins: spacings
 
-        Kirigami.InlineMessage {
+        RestartServerWarning {
             id: restartServerWarning
-            type: Kirigami.MessageType.Warning
-            position: Kirigami.InlineMessage.Position.Header
-            Layout.fillWidth: true
-            visible: false
-            text: i18nc("@info:status", "Restart the server to apply changed settings. This may disconnect active connections.")
-            actions: [
-                Kirigami.Action {
-                    icon.name: "system-reboot-symbolic"
-                    text: i18n("Restart Server")
-                    onTriggered: source => {
-                        kcm.restartServer();
-                        restartServerWarning.visible = false;
-                    }
-                }
-            ]
         }
 
-        Kirigami.InlineMessage {
-            type: Kirigami.MessageType.Error
-            position: Kirigami.InlineMessage.Position.Header
-            Layout.fillWidth: true
-            visible: !kcm.isH264Supported()
-            text: i18nc("@info:status", "Remote desktop cannot be enabled because your system does not support H264 video encoding. Please contact your distribution regarding how to enable it.")
-        }
+        CodecError {}
 
-        Kirigami.InlineMessage {
+        CertError {
             id: certificateError
-            type: Kirigami.MessageType.Error
-            position: Kirigami.InlineMessage.Position.Header
-            Layout.fillWidth: true
-            // TODO better text
-            text: i18nc("@info:status", "Generating certificates automatically has failed!")
         }
 
         // Non-InlineMessage header content does need margins; put it all in here
