@@ -17,6 +17,8 @@ public:
     explicit KRDPServerConfig(QObject *parent, const KPluginMetaData &data);
     ~KRDPServerConfig() override;
 
+    Q_PROPERTY(QString hostName READ hostName CONSTANT)
+
     Q_INVOKABLE QString toLocalFile(const QUrl &url);
 
     Q_INVOKABLE void modifyUser(const QString &oldUsername, const QString &newUsername, const QString &newPassword);
@@ -41,6 +43,8 @@ public:
     {
         return m_serverSettings;
     };
+
+    QString hostName() const;
 
 public Q_SLOTS:
     void save() override;
