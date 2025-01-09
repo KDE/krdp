@@ -12,3 +12,4 @@ Restart=on-abnormal
 
 [Install]
 WantedBy=graphical-session.target
+Alias=plasma-krdp_server.service
