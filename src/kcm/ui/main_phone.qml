@@ -125,6 +125,12 @@ FormCard.FormCardPage {
             }
 
             FormCard.FormTextDelegate {
+                text: i18n("Hostname:")
+                description: kcm.hostName
+                visible: settings.autostart
+            }
+
+            FormCard.FormTextDelegate {
                 description: i18n("Use any of the following addresses to connect to this device:")
                 visible: settings.autostart
             }
