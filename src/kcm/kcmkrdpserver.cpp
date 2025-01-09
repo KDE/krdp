@@ -16,6 +16,7 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QGuiApplication>
+#include <QHostInfo>
 #include <QNetworkInterface>
 #include <QProcess>
 #include <qt6keychain/keychain.h>
@@ -192,6 +193,12 @@ QStringList KRDPServerConfig::listenAddressList()
         }
     }
     return addressList;
+}
+
+QString KRDPServerConfig::hostName() const
+{
+    QHostInfo info;
+    return info.localHostName();
 }
 
 void KRDPServerConfig::toggleAutoconnect(const bool enabled)
