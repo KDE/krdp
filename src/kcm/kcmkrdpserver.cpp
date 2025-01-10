@@ -201,9 +201,9 @@ void KRDPServerConfig::toggleAutoconnect(const bool enabled)
                                               dbusSystemdManagerInterface,
                                               enabled ? u"EnableUnitFiles"_qs : u"DisableUnitFiles"_qs);
     if (enabled) {
-        msg.setArguments({QStringList(u"plasma-krdp_server.service"_qs), false, true});
+        msg.setArguments({QStringList(u"app-org.kde.krdpserver.service"_qs), false, true});
     } else {
-        msg.setArguments({QStringList(u"plasma-krdp_server.service"_qs), false});
+        msg.setArguments({QStringList(u"app-org.kde.krdpserver.service"_qs), false});
     }
     QDBusConnection::sessionBus().asyncCall(msg);
 }
