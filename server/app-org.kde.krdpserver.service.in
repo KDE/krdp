@@ -3,7 +3,6 @@
 [Unit]
 Description=KRDP Server
 After=graphical-session.target
-Requires=plasma-xdg-desktop-portal-kde.service
 
 [Service]
 Type=exec
@@ -11,5 +10,5 @@ ExecStart=@CMAKE_INSTALL_PREFIX@/bin/krdpserver
 Restart=on-abnormal
 
 [Install]
-WantedBy=graphical-session.target
+WantedBy=plasma-workspace.target
 Alias=plasma-krdp_server.service
