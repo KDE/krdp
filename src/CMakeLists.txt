@@ -57,10 +57,6 @@ qt6_add_dbus_interface(_dbus_sources xdp_dbus_remotedesktop_interface.xml xdp_db
 qt6_add_dbus_interface(_dbus_sources xdp_dbus_screencast_interface.xml xdp_dbus_screencast_interface)
 target_sources(KRdp PRIVATE ${_dbus_sources})
 
-if ("${FreeRDP_VERSION_MAJOR}" STREQUAL "3")
-    target_compile_definitions(KRdp PRIVATE -DFREERDP3)
-endif()
-
 target_include_directories(KRdp PUBLIC ${FreeRDP_INCLUDE_DIR} ${WinPR_INCLUDE_DIR} ${FreeRDP_Server_INCLUDE_DIR})
 
 target_link_libraries(KRdp PUBLIC

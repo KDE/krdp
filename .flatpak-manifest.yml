@@ -29,11 +29,14 @@ modules:
     -   "-DWITH_SERVER=ON"
     -   "-DCHANNEL_URBDRC=OFF"
     -   "-DWITH_FFMPEG=OFF"
+    -   "-DWITH_KRB5=OFF"
+    -   "-DWITH_FUSE=OFF"
     buildsystem: cmake-ninja
+    builddir: true
     sources:
     -   type: git
         url: https://github.com/FreeRDP/FreeRDP
-        tag: 2.10.0
+        tag: 3.10.3
 
 -   name: libsecret
     buildsystem: meson

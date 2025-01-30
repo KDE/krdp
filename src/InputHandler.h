@@ -50,11 +50,7 @@ private:
     friend BOOL inputSynchronizeEvent(rdpInput *, uint32_t);
     friend BOOL inputMouseEvent(rdpInput *, uint16_t, uint16_t, uint16_t);
     friend BOOL inputExtendedMouseEvent(rdpInput *, uint16_t, uint16_t, uint16_t);
-#ifdef FREERDP3
     friend BOOL inputKeyboardEvent(rdpInput *, uint16_t, uint8_t);
-#else
-    friend BOOL inputKeyboardEvent(rdpInput *, uint16_t, uint16_t);
-#endif
     friend BOOL inputUnicodeKeyboardEvent(rdpInput *, uint16_t, uint16_t);
 
     /**

@@ -28,18 +28,18 @@ constexpr auto rttUpdateInterval = clk::milliseconds(70);
 constexpr auto rttAverageInterval = clk::milliseconds(500);
 constexpr auto networkResultInterval = clk::seconds(1);
 
-BOOL rttMeasureResponse(rdpContext *rdpContext, uint16_t sequence)
+BOOL rttMeasureResponse(rdpAutoDetect *rdpAutodetect, RDP_TRANSPORT_TYPE, uint16_t sequence)
 {
-    auto context = reinterpret_cast<PeerContext *>(rdpContext);
+    auto context = reinterpret_cast<PeerContext *>(rdpAutodetect->context);
     if (context->networkDetection->onRttMeasureResponse(sequence)) {
         return TRUE;
     }
     return FALSE;
 }
 
-BOOL bwMeasureResults(rdpContext *rdpContext, uint16_t)
+BOOL bwMeasureResults(rdpAutoDetect *rdpAutodetect, RDP_TRANSPORT_TYPE, uint16_t, uint16_t, uint32_t, uint32_t)
 {
-    auto context = reinterpret_cast<PeerContext *>(rdpContext);
+    auto context = reinterpret_cast<PeerContext *>(rdpAutodetect->context);
     if (context->networkDetection->onBandwidthMeasureResults()) {
         return TRUE;
     }
@@ -109,7 +109,7 @@ void NetworkDetection::startBandwidthMeasure()
     }
 
     d->state = State::PendingStop;
-    d->rdpAutodetect->BandwidthMeasureStart(d->rdpAutodetect->context, 0);
+    d->rdpAutodetect->BandwidthMeasureStart(d->rdpAutodetect, RDP_TRANSPORT_TCP, 0);
 }
 
 void NetworkDetection::stopBandwidthMeasure()
@@ -119,7 +119,7 @@ void NetworkDetection::stopBandwidthMeasure()
     }
 
     d->state = State::PendingResults;
-    d->rdpAutodetect->BandwidthMeasureStop(d->rdpAutodetect->context, 0);
+    d->rdpAutodetect->BandwidthMeasureStop(d->rdpAutodetect, RDP_TRANSPORT_TCP, 0, 0);
 }
 
 void NetworkDetection::update()
@@ -137,7 +137,7 @@ void NetworkDetection::update()
 
     auto sequence = d->nextSequenceNumber();
     d->rttRequests.insert(sequence, now);
-    d->rdpAutodetect->RTTMeasureRequest(d->rdpAutodetect->context, sequence);
+    d->rdpAutodetect->RTTMeasureRequest(d->rdpAutodetect, RDP_TRANSPORT_TCP, sequence);
 }
 
 bool NetworkDetection::onRttMeasureResponse(uint16_t sequence)
@@ -213,10 +213,12 @@ void NetworkDetection::updateAverageRtt()
 
     d->lastNetworkResult = now;
 
-    d->rdpAutodetect->netCharBandwidth = d->lastBandwithMeasurement;
-    d->rdpAutodetect->netCharBaseRTT = clk::duration_cast<clk::milliseconds>(d->minimumRtt).count();
-    d->rdpAutodetect->netCharAverageRTT = clk::duration_cast<clk::milliseconds>(d->averageRtt).count();
-    d->rdpAutodetect->NetworkCharacteristicsResult(d->rdpAutodetect->context, d->nextSequenceNumber());
+    rdpNetworkCharacteristicsResult result;
+    result.type = RDP_NETCHAR_RESULT_TYPE_BASE_RTT_BW_AVG_RTT;
+    result.baseRTT = clk::duration_cast<clk::milliseconds>(d->minimumRtt).count();
+    result.averageRTT = clk::duration_cast<clk::milliseconds>(d->averageRtt).count();
+    result.bandwidth = d->lastBandwithMeasurement;
+    d->rdpAutodetect->NetworkCharacteristicsResult(d->rdpAutodetect, RDP_TRANSPORT_TCP, d->nextSequenceNumber(), &result);
 }
 
 uint32_t NetworkDetection::Private::nextSequenceNumber()

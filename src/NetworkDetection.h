@@ -10,6 +10,7 @@
 #include <QObject>
 
 #include <freerdp/freerdp.h>
+#include <freerdp/types.h>
 
 namespace KRdp
 {
@@ -46,8 +47,8 @@ public:
     void update();
 
 private:
-    friend BOOL rttMeasureResponse(rdpContext *, uint16_t);
-    friend BOOL bwMeasureResults(rdpContext *, uint16_t);
+    friend BOOL rttMeasureResponse(rdpAutoDetect *, RDP_TRANSPORT_TYPE, uint16_t);
+    friend BOOL bwMeasureResults(rdpAutoDetect *, RDP_TRANSPORT_TYPE, uint16_t, uint16_t, uint32_t, uint32_t);
 
     bool onRttMeasureResponse(uint16_t sequence);
     bool onBandwidthMeasureResults();

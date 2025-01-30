@@ -42,9 +42,9 @@ endif()
 
 find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS Config DBusAddons KCMUtils I18n CoreAddons StatusNotifierItem Crash)
 
-find_package(FreeRDP 2.10 REQUIRED)
-find_package(WinPR 2.10 REQUIRED)
-find_package(FreeRDP-Server 2.10 REQUIRED)
+find_package(FreeRDP 3.1 REQUIRED)
+find_package(WinPR 3.1 REQUIRED)
+find_package(FreeRDP-Server 3.1 REQUIRED)
 find_package(KPipeWire 5.27.80 REQUIRED)
 find_package(XKB REQUIRED)
 
@@ -54,7 +54,7 @@ set_package_properties(Qt6Keychain PROPERTIES
                                    URL "https://github.com/frankosterfeld/qtkeychain"
 				   TYPE REQUIRED)
 
-if (BUILD_PLASMA_SESSION)
+if(BUILD_PLASMA_SESSION)
     find_package(PlasmaWaylandProtocols REQUIRED)
 endif()
 

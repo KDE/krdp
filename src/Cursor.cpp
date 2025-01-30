@@ -79,7 +79,7 @@ void Cursor::update(const Cursor::CursorUpdate &update)
     }
 
     auto context = d->session->rdpPeerContext();
-    auto updatePointer = d->session->rdpPeer()->update->pointer;
+    auto updatePointer = d->session->rdpPeerContext()->update->pointer;
 
     // Cursor images are cached. Check to see if the newly requested cursor is
     // already in the cache, and if so, mark that as the current cursor.
@@ -104,7 +104,7 @@ void Cursor::update(const Cursor::CursorUpdate &update)
     newCursor.lastUsed = std::chrono::steady_clock::now();
 
     // Evict least recently used cursor from the cache if it has grown too large.
-    if (d->cursorCache.size() >= d->session->rdpPeer()->settings->PointerCacheSize) {
+    if (d->cursorCache.size() >= freerdp_settings_get_uint32(d->session->rdpPeerContext()->settings, FreeRDP_PointerCacheSize)) {
         auto lru = std::min_element(d->cursorCache.cbegin(), d->cursorCache.cend(), [](const CursorUpdate &first, const CursorUpdate &second) {
             return first.lastUsed < second.lastUsed;
         });
@@ -117,9 +117,8 @@ void Cursor::update(const Cursor::CursorUpdate &update)
         pointerNewUpdate.xorBpp = 32;
         auto &colorUpdate = pointerNewUpdate.colorPtrAttr;
         colorUpdate.cacheIndex = newCursor.cacheId;
-        // xPos and yPos are actually the hotspot coordinates, not position.
-        colorUpdate.xPos = newCursor.hotspot.x();
-        colorUpdate.yPos = newCursor.hotspot.y();
+        colorUpdate.hotSpotX = newCursor.hotspot.x();
+        colorUpdate.hotSpotY = newCursor.hotspot.y();
         colorUpdate.width = newCursor.image.width();
         colorUpdate.height = newCursor.image.height();
         colorUpdate.lengthAndMask = 0;
@@ -165,7 +164,7 @@ void Cursor::setCursorType(Cursor::CursorType type)
         d->lastUsedCursor = nullptr;
         POINTER_SYSTEM_UPDATE pointerSystemUpdate;
         pointerSystemUpdate.type = type == CursorType::Hidden ? SYSPTR_NULL : SYSPTR_DEFAULT;
-        d->session->rdpPeer()->update->pointer->PointerSystem(d->session->rdpPeerContext(), &pointerSystemUpdate);
+        d->session->rdpPeerContext()->update->pointer->PointerSystem(d->session->rdpPeerContext(), &pointerSystemUpdate);
     }
 }
 

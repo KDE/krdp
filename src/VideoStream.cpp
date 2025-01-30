@@ -154,7 +154,7 @@ bool VideoStream::initialize()
         return true;
     }
 
-    auto peerContext = reinterpret_cast<PeerContext *>(d->session->rdpPeer()->context);
+    auto peerContext = reinterpret_cast<PeerContext *>(d->session->rdpPeerContext());
 
     d->gfxContext = Private::RdpGfxContextPtr{rdpgfx_server_context_new(peerContext->virtualChannelManager), rdpgfx_server_context_free};
     if (!d->gfxContext) {
@@ -168,7 +168,7 @@ bool VideoStream::initialize()
     d->gfxContext->QoeFrameAcknowledge = gfxQoEFrameAcknowledge;
 
     d->gfxContext->custom = this;
-    d->gfxContext->rdpcontext = d->session->rdpPeer()->context;
+    d->gfxContext->rdpcontext = d->session->rdpPeerContext();
 
     if (!d->gfxContext->Open(d->gfxContext.get())) {
         qCWarning(KRDP) << "Could not open GFX context";

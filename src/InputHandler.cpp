@@ -48,11 +48,7 @@ BOOL inputExtendedMouseEvent(rdpInput *input, uint16_t flags, uint16_t x, uint16
     return FALSE;
 }
 
-#ifdef FREERDP3
 BOOL inputKeyboardEvent(rdpInput *input, uint16_t flags, uint8_t code)
-#else
-BOOL inputKeyboardEvent(rdpInput *input, uint16_t flags, uint16_t code)
-#endif
 {
     auto context = reinterpret_cast<PeerContext *>(input->context);
 
@@ -177,10 +173,10 @@ bool InputHandler::keyboardEvent(uint16_t code, uint16_t flags)
 {
     auto virtualCode = GetVirtualKeyCodeFromVirtualScanCode(flags & KBD_FLAGS_EXTENDED ? code | KBDEXT : code, 4);
     virtualCode = flags & KBD_FLAGS_EXTENDED ? virtualCode | KBDEXT : virtualCode;
-    // While "type" suggests an EVDEV code, the actual code is an X code
-    quint32 keycode = GetKeycodeFromVirtualKeyCode(virtualCode, KEYCODE_TYPE_EVDEV) - 8;
 
-    auto type = flags & KBD_FLAGS_DOWN ? QEvent::KeyPress : QEvent::KeyRelease;
+    quint32 keycode = GetKeycodeFromVirtualKeyCode(virtualCode, WINPR_KEYCODE_TYPE_EVDEV);
+
+    auto type = flags & KBD_FLAGS_RELEASE ? QEvent::KeyRelease : QEvent::KeyPress;
 
     auto event = std::make_shared<QKeyEvent>(type, 0, Qt::KeyboardModifiers{}, keycode, 0, 0);
     Q_EMIT inputEvent(event);
@@ -196,7 +192,7 @@ bool InputHandler::unicodeKeyboardEvent(uint16_t code, uint16_t flags)
         return true;
     }
 
-    auto type = flags & KBD_FLAGS_DOWN ? QEvent::KeyPress : QEvent::KeyRelease;
+    auto type = flags & KBD_FLAGS_RELEASE ? QEvent::KeyRelease : QEvent::KeyPress;
 
     auto event = std::make_shared<QKeyEvent>(type, 0, Qt::KeyboardModifiers{}, 0, keysym, 0);
     Q_EMIT inputEvent(event);

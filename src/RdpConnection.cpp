@@ -24,11 +24,7 @@
 #include <freerdp/freerdp.h>
 #include <freerdp/server/cliprdr.h>
 
-#ifdef FREERDP3
 #include <freerdp/channels/drdynvc.h>
-#else
-#define DRDYNVC_SVC_CHANNEL_NAME "drdynvc"
-#endif
 
 #include "Clipboard.h"
 #include "Cursor.h"
@@ -264,11 +260,7 @@ void RdpConnection::initialize()
     d->peer->ContextNew = (psPeerContextNew)newPeerContext;
     d->peer->ContextFree = (psPeerContextFree)freePeerContext;
 
-#ifdef FREERDP3
     auto result = freerdp_peer_context_new_ex(d->peer, d->server->rdpSettings());
-#else
-    auto result = freerdp_peer_context_new(d->peer);
-#endif
     if (!result) {
         qCWarning(KRDP) << "Failed to create peer context";
         return;
@@ -285,72 +277,68 @@ void RdpConnection::initialize()
         return;
     }
 
-#ifdef FREERDP3
-    auto certificate = freerdp_certificate_new_from_file(d->server->tlsCertificate().toUtf8().data());
+    auto certificate = freerdp_certificate_new_from_file(d->server->tlsCertificate().string().data());
     if (!certificate) {
-        qCWarning(KRDP) << "Could not read certificate file" << d->server->tlsCertificate();
+        qCWarning(KRDP) << "Could not read certificate file" << d->server->tlsCertificate().string();
         return;
     }
     freerdp_settings_set_pointer_len(settings, FreeRDP_RdpServerCertificate, certificate, 1);
 
-    auto key = freerdp_key_new_from_file(d->server->tlsCertificateKey().toUtf8().data());
+    auto key = freerdp_key_new_from_file(d->server->tlsCertificateKey().string().data());
     if (!key) {
-        qCWarning(KRDP) << "Could not read certificate file" << d->server->tlsCertificate();
+        qCWarning(KRDP) << "Could not read certificate file" << d->server->tlsCertificate().string();
         return;
     }
     freerdp_settings_set_pointer_len(settings, FreeRDP_RdpServerRsaKey, key, 1);
-#else
-    settings->CertificateFile = strdup(d->server->tlsCertificate().string().data());
-    settings->PrivateKeyFile = strdup(d->server->tlsCertificateKey().string().data());
-#endif
 
     // Only NTLM Authentication (NLA) security is currently supported. This also
     // happens to be the most secure one. It implicitly requires a TLS
     // connection so the above certificate is always required.
-    settings->RdpSecurity = false;
-    settings->TlsSecurity = false;
-    settings->NlaSecurity = true;
+    freerdp_settings_set_bool(settings, FreeRDP_RdpSecurity, false);
+    freerdp_settings_set_bool(settings, FreeRDP_TlsSecurity, false);
+    freerdp_settings_set_bool(settings, FreeRDP_NlaSecurity, true);
 
-    settings->OsMajorType = OSMAJORTYPE_UNIX;
+    freerdp_settings_set_uint32(settings, FreeRDP_OsMajorType, OSMAJORTYPE_UNIX);
     // PSEUDO_XSERVER is apparently required for things to work properly.
-    settings->OsMinorType = OSMINORTYPE_PSEUDO_XSERVER;
+    freerdp_settings_set_uint32(settings, FreeRDP_OsMinorType, OSMINORTYPE_PSEUDO_XSERVER);
 
     // TODO: Implement audio support
-    settings->AudioPlayback = false;
+    freerdp_settings_set_bool(settings, FreeRDP_AudioPlayback, false);
 
-    settings->ColorDepth = 32;
+    freerdp_settings_set_uint32(settings, FreeRDP_ColorDepth, 32);
 
     // Plain YUV420 AVC is currently the most straightforward of the the AVC
     // related codecs to implement. Moreover, it makes the encoding side also
     // simpler so it is currently the only supported codec. This uses the RdpGfx
     // pipeline, so make sure to request that.
-    settings->SupportGraphicsPipeline = true;
-    settings->GfxAVC444 = false;
-    settings->GfxAVC444v2 = false;
-    settings->GfxH264 = true;
+    freerdp_settings_set_bool(settings, FreeRDP_SupportGraphicsPipeline, true);
+    freerdp_settings_set_bool(settings, FreeRDP_GfxAVC444, false);
+    freerdp_settings_set_bool(settings, FreeRDP_GfxAVC444v2, false);
+    freerdp_settings_set_bool(settings, FreeRDP_GfxH264, true);
 
-    settings->GfxSmallCache = false;
-    settings->GfxThinClient = false;
 
-    settings->HasExtendedMouseEvent = true;
-    settings->HasHorizontalWheel = true;
-    settings->UnicodeInput = true;
+    freerdp_settings_set_bool(settings, FreeRDP_GfxSmallCache, false);
+    freerdp_settings_set_bool(settings, FreeRDP_GfxThinClient, false);
+
+    freerdp_settings_set_bool(settings, FreeRDP_HasExtendedMouseEvent, true);
+    freerdp_settings_set_bool(settings, FreeRDP_HasHorizontalWheel, true);
+    freerdp_settings_set_bool(settings, FreeRDP_UnicodeInput, true);
 
     // TODO: Implement network performance detection
-    settings->NetworkAutoDetect = true;
+    freerdp_settings_set_bool(settings, FreeRDP_NetworkAutoDetect, true);
 
-    settings->RefreshRect = true;
-    settings->RemoteConsoleAudio = true;
-    settings->RemoteFxCodec = false;
-    settings->NSCodec = false;
-    settings->FrameMarkerCommandEnabled = true;
-    settings->SurfaceFrameMarkerEnabled = true;
+    freerdp_settings_set_bool(settings, FreeRDP_RefreshRect, true);
+    freerdp_settings_set_bool(settings, FreeRDP_RemoteConsoleAudio, true);
+    freerdp_settings_set_bool(settings, FreeRDP_RemoteFxCodec, false);
+    freerdp_settings_set_bool(settings, FreeRDP_NSCodec, false);
+    freerdp_settings_set_bool(settings, FreeRDP_FrameMarkerCommandEnabled, true);
+    freerdp_settings_set_bool(settings, FreeRDP_SurfaceFrameMarkerEnabled, true);
 
     d->peer->Capabilities = peerCapabilities;
     d->peer->Activate = peerActivate;
     d->peer->PostConnect = peerPostConnect;
 
-    d->peer->update->SuppressOutput = suppressOutput;
+    d->peer->context->update->SuppressOutput = suppressOutput;
 
     d->inputHandler->initialize(d->peer->context->input);
     context->inputHandler = d->inputHandler.get();
@@ -393,29 +381,31 @@ void RdpConnection::run(std::stop_token stopToken)
             break;
         }
 
-        // Read data for the virtual channel manager.
-        // Note that this is separate from the above file handle for... some reason.
-        // However, if we don't call this, login and any dynamic channels will not work.
-        if (WTSVirtualChannelManagerCheckFileDescriptor(context->virtualChannelManager) != TRUE) {
-            qCDebug(KRDP) << "Unable to check Virtual Channel Manager file descriptor, closing connection";
-            break;
-        }
-
         // Initialize any dynamic channels once the dynamic channel channel is setup.
-        if (WTSVirtualChannelManagerIsChannelJoined(context->virtualChannelManager, DRDYNVC_SVC_CHANNEL_NAME)) {
+        if (d->peer->connected && WTSVirtualChannelManagerIsChannelJoined(context->virtualChannelManager, DRDYNVC_SVC_CHANNEL_NAME)) {
+            auto state = WTSVirtualChannelManagerGetDrdynvcState(context->virtualChannelManager);
             // Dynamic channels can only be set up properly once the dynamic channel channel is properly setup.
-            if (WTSVirtualChannelManagerGetDrdynvcState(context->virtualChannelManager) == DRDYNVC_STATE_READY) {
+            if (state == DRDYNVC_STATE_READY) {
                 if (d->videoStream->initialize()) {
                     d->videoStream->setEnabled(true);
                     setState(State::Streaming);
                 } else {
                     break;
                 }
-                if (WTSVirtualChannelManagerIsChannelJoined(context->virtualChannelManager, CLIPRDR_SVC_CHANNEL_NAME)) {
-                    if (!d->clipboard->initialize()) {
-                        break;
-                    }
-                }
+            } else if (state == DRDYNVC_STATE_NONE) {
+                // This ensures that WTSVirtualChannelManagerCheckFileDescriptor() will be called, which initializes the drdynvc channel.
+                SetEvent(channelEvent);
+            }
+        }
+
+        if (WaitForSingleObject(channelEvent, 0) == WAIT_OBJECT_0 && WTSVirtualChannelManagerCheckFileDescriptor(context->virtualChannelManager) != TRUE) {
+            qCDebug(KRDP) << "Unable to check Virtual Channel Manager file descriptor, closing connection";
+            break;
+        }
+
+        if (d->peer->connected && WTSVirtualChannelManagerIsChannelJoined(context->virtualChannelManager, CLIPRDR_SVC_CHANNEL_NAME)) {
+            if (!d->clipboard->initialize()) {
+                break;
             }
         }
 
@@ -431,22 +421,23 @@ bool RdpConnection::onCapabilities()
     auto settings = d->peer->context->settings;
     // We only support GraphicsPipeline clients currently as that is required
     // for AVC streaming.
-    if (!settings->SupportGraphicsPipeline) {
+    if (!freerdp_settings_get_bool(settings, FreeRDP_SupportGraphicsPipeline)) {
         qCWarning(KRDP) << "Client does not support graphics pipeline which is required";
         return false;
     }
 
-    if (settings->ColorDepth != 32) {
-        qCDebug(KRDP) << "Correcting invalid color depth from client:" << settings->ColorDepth;
-        settings->ColorDepth = 32;
+    auto colorDepth = freerdp_settings_get_uint32(settings, FreeRDP_ColorDepth);
+    if (colorDepth != 32) {
+        qCDebug(KRDP) << "Correcting invalid color depth from client:" << colorDepth;
+        freerdp_settings_set_uint32(settings, FreeRDP_ColorDepth, 32);
     }
 
-    if (!settings->DesktopResize) {
+    if (!freerdp_settings_get_bool(settings, FreeRDP_DesktopResize)) {
         qCWarning(KRDP) << "Client doesn't support resizing, aborting";
         return false;
     }
 
-    if (settings->PointerCacheSize <= 0) {
+    if (freerdp_settings_get_uint32(settings,FreeRDP_PointerCacheSize) <= 0) {
         qCWarning(KRDP) << "Client doesn't support pointer caching, aborting";
         return false;
     }
