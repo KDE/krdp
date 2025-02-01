@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: CC0-1.0
 
 Dependencies:
-- 'on': ['@all']
-  'require':
+ - 'on': ['@all']
+   'require':
     'frameworks/extra-cmake-modules': '@latest-kf6'
     'frameworks/kconfig': '@latest-kf6'
     'frameworks/kdbusaddons': '@latest-kf6'
@@ -14,4 +14,4 @@ Dependencies:
     'third-party/qtkeychain': '@latest'
 
 Options:
-  require-passing-tests-on: ['Linux']
+ require-passing-tests-on: ['Linux']
