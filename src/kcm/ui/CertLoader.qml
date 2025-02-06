@@ -9,15 +9,15 @@ import QtQuick.Dialogs as QtDialogs
 
 Loader {
     id: certLoader
-    property bool key
+    property bool selectKey
     active: false
     sourceComponent: QtDialogs.FileDialog {
         id: fileDialog
-        title: key ? i18nc("@title:window", "Select Certificate Key file") : i18nc("@title:window", "Select Certificate file")
+        title: selectKey ? i18nc("@title:window", "Select Certificate Key file") : i18nc("@title:window", "Select Certificate file")
         Component.onCompleted: open()
         onAccepted: {
             var file = kcm.toLocalFile(selectedFile);
-            if (key) {
+            if (selectKey) {
                 certKeyPathField.text = file;
             } else {
                 certPathField.text = file;
