@@ -289,7 +289,7 @@ KCM.ScrollViewKCM {
                 text: i18nc("@action:button", "Choose Certificate File…")
                 display: QQC2.AbstractButton.IconOnly
                 onClicked: {
-                    certLoader.key = false;
+                    certLoader.selectKey = false;
                     certLoader.active = true;
                 }
             }
@@ -317,7 +317,7 @@ KCM.ScrollViewKCM {
                 text: i18nc("@action:button", "Choose Certificate Key File…")
                 display: QQC2.AbstractButton.IconOnly
                 onClicked: {
-                    certLoader.key = true;
+                    certLoader.selectKey = true;
                     certLoader.active = true;
                 }
             }
