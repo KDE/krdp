@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2023 Arjen Hiemstra <ahiemstra@heimr.nl>
 # SPDX-License-Identifier: BSD-2-Clause
 
-set(PROJECT_VERSION "6.2.91")
+set(PROJECT_VERSION "6.3.0")
 
 cmake_minimum_required(VERSION 3.16)
 
