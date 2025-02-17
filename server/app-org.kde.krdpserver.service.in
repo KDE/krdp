@@ -2,7 +2,8 @@
 # SPDX-FileCopyrightText: 2024 Akseli Lahtinen <akselmo@akselmo.dev>
 [Unit]
 Description=KRDP Server
-After=graphical-session.target
+After=plasma-xdg-desktop-portal-kde.service
+After=plasma-core.target
 
 [Service]
 Type=exec
