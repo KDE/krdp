@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-06 00:40+0000\n"
+"POT-Creation-Date: 2025-02-27 00:42+0000\n"
 "PO-Revision-Date: 2024-09-02 15:34+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -59,6 +59,35 @@ msgstr "Usatores permittite a acceder,contrasignos es immagazinate in KWallet"
 #, kde-format
 msgid "Autostart the server on login"
 msgstr "Starta automaticamente le servitor al accesso"
+
+#: ui/CertError.qml:14
+#, kde-format
+msgctxt "@info:status"
+msgid "Generating certificates automatically has failed!"
+msgstr "Generar cutomaticamente certificatos ha fallite!"
+
+#: ui/CertLoader.qml:16
+#, kde-format
+msgctxt "@title:window"
+msgid "Select Certificate Key file"
+msgstr "Selige file de clave de certificato"
+
+#: ui/CertLoader.qml:16
+#, kde-format
+msgctxt "@title:window"
+msgid "Select Certificate file"
+msgstr "Selige file de certificato"
+
+#: ui/CodecError.qml:13
+#, kde-format
+msgctxt "@info:status"
+msgid ""
+"Remote desktop cannot be enabled because your system does not support H264 "
+"video encoding. Please contact your distribution regarding how to enable it."
+msgstr ""
+"Scriptorios remote non pote esser habilitate proque tu systema non supporta "
+"codification video H264. Pro favor tu continge tu distribution re como "
+"habilitar lo."
 
 #: ui/DeleteUserModal.qml:14
 #, kde-format
@@ -126,7 +155,136 @@ msgctxt "@option:check Enable RDP server"
 msgid "Enable RDP server"
 msgstr "Habilita servitor RDP"
 
-#: ui/main.qml:104
+#: ui/main.qml:115 ui/main_phone.qml:101
+#, kde-format
+msgid ""
+"Set up remote login to connect using apps supporting the “RDP” remote "
+"desktop protocol."
+msgstr ""
+"Configura accesso remote per connecter usante apps que supporta le "
+"protocollo de scriptorio remote \"RDP\"."
+
+#: ui/main.qml:124
+#, kde-format
+msgctxt "@info:usagetip"
+msgid "Use any of the following addresses to connect to this device:"
+msgstr "Usa ulle del sequente adresse per connecter a iste dispoisitivo:"
+
+#: ui/main.qml:156 ui/main_phone.qml:157
+#, kde-format
+msgctxt "@action:button"
+msgid "Copy Address to Clipboard"
+msgstr "Copia adresse a area de transferentia"
+
+#: ui/main.qml:183
+#, kde-format
+msgctxt "title:group Group of RDP server settings"
+msgid "Server Settings"
+msgstr "Preferentias de servitor"
+
+#: ui/main.qml:188
+#, kde-format
+msgctxt "@option:check"
+msgid "Autostart on login"
+msgstr "Starta automaticamente quando on accede"
+
+#: ui/main.qml:204
+#, kde-format
+msgctxt "@label:textbox"
+msgid "Listening Port:"
+msgstr "Porto ascoltante:"
+
+#: ui/main.qml:219
+#, kde-format
+msgctxt "@label:textbox"
+msgid "Video quality:"
+msgstr "Qualitate de video"
+
+#: ui/main.qml:238
+#, kde-format
+msgctxt "@label:slider"
+msgid "Responsiveness"
+msgstr "Rapiditate de responsa"
+
+#: ui/main.qml:244
+#, kde-format
+msgctxt "@label:slider"
+msgid "Quality"
+msgstr "Qualitate"
+
+#: ui/main.qml:251
+#, kde-format
+msgctxt "title:group Group of RDP server settings"
+msgid "Security Certificates"
+msgstr "Certificatos de securitate"
+
+#: ui/main.qml:256
+#, kde-format
+msgctxt "@label:check generate security certificates automatically"
+msgid "Generate automatically"
+msgstr "Genera automaticamente"
+
+#: ui/main.qml:274
+#, kde-format
+msgctxt "@label:textbox"
+msgid "Certificate path:"
+msgstr "Percurso de certificato:"
+
+#: ui/main.qml:289
+#, kde-format
+msgctxt "@action:button"
+msgid "Choose Certificate File…"
+msgstr "Selòige file de certificato..."
+
+#: ui/main.qml:301
+#, kde-format
+msgctxt "@label:textbox"
+msgid "Certificate key path:"
+msgstr "Percurso de clave de certificato:"
+
+#: ui/main.qml:317
+#, kde-format
+msgctxt "@action:button"
+msgid "Choose Certificate Key File…"
+msgstr "Selige file de clave de certificato..."
+
+#: ui/main_phone.qml:94
+#, kde-format
+msgctxt "@title:group"
+msgid "Remote Desktop Access"
+msgstr ""
+
+#: ui/main_phone.qml:105
+#, fuzzy, kde-format
+#| msgctxt "@option:check Enable RDP server"
+#| msgid "Enable RDP server"
+msgctxt "@option:check"
+msgid "Enable RDP Server"
+msgstr "Habilita servitor RDP"
+
+#: ui/main_phone.qml:128
+#, fuzzy, kde-format
+#| msgctxt "@label:textbox"
+#| msgid "Username:"
+msgid "Hostname:"
+msgstr "Nomine de usator:"
+
+#: ui/main_phone.qml:134
+#, fuzzy, kde-format
+#| msgctxt "@info:usagetip"
+#| msgid "Use any of the following addresses to connect to this device:"
+msgid "Use any of the following addresses to connect to this device:"
+msgstr "Usa ulle del sequente adresse per connecter a iste dispoisitivo:"
+
+#: ui/main_phone.qml:172
+#, fuzzy, kde-format
+#| msgctxt "title:group Group of RDP server settings"
+#| msgid "Server Settings"
+msgctxt "@title:group"
+msgid "Server Settings"
+msgstr "Preferentias de servitor"
+
+#: ui/RestartServerWarning.qml:13
 #, kde-format
 msgctxt "@info:status"
 msgid ""
@@ -136,171 +294,49 @@ msgstr ""
 "Restarta le servitor per applicar le preferentias modificate. Isto pote "
 "disconnecter connexiones active."
 
-#: ui/main.qml:108
+#: ui/RestartServerWarning.qml:17
 #, kde-format
 msgid "Restart Server"
 msgstr "Restarta Servitor"
 
-#: ui/main.qml:122
-#, kde-format
-msgctxt "@info:status"
-msgid ""
-"Remote desktop cannot be enabled because your system does not support H264 "
-"video encoding. Please contact your distribution regarding how to enable it."
-msgstr ""
-"Scriptorios remote non pote esser habilitate proque tu systema non supporta "
-"codification video H264. Pro favor tu continge tu distribution re como "
-"habilitar lo."
-
-#: ui/main.qml:131
-#, kde-format
-msgctxt "@info:status"
-msgid "Generating certificates automatically has failed!"
-msgstr "Generar cutomaticamente certificatos ha fallite!"
-
-#: ui/main.qml:141
-#, kde-format
-msgid ""
-"Set up remote login to connect using apps supporting the “RDP” remote "
-"desktop protocol."
-msgstr ""
-"Configura accesso remote per connecter usante apps que supporta le "
-"protocollo de scriptorio remote \"RDP\"."
-
-#: ui/main.qml:150
-#, kde-format
-msgctxt "@info:usagetip"
-msgid "Use any of the following addresses to connect to this device:"
-msgstr "Usa ulle del sequente adresse per connecter a iste dispoisitivo:"
-
-#: ui/main.qml:182
-#, kde-format
-msgctxt "@action:button"
-msgid "Copy Address to Clipboard"
-msgstr "Copia adresse a area de transferentia"
-
-#: ui/main.qml:204
+#: ui/UserListView.qml:20
 #, kde-format
 msgctxt "@title"
 msgid "Usernames"
 msgstr "Nomines de usator"
 
-#: ui/main.qml:208
+#: ui/UserListView.qml:24
 #, kde-format
 msgctxt "@action:button"
 msgid "Add New…"
 msgstr "Adde Nove …"
 
-#: ui/main.qml:209
+#: ui/UserListView.qml:25
 #, kde-format
 msgctxt "@action:button"
 msgid "Add New User Account…"
 msgstr "Adde conto de nove usator…"
 
-#: ui/main.qml:222
+#: ui/UserListView.qml:38
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "Add at least one user account to enable remote login"
 msgstr "Adde al minu un conto de usator per habilitar accesso remote"
 
-#: ui/main.qml:223
+#: ui/UserListView.qml:39
 #, kde-kuit-format
 msgctxt "@info:placeholder"
 msgid "Click <interface>Add New…</interface> to add one"
 msgstr "Clicca <interface>Adde Nove…</interface> per adder un"
 
-#: ui/main.qml:248
+#: ui/UserListView.qml:64
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify user…"
 msgstr "Modifica usator…"
 
-#: ui/main.qml:262
+#: ui/UserListView.qml:78
 #, kde-format
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "Remove Usator…"
-
-#: ui/main.qml:286
-#, kde-format
-msgctxt "title:group Group of RDP server settings"
-msgid "Server Settings"
-msgstr "Preferentias de servitor"
-
-#: ui/main.qml:291
-#, kde-format
-msgctxt "@option:check"
-msgid "Autostart on login"
-msgstr "Starta automaticamente quando on accede"
-
-#: ui/main.qml:307
-#, kde-format
-msgctxt "@label:textbox"
-msgid "Listening Port:"
-msgstr "Porto ascoltante:"
-
-#: ui/main.qml:322
-#, kde-format
-msgctxt "@label:textbox"
-msgid "Video quality:"
-msgstr "Qualitate de video"
-
-#: ui/main.qml:341
-#, kde-format
-msgctxt "@label:slider"
-msgid "Responsiveness"
-msgstr "Rapiditate de responsa"
-
-#: ui/main.qml:347
-#, kde-format
-msgctxt "@label:slider"
-msgid "Quality"
-msgstr "Qualitate"
-
-#: ui/main.qml:354
-#, kde-format
-msgctxt "title:group Group of RDP server settings"
-msgid "Security Certificates"
-msgstr "Certificatos de securitate"
-
-#: ui/main.qml:359
-#, kde-format
-msgctxt "@label:check generate security certificates automatically"
-msgid "Generate automatically"
-msgstr "Genera automaticamente"
-
-#: ui/main.qml:377
-#, kde-format
-msgctxt "@label:textbox"
-msgid "Certificate path:"
-msgstr "Percurso de certificato:"
-
-#: ui/main.qml:392
-#, kde-format
-msgctxt "@action:button"
-msgid "Choose Certificate File…"
-msgstr "Selòige file de certificato..."
-
-#: ui/main.qml:404
-#, kde-format
-msgctxt "@label:textbox"
-msgid "Certificate key path:"
-msgstr "Percurso de clave de certificato:"
-
-#: ui/main.qml:420
-#, kde-format
-msgctxt "@action:button"
-msgid "Choose Certificate Key File…"
-msgstr "Selige file de clave de certificato..."
-
-#: ui/main.qml:436
-#, kde-format
-msgctxt "@title:window"
-msgid "Select Certificate Key file"
-msgstr "Selige file de clave de certificato"
-
-#: ui/main.qml:436
-#, kde-format
-msgctxt "@title:window"
-msgid "Select Certificate file"
-msgstr "Selige file de certificato"

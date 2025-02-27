@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-06 00:40+0000\n"
+"POT-Creation-Date: 2025-02-27 00:42+0000\n"
 "PO-Revision-Date: 2024-12-20 21:52+0530\n"
 "Last-Translator: kali <skkalwar999@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -60,6 +60,34 @@ msgstr "उपयोक्तारः प्रवेशं कर्तुं 
 #, kde-format
 msgid "Autostart the server on login"
 msgstr "प्रवेशसमये सर्वरं स्वयमेव आरभत"
+
+#: ui/CertError.qml:14
+#, kde-format
+msgctxt "@info:status"
+msgid "Generating certificates automatically has failed!"
+msgstr "प्रमाणपत्राणि स्वयमेव जनयितुं विफलं जातम्!"
+
+#: ui/CertLoader.qml:16
+#, kde-format
+msgctxt "@title:window"
+msgid "Select Certificate Key file"
+msgstr "Certificate Key सञ्चिकां चिनोतु"
+
+#: ui/CertLoader.qml:16
+#, kde-format
+msgctxt "@title:window"
+msgid "Select Certificate file"
+msgstr "प्रमाणपत्रसञ्चिकां चिनोतु"
+
+#: ui/CodecError.qml:13
+#, kde-format
+msgctxt "@info:status"
+msgid ""
+"Remote desktop cannot be enabled because your system does not support H264 "
+"video encoding. Please contact your distribution regarding how to enable it."
+msgstr ""
+"दूरस्थं डेस्कटॉप् सक्षमं कर्तुं न शक्यते यतोहि भवतः प्रणाली H264 विडियो एन्कोडिंग् समर्थयति "
+"नास्ति । कथं सक्षमं कर्तव्यमिति विषये कृपया स्ववितरणं सम्पर्कं कुर्वन्तु।"
 
 #: ui/DeleteUserModal.qml:14
 #, kde-format
@@ -127,7 +155,135 @@ msgctxt "@option:check Enable RDP server"
 msgid "Enable RDP server"
 msgstr "RDP सर्वरं सक्षमं कुर्वन्तु"
 
-#: ui/main.qml:104
+#: ui/main.qml:115 ui/main_phone.qml:101
+#, kde-format
+msgid ""
+"Set up remote login to connect using apps supporting the “RDP” remote "
+"desktop protocol."
+msgstr ""
+"“RDP” दूरस्थं डेस्कटॉप् प्रोटोकॉलं समर्थयन्तः एप्स् उपयुज्य संयोजयितुं दूरस्थप्रवेशं सेट् कुर्वन्तु ।"
+
+#: ui/main.qml:124
+#, kde-format
+msgctxt "@info:usagetip"
+msgid "Use any of the following addresses to connect to this device:"
+msgstr "अस्मिन् यन्त्रे सम्बद्धं कर्तुं निम्नलिखितपतेः कस्यापि उपयोगं कुर्वन्तु:"
+
+#: ui/main.qml:156 ui/main_phone.qml:157
+#, kde-format
+msgctxt "@action:button"
+msgid "Copy Address to Clipboard"
+msgstr "Address इत्यस्य प्रतिलिपिं Clipboard इत्यत्र कुर्वन्तु"
+
+#: ui/main.qml:183
+#, kde-format
+msgctxt "title:group Group of RDP server settings"
+msgid "Server Settings"
+msgstr "सर्वर सेटिंग्स्"
+
+#: ui/main.qml:188
+#, kde-format
+msgctxt "@option:check"
+msgid "Autostart on login"
+msgstr "स्वतःप्रारम्भः प्रवेशः अस्ति"
+
+#: ui/main.qml:204
+#, kde-format
+msgctxt "@label:textbox"
+msgid "Listening Port:"
+msgstr "श्रवण पोर्ट् :"
+
+#: ui/main.qml:219
+#, kde-format
+msgctxt "@label:textbox"
+msgid "Video quality:"
+msgstr "विडियो गुणवत्ता :"
+
+#: ui/main.qml:238
+#, kde-format
+msgctxt "@label:slider"
+msgid "Responsiveness"
+msgstr "प्रतिक्रियाशीलता"
+
+#: ui/main.qml:244
+#, kde-format
+msgctxt "@label:slider"
+msgid "Quality"
+msgstr "गुणवत्ता"
+
+#: ui/main.qml:251
+#, kde-format
+msgctxt "title:group Group of RDP server settings"
+msgid "Security Certificates"
+msgstr "सुरक्षा प्रमाणपत्र"
+
+#: ui/main.qml:256
+#, kde-format
+msgctxt "@label:check generate security certificates automatically"
+msgid "Generate automatically"
+msgstr "स्वयमेव जनयति"
+
+#: ui/main.qml:274
+#, kde-format
+msgctxt "@label:textbox"
+msgid "Certificate path:"
+msgstr "प्रमाणपत्रमार्गः :"
+
+#: ui/main.qml:289
+#, kde-format
+msgctxt "@action:button"
+msgid "Choose Certificate File…"
+msgstr "प्रमाणपत्रसञ्चिकां चिनोतु..."
+
+#: ui/main.qml:301
+#, kde-format
+msgctxt "@label:textbox"
+msgid "Certificate key path:"
+msgstr "प्रमाणपत्रकुंजीमार्गः :"
+
+#: ui/main.qml:317
+#, kde-format
+msgctxt "@action:button"
+msgid "Choose Certificate Key File…"
+msgstr "प्रमाणपत्रकुंजीसञ्चिकां चिनोतु..."
+
+#: ui/main_phone.qml:94
+#, kde-format
+msgctxt "@title:group"
+msgid "Remote Desktop Access"
+msgstr ""
+
+#: ui/main_phone.qml:105
+#, fuzzy, kde-format
+#| msgctxt "@option:check Enable RDP server"
+#| msgid "Enable RDP server"
+msgctxt "@option:check"
+msgid "Enable RDP Server"
+msgstr "RDP सर्वरं सक्षमं कुर्वन्तु"
+
+#: ui/main_phone.qml:128
+#, fuzzy, kde-format
+#| msgctxt "@label:textbox"
+#| msgid "Username:"
+msgid "Hostname:"
+msgstr "उपयोक्तृनाम :"
+
+#: ui/main_phone.qml:134
+#, fuzzy, kde-format
+#| msgctxt "@info:usagetip"
+#| msgid "Use any of the following addresses to connect to this device:"
+msgid "Use any of the following addresses to connect to this device:"
+msgstr "अस्मिन् यन्त्रे सम्बद्धं कर्तुं निम्नलिखितपतेः कस्यापि उपयोगं कुर्वन्तु:"
+
+#: ui/main_phone.qml:172
+#, fuzzy, kde-format
+#| msgctxt "title:group Group of RDP server settings"
+#| msgid "Server Settings"
+msgctxt "@title:group"
+msgid "Server Settings"
+msgstr "सर्वर सेटिंग्स्"
+
+#: ui/RestartServerWarning.qml:13
 #, kde-format
 msgctxt "@info:status"
 msgid ""
@@ -136,169 +292,49 @@ msgid ""
 msgstr ""
 "परिवर्तितानि सेटिङ्ग्स् प्रयोक्तुं सर्वरं पुनः आरभत । एतेन सक्रियसंयोजनानि विच्छिन्दितुं शक्यन्ते ।"
 
-#: ui/main.qml:108
+#: ui/RestartServerWarning.qml:17
 #, kde-format
 msgid "Restart Server"
 msgstr "सर्वरं पुनः आरभत"
 
-#: ui/main.qml:122
-#, kde-format
-msgctxt "@info:status"
-msgid ""
-"Remote desktop cannot be enabled because your system does not support H264 "
-"video encoding. Please contact your distribution regarding how to enable it."
-msgstr ""
-"दूरस्थं डेस्कटॉप् सक्षमं कर्तुं न शक्यते यतोहि भवतः प्रणाली H264 विडियो एन्कोडिंग् समर्थयति "
-"नास्ति । कथं सक्षमं कर्तव्यमिति विषये कृपया स्ववितरणं सम्पर्कं कुर्वन्तु।"
-
-#: ui/main.qml:131
-#, kde-format
-msgctxt "@info:status"
-msgid "Generating certificates automatically has failed!"
-msgstr "प्रमाणपत्राणि स्वयमेव जनयितुं विफलं जातम्!"
-
-#: ui/main.qml:141
-#, kde-format
-msgid ""
-"Set up remote login to connect using apps supporting the “RDP” remote "
-"desktop protocol."
-msgstr ""
-"“RDP” दूरस्थं डेस्कटॉप् प्रोटोकॉलं समर्थयन्तः एप्स् उपयुज्य संयोजयितुं दूरस्थप्रवेशं सेट् कुर्वन्तु ।"
-
-#: ui/main.qml:150
-#, kde-format
-msgctxt "@info:usagetip"
-msgid "Use any of the following addresses to connect to this device:"
-msgstr "अस्मिन् यन्त्रे सम्बद्धं कर्तुं निम्नलिखितपतेः कस्यापि उपयोगं कुर्वन्तु:"
-
-#: ui/main.qml:182
-#, kde-format
-msgctxt "@action:button"
-msgid "Copy Address to Clipboard"
-msgstr "Address इत्यस्य प्रतिलिपिं Clipboard इत्यत्र कुर्वन्तु"
-
-#: ui/main.qml:204
+#: ui/UserListView.qml:20
 #, kde-format
 msgctxt "@title"
 msgid "Usernames"
 msgstr "उपयोक्तृनाम"
 
-#: ui/main.qml:208
+#: ui/UserListView.qml:24
 #, kde-format
 msgctxt "@action:button"
 msgid "Add New…"
 msgstr "Add New..."
 
-#: ui/main.qml:209
+#: ui/UserListView.qml:25
 #, kde-format
 msgctxt "@action:button"
 msgid "Add New User Account…"
 msgstr "नूतनं उपयोक्तृलेखं योजयतु..."
 
-#: ui/main.qml:222
+#: ui/UserListView.qml:38
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "Add at least one user account to enable remote login"
 msgstr "दूरस्थप्रवेशं सक्षमं कर्तुं न्यूनातिन्यूनम् एकं उपयोक्तृलेखं योजयन्तु"
 
-#: ui/main.qml:223
+#: ui/UserListView.qml:39
 #, kde-kuit-format
 msgctxt "@info:placeholder"
 msgid "Click <interface>Add New…</interface> to add one"
 msgstr "एकं योजयितुं <interface>Add New...</interface> नुदन्तु"
 
-#: ui/main.qml:248
+#: ui/UserListView.qml:64
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify user…"
 msgstr "उपयोक्तृं परिवर्तयतु..."
 
-#: ui/main.qml:262
+#: ui/UserListView.qml:78
 #, kde-format
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "उपयोक्तारं निष्कासयन्तु..."
-
-#: ui/main.qml:286
-#, kde-format
-msgctxt "title:group Group of RDP server settings"
-msgid "Server Settings"
-msgstr "सर्वर सेटिंग्स्"
-
-#: ui/main.qml:291
-#, kde-format
-msgctxt "@option:check"
-msgid "Autostart on login"
-msgstr "स्वतःप्रारम्भः प्रवेशः अस्ति"
-
-#: ui/main.qml:307
-#, kde-format
-msgctxt "@label:textbox"
-msgid "Listening Port:"
-msgstr "श्रवण पोर्ट् :"
-
-#: ui/main.qml:322
-#, kde-format
-msgctxt "@label:textbox"
-msgid "Video quality:"
-msgstr "विडियो गुणवत्ता :"
-
-#: ui/main.qml:341
-#, kde-format
-msgctxt "@label:slider"
-msgid "Responsiveness"
-msgstr "प्रतिक्रियाशीलता"
-
-#: ui/main.qml:347
-#, kde-format
-msgctxt "@label:slider"
-msgid "Quality"
-msgstr "गुणवत्ता"
-
-#: ui/main.qml:354
-#, kde-format
-msgctxt "title:group Group of RDP server settings"
-msgid "Security Certificates"
-msgstr "सुरक्षा प्रमाणपत्र"
-
-#: ui/main.qml:359
-#, kde-format
-msgctxt "@label:check generate security certificates automatically"
-msgid "Generate automatically"
-msgstr "स्वयमेव जनयति"
-
-#: ui/main.qml:377
-#, kde-format
-msgctxt "@label:textbox"
-msgid "Certificate path:"
-msgstr "प्रमाणपत्रमार्गः :"
-
-#: ui/main.qml:392
-#, kde-format
-msgctxt "@action:button"
-msgid "Choose Certificate File…"
-msgstr "प्रमाणपत्रसञ्चिकां चिनोतु..."
-
-#: ui/main.qml:404
-#, kde-format
-msgctxt "@label:textbox"
-msgid "Certificate key path:"
-msgstr "प्रमाणपत्रकुंजीमार्गः :"
-
-#: ui/main.qml:420
-#, kde-format
-msgctxt "@action:button"
-msgid "Choose Certificate Key File…"
-msgstr "प्रमाणपत्रकुंजीसञ्चिकां चिनोतु..."
-
-#: ui/main.qml:436
-#, kde-format
-msgctxt "@title:window"
-msgid "Select Certificate Key file"
-msgstr "Certificate Key सञ्चिकां चिनोतु"
-
-#: ui/main.qml:436
-#, kde-format
-msgctxt "@title:window"
-msgid "Select Certificate file"
-msgstr "प्रमाणपत्रसञ्चिकां चिनोतु"
