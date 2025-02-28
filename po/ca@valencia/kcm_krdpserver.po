@@ -1,15 +1,15 @@
 # Translation of kcm_krdpserver.po to Catalan (Valencian)
-# Copyright (C) 2024 This_file_is_part_of_KDE
+# Copyright (C) 2024-2025 This_file_is_part_of_KDE
 # This file is distributed under the license LGPL version 2.1 or
 # version 3 or later versions approved by the membership of KDE e.V.
 #
-# SPDX-FileCopyrightText: 2024 Josep M. Ferrer <txemaq@gmail.com>
+# SPDX-FileCopyrightText: 2024, 2025 Josep M. Ferrer <txemaq@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-02-27 00:42+0000\n"
-"PO-Revision-Date: 2024-10-26 18:57+0200\n"
+"PO-Revision-Date: 2025-02-27 15:13+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.08.2\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #. i18n: ectx: label, entry (ListenPort), group (General)
 #: krdpserversettings.kcfg:14
@@ -257,36 +257,28 @@ msgstr "Seleccioneu un fitxer de clau de certificat…"
 #, kde-format
 msgctxt "@title:group"
 msgid "Remote Desktop Access"
-msgstr ""
+msgstr "Accés d'escriptori remot"
 
 #: ui/main_phone.qml:105
-#, fuzzy, kde-format
-#| msgctxt "@option:check Enable RDP server"
-#| msgid "Enable RDP server"
+#, kde-format
 msgctxt "@option:check"
 msgid "Enable RDP Server"
 msgstr "Activa el servidor RDP"
 
 #: ui/main_phone.qml:128
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Username:"
+#, kde-format
 msgid "Hostname:"
-msgstr "Nom d'usuari:"
+msgstr "Nom de l'amfitrió:"
 
 #: ui/main_phone.qml:134
-#, fuzzy, kde-format
-#| msgctxt "@info:usagetip"
-#| msgid "Use any of the following addresses to connect to this device:"
+#, kde-format
 msgid "Use any of the following addresses to connect to this device:"
 msgstr ""
 "Utilitza qualsevol de les adreces següents per a connectar amb este "
 "dispositiu:"
 
 #: ui/main_phone.qml:172
-#, fuzzy, kde-format
-#| msgctxt "title:group Group of RDP server settings"
-#| msgid "Server Settings"
+#, kde-format
 msgctxt "@title:group"
 msgid "Server Settings"
 msgstr "Configureu el servidor"

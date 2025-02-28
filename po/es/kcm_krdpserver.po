@@ -1,15 +1,15 @@
 # Spanish translations for kcm_krdpserver.po package.
-# Copyright (C) 2024 This file is copyright:
+# Copyright (C) 2024-2025 This file is copyright:
 # This file is distributed under the same license as the krdp package.
 # Automatically generated, 2024.
 #
-# SPDX-FileCopyrightText: 2024 Eloy Cuadra <ecuadra@eloihr.net>
+# SPDX-FileCopyrightText: 2024, 2025 Eloy Cuadra <ecuadra@eloihr.net>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_krdpserver\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-02-27 00:42+0000\n"
-"PO-Revision-Date: 2024-08-07 00:51+0200\n"
+"PO-Revision-Date: 2025-02-27 12:17+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.05.2\n"
+"X-Generator: Lokalize 24.12.2\n"
 
 #. i18n: ectx: label, entry (ListenPort), group (General)
 #: krdpserversettings.kcfg:14
@@ -239,7 +239,7 @@ msgstr "Ruta de los certificados:"
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate File…"
-msgstr "Escoger archivo de certificado..."
+msgstr "Escoger archivo de certificado…"
 
 #: ui/main.qml:301
 #, kde-format
@@ -251,41 +251,33 @@ msgstr "Ruta de clave del certificado"
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate Key File…"
-msgstr "Escoger archivo de clave del certificado..."
+msgstr "Escoger archivo de clave del certificado…"
 
 #: ui/main_phone.qml:94
 #, kde-format
 msgctxt "@title:group"
 msgid "Remote Desktop Access"
-msgstr ""
+msgstr "Acceso a escritorio remoto"
 
 #: ui/main_phone.qml:105
-#, fuzzy, kde-format
-#| msgctxt "@option:check Enable RDP server"
-#| msgid "Enable RDP server"
+#, kde-format
 msgctxt "@option:check"
 msgid "Enable RDP Server"
 msgstr "Activar servidor RDP"
 
 #: ui/main_phone.qml:128
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Username:"
+#, kde-format
 msgid "Hostname:"
-msgstr "Nombre de usuario:"
+msgstr "Nombre de la máquina:"
 
 #: ui/main_phone.qml:134
-#, fuzzy, kde-format
-#| msgctxt "@info:usagetip"
-#| msgid "Use any of the following addresses to connect to this device:"
+#, kde-format
 msgid "Use any of the following addresses to connect to this device:"
 msgstr ""
 "Use una de las siguientes direcciones para conectarse a este dispositivo:"
 
 #: ui/main_phone.qml:172
-#, fuzzy, kde-format
-#| msgctxt "title:group Group of RDP server settings"
-#| msgid "Server Settings"
+#, kde-format
 msgctxt "@title:group"
 msgid "Server Settings"
 msgstr "Preferencias del servidor"
@@ -315,13 +307,13 @@ msgstr "Nombres de usuarios"
 #, kde-format
 msgctxt "@action:button"
 msgid "Add New…"
-msgstr "Añadir nuevo..."
+msgstr "Añadir nuevo…"
 
 #: ui/UserListView.qml:25
 #, kde-format
 msgctxt "@action:button"
 msgid "Add New User Account…"
-msgstr "Añadir nueva cuenta de usuario..."
+msgstr "Añadir nueva cuenta de usuario…"
 
 #: ui/UserListView.qml:38
 #, kde-format
@@ -334,23 +326,16 @@ msgstr ""
 #, kde-kuit-format
 msgctxt "@info:placeholder"
 msgid "Click <interface>Add New…</interface> to add one"
-msgstr "Pulse <interface>Añadir nuevo...</interface> para añadir uno"
+msgstr "Pulse <interface>Añadir nuevo…</interface> para añadir uno"
 
 #: ui/UserListView.qml:64
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify user…"
-msgstr "Modificar usuario..."
+msgstr "Modificar usuario…"
 
 #: ui/UserListView.qml:78
 #, kde-format
 msgctxt "@action:button"
 msgid "Remove user…"
-msgstr "Eliminar usuario..."
-
-#~ msgid "The address the server listens on"
-#~ msgstr "La dirección en la que escucha el servidor"
-
-#~ msgctxt "@label:textbox"
-#~ msgid "Listening Address:"
-#~ msgstr "Dirección de escucha:"
+msgstr "Eliminar usuario…"

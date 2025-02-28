@@ -1,13 +1,13 @@
 # Copyright (C) 2024 This file is copyright:
 # This file is distributed under the same license as the krdp package.
 #
-# SPDX-FileCopyrightText: 2024 Freek de Kruijf <freekdekruijf@kde.nl>
+# SPDX-FileCopyrightText: 2024, 2025 Freek de Kruijf <freekdekruijf@kde.nl>
 msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-02-27 00:42+0000\n"
-"PO-Revision-Date: 2024-08-06 10:24+0200\n"
+"PO-Revision-Date: 2025-02-27 23:05+0100\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.05.2\n"
+"X-Generator: Lokalize 24.12.2\n"
 
 #. i18n: ectx: label, entry (ListenPort), group (General)
 #: krdpserversettings.kcfg:14
@@ -255,35 +255,27 @@ msgstr "Certificaatsleutelbestand kiezen…"
 #, kde-format
 msgctxt "@title:group"
 msgid "Remote Desktop Access"
-msgstr ""
+msgstr "Toegang tot bureaublad op afstand"
 
 #: ui/main_phone.qml:105
-#, fuzzy, kde-format
-#| msgctxt "@option:check Enable RDP server"
-#| msgid "Enable RDP server"
+#, kde-format
 msgctxt "@option:check"
 msgid "Enable RDP Server"
 msgstr "RDP-server inschakelen"
 
 #: ui/main_phone.qml:128
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Username:"
+#, kde-format
 msgid "Hostname:"
-msgstr "Gebruikersnaam:"
+msgstr "Hostnaam:"
 
 #: ui/main_phone.qml:134
-#, fuzzy, kde-format
-#| msgctxt "@info:usagetip"
-#| msgid "Use any of the following addresses to connect to this device:"
+#, kde-format
 msgid "Use any of the following addresses to connect to this device:"
 msgstr ""
 "Een van de volgende adressen gebruiken om met dit apparaat te verbinden:"
 
 #: ui/main_phone.qml:172
-#, fuzzy, kde-format
-#| msgctxt "title:group Group of RDP server settings"
-#| msgid "Server Settings"
+#, kde-format
 msgctxt "@title:group"
 msgid "Server Settings"
 msgstr "Serverinstellingen"

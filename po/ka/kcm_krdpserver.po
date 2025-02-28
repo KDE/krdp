@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-02-27 00:42+0000\n"
-"PO-Revision-Date: 2024-08-06 05:49+0200\n"
+"PO-Revision-Date: 2025-02-27 08:36+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.3.2\n"
+"X-Generator: Poedit 3.5\n"
 
 #. i18n: ectx: label, entry (ListenPort), group (General)
 #: krdpserversettings.kcfg:14
@@ -253,35 +253,27 @@ msgstr "აირჩიეთ სერტიფიკატის გასა�
 #, kde-format
 msgctxt "@title:group"
 msgid "Remote Desktop Access"
-msgstr ""
+msgstr "წვდომა დაშორებულ სამუშაო მაგიდასთან"
 
 #: ui/main_phone.qml:105
-#, fuzzy, kde-format
-#| msgctxt "@option:check Enable RDP server"
-#| msgid "Enable RDP server"
+#, kde-format
 msgctxt "@option:check"
 msgid "Enable RDP Server"
 msgstr "RDP სერვერის ჩართვა"
 
 #: ui/main_phone.qml:128
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Username:"
+#, kde-format
 msgid "Hostname:"
-msgstr "მომხმარებელი:"
+msgstr "ჰოსტის სახელი:"
 
 #: ui/main_phone.qml:134
-#, fuzzy, kde-format
-#| msgctxt "@info:usagetip"
-#| msgid "Use any of the following addresses to connect to this device:"
+#, kde-format
 msgid "Use any of the following addresses to connect to this device:"
 msgstr ""
 "გამოიყენეთ ნებისმიერი ამ მისამართებიდან, რომ ამ მოწყობილობას დაუკავშირდეთ:"
 
 #: ui/main_phone.qml:172
-#, fuzzy, kde-format
-#| msgctxt "title:group Group of RDP server settings"
-#| msgid "Server Settings"
+#, kde-format
 msgctxt "@title:group"
 msgid "Server Settings"
 msgstr "სერვერის მორგება"
