@@ -257,11 +257,9 @@ msgid "Enable RDP Server"
 msgstr "Povolit server RDP"
 
 #: ui/main_phone.qml:128
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Username:"
+#, kde-format
 msgid "Hostname:"
-msgstr "Uživatelské jméno:"
+msgstr "Název počítače:"
 
 #: ui/main_phone.qml:134
 #, kde-format
