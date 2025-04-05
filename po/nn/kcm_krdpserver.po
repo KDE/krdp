@@ -256,30 +256,22 @@ msgstr ""
 
 #: ui/main_phone.qml:105
 #, fuzzy, kde-format
-#| msgctxt "@option:check Enable RDP server"
-#| msgid "Enable RDP server"
 msgctxt "@option:check"
 msgid "Enable RDP Server"
 msgstr "Bruk RDP-tenar"
 
 #: ui/main_phone.qml:128
 #, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Username:"
 msgid "Hostname:"
 msgstr "Brukarnamn:"
 
 #: ui/main_phone.qml:134
 #, fuzzy, kde-format
-#| msgctxt "@info:usagetip"
-#| msgid "Use any of the following addresses to connect to this device:"
 msgid "Use any of the following addresses to connect to this device:"
 msgstr "Bruk ei av desse adressene til å kopla til eininga:"
 
 #: ui/main_phone.qml:172
 #, fuzzy, kde-format
-#| msgctxt "title:group Group of RDP server settings"
-#| msgid "Server Settings"
 msgctxt "@title:group"
 msgid "Server Settings"
 msgstr "Tenarinnstillingar"
