@@ -124,18 +124,18 @@ bool InputHandler::mouseEvent(uint16_t x, uint16_t y, uint16_t flags)
         }
         axis *= flags & PTR_FLAGS_WHEEL_NEGATIVE ? 1 : -1;
         auto event =
-            std::make_shared<QWheelEvent>(QPointF{}, position, QPoint{}, QPoint{0, axis}, Qt::NoButton, Qt::KeyboardModifiers{}, Qt::NoScrollPhase, false);
+            std::make_shared<QWheelEvent>(position, QPointF{}, QPoint{}, QPoint{0, axis}, Qt::NoButton, Qt::KeyboardModifiers{}, Qt::NoScrollPhase, false);
         Q_EMIT inputEvent(event);
         return true;
     }
 
     std::shared_ptr<QMouseEvent> event;
     if (flags & PTR_FLAGS_DOWN) {
-        event = std::make_shared<QMouseEvent>(QEvent::MouseButtonPress, QPointF{}, position, button, button, Qt::NoModifier);
+        event = std::make_shared<QMouseEvent>(QEvent::MouseButtonPress, position, QPointF{}, button, button, Qt::NoModifier);
     } else if (flags & PTR_FLAGS_MOVE) {
-        event = std::make_shared<QMouseEvent>(QEvent::MouseMove, QPointF{}, position, button, button, Qt::NoModifier);
+        event = std::make_shared<QMouseEvent>(QEvent::MouseMove, position, QPointF{}, button, button, Qt::NoModifier);
     } else {
-        event = std::make_shared<QMouseEvent>(QEvent::MouseButtonRelease, QPointF{}, position, button, button, Qt::NoModifier);
+        event = std::make_shared<QMouseEvent>(QEvent::MouseButtonRelease, position, QPointF{}, button, button, Qt::NoModifier);
     }
     Q_EMIT inputEvent(event);
 
@@ -159,10 +159,10 @@ bool InputHandler::extendedMouseEvent(uint16_t x, uint16_t y, uint16_t flags)
 
     std::shared_ptr<QMouseEvent> event;
     if (flags & PTR_XFLAGS_DOWN) {
-        event = std::make_shared<QMouseEvent>(QEvent::MouseButtonPress, QPointF{}, QPointF(x, y), button, button, Qt::KeyboardModifiers{});
+        event = std::make_shared<QMouseEvent>(QEvent::MouseButtonPress, QPointF(x, y), QPointF{}, button, button, Qt::KeyboardModifiers{});
 
     } else {
-        event = std::make_shared<QMouseEvent>(QEvent::MouseButtonRelease, QPointF{}, QPointF(x, y), button, button, Qt::KeyboardModifiers{});
+        event = std::make_shared<QMouseEvent>(QEvent::MouseButtonRelease, QPointF(x, y), QPointF{}, button, button, Qt::KeyboardModifiers{});
     }
     Q_EMIT inputEvent(event);
 
