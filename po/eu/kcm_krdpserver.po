@@ -1,16 +1,16 @@
 # Translation for kcm_krdpserver.po to Euskara/Basque (eu).
-# Copyright (C) 2024 This file is copyright:
+# Copyright (C) 2024-2025 This file is copyright:
 # This file is distributed under the same license as the krdp package.
-# SPDX-FileCopyrightText: 2024 KDE euskaratzeko proiektuko arduraduna <xalba@ni.eus>
+# SPDX-FileCopyrightText: 2024, 2025 KDE euskaratzeko proiektuaren arduraduna <xalba@ni.eus>
 #
 # Translators:
-# SPDX-FileCopyrightText: 2024 Iñigo Salvador Azurmendi <xalba@ni.eus>
+# Iñigo Salvador Azurmendi <xalba@ni.eus>, 2024, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-02-27 00:42+0000\n"
-"PO-Revision-Date: 2024-08-06 11:33+0200\n"
+"PO-Revision-Date: 2025-04-23 00:06+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 24.05.2\n"
+"X-Generator: Lokalize 25.04.0\n"
 
 #. i18n: ectx: label, entry (ListenPort), group (General)
 #: krdpserversettings.kcfg:14
@@ -255,34 +255,26 @@ msgstr "Hautatu ziurtagiri-gakoaren fitxategia..."
 #, kde-format
 msgctxt "@title:group"
 msgid "Remote Desktop Access"
-msgstr ""
+msgstr "Urruneko mahaigainera sarbidea"
 
 #: ui/main_phone.qml:105
-#, fuzzy, kde-format
-#| msgctxt "@option:check Enable RDP server"
-#| msgid "Enable RDP server"
+#, kde-format
 msgctxt "@option:check"
 msgid "Enable RDP Server"
 msgstr "Gaitu RDP zerbitzaria"
 
 #: ui/main_phone.qml:128
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Username:"
+#, kde-format
 msgid "Hostname:"
-msgstr "Erabiltzaile-izena:"
+msgstr "Ostalari-izena:"
 
 #: ui/main_phone.qml:134
-#, fuzzy, kde-format
-#| msgctxt "@info:usagetip"
-#| msgid "Use any of the following addresses to connect to this device:"
+#, kde-format
 msgid "Use any of the following addresses to connect to this device:"
 msgstr "Erabili ondoko helbideetako edozein gailu honetara konektatzeko:"
 
 #: ui/main_phone.qml:172
-#, fuzzy, kde-format
-#| msgctxt "title:group Group of RDP server settings"
-#| msgid "Server Settings"
+#, kde-format
 msgctxt "@title:group"
 msgid "Server Settings"
 msgstr "Zerbitzariaren ezarpenak"
