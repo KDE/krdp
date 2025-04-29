@@ -221,9 +221,9 @@ KCM.ScrollViewKCM {
             QQC2.Slider {
                 id: qualitySlider
                 Layout.fillWidth: true
-                from: 0
+                from: 50
                 to: 100
-                stepSize: 1
+                stepSize: 5
                 value: settings.quality
                 onMoved: {
                     settings.quality = value;

@@ -26,7 +26,7 @@ SPDX-License-Identifier: BSD-2-Clause
     </entry>
     <entry name="Quality" type="Int">
       <label>The quality of the video stream</label>
-      <default>50</default>
+      <default>75</default>
     </entry>
     <entry name="Users" type="StringList">
       <label>Users allowed to login, passwords are stored in KWallet</label>
