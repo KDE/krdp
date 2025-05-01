@@ -110,6 +110,7 @@ SessionController::SessionController(KRdp::Server *server, SessionType sessionTy
         // reconnection.
         connect(m_initializationSession.get(), &KRdp::AbstractSession::started, this, cleanup);
         connect(m_initializationSession.get(), &KRdp::AbstractSession::error, this, cleanup);
+        m_initializationSession->start();
     }
 }
 
