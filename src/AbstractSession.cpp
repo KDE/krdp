@@ -38,7 +38,7 @@ AbstractSession::AbstractSession(Server *server)
 AbstractSession::~AbstractSession()
 {
     if (d->encodedStream) {
-        d->encodedStream->setActive(false);
+        d->encodedStream->stop();
     }
 }
 
@@ -89,7 +89,11 @@ void AbstractSession::setStreamingEnabled(bool enable)
 {
     d->enabled = enable;
     if (d->encodedStream) {
-        d->encodedStream->setActive(enable && d->started);
+        if (enable && d->started) {
+            d->encodedStream->start();
+        } else {
+            d->encodedStream->stop();
+        }
     }
 }
 
@@ -136,8 +140,10 @@ void AbstractSession::setStarted(bool s)
 {
     d->started = s;
     if (s) {
+        if (d->enabled) {
+            d->encodedStream->start();
+        }
         Q_EMIT started();
-        d->encodedStream->setActive(d->enabled);
     }
 }
 
