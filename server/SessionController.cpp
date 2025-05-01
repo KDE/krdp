@@ -35,6 +35,10 @@ public:
         connect(connection->videoStream(), &KRdp::VideoStream::requestedFrameRateChanged, this, &SessionWrapper::onRequestedFrameRateChanged);
         connect(connection->inputHandler(), &KRdp::InputHandler::inputEvent, session.get(), &KRdp::AbstractSession::sendEvent);
         connect(connection, &QObject::destroyed, this, &SessionWrapper::onConnectionDestroyed);
+
+        if (connection->videoStream()->enabled()) {
+            session->requestStreamingEnable(connection->videoStream());
+        }
     }
 
     void onCursorUpdate(const PipeWireCursor &cursor)
