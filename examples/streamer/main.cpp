@@ -59,6 +59,7 @@ int main(int argc, char **argv)
         timer.setInterval(parser.value(u"quit-after"_qs).toInt() * 1000);
     }
 
+    session.start();
     auto result = application.exec();
 
     file.close();
