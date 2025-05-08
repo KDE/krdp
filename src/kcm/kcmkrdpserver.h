@@ -59,6 +59,7 @@ Q_SIGNALS:
     void serverRunning(const bool &isServerRunning);
 
 private:
+    void createRestoreToken();
     KRDPServerSettings *m_serverSettings;
     Q_SLOT void servicePropertiesChanged();
     bool m_isH264Supported { false };

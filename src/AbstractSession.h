@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include "VideoStream.h"
 #include "krdp_export.h"
 
 #include <PipeWireEncodedStream>
@@ -12,6 +11,7 @@
 
 namespace KRdp
 {
+struct VideoFrame;
 class Server;
 
 struct VirtualMonitor {

@@ -18,6 +18,8 @@
 #include <PlasmaScreencastV1Session.h>
 #endif
 
+#include "VideoStream.h"
+
 class SessionWrapper : public QObject
 {
     Q_OBJECT
@@ -94,24 +96,6 @@ SessionController::SessionController(KRdp::Server *server, SessionType sessionTy
     connect(quitAction, &QAction::triggered, this, &SessionController::stopFromSNI);
     menu->addAction(quitAction);
     m_sni->setContextMenu(menu);
-
-    // Create a single temporary session to request permissions from the portal
-    // on startup.
-    if (sessionType == SessionType::Portal) {
-        m_initializationSession = makeSession();
-
-        auto cleanup = [this]() {
-            auto session = m_initializationSession.release();
-            session->deleteLater();
-        };
-
-        // Destroy the session after we've successfully connected, we just use
-        // it to get permissions. Reusing it is going to lead to problems with
-        // reconnection.
-        connect(m_initializationSession.get(), &KRdp::AbstractSession::started, this, cleanup);
-        connect(m_initializationSession.get(), &KRdp::AbstractSession::error, this, cleanup);
-        m_initializationSession->start();
-    }
 }
 
 SessionController::~SessionController() noexcept
