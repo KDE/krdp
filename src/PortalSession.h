@@ -34,7 +34,7 @@ class KRDP_EXPORT PortalSession : public AbstractSession
     Q_OBJECT
 
 public:
-    explicit PortalSession(Server *server);
+    explicit PortalSession();
     ~PortalSession() override;
 
     void start() override;

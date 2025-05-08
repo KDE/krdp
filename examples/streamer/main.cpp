@@ -27,7 +27,7 @@ int main(int argc, char **argv)
     });
     parser.process(application);
 
-    KRdp::PortalSession session{nullptr};
+    KRdp::PortalSession session;
     session.requestStreamingEnable(&application);
     session.setActiveStream(parser.value(u"monitor"_qs).toInt());
     if (parser.isSet(u"quality"_qs)) {

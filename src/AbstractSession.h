@@ -24,7 +24,7 @@ class KRDP_EXPORT AbstractSession : public QObject
 {
     Q_OBJECT
 public:
-    AbstractSession(Server *server);
+    AbstractSession();
     ~AbstractSession() override;
 
     /**

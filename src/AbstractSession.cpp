@@ -13,8 +13,6 @@ namespace KRdp
 class KRDP_NO_EXPORT AbstractSession::Private
 {
 public:
-    Server *server = nullptr;
-
     std::unique_ptr<PipeWireEncodedStream> encodedStream;
 
     std::optional<int> activeStream;
@@ -28,11 +26,10 @@ public:
     QSet<QObject *> enableRequests;
 };
 
-AbstractSession::AbstractSession(Server *server)
+AbstractSession::AbstractSession()
     : QObject()
     , d(std::make_unique<Private>())
 {
-    d->server = server;
 }
 
 AbstractSession::~AbstractSession()

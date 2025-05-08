@@ -30,7 +30,7 @@ class KRDP_EXPORT PlasmaScreencastV1Session : public AbstractSession
     Q_OBJECT
 
 public:
-    PlasmaScreencastV1Session(Server *server);
+    PlasmaScreencastV1Session();
     ~PlasmaScreencastV1Session() override;
 
     void start() override;
