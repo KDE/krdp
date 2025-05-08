@@ -24,10 +24,25 @@ kconfig_target_kcfg_file(kcm_krdpserver
     GENERATE_MOC
 )
 
+include_directories(${CMAKE_CURRENT_BINARY_DIR}/..)
+
+ecm_qt_declare_logging_category(kcm_krdpserver
+    HEADER krdp_logging.h
+    IDENTIFIER KRDP
+    CATEGORY_NAME org.kde.krdp
+    DESCRIPTION "KRdp"
+    EXPORT kcm_krdpserver
+    DEFAULT_SEVERITY Debug
+)
+
 target_sources(kcm_krdpserver PRIVATE
+   ../PortalSession.cpp
+   ../AbstractSession.cpp
    kcmkrdpserver.cpp
    kcmkrdpserver.h
 )
+
+target_sources(kcm_krdpserver PRIVATE ${_dbus_sources})
 
 ecm_qt_declare_logging_category(kcm_krdpserver
     HEADER krdpkcm_logging.h

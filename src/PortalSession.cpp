@@ -14,7 +14,7 @@
 #include <KSharedConfig>
 
 #include "PortalSession_p.h"
-#include "VideoStream.h"
+#include "VideoFrame.h"
 #include "krdp_logging.h"
 #include "xdp_dbus_remotedesktop_interface.h"
 #include "xdp_dbus_screencast_interface.h"
@@ -194,7 +194,8 @@ void PortalSession::onCreateSession(uint code, const QVariantMap &result)
         {QStringLiteral("handle_token"), createHandleToken()},
         {QStringLiteral("persist_mode"), PermissionsPersistUntilExplicitlyRevoked},
     };
-    KConfigGroup restorationGroup = KSharedConfig::openStateConfig()->group(QStringLiteral("General"));
+    // name is set explicitly as this is also used by the KCM
+    KConfigGroup restorationGroup = KSharedConfig::openStateConfig(QStringLiteral("krdp-serverstaterc"))->group(QStringLiteral("General"));
     QString restoreToken = restorationGroup.readEntry(QStringLiteral("restorationToken"));
 
     // this is a compatibility path for krdp < 6.3 that used a different name and in .config
@@ -258,7 +259,7 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
         return;
     }
 
-    KConfigGroup restorationGroup = KSharedConfig::openStateConfig()->group(QStringLiteral("General"));
+    KConfigGroup restorationGroup = KSharedConfig::openStateConfig(QStringLiteral("krdp-serverstaterc"))->group(QStringLiteral("General"));
     restorationGroup.writeEntry("restorationToken", result.value(QStringLiteral("restore_token")));
 
     const auto streams = qdbus_cast<QList<PortalSessionStream>>(result.value(QStringLiteral("streams")));

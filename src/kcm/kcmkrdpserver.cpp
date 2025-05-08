@@ -8,6 +8,8 @@
 #include "krdpserversettings.h"
 #include <PipeWireRecord>
 
+#include "../PortalSession.h"
+
 #include <KPluginFactory>
 #include <QClipboard>
 #include <QDBusArgument>
@@ -172,6 +174,24 @@ void KRDPServerConfig::defaults()
     m_serverSettings->setUsers(userList);
 }
 
+void KRDPServerConfig::createRestoreToken()
+{
+    // the first remote desktop usage will show a prompt requiring user interaction
+    // this will cache a restore token that can be used for subsequent logins when potentially remote
+
+    // The long term plan is for the portal having a path for pre-approval
+    // This is blocked on apps not in sandboxes being identifiable
+
+    // create a portal session and save the key
+    auto initializationSession = new KRdp::PortalSession();
+    connect(initializationSession, &KRdp::AbstractSession::started, initializationSession, &QObject::deleteLater);
+    connect(initializationSession, &KRdp::AbstractSession::error, initializationSession, &QObject::deleteLater);
+    connect(initializationSession, &KRdp::AbstractSession::error, initializationSession, []() {
+        qCWarning(KRDPKCM) << "Failed to create temporary session";
+    });
+    initializationSession->start();
+}
+
 bool KRDPServerConfig::isH264Supported()
 {
     return m_isH264Supported;
@@ -215,6 +235,10 @@ void KRDPServerConfig::toggleAutoconnect(const bool enabled)
         msg.setArguments({QStringList(u"app-org.kde.krdpserver.service"_qs), false});
     }
     QDBusConnection::sessionBus().asyncCall(msg);
+
+    if (enabled) {
+        createRestoreToken();
+    }
 }
 
 void KRDPServerConfig::toggleServer(const bool enabled)
@@ -224,6 +248,10 @@ void KRDPServerConfig::toggleServer(const bool enabled)
     msg.setArguments({u"replace"_qs});
     qDebug(KRDPKCM) << "Toggling KRDP Server to " << enabled << "over QDBus";
     QDBusConnection::sessionBus().asyncCall(msg);
+
+    if (enabled) {
+        createRestoreToken();
+    }
 }
 
 void KRDPServerConfig::restartServer()

@@ -3,6 +3,8 @@
 
 add_library(KRdp)
 
+add_library(PortalActivation STATIC)
+
 if (BUILD_PLASMA_SESSION)
     if (Qt6_VERSION VERSION_GREATER_EQUAL "6.8.0")
         set(private_code_option  "PRIVATE_CODE")
