@@ -83,12 +83,10 @@ QString createHandleToken()
     return QStringLiteral("krdp%1").arg(QRandomGenerator::global()->generate());
 }
 
-PortalSession::PortalSession(Server *server)
-    : AbstractSession(server)
+PortalSession::PortalSession()
+    : AbstractSession()
     , d(std::make_unique<Private>())
 {
-    d->server = server;
-
     d->remoteInterface = std::make_unique<OrgFreedesktopPortalRemoteDesktopInterface>(dbusService, dbusPath, QDBusConnection::sessionBus());
     d->screencastInterface = std::make_unique<OrgFreedesktopPortalScreenCastInterface>(dbusService, dbusPath, QDBusConnection::sessionBus());
 

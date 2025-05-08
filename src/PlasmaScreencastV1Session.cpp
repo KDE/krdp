@@ -158,8 +158,8 @@ public:
     FakeInput *remoteInterface = nullptr;
 };
 
-PlasmaScreencastV1Session::PlasmaScreencastV1Session(Server *server)
-    : AbstractSession(server)
+PlasmaScreencastV1Session::PlasmaScreencastV1Session()
+    : AbstractSession()
     , d(std::make_unique<Private>())
 {
     d->remoteInterface = new FakeInput();

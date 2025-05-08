@@ -176,11 +176,11 @@ std::unique_ptr<KRdp::AbstractSession> SessionController::makeSession()
 {
 #ifdef WITH_PLASMA_SESSION
     if (m_sessionType == SessionType::Plasma) {
-        return std::make_unique<KRdp::PlasmaScreencastV1Session>(m_server);
+        return std::make_unique<KRdp::PlasmaScreencastV1Session>();
     } else
 #endif
     {
-        return std::make_unique<KRdp::PortalSession>(m_server);
+        return std::make_unique<KRdp::PortalSession>();
     }
 }
 
