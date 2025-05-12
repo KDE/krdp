@@ -8,8 +8,6 @@
 #include "krdpserversettings.h"
 #include <PipeWireRecord>
 
-#include "../PortalSession.h"
-
 #include <KPluginFactory>
 #include <QClipboard>
 #include <QDBusArgument>
@@ -22,6 +20,10 @@
 #include <QNetworkInterface>
 #include <QProcess>
 #include <qt6keychain/keychain.h>
+
+#include "org.freedesktop.impl.portal.PermissionStore.h"
+
+using namespace Qt::StringLiterals;
 
 K_PLUGIN_CLASS_WITH_JSON(KRDPServerConfig, "kcm_krdpserver.json")
 
@@ -176,20 +178,27 @@ void KRDPServerConfig::defaults()
 
 void KRDPServerConfig::createRestoreToken()
 {
-    // the first remote desktop usage will show a prompt requiring user interaction
-    // this will cache a restore token that can be used for subsequent logins when potentially remote
-
-    // The long term plan is for the portal having a path for pre-approval
-    // This is blocked on apps not in sandboxes being identifiable
-
-    // create a portal session and save the key
-    auto initializationSession = new KRdp::PortalSession();
-    connect(initializationSession, &KRdp::AbstractSession::started, initializationSession, &QObject::deleteLater);
-    connect(initializationSession, &KRdp::AbstractSession::error, initializationSession, &QObject::deleteLater);
-    connect(initializationSession, &KRdp::AbstractSession::error, initializationSession, []() {
-        qCWarning(KRDPKCM) << "Failed to create temporary session";
+    static std::once_flag flag;
+    std::call_once(flag, [this]() {
+        auto iface = new OrgFreedesktopImplPortalPermissionStoreInterface(u"org.freedesktop.impl.portal.PermissionStore"_s,
+                                                                          u"/org/freedesktop/impl/portal/PermissionStore"_s,
+                                                                          QDBusConnection::sessionBus(),
+                                                                          this);
+        // WARNING: The app_id org.kde.krdpserver must match the service name on the systemd side!
+        auto reply = iface->SetPermission(u"kde-authorized"_s, /* create = */ true, u"remote-desktop"_s, u"org.kde.krdpserver"_s, {u"yes"_s});
+        auto watcher = new QDBusPendingCallWatcher(reply, this);
+        connect(watcher, &QDBusPendingCallWatcher::finished, this, [watcher, iface]() {
+            watcher->deleteLater();
+            iface->deleteLater();
+            QDBusPendingReply<> reply(*watcher);
+            if (reply.isError()) {
+                qCWarning(KRDPKCM) << "Failed to set pre-authorization in portal permission store" << reply.error().message();
+            } else {
+                qCDebug(KRDPKCM) << "Configured pre-authorization in portal permission store";
+            }
+        });
+        return true;
     });
-    initializationSession->start();
 }
 
 bool KRDPServerConfig::isH264Supported()

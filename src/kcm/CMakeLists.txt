@@ -24,8 +24,6 @@ kconfig_target_kcfg_file(kcm_krdpserver
     GENERATE_MOC
 )
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/..)
-
 ecm_qt_declare_logging_category(kcm_krdpserver
     HEADER krdp_logging.h
     IDENTIFIER KRDP
@@ -36,13 +34,13 @@ ecm_qt_declare_logging_category(kcm_krdpserver
 )
 
 target_sources(kcm_krdpserver PRIVATE
-   ../PortalSession.cpp
-   ../AbstractSession.cpp
    kcmkrdpserver.cpp
    kcmkrdpserver.h
 )
 
-target_sources(kcm_krdpserver PRIVATE ${_dbus_sources})
+qt_add_dbus_interface(kcm_krdpserver_dbus_srcs org.freedesktop.impl.portal.PermissionStore.xml org.freedesktop.impl.portal.PermissionStore)
+
+target_sources(kcm_krdpserver PRIVATE ${kcm_krdpserver_dbus_srcs})
 
 ecm_qt_declare_logging_category(kcm_krdpserver
     HEADER krdpkcm_logging.h

@@ -1,0 +1,18 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+                      "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<!--
+  SPDX-License-Identifier: CC0-1.0
+  SPDX-FileCopyrightText: none
+-->
+<node>
+  <interface name="org.freedesktop.impl.portal.PermissionStore">
+    <method name="SetPermission">
+      <arg type="s" name="table" direction="in"/>
+      <arg type="b" name="create" direction="in"/>
+      <arg type="s" name="id" direction="in"/>
+      <arg type="s" name="app" direction="in"/>
+      <arg type="as" name="permissions" direction="in"/>
+    </method>
+  </interface>
+</node>
+
