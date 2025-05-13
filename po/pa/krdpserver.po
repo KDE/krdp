@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-08 00:41+0000\n"
+"POT-Creation-Date: 2025-05-13 00:43+0000\n"
 "PO-Revision-Date: 2024-10-01 14:51-0500\n"
 "Last-Translator: A S Alam <aalam@punlinux.org>\n"
 "Language-Team: pa\n"
@@ -69,12 +69,12 @@ msgstr ""
 msgid "Autostart the server on login"
 msgstr ""
 
-#: SessionController.cpp:89
+#: SessionController.cpp:91
 #, kde-format
 msgid "RDP Server"
 msgstr ""
 
-#: SessionController.cpp:92
+#: SessionController.cpp:94
 #, kde-format
 msgid "Quit"
 msgstr ""
