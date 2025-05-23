@@ -2,6 +2,7 @@
     "KPlugin": {
         "Description": "Configure Remote Desktop",
         "Description[ar]": "اضبط سطح المكتب بعيد",
+        "Description[az]": "İş masasına uzaqdan girişi tənzimləmək",
         "Description[bg]": "Настройване на отдалечено работно място",
         "Description[ca@valencia]": "Configureu escriptori remot",
         "Description[ca]": "Configuració d'escriptori remot",
@@ -44,6 +45,7 @@
         "Icon": "preferences-system-network-remote",
         "Name": "Remote Desktop",
         "Name[ar]": "سطح المكتب بعيد",
+        "Name[az]": "Uzaq iş masası",
         "Name[bg]": "Отдалечено работно място",
         "Name[ca@valencia]": "Escriptori remot",
         "Name[ca]": "Escriptori remot",
@@ -82,6 +84,7 @@
     },
     "X-KDE-Keywords": "KRDP,remote desktop",
     "X-KDE-Keywords[ar]": "سطح المكتب بعيد,كردب",
+    "X-KDE-Keywords[az]": "KRDP,remote desktop,uzaq iş masası",
     "X-KDE-Keywords[bg]": "KRDP,отдалечено работно място",
     "X-KDE-Keywords[ca@valencia]": "KRDP,escriptori remot",
     "X-KDE-Keywords[ca]": "KRDP,escriptori remot",
