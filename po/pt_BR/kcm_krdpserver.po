@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-02-27 00:42+0000\n"
-"PO-Revision-Date: 2025-03-01 17:14-0300\n"
+"PO-Revision-Date: 2025-06-19 23:31-0300\n"
 "Last-Translator: Guilherme Marçal Silva <guimarcalsilva@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 24.12.2\n"
+"X-Generator: Lokalize 25.04.2\n"
 
 #. i18n: ectx: label, entry (ListenPort), group (General)
 #: krdpserversettings.kcfg:14
@@ -171,8 +171,8 @@ msgid ""
 "Set up remote login to connect using apps supporting the “RDP” remote "
 "desktop protocol."
 msgstr ""
-"Configure o login remoto para se conectar usando aplicativos que suportam "
-"oprotocolo de área de trabalho remota “RDP”."
+"Configure o login remoto para se conectar usando aplicativos que suportam o "
+"protocolo de área de trabalho remota “RDP”."
 
 #: ui/main.qml:124
 #, kde-format
