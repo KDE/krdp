@@ -45,7 +45,7 @@ public:
      */
     void sendEvent(const std::shared_ptr<QEvent> &event) override;
 
-    void setClipboardData(QMimeData *data) override;
+    void setClipboardData(std::unique_ptr<QMimeData> data) override;
 
 private:
     void onCreateSession(uint code, const QVariantMap &result);

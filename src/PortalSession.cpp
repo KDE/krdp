@@ -210,9 +210,14 @@ void PortalSession::sendEvent(const std::shared_ptr<QEvent> &event)
     }
 }
 
-void PortalSession::setClipboardData(QMimeData *data)
+void PortalSession::setClipboardData(std::unique_ptr<QMimeData> data)
 {
-    KSystemClipboard::instance()->setMimeData(data, QClipboard::Clipboard);
+    // KSystemClipboard takes ownership
+    if (data) {
+        KSystemClipboard::instance()->setMimeData(data.release(), QClipboard::Clipboard);
+    } else {
+        KSystemClipboard::instance()->clear(QClipboard::Clipboard);
+    }
 }
 
 void PortalSession::onCreateSession(uint code, const QVariantMap &result)

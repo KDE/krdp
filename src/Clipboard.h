@@ -37,7 +37,8 @@ public:
 
     void setServerData(const QMimeData *data);
 
-    Q_SIGNAL void clientDataChanged(QMimeData *clientData);
+    Q_SIGNAL void clientDataChanged();
+    std::unique_ptr<QMimeData> getClipboard() const;
 
 private:
     void sendServerData();

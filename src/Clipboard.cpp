@@ -41,6 +41,7 @@ public:
 
     bool enabled = false;
     const QMimeData *serverData = nullptr;
+    std::unique_ptr<QMimeData> clientData;
 
     static UINT clientFormatList(CliprdrServerContext *context, const CLIPRDR_FORMAT_LIST *formatList)
     {
@@ -142,6 +143,11 @@ void Clipboard::setServerData(const QMimeData *data)
     QMetaObject::invokeMethod(this, &Clipboard::sendServerData, Qt::QueuedConnection);
 }
 
+std::unique_ptr<QMimeData> Clipboard::getClipboard() const
+{
+    return std::move(d->clientData);
+}
+
 void Clipboard::sendServerData()
 {
     if (!d->serverData || !d->enabled) {
@@ -207,11 +213,17 @@ uint32_t Clipboard::Private::onClientFormatDataResponse(const CLIPRDR_FORMAT_DAT
         return CHANNEL_RC_OK;
     }
 
-    auto clientData = new QMimeData();
+    const auto nCharacters = formatDataResponse->common.dataLen / 2 - 1; // Each char16_t is 2 bytes, plus null terminator
+    if (nCharacters < 0) {
+        clientData.reset();
+        Q_EMIT q->clientDataChanged();
+        return CHANNEL_RC_OK; // empty string
+    }
 
-    clientData->setText(
-        QString::fromUtf16(reinterpret_cast<const char16_t *>(formatDataResponse->requestedFormatData), formatDataResponse->common.dataLen / 2 - 1));
-    Q_EMIT q->clientDataChanged(clientData);
+    clientData.reset(new QMimeData());
+
+    clientData->setText(QString::fromUtf16(reinterpret_cast<const char16_t *>(formatDataResponse->requestedFormatData), nCharacters));
+    Q_EMIT q->clientDataChanged();
 
     return CHANNEL_RC_OK;
 }

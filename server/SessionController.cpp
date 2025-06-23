@@ -41,7 +41,9 @@ public:
         connect(connection->videoStream(), &KRdp::VideoStream::enabledChanged, this, &SessionWrapper::onVideoStreamEnabledChanged);
         connect(connection->videoStream(), &KRdp::VideoStream::requestedFrameRateChanged, this, &SessionWrapper::onRequestedFrameRateChanged);
         connect(connection->inputHandler(), &KRdp::InputHandler::inputEvent, session.get(), &KRdp::AbstractSession::sendEvent);
-        connect(connection->clipboard(), &KRdp::Clipboard::clientDataChanged, session.get(), &KRdp::AbstractSession::setClipboardData);
+        connect(connection->clipboard(), &KRdp::Clipboard::clientDataChanged, session.get(), [clipboard = connection->clipboard(), this]() {
+            session->setClipboardData(clipboard->getClipboard());
+        });
 
         connect(connection, &QObject::destroyed, this, &SessionWrapper::onConnectionDestroyed);
     }
