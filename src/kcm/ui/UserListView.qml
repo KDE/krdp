@@ -10,14 +10,13 @@ import org.kde.kirigami as Kirigami
 import org.kde.kirigamiaddons.formcard 1 as FormCard
 import org.kde.kcmutils as KCM
 
-
 ListView {
     id: userListView
     clip: true
     headerPositioning: ListView.OverlayHeader
     header: Kirigami.InlineViewHeader {
         width: userListView.width
-        text: i18nc("@title", "Usernames")
+        text: i18nc("@title", "Additional Users")
         actions: [
             Kirigami.Action {
                 icon.name: "list-add-symbolic"
@@ -39,22 +38,33 @@ ListView {
         explanation: xi18nc("@info:placeholder", "Click <interface>Add New…</interface> to add one")
     }
 
-    model: settings.users
+    model: kcm.users
+
+    section.property: "systemUser"
+    section.delegate: Kirigami.ListSectionHeader {
+        text: section ? i18n("System users") : i18n("Other users")
+    }
 
     delegate: QQC2.ItemDelegate {
         id: itemDelegate
         width: userListView.width
-        text: modelData
+        text: model.userName
         // Help line up text and actions
         Kirigami.Theme.useAlternateBackgroundColor: true
         contentItem: RowLayout {
             spacing: Kirigami.Units.mediumSpacing
 
-            QQC2.Label {
+            QQC2.CheckBox {
+                visible: model.systemUser
+                checked: model.systemUserEnabled
+                onToggled: model.systemUserEnabled = checked
+            }
+
+            Kirigami.TitleSubtitle {
                 Layout.fillHeight: true
                 Layout.fillWidth: true
-                text: itemDelegate.text
-                verticalAlignment: Text.AlignVCenter
+                title: itemDelegate.text
+                subtitle: model.systemUser ? i18n("Login with your system password") : ""
                 elide: Text.ElideRight
             }
 
@@ -70,6 +80,7 @@ ListView {
                     text: modifyUserButton.text
                     visible: modifyUserButton.hovered || (Kirigami.Settings.tabletMode && modifyUserButton.pressed)
                 }
+                visible: !model.systemUser
             }
 
             QQC2.Button {
@@ -84,6 +95,7 @@ ListView {
                     text: deleteUserButton.text
                     visible: deleteUserButton.hovered || (Kirigami.Settings.tabletMode && deleteUserButton.pressed)
                 }
+                visible: !model.systemUser
             }
         }
         onClicked: {

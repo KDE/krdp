@@ -30,6 +30,7 @@ include(ECMSetupVersion)
 include(ECMQtDeclareLoggingCategory)
 include(ECMEnableSanitizers)
 include(ECMDeprecationSettings)
+include(ECMQmlModule)
 
 option(BUILD_EXAMPLES "Build example applications" ON)
 option(BUILD_PLASMA_SESSION "Build support for Plasma Screencasting extensions" ON)
@@ -57,6 +58,13 @@ set_package_properties(Qt6Keychain PROPERTIES
 if(BUILD_PLASMA_SESSION)
     find_package(PlasmaWaylandProtocols REQUIRED)
 endif()
+
+find_package(PAM REQUIRED)
+set_package_properties(PAM PROPERTIES DESCRIPTION "PAM Libraries"
+                       URL "https://www.kernel.org/pub/linux/libs/pam/"
+                       TYPE REQUIRED
+                       PURPOSE "Required for authentication"
+                      )
 
 set(EXCLUDE_DEPRECATED_BEFORE_AND_AT 0 CACHE STRING "Control the range of deprecated API excluded from the build [default=0].")
 

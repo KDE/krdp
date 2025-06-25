@@ -101,6 +101,8 @@ int main(int argc, char **argv)
     }
     // Otherwise use KCM username list
     else {
+        server.setUsePAMAuthentication(config->systemUserEnabled());
+
         const auto users = config->users();
         for (const auto &userName : users) {
             const auto readJob = new QKeychain::ReadPasswordJob(QLatin1StringView("KRDP"));
@@ -116,6 +118,10 @@ int main(int argc, char **argv)
                 server.addUser(user);
             });
             readJob->start();
+        }
+        if (users.isEmpty() && !server.usePAMAuthentication()) {
+            qWarning() << "No users configured for login. Either pass a username/password or configure users using kcm_krdp.";
+            return -1;
         }
     }
 

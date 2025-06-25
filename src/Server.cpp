@@ -28,6 +28,7 @@ public:
     quint16 port = 3389;
 
     QList<User> users;
+    bool usePamAuthentication = false;
 
     std::filesystem::path tlsCertificate;
     std::filesystem::path tlsCertificateKey;
@@ -120,6 +121,16 @@ void KRdp::Server::setUsers(const QList<User> &users)
 void KRdp::Server::addUser(const User &user)
 {
     d->users.append(user);
+}
+
+bool Server::usePAMAuthentication() const
+{
+    return d->usePamAuthentication;
+}
+
+void Server::setUsePAMAuthentication(bool usePAM)
+{
+    d->usePamAuthentication = usePAM;
 }
 
 std::filesystem::path Server::tlsCertificate() const

@@ -38,6 +38,7 @@ static const QString dbusSystemdPropertiesInterface = u"org.freedesktop.DBus.Pro
 KRDPServerConfig::KRDPServerConfig(QObject *parent, const KPluginMetaData &data)
     : KQuickManagedConfigModule(parent, data)
     , m_serverSettings(new KRDPServerSettings(this))
+    , m_usersModel(new UsersModel(m_serverSettings, this))
 {
     setButtons(Help | Apply | Default);
 
@@ -107,10 +108,10 @@ void KRDPServerConfig::deletePasswordFromWallet(const QString &user)
 void KRDPServerConfig::addUser(const QString &username, const QString &password)
 {
     if (!username.isEmpty()) {
-        auto userList = m_serverSettings->users();
+        auto userList = m_usersModel->users();
         userList.append(username);
         writePasswordToWallet(username, password);
-        m_serverSettings->setUsers(userList);
+        m_usersModel->setUsers(userList);
     }
     save();
 }
@@ -123,14 +124,14 @@ void KRDPServerConfig::modifyUser(const QString &oldUsername, const QString &new
     }
     // If we have new username, we're removing the old one and adding the new one
     if (!newUsername.isEmpty()) {
-        auto userList = m_serverSettings->users();
+        auto userList = m_usersModel->users();
         if (userList.contains(oldUsername)) {
             userList.removeAll(oldUsername);
         }
         userList.append(newUsername);
         deletePasswordFromWallet(oldUsername);
         writePasswordToWallet(newUsername, newPassword);
-        m_serverSettings->setUsers(userList);
+        m_usersModel->setUsers(userList);
     }
     // We change the password of the old user
     else {
@@ -145,19 +146,19 @@ void KRDPServerConfig::deleteUser(const QString &username)
 {
     // Remove the old username
     if (!username.isEmpty()) {
-        auto userList = m_serverSettings->users();
+        auto userList = m_usersModel->users();
         if (userList.contains(username)) {
             userList.removeAll(username);
         }
         deletePasswordFromWallet(username);
-        m_serverSettings->setUsers(userList);
+        m_usersModel->setUsers(userList);
     }
     save();
 }
 
 bool KRDPServerConfig::userExists(const QString &username)
 {
-    return m_serverSettings->users().contains(username);
+    return m_usersModel->users().contains(username);
 }
 
 void KRDPServerConfig::save()
@@ -171,9 +172,9 @@ void KRDPServerConfig::defaults()
     // Do not reset list of users. This would not be needed
     // if we can get the list of users from wallet, instead
     // of saving it in this config
-    auto userList = m_serverSettings->users();
+    auto userList = m_usersModel->users();
     KQuickManagedConfigModule::defaults();
-    m_serverSettings->setUsers(userList);
+    m_usersModel->setUsers(userList);
 }
 
 void KRDPServerConfig::createRestoreToken()

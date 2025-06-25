@@ -17,7 +17,6 @@
 #include <QHostAddress>
 #include <QStandardPaths>
 #include <QTcpSocket>
-#include <QTemporaryFile>
 #include <QThread>
 
 #include <freerdp/channels/wtsvc.h>
@@ -34,6 +33,8 @@
 #include "Server.h"
 #include "VideoStream.h"
 
+#include <KUser>
+
 #include "krdp_logging.h"
 
 namespace fs = std::filesystem;
@@ -41,45 +42,106 @@ namespace fs = std::filesystem;
 namespace KRdp
 {
 
-/**
- * Create the "sam" file used by FreeRDP for reading username and password
- * information. It hashes the password in the appropriate format and writes that
- * along with the username to the provided temporary file.
- */
-bool createSamFile(QTemporaryFile &file, const QList<User> &users)
+#include <security/pam_appl.h>
+
+typedef struct {
+    QByteArray user;
+    QByteArray password;
+} RDPConnectionAuthData;
+
+typedef struct {
+    pam_handle_t *handle;
+    struct pam_conv pamc;
+    RDPConnectionAuthData appdata;
+} RdpConnectionPamHandle;
+
+static int pam_conv(int num_msg, const struct pam_message **msg, struct pam_response **resp, void *appdata_ptr)
 {
-    auto runtimePath = fs::path(QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation).toStdString());
+    int pam_status = PAM_CONV_ERR;
+    RDPConnectionAuthData *appdata = NULL;
+    struct pam_response *response = NULL;
+    WINPR_ASSERT(num_msg >= 0);
+    appdata = (RDPConnectionAuthData *)appdata_ptr;
+    WINPR_ASSERT(appdata);
 
-    auto path = runtimePath / "krdp";
-    fs::create_directories(path);
+    if (!(response = (struct pam_response *)calloc((size_t)num_msg, sizeof(struct pam_response))))
+        return PAM_BUF_ERR;
 
-    file.setFileTemplate(QString::fromStdString(path / "rdp-sam-XXXXXX"));
-    if (!file.open()) {
-        qCWarning(KRDP) << "Could not open SAM file";
-        return false;
-    }
+    for (int index = 0; index < num_msg; index++) {
+        switch (msg[index]->msg_style) {
+        case PAM_PROMPT_ECHO_ON:
+            response[index].resp = _strdup(appdata->user.constData());
 
-    QString data;
+            if (!response[index].resp)
+                goto out_fail;
 
-    for (const auto &user : users) {
-        auto username = user.name;
-        auto password = user.password.toUtf8();
+            response[index].resp_retcode = PAM_SUCCESS;
+            break;
 
-        std::array<uint8_t, 16> hash;
-        NTOWFv1A((LPSTR)password.data(), password.size(), hash.data());
+        case PAM_PROMPT_ECHO_OFF:
+            response[index].resp = _strdup(appdata->password.constData());
 
-        auto entry = QStringLiteral("%1:::").arg(username);
-        for (int i = 0; i < 16; ++i) {
-            entry.append(QStringLiteral("%1").arg(hash[i], 2, 16, QLatin1Char('0')));
+            if (!response[index].resp)
+                goto out_fail;
+
+            response[index].resp_retcode = PAM_SUCCESS;
+            break;
+
+        default:
+            pam_status = PAM_CONV_ERR;
+            goto out_fail;
         }
-        entry.append(QStringLiteral(":::\n"));
-        data.append(entry);
     }
 
-    file.write(data.toUtf8());
-    file.close();
+    *resp = response;
+    return PAM_SUCCESS;
+out_fail:
 
-    return true;
+    for (int index = 0; index < num_msg; ++index) {
+        if (response[index].resp) {
+            memset(response[index].resp, 0, strlen(response[index].resp));
+            free(response[index].resp);
+        }
+    }
+
+    memset(response, 0, sizeof(struct pam_response) * (size_t)num_msg);
+    free(response);
+    *resp = NULL;
+    return pam_status;
+}
+
+static int pamAuthenticate(const QString &user, const QString &password)
+{
+    int pam_status = 0;
+    RdpConnectionPamHandle info = {0};
+
+    info.appdata.user = user.toLatin1();
+    info.appdata.password = password.toLatin1();
+    info.pamc.conv = &pam_conv;
+    info.pamc.appdata_ptr = &info.appdata;
+
+    pam_status = pam_start("login", 0, &info.pamc, &info.handle);
+
+    if (pam_status != PAM_SUCCESS) {
+        qWarning() << "pam_start failure:" << pam_strerror(info.handle, pam_status);
+        return -1;
+    }
+
+    pam_status = pam_authenticate(info.handle, 0);
+
+    if (pam_status != PAM_SUCCESS) {
+        qWarning() << "pam_authenticate failure:" << pam_strerror(info.handle, pam_status);
+        return -1;
+    }
+
+    pam_status = pam_acct_mgmt(info.handle, 0);
+
+    if (pam_status != PAM_SUCCESS) {
+        qWarning() << "pam_acct_mgmt failure:" << pam_strerror(info.handle, pam_status);
+        return -1;
+    }
+
+    return 1;
 }
 
 /**
@@ -149,8 +211,6 @@ public:
     freerdp_peer *peer = nullptr;
 
     std::jthread thread;
-
-    QTemporaryFile samFile;
 };
 
 RdpConnection::RdpConnection(Server *server, qintptr socketHandle)
@@ -273,12 +333,6 @@ void RdpConnection::initialize()
 
     auto settings = d->peer->context->settings;
 
-    createSamFile(d->samFile, d->server->users());
-    if (!freerdp_settings_set_string(settings, FreeRDP_NtlmSamFile, d->samFile.fileName().toUtf8().data())) {
-        qCWarning(KRDP) << "Failed to set SAM database";
-        return;
-    }
-
     auto certificate = freerdp_certificate_new_from_file(d->server->tlsCertificate().string().data());
     if (!certificate) {
         qCWarning(KRDP) << "Could not read certificate file" << d->server->tlsCertificate().string();
@@ -293,12 +347,9 @@ void RdpConnection::initialize()
     }
     freerdp_settings_set_pointer_len(settings, FreeRDP_RdpServerRsaKey, key, 1);
 
-    // Only NTLM Authentication (NLA) security is currently supported. This also
-    // happens to be the most secure one. It implicitly requires a TLS
-    // connection so the above certificate is always required.
     freerdp_settings_set_bool(settings, FreeRDP_RdpSecurity, false);
-    freerdp_settings_set_bool(settings, FreeRDP_TlsSecurity, false);
-    freerdp_settings_set_bool(settings, FreeRDP_NlaSecurity, true);
+    freerdp_settings_set_bool(settings, FreeRDP_TlsSecurity, true);
+    freerdp_settings_set_bool(settings, FreeRDP_NlaSecurity, false);
 
     freerdp_settings_set_uint32(settings, FreeRDP_OsMajorType, OSMAJORTYPE_UNIX);
     // PSEUDO_XSERVER is apparently required for things to work properly.
@@ -456,10 +507,35 @@ bool RdpConnection::onPostConnect()
 {
     qCInfo(KRDP) << "New client connected:" << d->peer->hostname << freerdp_peer_os_major_type_string(d->peer) << freerdp_peer_os_minor_type_string(d->peer);
 
-    // Cleanup the temporary file so we don't leak it.
-    d->samFile.remove();
+    rdpSettings *settings = d->peer->context->settings;
 
-    return true;
+    if (!freerdp_settings_set_bool(settings, FreeRDP_AutoLogonEnabled, true)) {
+        return false;
+    }
+
+    const QString username = QString::fromLatin1(freerdp_settings_get_string(settings, FreeRDP_Username));
+    const QString password = QString::fromLatin1(freerdp_settings_get_string(settings, FreeRDP_Password));
+
+    if (d->server->usePAMAuthentication()) {
+        qCDebug(KRDP) << "Attempting authenticating user with PAM";
+        if (username == KUser().loginName() && pamAuthenticate(username, password) >= 0) {
+            qCDebug(KRDP) << "PAM authentication succeeded for user" << username;
+            return true;
+        }
+    }
+
+    const auto users = d->server->users();
+    for (auto user : users) {
+        if (user.password.isEmpty()) {
+            return false;
+        }
+        if (user.name == username && user.password == password) {
+            qCDebug(KRDP) << "User" << username << "authenticated successfully";
+            return true;
+        }
+    }
+
+    return false;
 }
 
 bool RdpConnection::onClose()

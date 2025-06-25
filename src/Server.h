@@ -84,6 +84,12 @@ public:
     void setUsers(const QList<User> &users);
     void addUser(const User &user);
 
+
+    /** Whether to authenticate against PAM for the user running the daemon
+     */
+    bool usePAMAuthentication() const;
+    void setUsePAMAuthentication(bool usePAM);
+
     /**
      * The path of a certificate file to use for encrypting communications.
      *

@@ -36,6 +36,8 @@ ecm_qt_declare_logging_category(kcm_krdpserver
 target_sources(kcm_krdpserver PRIVATE
    kcmkrdpserver.cpp
    kcmkrdpserver.h
+   usersmodel.cpp
+   usersmodel.h
 )
 
 qt_add_dbus_interface(kcm_krdpserver_dbus_srcs org.freedesktop.impl.portal.PermissionStore.xml org.freedesktop.impl.portal.PermissionStore)
