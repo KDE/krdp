@@ -34,7 +34,6 @@ int main(int argc, char **argv)
     QCommandLineParser parser;
     parser.setApplicationDescription(
         u"An RDP server that exposes the current desktop session over the RDP protocol.\nNote that a valid TLS certificate and key is needed. If not provided, a temporary certificate will be generated."_qs);
-    parser.addHelpOption();
     parser.addOptions({
         {{u"u"_qs, u"username"_qs}, u"The username to use for login"_qs, u"username"_qs},
         {{u"p"_qs, u"password"_qs}, u"The password to use for login. Requires username to be passed as well."_qs, u"password"_qs},
@@ -52,7 +51,9 @@ int main(int argc, char **argv)
         {u"plasma"_qs, u"Use Plasma protocols instead of XDP"_qs},
 #endif
     });
+    about.setupCommandLine(&parser);
     parser.process(application);
+    about.processCommandLine(&parser);
 
     signal(SIGINT, [](int) {
         QCoreApplication::exit(0);
