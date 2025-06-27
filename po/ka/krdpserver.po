@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-13 00:43+0000\n"
+"POT-Creation-Date: 2025-06-27 00:44+0000\n"
 "PO-Revision-Date: 2024-08-08 05:59+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -70,12 +70,12 @@ msgstr "მომხმარებლებს შეუძლიათ შე�
 msgid "Autostart the server on login"
 msgstr "სერვერის ავტომატური გაშვვება სისტემაში შესვლისას"
 
-#: SessionController.cpp:91
+#: SessionController.cpp:100
 #, kde-format
 msgid "RDP Server"
 msgstr "RDP სერვერი"
 
-#: SessionController.cpp:94
+#: SessionController.cpp:103
 #, kde-format
 msgid "Quit"
 msgstr "გასვლა"

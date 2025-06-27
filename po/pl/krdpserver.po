@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-13 00:43+0000\n"
+"POT-Creation-Date: 2025-06-27 00:44+0000\n"
 "PO-Revision-Date: 2024-08-10 12:26+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -69,12 +69,12 @@ msgstr "Użytkownicy, którym wolno wchodzić, hasła zapisywane są w KPortfelu
 msgid "Autostart the server on login"
 msgstr "Uruchomić serwer zaraz po wejściu"
 
-#: SessionController.cpp:91
+#: SessionController.cpp:100
 #, kde-format
 msgid "RDP Server"
 msgstr "Serwer RDP"
 
-#: SessionController.cpp:94
+#: SessionController.cpp:103
 #, kde-format
 msgid "Quit"
 msgstr "Zakończ"

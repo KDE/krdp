@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-13 00:43+0000\n"
+"POT-Creation-Date: 2025-06-27 00:44+0000\n"
 "PO-Revision-Date: 2024-08-08 06:32+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
@@ -69,12 +69,12 @@ msgstr "Användare som har tillåtelse att logga in, lösenord lagras i plånbok
 msgid "Autostart the server on login"
 msgstr "Starta servern automatiskt vid inloggning"
 
-#: SessionController.cpp:91
+#: SessionController.cpp:100
 #, kde-format
 msgid "RDP Server"
 msgstr "RDP-server"
 
-#: SessionController.cpp:94
+#: SessionController.cpp:103
 #, kde-format
 msgid "Quit"
 msgstr "Avsluta"
