@@ -9,7 +9,7 @@ import QtQuick.Dialogs as QtDialogs
 import org.kde.kirigami as Kirigami
 import org.kde.kcmutils as KCM
 
-KCM.ScrollViewKCM {
+KCM.SimpleKCM {
     id: root
 
     property var settings: kcm.settings()
@@ -169,12 +169,34 @@ KCM.ScrollViewKCM {
         }
     }
 
-    view: UserListView {
-        id: userListView
-    }
 
-    footer: Kirigami.FormLayout {
-        id: settingsLayout
+    Kirigami.FormLayout {
+        Item {
+            Kirigami.FormData.isSection: true
+            Kirigami.FormData.label: i18nc("title:group Group of RDP server settings", "Authentication Settings")
+        }
+
+        QQC2.RadioButton {
+            checked: true
+            // onToggled:
+            text: i18n("Authenticate as the current user")
+        }
+        QQC2.RadioButton {
+            id: useCustoListButton
+            checked: true
+            // onToggled:
+            text: i18n("Authenticate via custom user list")
+        }
+
+        QQC2.ScrollView {
+            Kirigami.FormData.isSection: true
+            implicitHeight: 200
+            Layout.fillWidth: true
+            // visible: useCustoListButton.checked
+            UserListView {
+                id: userListView
+            }
+        }
 
         readonly property bool showAdvancedCertUI: !autoGenCertSwitch.checked
 
@@ -213,7 +235,6 @@ KCM.ScrollViewKCM {
         }
 
         ColumnLayout {
-            enabled: userListView.count > 0
             Layout.preferredWidth: certKeyLayout.width
 
             Kirigami.FormData.label: i18nc("@label:textbox", "Video quality:")
@@ -321,6 +342,9 @@ KCM.ScrollViewKCM {
                     certLoader.active = true;
                 }
             }
+        }
+        Item {
+            Layout.fillHeight: true
         }
     }
 
