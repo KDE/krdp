@@ -18,6 +18,7 @@ public:
     ~KRDPServerConfig() override;
 
     Q_PROPERTY(QString hostName READ hostName CONSTANT)
+    Q_PROPERTY(bool managementAvailable READ managementAvailable CONSTANT)
 
     Q_INVOKABLE QString toLocalFile(const QUrl &url);
 
@@ -45,6 +46,7 @@ public:
     };
 
     QString hostName() const;
+    bool managementAvailable() const;
 
 public Q_SLOTS:
     void save() override;

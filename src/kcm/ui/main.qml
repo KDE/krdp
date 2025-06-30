@@ -72,6 +72,7 @@ KCM.ScrollViewKCM {
             id: toggleServerSwitch
             text: i18nc("@option:check Enable RDP server", "Enable RDP server")
             checkable: true
+            visible: kcm.managementAvailable
             Component.onCompleted: {
                 kcm.checkServerRunning();
             }
@@ -103,6 +104,14 @@ KCM.ScrollViewKCM {
 
         CertError {
             id: certificateError
+        }
+
+        Kirigami.InlineMessage {
+            type: Kirigami.MessageType.Warning
+            visible: !kcm.managementAvailable
+            position: Kirigami.InlineMessage.Position.Header
+            Layout.fillWidth: true
+            text: i18nc("@info:status", "Systemd not found. krdpserver will require manual activation.")
         }
 
         // Non-InlineMessage header content does need margins; put it all in here
@@ -185,6 +194,7 @@ KCM.ScrollViewKCM {
 
         QQC2.CheckBox {
             id: autostartOnLogin
+            visible: kcm.managementAvailable
             text: i18nc("@option:check", "Autostart on login")
             checked: settings.autostart
             onToggled: {

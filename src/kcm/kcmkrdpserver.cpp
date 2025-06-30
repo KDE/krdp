@@ -230,6 +230,12 @@ QString KRDPServerConfig::hostName() const
     return info.localHostName();
 }
 
+bool KRDPServerConfig::managementAvailable() const
+{
+    static bool managementAvailable = QDBusConnection::sessionBus().interface()->isServiceRegistered(u"org.freedesktop.systemd1"_s);
+    return managementAvailable;
+}
+
 void KRDPServerConfig::toggleAutoconnect(const bool enabled)
 {
     qDebug(KRDPKCM) << "Setting KRDP Server service autostart on login to " << enabled << "over QDBus";
