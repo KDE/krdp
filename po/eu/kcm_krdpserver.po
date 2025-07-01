@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-27 00:42+0000\n"
+"POT-Creation-Date: 2025-07-01 00:43+0000\n"
 "PO-Revision-Date: 2025-04-23 00:06+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -158,7 +158,13 @@ msgctxt "@option:check Enable RDP server"
 msgid "Enable RDP server"
 msgstr "Gaitu RDP zerbitzaria"
 
-#: ui/main.qml:115 ui/main_phone.qml:101
+#: ui/main.qml:114
+#, kde-format
+msgctxt "@info:status"
+msgid "Systemd not found. krdpserver will require manual activation."
+msgstr ""
+
+#: ui/main.qml:124 ui/main_phone.qml:101
 #, kde-format
 msgid ""
 "Set up remote login to connect using apps supporting the “RDP” remote "
@@ -167,85 +173,85 @@ msgstr ""
 "Ezar ezazu urrunetik saio-hastea, \"RDP\", urruneko mahaigain protokoloa "
 "onartzen duten aplikazioak erabiliz konektatzeko."
 
-#: ui/main.qml:124
+#: ui/main.qml:133
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Use any of the following addresses to connect to this device:"
 msgstr "Erabili ondoko helbideetako edozein gailu honetara konektatzeko:"
 
-#: ui/main.qml:156 ui/main_phone.qml:157
+#: ui/main.qml:165 ui/main_phone.qml:157
 #, kde-format
 msgctxt "@action:button"
 msgid "Copy Address to Clipboard"
 msgstr "Kopiatu helbidea arbelera"
 
-#: ui/main.qml:183
+#: ui/main.qml:192
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Server Settings"
 msgstr "Zerbitzariaren ezarpenak"
 
-#: ui/main.qml:188
+#: ui/main.qml:198
 #, kde-format
 msgctxt "@option:check"
 msgid "Autostart on login"
 msgstr "Automatikoki abiarazi saioa hastean"
 
-#: ui/main.qml:204
+#: ui/main.qml:214
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Listening Port:"
 msgstr "Entzuteko ataka:"
 
-#: ui/main.qml:219
+#: ui/main.qml:229
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Video quality:"
 msgstr "Bideo-kalitatea:"
 
-#: ui/main.qml:238
+#: ui/main.qml:248
 #, kde-format
 msgctxt "@label:slider"
 msgid "Responsiveness"
 msgstr "Erantzuteko gaitasuna"
 
-#: ui/main.qml:244
+#: ui/main.qml:254
 #, kde-format
 msgctxt "@label:slider"
 msgid "Quality"
 msgstr "Kalitatea"
 
-#: ui/main.qml:251
+#: ui/main.qml:261
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Security Certificates"
 msgstr "Segurtasun ziurtagiriak"
 
-#: ui/main.qml:256
+#: ui/main.qml:266
 #, kde-format
 msgctxt "@label:check generate security certificates automatically"
 msgid "Generate automatically"
 msgstr "Automatikoki sortu"
 
-#: ui/main.qml:274
+#: ui/main.qml:284
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate path:"
 msgstr "Ziurtagiriaren bide-izena:"
 
-#: ui/main.qml:289
+#: ui/main.qml:299
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate File…"
 msgstr "Hautatu ziurtagiriaren fitxategia..."
 
-#: ui/main.qml:301
+#: ui/main.qml:311
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate key path:"
 msgstr "Ziurtagiri-gakoaren bide-izena:"
 
-#: ui/main.qml:317
+#: ui/main.qml:327
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate Key File…"

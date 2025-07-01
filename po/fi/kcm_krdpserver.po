@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-27 00:42+0000\n"
+"POT-Creation-Date: 2025-07-01 00:43+0000\n"
 "PO-Revision-Date: 2025-04-03 17:50+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -153,7 +153,13 @@ msgctxt "@option:check Enable RDP server"
 msgid "Enable RDP server"
 msgstr "Käytä RDP-palvelinta"
 
-#: ui/main.qml:115 ui/main_phone.qml:101
+#: ui/main.qml:114
+#, kde-format
+msgctxt "@info:status"
+msgid "Systemd not found. krdpserver will require manual activation."
+msgstr ""
+
+#: ui/main.qml:124 ui/main_phone.qml:101
 #, kde-format
 msgid ""
 "Set up remote login to connect using apps supporting the “RDP” remote "
@@ -162,85 +168,85 @@ msgstr ""
 "Aseta etäkirjautuminen RDP-etätyöpöytäyhteyskäytäntöä tukeville "
 "sovelluksille."
 
-#: ui/main.qml:124
+#: ui/main.qml:133
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Use any of the following addresses to connect to this device:"
 msgstr "Käytä laitteeseen yhdistämiseksi mitä tahansa seuraavista osoitteista:"
 
-#: ui/main.qml:156 ui/main_phone.qml:157
+#: ui/main.qml:165 ui/main_phone.qml:157
 #, kde-format
 msgctxt "@action:button"
 msgid "Copy Address to Clipboard"
 msgstr "Kopioi osoite leikepöydälle"
 
-#: ui/main.qml:183
+#: ui/main.qml:192
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Server Settings"
 msgstr "Palvelinasetukset"
 
-#: ui/main.qml:188
+#: ui/main.qml:198
 #, kde-format
 msgctxt "@option:check"
 msgid "Autostart on login"
 msgstr "Käynnistä automaattisesti kirjauduttaessa"
 
-#: ui/main.qml:204
+#: ui/main.qml:214
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Listening Port:"
 msgstr "Kuunteleva portti:"
 
-#: ui/main.qml:219
+#: ui/main.qml:229
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Video quality:"
 msgstr "Videon laatu:"
 
-#: ui/main.qml:238
+#: ui/main.qml:248
 #, kde-format
 msgctxt "@label:slider"
 msgid "Responsiveness"
 msgstr "Herkkyys"
 
-#: ui/main.qml:244
+#: ui/main.qml:254
 #, kde-format
 msgctxt "@label:slider"
 msgid "Quality"
 msgstr "Laatu"
 
-#: ui/main.qml:251
+#: ui/main.qml:261
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Security Certificates"
 msgstr "Tietoturvavarmenteet"
 
-#: ui/main.qml:256
+#: ui/main.qml:266
 #, kde-format
 msgctxt "@label:check generate security certificates automatically"
 msgid "Generate automatically"
 msgstr "Luo automaattisesti"
 
-#: ui/main.qml:274
+#: ui/main.qml:284
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate path:"
 msgstr "Varmenteiden sijainti:"
 
-#: ui/main.qml:289
+#: ui/main.qml:299
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate File…"
 msgstr "Valitse varmennetiedosto…"
 
-#: ui/main.qml:301
+#: ui/main.qml:311
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate key path:"
 msgstr "Varmenneavaimen sijainti:"
 
-#: ui/main.qml:317
+#: ui/main.qml:327
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate Key File…"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-27 00:42+0000\n"
+"POT-Creation-Date: 2025-07-01 00:43+0000\n"
 "PO-Revision-Date: 2025-05-20 14:09+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -156,7 +156,13 @@ msgctxt "@option:check Enable RDP server"
 msgid "Enable RDP server"
 msgstr "Включить RDP-сервер"
 
-#: ui/main.qml:115 ui/main_phone.qml:101
+#: ui/main.qml:114
+#, kde-format
+msgctxt "@info:status"
+msgid "Systemd not found. krdpserver will require manual activation."
+msgstr ""
+
+#: ui/main.qml:124 ui/main_phone.qml:101
 #, kde-format
 msgid ""
 "Set up remote login to connect using apps supporting the “RDP” remote "
@@ -165,86 +171,86 @@ msgstr ""
 "Настройте удалённый вход для подключения с помощью приложений, "
 "поддерживающих протокол удалённого рабочего стола «RDP»."
 
-#: ui/main.qml:124
+#: ui/main.qml:133
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Use any of the following addresses to connect to this device:"
 msgstr ""
 "Используйте любой из следующих адресов для подключения к этому устройству:"
 
-#: ui/main.qml:156 ui/main_phone.qml:157
+#: ui/main.qml:165 ui/main_phone.qml:157
 #, kde-format
 msgctxt "@action:button"
 msgid "Copy Address to Clipboard"
 msgstr "Скопировать адрес в буфер обмена"
 
-#: ui/main.qml:183
+#: ui/main.qml:192
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Server Settings"
 msgstr "Параметры сервера"
 
-#: ui/main.qml:188
+#: ui/main.qml:198
 #, kde-format
 msgctxt "@option:check"
 msgid "Autostart on login"
 msgstr "Автозапуск при входе"
 
-#: ui/main.qml:204
+#: ui/main.qml:214
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Listening Port:"
 msgstr "Порт прослушивания:"
 
-#: ui/main.qml:219
+#: ui/main.qml:229
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Video quality:"
 msgstr "Качество видео:"
 
-#: ui/main.qml:238
+#: ui/main.qml:248
 #, kde-format
 msgctxt "@label:slider"
 msgid "Responsiveness"
 msgstr "Отзывчивость"
 
-#: ui/main.qml:244
+#: ui/main.qml:254
 #, kde-format
 msgctxt "@label:slider"
 msgid "Quality"
 msgstr "Качество"
 
-#: ui/main.qml:251
+#: ui/main.qml:261
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Security Certificates"
 msgstr "Сертификаты безопасности"
 
-#: ui/main.qml:256
+#: ui/main.qml:266
 #, kde-format
 msgctxt "@label:check generate security certificates automatically"
 msgid "Generate automatically"
 msgstr "Генерировать автоматически"
 
-#: ui/main.qml:274
+#: ui/main.qml:284
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate path:"
 msgstr "Путь к сертификату:"
 
-#: ui/main.qml:289
+#: ui/main.qml:299
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate File…"
 msgstr "Выбрать файл сертификата…"
 
-#: ui/main.qml:301
+#: ui/main.qml:311
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate key path:"
 msgstr "Путь к ключу сертификата:"
 
-#: ui/main.qml:317
+#: ui/main.qml:327
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate Key File…"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-27 00:42+0000\n"
+"POT-Creation-Date: 2025-07-01 00:43+0000\n"
 "PO-Revision-Date: 2025-04-06 23:59+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -153,7 +153,13 @@ msgctxt "@option:check Enable RDP server"
 msgid "Enable RDP server"
 msgstr "RDP 서버 활성화"
 
-#: ui/main.qml:115 ui/main_phone.qml:101
+#: ui/main.qml:114
+#, kde-format
+msgctxt "@info:status"
+msgid "Systemd not found. krdpserver will require manual activation."
+msgstr ""
+
+#: ui/main.qml:124 ui/main_phone.qml:101
 #, kde-format
 msgid ""
 "Set up remote login to connect using apps supporting the “RDP” remote "
@@ -161,85 +167,85 @@ msgid ""
 msgstr ""
 "\"RDP\" 원격 데스크톱 프로토콜을 지원하는 앱으로 원격 로그인을 설정합니다."
 
-#: ui/main.qml:124
+#: ui/main.qml:133
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Use any of the following addresses to connect to this device:"
 msgstr "이 장치에 연결할 때 다음 주소를 사용하십시오:"
 
-#: ui/main.qml:156 ui/main_phone.qml:157
+#: ui/main.qml:165 ui/main_phone.qml:157
 #, kde-format
 msgctxt "@action:button"
 msgid "Copy Address to Clipboard"
 msgstr "클립보드에 주소 복사"
 
-#: ui/main.qml:183
+#: ui/main.qml:192
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Server Settings"
 msgstr "서버 설정"
 
-#: ui/main.qml:188
+#: ui/main.qml:198
 #, kde-format
 msgctxt "@option:check"
 msgid "Autostart on login"
 msgstr "로그인할 때 자동으로 시작"
 
-#: ui/main.qml:204
+#: ui/main.qml:214
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Listening Port:"
 msgstr "듣는 포트:"
 
-#: ui/main.qml:219
+#: ui/main.qml:229
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Video quality:"
 msgstr "동영상 화질:"
 
-#: ui/main.qml:238
+#: ui/main.qml:248
 #, kde-format
 msgctxt "@label:slider"
 msgid "Responsiveness"
 msgstr "응답 속도"
 
-#: ui/main.qml:244
+#: ui/main.qml:254
 #, kde-format
 msgctxt "@label:slider"
 msgid "Quality"
 msgstr "품질"
 
-#: ui/main.qml:251
+#: ui/main.qml:261
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Security Certificates"
 msgstr "보안 인증서"
 
-#: ui/main.qml:256
+#: ui/main.qml:266
 #, kde-format
 msgctxt "@label:check generate security certificates automatically"
 msgid "Generate automatically"
 msgstr "자동으로 생성"
 
-#: ui/main.qml:274
+#: ui/main.qml:284
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate path:"
 msgstr "인증서 경로:"
 
-#: ui/main.qml:289
+#: ui/main.qml:299
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate File…"
 msgstr "인증서 파일 선택…"
 
-#: ui/main.qml:301
+#: ui/main.qml:311
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate key path:"
 msgstr "인증서 키 경로:"
 
-#: ui/main.qml:317
+#: ui/main.qml:327
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate Key File…"

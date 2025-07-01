@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-27 00:42+0000\n"
+"POT-Creation-Date: 2025-07-01 00:43+0000\n"
 "PO-Revision-Date: 2025-02-28 15:21+0200\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -154,7 +154,13 @@ msgctxt "@option:check Enable RDP server"
 msgid "Enable RDP server"
 msgstr "Ieslēgt RDP serveri"
 
-#: ui/main.qml:115 ui/main_phone.qml:101
+#: ui/main.qml:114
+#, kde-format
+msgctxt "@info:status"
+msgid "Systemd not found. krdpserver will require manual activation."
+msgstr ""
+
+#: ui/main.qml:124 ui/main_phone.qml:101
 #, kde-format
 msgid ""
 "Set up remote login to connect using apps supporting the “RDP” remote "
@@ -163,85 +169,85 @@ msgstr ""
 "Iestatiet attālo ierakstīšanos, lai izmantotu programmas, kas atbalsta RDP "
 "attālās darbvirsmas protokolu."
 
-#: ui/main.qml:124
+#: ui/main.qml:133
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Use any of the following addresses to connect to this device:"
 msgstr "Izmantot jebkuru no šīm adresēm, lai savienotos ar šo ierīci:"
 
-#: ui/main.qml:156 ui/main_phone.qml:157
+#: ui/main.qml:165 ui/main_phone.qml:157
 #, kde-format
 msgctxt "@action:button"
 msgid "Copy Address to Clipboard"
 msgstr "Kopēt adresi starpliktuvē"
 
-#: ui/main.qml:183
+#: ui/main.qml:192
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Server Settings"
 msgstr "Servera iestatījumi"
 
-#: ui/main.qml:188
+#: ui/main.qml:198
 #, kde-format
 msgctxt "@option:check"
 msgid "Autostart on login"
 msgstr "Automātiski palaist ierakstoties"
 
-#: ui/main.qml:204
+#: ui/main.qml:214
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Listening Port:"
 msgstr "Klausīšanās ports:"
 
-#: ui/main.qml:219
+#: ui/main.qml:229
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Video quality:"
 msgstr "Video kvalitāte"
 
-#: ui/main.qml:238
+#: ui/main.qml:248
 #, kde-format
 msgctxt "@label:slider"
 msgid "Responsiveness"
 msgstr "Reaģēšana"
 
-#: ui/main.qml:244
+#: ui/main.qml:254
 #, kde-format
 msgctxt "@label:slider"
 msgid "Quality"
 msgstr "Kvalitāte"
 
-#: ui/main.qml:251
+#: ui/main.qml:261
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Security Certificates"
 msgstr "Drošības sertifikāti"
 
-#: ui/main.qml:256
+#: ui/main.qml:266
 #, kde-format
 msgctxt "@label:check generate security certificates automatically"
 msgid "Generate automatically"
 msgstr "Ģenerēt automātiski"
 
-#: ui/main.qml:274
+#: ui/main.qml:284
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate path:"
 msgstr "Sertifikāta ceļš:"
 
-#: ui/main.qml:289
+#: ui/main.qml:299
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate File…"
 msgstr "Norādiet sertifikāta datni…"
 
-#: ui/main.qml:301
+#: ui/main.qml:311
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate key path:"
 msgstr "Sertifikāta atslēgas ceļš:"
 
-#: ui/main.qml:317
+#: ui/main.qml:327
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate Key File…"
