@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-07-01 00:43+0000\n"
-"PO-Revision-Date: 2025-03-02 10:53+0400\n"
+"PO-Revision-Date: 2025-07-03 09:56+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -158,7 +158,7 @@ msgstr "مكن خادم سطح المكتب البعيد"
 #, kde-format
 msgctxt "@info:status"
 msgid "Systemd not found. krdpserver will require manual activation."
-msgstr ""
+msgstr "لم يُعثر على Systemd. سيتطلب krdpserver التفعيل اليدوي."
 
 #: ui/main.qml:124 ui/main_phone.qml:101
 #, kde-format

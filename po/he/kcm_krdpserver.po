@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-07-01 00:43+0000\n"
-"PO-Revision-Date: 2025-02-28 11:44+0200\n"
+"PO-Revision-Date: 2025-07-02 14:12+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
-"X-Generator: Lokalize 24.12.2\n"
+"X-Generator: Lokalize 25.04.2\n"
 
 #. i18n: ectx: label, entry (ListenPort), group (General)
 #: krdpserversettings.kcfg:14
@@ -158,7 +158,7 @@ msgstr "הפעלת שרת RDP"
 #, kde-format
 msgctxt "@info:status"
 msgid "Systemd not found. krdpserver will require manual activation."
-msgstr ""
+msgstr "‏Systemd לא נמצא. krdpserver ידרוש התערבות ידנית."
 
 #: ui/main.qml:124 ui/main_phone.qml:101
 #, kde-format
