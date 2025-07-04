@@ -216,7 +216,9 @@ void RdpConnection::close(RdpConnection::CloseReason reason)
         break;
     }
 
-    d->peer->Close(d->peer);
+    if (d->peer) { // may be null if creating the peer failed
+        d->peer->Close(d->peer);
+    }
 }
 
 InputHandler *RdpConnection::inputHandler() const
