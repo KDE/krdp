@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-07-01 00:43+0000\n"
-"PO-Revision-Date: 2025-02-27 15:13+0100\n"
+"PO-Revision-Date: 2025-07-01 12:05+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -162,7 +162,7 @@ msgstr "Activa el servidor RDP"
 #, kde-format
 msgctxt "@info:status"
 msgid "Systemd not found. krdpserver will require manual activation."
-msgstr ""
+msgstr "No s'ha trobat «systemd». «krdpserver» requerirà una activació manual."
 
 #: ui/main.qml:124 ui/main_phone.qml:101
 #, kde-format
@@ -332,7 +332,7 @@ msgstr "Afig almenys un compte d'usuari per a activar l'inici de sessió remot"
 #, kde-kuit-format
 msgctxt "@info:placeholder"
 msgid "Click <interface>Add New…</interface> to add one"
-msgstr "Feu clic en <interface>Afig nou…</interface> per a afegir-ne un"
+msgstr "Cliqueu damunt <interface>Afig nou…</interface> per a afegir-ne un"
 
 #: ui/UserListView.qml:64
 #, kde-format
