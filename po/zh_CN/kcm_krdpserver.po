@@ -157,7 +157,7 @@ msgstr "启用 RDP 服务器"
 #, kde-format
 msgctxt "@info:status"
 msgid "Systemd not found. krdpserver will require manual activation."
-msgstr ""
+msgstr "Systemd 没有找到。krdpserver 将需要手动激活。"
 
 #: ui/main.qml:124 ui/main_phone.qml:101
 #, kde-format
