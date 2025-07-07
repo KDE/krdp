@@ -85,6 +85,12 @@ bool AbstractSession::streamingEnabled() const
 void AbstractSession::setStreamingEnabled(bool enable)
 {
     d->enabled = enable;
+
+    if (enable && !d->started) {
+        start();
+        return;
+    }
+
     if (d->encodedStream) {
         if (enable && d->started) {
             d->encodedStream->start();
