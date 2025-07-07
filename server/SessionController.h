@@ -47,8 +47,6 @@ private:
     std::optional<int> m_quality;
     std::optional<KRdp::VirtualMonitor> m_virtualMonitor;
 
-    std::unique_ptr<KRdp::AbstractSession> m_initializationSession;
-
     std::vector<std::unique_ptr<SessionWrapper>> m_wrappers;
 
     KStatusNotifierItem *m_sni;
