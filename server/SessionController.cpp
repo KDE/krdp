@@ -151,7 +151,6 @@ void SessionController::onNewConnection(KRdp::RdpConnection *newConnection)
         newConnection->close(KRdp::RdpConnection::CloseReason::None);
     });
 
-    wrapper->session->start();
     m_wrappers.push_back(std::move(wrapper));
 }
 
