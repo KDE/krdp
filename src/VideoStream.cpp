@@ -135,6 +135,7 @@ public:
     uint16_t nextSurfaceId = 1;
     Surface surface;
     QSize size;
+    QSize requestedSize;
 
     bool pendingReset = true;
     bool enabled = false;
@@ -264,6 +265,9 @@ void VideoStream::setActiveEncodingMode(EncodingMode mode)
         d->encodedStream->setQuality(d->quality);
         d->encodedStream->setMaxFramerate(d->requestedFrameRate, 1);
         d->encodedStream->setMaxPendingFrames(d->requestedFrameRate);
+        if (d->requestedSize.isValid()) {
+            d->encodedStream->setRequestedSize(d->requestedSize);
+        }
 
         connect(d->encodedStream.get(), &PipeWireEncodedStream::newPacket, this, &VideoStream::onPacketReceived);
         connect(d->encodedStream.get(), &PipeWireEncodedStream::sizeChanged, this, [this](const QSize &size) {
@@ -285,6 +289,9 @@ void VideoStream::setActiveEncodingMode(EncodingMode mode)
         d->sourceStream->setAllowDmaBuf(true);
         d->sourceStream->setDamageEnabled(true);
         d->sourceStream->setMaxFramerate({static_cast<quint32>(d->requestedFrameRate.load()), 1});
+        if (d->requestedSize.isValid()) {
+            d->sourceStream->setRequestedSize(d->requestedSize);
+        }
         connect(d->sourceStream.get(), &PipeWireSourceStream::frameReceived, this, &VideoStream::onFrameReceived, Qt::QueuedConnection);
         connect(d->sourceStream.get(), &PipeWireSourceStream::streamParametersChanged, this, [this]() {
             d->setSize(this, d->sourceStream->size());
@@ -491,6 +498,17 @@ void VideoStream::setVideoQuality(quint8 quality)
     d->quality = quality;
     if (d->encodedStream) {
         d->encodedStream->setQuality(quality);
+    }
+}
+
+void VideoStream::setRequestedSize(const QSize &size)
+{
+    d->requestedSize = size;
+    if (d->encodedStream) {
+        d->encodedStream->setRequestedSize(size);
+    }
+    if (d->sourceStream) {
+        d->sourceStream->setRequestedSize(size);
     }
 }
 
