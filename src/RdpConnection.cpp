@@ -23,6 +23,8 @@
 #include <freerdp/channels/wtsvc.h>
 #include <freerdp/freerdp.h>
 #include <freerdp/server/cliprdr.h>
+#include <freerdp/server/disp.h>
+
 
 #include <freerdp/channels/drdynvc.h>
 
@@ -113,6 +115,7 @@ BOOL peerPostConnect(freerdp_peer *peer)
  */
 BOOL peerActivate(freerdp_peer *peer)
 {
+    qDebug() << "activate";
     auto context = reinterpret_cast<PeerContext *>(peer->context);
     if (context->connection->onActivate()) {
         return TRUE;
@@ -318,6 +321,7 @@ void RdpConnection::initialize()
     freerdp_settings_set_bool(settings, FreeRDP_GfxAVC444v2, false);
     freerdp_settings_set_bool(settings, FreeRDP_GfxH264, true);
 
+    freerdp_settings_set_bool(settings, FreeRDP_SmartSizing, true);
 
     freerdp_settings_set_bool(settings, FreeRDP_GfxSmallCache, false);
     freerdp_settings_set_bool(settings, FreeRDP_GfxThinClient, false);
@@ -358,6 +362,11 @@ void RdpConnection::initialize()
     // Perform actual communication on a separate thread.
     d->thread = std::jthread(std::bind(&RdpConnection::run, this, std::placeholders::_1));
     pthread_setname_np(d->thread.native_handle(), "krdp_session");
+
+
+
+
+
 }
 
 void RdpConnection::run(std::stop_token stopToken)
@@ -391,6 +400,7 @@ void RdpConnection::run(std::stop_token stopToken)
                 if (d->videoStream->initialize()) {
                     d->videoStream->setEnabled(true);
                     setState(State::Streaming);
+
                 } else {
                     break;
                 }
@@ -410,6 +420,14 @@ void RdpConnection::run(std::stop_token stopToken)
                 break;
             }
         }
+
+        if (d->peer->connected && WTSVirtualChannelManagerIsChannelJoined(context->virtualChannelManager, "disp")) {
+            qDebug() << "???";
+        }
+        if (d->peer->connected && WTSVirtualChannelManagerIsChannelJoined(context->virtualChannelManager, "disp2")) {
+            qDebug() << "??222?";
+        }
+
 
         d->networkDetection->update();
     }
@@ -444,6 +462,12 @@ bool RdpConnection::onCapabilities()
         return false;
     }
 
+    qDebug() << "DAVE" << freerdp_settings_get_uint32(settings, FreeRDP_DesktopWidth);
+    qDebug() << "DAVE SMART" << freerdp_settings_get_uint32(settings, FreeRDP_SmartSizingWidth);
+
+    qDebug() << "DAVE ADMIN " << freerdp_settings_get_bool(settings, FreeRDP_RestrictedAdminModeRequired);
+
+
     return true;
 }
 
@@ -455,6 +479,9 @@ bool RdpConnection::onActivate()
 bool RdpConnection::onPostConnect()
 {
     qCInfo(KRDP) << "New client connected:" << d->peer->hostname << freerdp_peer_os_major_type_string(d->peer) << freerdp_peer_os_minor_type_string(d->peer);
+
+    auto settings = d->peer->context->settings;
+    qDebug() << "DAVE" << freerdp_settings_get_uint32(settings, FreeRDP_DesktopWidth);
 
     // Cleanup the temporary file so we don't leak it.
     d->samFile.remove();
