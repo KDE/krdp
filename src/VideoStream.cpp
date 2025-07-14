@@ -17,6 +17,8 @@
 
 #include <freerdp/freerdp.h>
 #include <freerdp/peer.h>
+#include <freerdp/server/disp.h>
+
 
 #include "NetworkDetection.h"
 #include "PeerContext_p.h"
@@ -93,6 +95,25 @@ uint32_t gfxQoEFrameAcknowledge(RdpgfxServerContext *, const RDPGFX_QOE_FRAME_AC
     return CHANNEL_RC_OK;
 }
 
+static UINT display_control_receive_monitor_layout(DispServerContext* context,
+                                                   const DISPLAY_CONTROL_MONITOR_LAYOUT_PDU* pdu)
+{
+    qDebug() << "YAY!!!!!";
+    for (int i = 0; i < pdu->MonitorLayoutSize; i++) {
+        const DISPLAY_CONTROL_MONITOR_LAYOUT* monitor = &pdu->Monitors[i];
+        printf("Monitor %d: pos=(%d,%d), size=%dx%d\n",
+               i,
+               monitor->Left, monitor->Top,
+               monitor->Width, monitor->Height);
+    }
+
+           // TODO: Resize your framebuffer and send new surface bits
+
+    return CHANNEL_RC_OK;
+}
+
+
+
 struct Surface {
     uint16_t id;
     QSize size;
@@ -156,6 +177,13 @@ bool VideoStream::initialize()
 
     auto peerContext = reinterpret_cast<PeerContext *>(d->session->rdpPeerContext());
 
+    auto dispManager = disp_server_context_new(peerContext->virtualChannelManager);
+    dispManager->DispMonitorLayout = display_control_receive_monitor_layout;
+    dispManager->MaxNumMonitors = 1;
+    dispManager->MaxMonitorAreaFactorA = 10000; // ??
+    dispManager->MaxMonitorAreaFactorB = 10000;
+    // x->rdpcontext = d->peer->context;
+
     d->gfxContext = Private::RdpGfxContextPtr{rdpgfx_server_context_new(peerContext->virtualChannelManager), rdpgfx_server_context_free};
     if (!d->gfxContext) {
         qCWarning(KRDP) << "Failed creating RDPGFX context";
@@ -195,6 +223,8 @@ bool VideoStream::initialize()
     });
 
     qCDebug(KRDP) << "Video stream initialized";
+
+
 
     return true;
 }
@@ -353,14 +383,22 @@ void VideoStream::performReset(QSize size)
     RDPGFX_RESET_GRAPHICS_PDU resetGraphicsPdu;
     resetGraphicsPdu.width = size.width();
     resetGraphicsPdu.height = size.height();
-    resetGraphicsPdu.monitorCount = 1;
+    resetGraphicsPdu.monitorCount = 2;
 
-    auto monitors = new MONITOR_DEF[1];
+    auto monitors = new MONITOR_DEF[2];
     monitors[0].left = 0;
     monitors[0].right = size.width();
     monitors[0].top = 0;
     monitors[0].bottom = size.height();
     monitors[0].flags = MONITOR_PRIMARY;
+
+    monitors[1].left = 1920;
+    monitors[1].right = 1920+ size.width();
+    monitors[1].top = 0;
+    monitors[1].bottom = size.height();
+    monitors[1].flags = MONITOR_PRIMARY;
+
+
     resetGraphicsPdu.monitorDefArray = monitors;
     d->gfxContext->ResetGraphics(d->gfxContext.get(), &resetGraphicsPdu);
 
@@ -381,6 +419,7 @@ void VideoStream::performReset(QSize size)
     mapSurfaceToOutputPdu.outputOriginX = 0;
     mapSurfaceToOutputPdu.outputOriginY = 0;
     mapSurfaceToOutputPdu.surfaceId = surfaceId;
+
     d->gfxContext->MapSurfaceToOutput(d->gfxContext.get(), &mapSurfaceToOutputPdu);
 }
 
