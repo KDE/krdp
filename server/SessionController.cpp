@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 
 #include "SessionController.h"
+#include "DisplayControl.h"
 
 #include <QAction>
 #include <QCoreApplication>
@@ -45,6 +46,13 @@ public:
         connect(connection->inputHandler(), &KRdp::InputHandler::inputEvent, session.get(), &KRdp::AbstractSession::sendEvent);
         connect(connection->clipboard(), &KRdp::Clipboard::clientDataChanged, session.get(), [clipboard = connection->clipboard(), this]() {
             session->setClipboardData(clipboard->getClipboard());
+        });
+
+        connect(connection->displayControl(), &KRdp::DisplayControl::requestedScreenSizeChanged, session.get(), [session = session.get()](const QSize &size) {
+            KRdp::VirtualMonitor vm;
+            vm.dpr = 1.0;
+            vm.size = size;
+            session->setVirtualMonitor(vm);
         });
 
         connect(connection, &QObject::destroyed, this, &SessionWrapper::onConnectionDestroyed);

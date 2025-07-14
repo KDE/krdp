@@ -64,6 +64,9 @@ void AbstractSession::setVirtualMonitor(const VirtualMonitor &virtualMonitor)
 {
     Q_ASSERT(!d->activeStream.has_value());
     d->virtualMonitor = virtualMonitor;
+    if (d->encodedStream) {
+        d->encodedStream->setRequestedSize(d->virtualMonitor->size);
+    }
 }
 
 void AbstractSession::setVideoQuality(quint8 quality)
@@ -125,6 +128,9 @@ PipeWireEncodedStream *AbstractSession::stream()
         d->encodedStream = std::make_unique<PipeWireEncodedStream>();
         if (d->frameRate) {
             d->encodedStream->setMaxFramerate({d->frameRate.value(), 1});
+        }
+        if (d->virtualMonitor) {
+            d->encodedStream->setRequestedSize(d->virtualMonitor->size);
         }
         if (d->quality) {
             d->encodedStream->setQuality(d->quality.value());

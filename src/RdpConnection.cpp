@@ -23,11 +23,15 @@
 #include <freerdp/channels/wtsvc.h>
 #include <freerdp/freerdp.h>
 #include <freerdp/server/cliprdr.h>
+#include <freerdp/server/disp.h>
+
 
 #include <freerdp/channels/drdynvc.h>
 
+#include "AbstractSession.h"
 #include "Clipboard.h"
 #include "Cursor.h"
+#include "DisplayControl.h"
 #include "InputHandler.h"
 #include "NetworkDetection.h"
 #include "PeerContext_p.h"
@@ -145,8 +149,10 @@ public:
     std::unique_ptr<Cursor> cursor;
     std::unique_ptr<NetworkDetection> networkDetection;
     std::unique_ptr<Clipboard> clipboard;
+    std::unique_ptr<DisplayControl> displayControl;
 
     freerdp_peer *peer = nullptr;
+    bool dynamicChannelsInitialized = false;
 
     std::jthread thread;
 
@@ -171,6 +177,7 @@ RdpConnection::RdpConnection(Server *server, qintptr socketHandle)
     d->cursor = std::make_unique<Cursor>(this);
     d->networkDetection = std::make_unique<NetworkDetection>(this);
     d->clipboard = std::make_unique<Clipboard>(this);
+    d->displayControl = std::make_unique<DisplayControl>(this);
 
     QMetaObject::invokeMethod(this, &RdpConnection::initialize, Qt::QueuedConnection);
 }
@@ -239,6 +246,11 @@ Cursor *RdpConnection::cursor() const
 Clipboard *RdpConnection::clipboard() const
 {
     return d->clipboard.get();
+}
+
+DisplayControl *RdpConnection::displayControl() const
+{
+    return d->displayControl.get();
 }
 
 NetworkDetection *RdpConnection::networkDetection() const
@@ -318,6 +330,7 @@ void RdpConnection::initialize()
     freerdp_settings_set_bool(settings, FreeRDP_GfxAVC444v2, false);
     freerdp_settings_set_bool(settings, FreeRDP_GfxH264, true);
 
+    freerdp_settings_set_bool(settings, FreeRDP_SmartSizing, true);
 
     freerdp_settings_set_bool(settings, FreeRDP_GfxSmallCache, false);
     freerdp_settings_set_bool(settings, FreeRDP_GfxThinClient, false);
@@ -335,6 +348,10 @@ void RdpConnection::initialize()
     freerdp_settings_set_bool(settings, FreeRDP_NSCodec, false);
     freerdp_settings_set_bool(settings, FreeRDP_FrameMarkerCommandEnabled, true);
     freerdp_settings_set_bool(settings, FreeRDP_SurfaceFrameMarkerEnabled, true);
+
+    freerdp_settings_set_bool(settings, FreeRDP_SupportMonitorLayoutPdu, true);
+    freerdp_settings_set_bool(settings, FreeRDP_SupportDisplayControl, true);
+
 
     d->peer->Capabilities = peerCapabilities;
     d->peer->Activate = peerActivate;
@@ -387,7 +404,10 @@ void RdpConnection::run(std::stop_token stopToken)
         if (d->peer->connected && WTSVirtualChannelManagerIsChannelJoined(context->virtualChannelManager, DRDYNVC_SVC_CHANNEL_NAME)) {
             auto state = WTSVirtualChannelManagerGetDrdynvcState(context->virtualChannelManager);
             // Dynamic channels can only be set up properly once the dynamic channel channel is properly setup.
-            if (state == DRDYNVC_STATE_READY) {
+            if (state == DRDYNVC_STATE_READY && !d->dynamicChannelsInitialized) {
+                d->dynamicChannelsInitialized = true;
+                d->displayControl->initialize();
+
                 if (d->videoStream->initialize()) {
                     d->videoStream->setEnabled(true);
                     setState(State::Streaming);
@@ -432,11 +452,6 @@ bool RdpConnection::onCapabilities()
     if (colorDepth != 32) {
         qCDebug(KRDP) << "Correcting invalid color depth from client:" << colorDepth;
         freerdp_settings_set_uint32(settings, FreeRDP_ColorDepth, 32);
-    }
-
-    if (!freerdp_settings_get_bool(settings, FreeRDP_DesktopResize)) {
-        qCWarning(KRDP) << "Client doesn't support resizing, aborting";
-        return false;
     }
 
     if (freerdp_settings_get_uint32(settings,FreeRDP_PointerCacheSize) <= 0) {
