@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 
 #include "SessionController.h"
+#include "DisplayControl.h"
+#include "VideoStream.h"
 
 #include <QAction>
 #include <QCoreApplication>
@@ -48,6 +50,7 @@ public:
         connect(connection->clipboard(), &KRdp::Clipboard::clientDataChanged, session.get(), [clipboard = connection->clipboard(), this]() {
             session->setClipboardData(clipboard->getClipboard());
         });
+        connect(connection->displayControl(), &KRdp::DisplayControl::requestedScreenSizeChanged, connection->videoStream(), &KRdp::VideoStream::setRequestedSize);
 
         connect(connection, &QObject::destroyed, this, &SessionWrapper::onConnectionDestroyed);
     }
