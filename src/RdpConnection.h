@@ -99,6 +99,9 @@ public:
 
     NetworkDetection *networkDetection() const;
 
+Q_SIGNALS:
+    void requestedScreenSizeChanged(const QSize &size);
+
 private:
     friend BOOL peerCapabilities(freerdp_peer *);
     friend BOOL peerActivate(freerdp_peer *);
