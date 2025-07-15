@@ -64,6 +64,9 @@ void AbstractSession::setVirtualMonitor(const VirtualMonitor &virtualMonitor)
 {
     Q_ASSERT(!d->activeStream.has_value());
     d->virtualMonitor = virtualMonitor;
+    if (d->encodedStream) {
+        // d->encodedStream->requestSize(size);
+    }
 }
 
 void AbstractSession::setVideoQuality(quint8 quality)

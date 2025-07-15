@@ -40,6 +40,9 @@ public:
 
         connect(connection->videoStream(), &KRdp::VideoStream::enabledChanged, this, &SessionWrapper::onVideoStreamEnabledChanged);
         connect(connection->videoStream(), &KRdp::VideoStream::requestedFrameRateChanged, this, &SessionWrapper::onRequestedFrameRateChanged);
+
+        connect(connection, &KRdp::RdpConnection::requestedScreenSizeChanged, this, &SessionWrapper::onRequestedScreenSizeChanged);
+
         connect(connection->inputHandler(), &KRdp::InputHandler::inputEvent, session.get(), &KRdp::AbstractSession::sendEvent);
         connect(connection->clipboard(), &KRdp::Clipboard::clientDataChanged, session.get(), [clipboard = connection->clipboard(), this]() {
             session->setClipboardData(clipboard->getClipboard());
@@ -72,6 +75,15 @@ public:
     void onRequestedFrameRateChanged()
     {
         session->setVideoFrameRate(connection->videoStream()->requestedFrameRate());
+    }
+
+    void onRequestedScreenSizeChanged(const QSize &size)
+    {
+        KRdp::VirtualMonitor vm;
+        vm.name = u"Virtual Monitor"_qs;
+        vm.size = size;
+        vm.dpr = 1.0;
+        session->setVirtualMonitor(vm);
     }
 
     void onConnectionDestroyed()
