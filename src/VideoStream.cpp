@@ -95,23 +95,6 @@ uint32_t gfxQoEFrameAcknowledge(RdpgfxServerContext *, const RDPGFX_QOE_FRAME_AC
     return CHANNEL_RC_OK;
 }
 
-static UINT display_control_receive_monitor_layout(DispServerContext* context,
-                                                   const DISPLAY_CONTROL_MONITOR_LAYOUT_PDU* pdu)
-{
-    qDebug() << "YAY!!!!!";
-    for (int i = 0; i < pdu->MonitorLayoutSize; i++) {
-        const DISPLAY_CONTROL_MONITOR_LAYOUT* monitor = &pdu->Monitors[i];
-        printf("Monitor %d: pos=(%d,%d), size=%dx%d\n",
-               i,
-               monitor->Left, monitor->Top,
-               monitor->Width, monitor->Height);
-    }
-
-           // TODO: Resize your framebuffer and send new surface bits
-
-    return CHANNEL_RC_OK;
-}
-
 
 
 struct Surface {
@@ -176,13 +159,6 @@ bool VideoStream::initialize()
     }
 
     auto peerContext = reinterpret_cast<PeerContext *>(d->session->rdpPeerContext());
-
-    auto dispManager = disp_server_context_new(peerContext->virtualChannelManager);
-    dispManager->DispMonitorLayout = display_control_receive_monitor_layout;
-    dispManager->MaxNumMonitors = 1;
-    dispManager->MaxMonitorAreaFactorA = 10000; // ??
-    dispManager->MaxMonitorAreaFactorB = 10000;
-    // x->rdpcontext = d->peer->context;
 
     d->gfxContext = Private::RdpGfxContextPtr{rdpgfx_server_context_new(peerContext->virtualChannelManager), rdpgfx_server_context_free};
     if (!d->gfxContext) {
