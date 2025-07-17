@@ -65,7 +65,7 @@ void AbstractSession::setVirtualMonitor(const VirtualMonitor &virtualMonitor)
     Q_ASSERT(!d->activeStream.has_value());
     d->virtualMonitor = virtualMonitor;
     if (d->encodedStream) {
-        // d->encodedStream->requestSize(size);
+        d->encodedStream->setRequestedSize(virtualMonitor.size);
     }
 }
 
