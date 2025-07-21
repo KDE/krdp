@@ -23,6 +23,8 @@
 
 #include "VideoStream.h"
 
+using namespace Qt::StringLiterals;
+
 class SessionWrapper : public QObject
 {
     Q_OBJECT
@@ -93,12 +95,12 @@ SessionController::SessionController(KRdp::Server *server, SessionType sessionTy
 {
     connect(m_server, &KRdp::Server::newConnectionCreated, this, &SessionController::onNewConnection);
     // Status notification item
-    m_sni = new KStatusNotifierItem(u"krdpserver"_qs, this);
-    auto menu = new QMenu(u"quitMenu"_qs);
+    m_sni = new KStatusNotifierItem(u"krdpserver"_s, this);
+    auto menu = new QMenu(u"quitMenu"_s);
     // Disable default quit button since it has confirmation dialog
     m_sni->setStandardActionsEnabled(false);
     m_sni->setTitle(i18n("RDP Server"));
-    m_sni->setIconByName(u"preferences-system-network-remote"_qs);
+    m_sni->setIconByName(u"preferences-system-network-remote"_s);
     m_sni->setStatus(KStatusNotifierItem::Passive);
     auto quitAction = new QAction(i18n("Quit"), menu);
     quitAction->setIcon(QIcon::fromTheme(QStringLiteral("application-exit")));
@@ -157,11 +159,11 @@ void SessionController::stopFromSNI()
 {
     // Uses dbus to stop the server service, like in the KCM
     // This kills all krdpserver instances, like a "panic button"
-    QDBusInterface unit(u"org.freedesktop.systemd1"_qs,
-                        u"/org/freedesktop/systemd1/unit/plasma_2dkrdp_5fserver_2eservice"_qs,
-                        u"org.freedesktop.systemd1.Unit"_qs);
+    QDBusInterface unit(u"org.freedesktop.systemd1"_s,
+                        u"/org/freedesktop/systemd1/unit/plasma_2dkrdp_5fserver_2eservice"_s,
+                        u"org.freedesktop.systemd1.Unit"_s);
 
-    unit.asyncCall(u"Stop"_qs);
+    unit.asyncCall(u"Stop"_s);
     QCoreApplication::quit();
 }
 

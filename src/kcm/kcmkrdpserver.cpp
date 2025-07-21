@@ -28,12 +28,12 @@ using namespace Qt::StringLiterals;
 K_PLUGIN_CLASS_WITH_JSON(KRDPServerConfig, "kcm_krdpserver.json")
 
 static const QString passwordServiceName = QLatin1StringView("KRDP");
-static const QString dbusSystemdDestination = u"org.freedesktop.systemd1"_qs;
-static const QString dbusSystemdPath = u"/org/freedesktop/systemd1"_qs;
-static const QString dbusKrdpServerServicePath = u"/org/freedesktop/systemd1/unit/plasma_2dkrdp_5fserver_2eservice"_qs;
-static const QString dbusSystemdUnitInterface = u"org.freedesktop.systemd1.Unit"_qs;
-static const QString dbusSystemdManagerInterface = u"org.freedesktop.systemd1.Manager"_qs;
-static const QString dbusSystemdPropertiesInterface = u"org.freedesktop.DBus.Properties"_qs;
+static const QString dbusSystemdDestination = u"org.freedesktop.systemd1"_s;
+static const QString dbusSystemdPath = u"/org/freedesktop/systemd1"_s;
+static const QString dbusKrdpServerServicePath = u"/org/freedesktop/systemd1/unit/plasma_2dkrdp_5fserver_2eservice"_s;
+static const QString dbusSystemdUnitInterface = u"org.freedesktop.systemd1.Unit"_s;
+static const QString dbusSystemdManagerInterface = u"org.freedesktop.systemd1.Manager"_s;
+static const QString dbusSystemdPropertiesInterface = u"org.freedesktop.DBus.Properties"_s;
 
 KRDPServerConfig::KRDPServerConfig(QObject *parent, const KPluginMetaData &data)
     : KQuickManagedConfigModule(parent, data)
@@ -51,7 +51,7 @@ KRDPServerConfig::KRDPServerConfig(QObject *parent, const KPluginMetaData &data)
     QDBusConnection::sessionBus().connect(dbusSystemdDestination,
                                           dbusKrdpServerServicePath,
                                           dbusSystemdPropertiesInterface,
-                                          u"PropertiesChanged"_qs,
+                                          u"PropertiesChanged"_s,
                                           this,
                                           SLOT(servicePropertiesChanged()));
 }
@@ -243,11 +243,11 @@ void KRDPServerConfig::toggleAutoconnect(const bool enabled)
     auto msg = QDBusMessage::createMethodCall(dbusSystemdDestination,
                                               dbusSystemdPath,
                                               dbusSystemdManagerInterface,
-                                              enabled ? u"EnableUnitFiles"_qs : u"DisableUnitFiles"_qs);
+                                              enabled ? u"EnableUnitFiles"_s : u"DisableUnitFiles"_s);
     if (enabled) {
-        msg.setArguments({QStringList(u"app-org.kde.krdpserver.service"_qs), false, true});
+        msg.setArguments({QStringList(u"app-org.kde.krdpserver.service"_s), false, true});
     } else {
-        msg.setArguments({QStringList(u"app-org.kde.krdpserver.service"_qs), false});
+        msg.setArguments({QStringList(u"app-org.kde.krdpserver.service"_s), false});
     }
     QDBusConnection::sessionBus().asyncCall(msg);
 
@@ -258,9 +258,9 @@ void KRDPServerConfig::toggleAutoconnect(const bool enabled)
 
 void KRDPServerConfig::toggleServer(const bool enabled)
 {
-    auto msg = QDBusMessage::createMethodCall(dbusSystemdDestination, dbusKrdpServerServicePath, dbusSystemdUnitInterface, enabled ? u"Start"_qs : u"Stop"_qs);
+    auto msg = QDBusMessage::createMethodCall(dbusSystemdDestination, dbusKrdpServerServicePath, dbusSystemdUnitInterface, enabled ? u"Start"_s : u"Stop"_s);
 
-    msg.setArguments({u"replace"_qs});
+    msg.setArguments({u"replace"_s});
     qDebug(KRDPKCM) << "Toggling KRDP Server to " << enabled << "over QDBus";
     QDBusConnection::sessionBus().asyncCall(msg);
 
@@ -272,8 +272,8 @@ void KRDPServerConfig::toggleServer(const bool enabled)
 void KRDPServerConfig::restartServer()
 {
     qDebug(KRDPKCM) << "Restarting KRDP Server";
-    auto restartMsg = QDBusMessage::createMethodCall(dbusSystemdDestination, dbusKrdpServerServicePath, dbusSystemdUnitInterface, u"Restart"_qs);
-    restartMsg.setArguments({u"replace"_qs});
+    auto restartMsg = QDBusMessage::createMethodCall(dbusSystemdDestination, dbusKrdpServerServicePath, dbusSystemdUnitInterface, u"Restart"_s);
+    restartMsg.setArguments({u"replace"_s});
     auto pendingCall = QDBusConnection::sessionBus().asyncCall(restartMsg);
     auto watcher = new QDBusPendingCallWatcher(pendingCall, this);
     connect(watcher, &QDBusPendingCallWatcher::finished, this, [&](QDBusPendingCallWatcher *w) {
@@ -287,24 +287,24 @@ void KRDPServerConfig::generateCertificate()
     if (!m_serverSettings->certificate().isEmpty() || !m_serverSettings->certificateKey().isEmpty()) {
         return;
     }
-    QDir(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)).mkpath(u"krdpserver"_qs);
-    QString certificatePath(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + u"/krdpserver/krdp.crt"_qs);
-    QString certificateKeyPath(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + u"/krdpserver/krdp.key"_qs);
+    QDir(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)).mkpath(u"krdpserver"_s);
+    QString certificatePath(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + u"/krdpserver/krdp.crt"_s);
+    QString certificateKeyPath(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + u"/krdpserver/krdp.key"_s);
     qDebug(KRDPKCM) << "Generating certificate files to: " << certificatePath << " and " << certificateKeyPath;
     QProcess sslProcess;
-    sslProcess.start(u"openssl"_qs,
+    sslProcess.start(u"openssl"_s,
                      {
-                         u"req"_qs,
-                         u"-nodes"_qs,
-                         u"-new"_qs,
-                         u"-x509"_qs,
-                         u"-keyout"_qs,
+                         u"req"_s,
+                         u"-nodes"_s,
+                         u"-new"_s,
+                         u"-x509"_s,
+                         u"-keyout"_s,
                          certificateKeyPath,
-                         u"-out"_qs,
+                         u"-out"_s,
                          certificatePath,
-                         u"-days"_qs,
-                         u"1"_qs,
-                         u"-batch"_qs,
+                         u"-days"_s,
+                         u"1"_s,
+                         u"-batch"_s,
                      });
     sslProcess.waitForFinished();
 
@@ -326,8 +326,8 @@ void KRDPServerConfig::generateCertificate()
 void KRDPServerConfig::checkServerRunning()
 {
     // Checks if there is PID, and if there is, process is running.
-    auto msg = QDBusMessage::createMethodCall(dbusSystemdDestination, dbusKrdpServerServicePath, dbusSystemdPropertiesInterface, u"Get"_qs);
-    msg.setArguments({u"org.freedesktop.systemd1.Service"_qs, u"MainPID"_qs});
+    auto msg = QDBusMessage::createMethodCall(dbusSystemdDestination, dbusKrdpServerServicePath, dbusSystemdPropertiesInterface, u"Get"_s);
+    msg.setArguments({u"org.freedesktop.systemd1.Service"_s, u"MainPID"_s});
 
     QDBusPendingCall pcall = QDBusConnection::sessionBus().asyncCall(msg);
     auto watcher = new QDBusPendingCallWatcher(pcall, this);

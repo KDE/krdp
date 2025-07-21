@@ -20,35 +20,37 @@
 #include "krdp_version.h"
 #include "krdpserversettings.h"
 
+using namespace Qt::StringLiterals;
+
 int main(int argc, char **argv)
 {
     QApplication application{argc, argv};
-    application.setApplicationName(u"krdp-server"_qs);
-    application.setApplicationDisplayName(u"KRDP Server"_qs);
+    application.setApplicationName(u"krdp-server"_s);
+    application.setApplicationDisplayName(u"KRDP Server"_s);
 
-    KAboutData about(u"krdp-server"_qs, u"KRDP Server"_qs, QStringLiteral(KRdp_VERSION_STRING));
+    KAboutData about(u"krdp-server"_s, u"KRDP Server"_s, QStringLiteral(KRdp_VERSION_STRING));
     KAboutData::setApplicationData(about);
 
     KCrash::initialize();
 
     QCommandLineParser parser;
     parser.setApplicationDescription(
-        u"An RDP server that exposes the current desktop session over the RDP protocol.\nNote that a valid TLS certificate and key is needed. If not provided, a temporary certificate will be generated."_qs);
+        u"An RDP server that exposes the current desktop session over the RDP protocol.\nNote that a valid TLS certificate and key is needed. If not provided, a temporary certificate will be generated."_s);
     parser.addOptions({
-        {{u"u"_qs, u"username"_qs}, u"The username to use for login"_qs, u"username"_qs},
-        {{u"p"_qs, u"password"_qs}, u"The password to use for login. Requires username to be passed as well."_qs, u"password"_qs},
-        {u"address"_qs, u"The address to listen on for connections. Defaults to 0.0.0.0"_qs, u"address"_qs},
-        {u"port"_qs, u"The port to use for connections. Defaults to 3389."_qs, u"port"_qs, u"3389"_qs},
-        {u"certificate"_qs, u"The TLS certificate file to use."_qs, u"certificate"_qs, u"server.crt"_qs},
-        {u"certificate-key"_qs, u"The TLS certificate key to use."_qs, u"certificate-key"_qs, u"server.key"_qs},
-        {u"monitor"_qs, u"The index of the monitor to use when streaming."_qs, u"monitor"_qs, u"-1"_qs},
-        {u"virtual-monitor"_qs,
-         u"Creates a new virtual output to connect to (WIDTHxHEIGHT@SCALE, e.g. 1920x1080@1). Incompatible with --monitor."_qs,
-         u"data"_qs,
-         u"1920x1080@1"_qs},
-        {u"quality"_qs, u"Encoding quality of the stream, from 0 (lowest) to 100 (highest)"_qs, u"quality"_qs},
+        {{u"u"_s, u"username"_s}, u"The username to use for login"_s, u"username"_s},
+        {{u"p"_s, u"password"_s}, u"The password to use for login. Requires username to be passed as well."_s, u"password"_s},
+        {u"address"_s, u"The address to listen on for connections. Defaults to 0.0.0.0"_s, u"address"_s},
+        {u"port"_s, u"The port to use for connections. Defaults to 3389."_s, u"port"_s, u"3389"_s},
+        {u"certificate"_s, u"The TLS certificate file to use."_s, u"certificate"_s, u"server.crt"_s},
+        {u"certificate-key"_s, u"The TLS certificate key to use."_s, u"certificate-key"_s, u"server.key"_s},
+        {u"monitor"_s, u"The index of the monitor to use when streaming."_s, u"monitor"_s, u"-1"_s},
+        {u"virtual-monitor"_s,
+         u"Creates a new virtual output to connect to (WIDTHxHEIGHT@SCALE, e.g. 1920x1080@1). Incompatible with --monitor."_s,
+         u"data"_s,
+         u"1920x1080@1"_s},
+        {u"quality"_s, u"Encoding quality of the stream, from 0 (lowest) to 100 (highest)"_s, u"quality"_s},
 #ifdef WITH_PLASMA_SESSION
-        {u"plasma"_qs, u"Use Plasma protocols instead of XDP"_qs},
+        {u"plasma"_s, u"Use Plasma protocols instead of XDP"_s},
 #endif
     });
     about.setupCommandLine(&parser);
@@ -75,8 +77,8 @@ int main(int argc, char **argv)
     };
 
     QHostAddress address = QHostAddress::Any;
-    if (parser.isSet(u"address"_qs)) {
-        address = QHostAddress(parser.value(u"address"_qs));
+    if (parser.isSet(u"address"_s)) {
+        address = QHostAddress(parser.value(u"address"_s));
     }
     auto port = parserValueWithDefault(u"port", config->listenPort());
     auto certificate = std::filesystem::path(parserValueWithDefault(u"certificate", config->certificate()).toStdString());
@@ -91,10 +93,10 @@ int main(int argc, char **argv)
     server.setTlsCertificateKey(certificateKey);
 
     // Use parsed username/pw if set
-    if (parser.isSet(u"username"_qs)) {
+    if (parser.isSet(u"username"_s)) {
         KRdp::User user;
-        user.name = parser.value(u"username"_qs);
-        user.password = parser.value(u"password"_qs);
+        user.name = parser.value(u"username"_s);
+        user.password = parser.value(u"password"_s);
         server.addUser(user);
     }
     // Otherwise use KCM username list
@@ -117,10 +119,10 @@ int main(int argc, char **argv)
         }
     }
 
-    SessionController controller(&server, parser.isSet(u"plasma"_qs) ? SessionController::SessionType::Plasma : SessionController::SessionType::Portal);
-    if (parser.isSet(u"virtual-monitor"_qs)) {
-        const QString vmData = parser.value(u"virtual-monitor"_qs);
-        const QRegularExpression rx(uR"((\d+)x(\d+)@([\d.]+))"_qs);
+    SessionController controller(&server, parser.isSet(u"plasma"_s) ? SessionController::SessionType::Plasma : SessionController::SessionType::Portal);
+    if (parser.isSet(u"virtual-monitor"_s)) {
+        const QString vmData = parser.value(u"virtual-monitor"_s);
+        const QRegularExpression rx(uR"((\d+)x(\d+)@([\d.]+))"_s);
         const auto match = rx.match(vmData);
         if (!match.hasMatch()) {
             qWarning() << "failed to parse" << vmData << ".  Should be WIDTHxHEIGHT@SCALE";
@@ -128,7 +130,7 @@ int main(int argc, char **argv)
         }
         controller.setVirtualMonitor({vmData, {match.capturedView(1).toInt(), match.capturedView(2).toInt()}, match.capturedView(3).toDouble()});
     } else {
-        controller.setMonitorIndex(parser.isSet(u"monitor"_qs) ? std::optional(parser.value(u"monitor"_qs).toInt()) : std::nullopt);
+        controller.setMonitorIndex(parser.isSet(u"monitor"_s) ? std::optional(parser.value(u"monitor"_s).toInt()) : std::nullopt);
     }
     controller.setQuality(parserValueWithDefault(u"quality", config->quality()));
 

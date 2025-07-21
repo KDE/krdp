@@ -14,6 +14,8 @@
 #include "PortalSession.h"
 #include "VideoStream.h"
 
+using namespace Qt::StringLiterals;
+
 int main(int argc, char **argv)
 {
     QGuiApplication application{argc, argv};
@@ -21,17 +23,17 @@ int main(int argc, char **argv)
     QCommandLineParser parser;
     parser.addHelpOption();
     parser.addOptions({
-        {u"quit-after"_qs, u"Quit after running for this amount of seconds"_qs, u"seconds"_qs},
-        {u"monitor"_qs, u"Index of the monitor to display."_qs, u"monitor"_qs, u"-1"_qs},
-        {u"quality"_qs, u"Encoding quality of the stream, from 0 (lowest) to 100 (highest)"_qs, u"quality"_qs},
+        {u"quit-after"_s, u"Quit after running for this amount of seconds"_s, u"seconds"_s},
+        {u"monitor"_s, u"Index of the monitor to display."_s, u"monitor"_s, u"-1"_s},
+        {u"quality"_s, u"Encoding quality of the stream, from 0 (lowest) to 100 (highest)"_s, u"quality"_s},
     });
     parser.process(application);
 
     KRdp::PortalSession session;
     session.requestStreamingEnable(&application);
-    session.setActiveStream(parser.value(u"monitor"_qs).toInt());
-    if (parser.isSet(u"quality"_qs)) {
-        session.setVideoQuality(parser.value(u"quality"_qs).toUShort());
+    session.setActiveStream(parser.value(u"monitor"_s).toInt());
+    if (parser.isSet(u"quality"_s)) {
+        session.setVideoQuality(parser.value(u"quality"_s).toUShort());
     }
 
     signal(SIGINT, [](int) {
@@ -42,7 +44,7 @@ int main(int argc, char **argv)
         QCoreApplication::exit(0);
     });
 
-    QFile file{u"stream.raw"_qs};
+    QFile file{u"stream.raw"_s};
     if (!file.open(QFile::WriteOnly)) {
         qDebug() << "Failed opening stream.raw";
         return -1;
@@ -54,9 +56,9 @@ int main(int argc, char **argv)
 
     QTimer timer;
     QObject::connect(&timer, &QTimer::timeout, &application, &QCoreApplication::quit);
-    if (parser.isSet(u"quit-after"_qs)) {
+    if (parser.isSet(u"quit-after"_s)) {
         QObject::connect(&session, &KRdp::PortalSession::started, &timer, qOverload<>(&QTimer::start));
-        timer.setInterval(parser.value(u"quit-after"_qs).toInt() * 1000);
+        timer.setInterval(parser.value(u"quit-after"_s).toInt() * 1000);
     }
 
     session.start();

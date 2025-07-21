@@ -21,6 +21,8 @@
 #include "xdp_dbus_remotedesktop_interface.h"
 #include "xdp_dbus_screencast_interface.h"
 
+using namespace Qt::StringLiterals;
+
 namespace KRdp
 {
 
@@ -324,7 +326,7 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
             }
             auto stream = streams.at(activeStream() >= 0 ? activeStream() : 0);
 
-            setLogicalSize(qdbus_cast<QSize>(stream.map.value(u"size"_qs)));
+            setLogicalSize(qdbus_cast<QSize>(stream.map.value(u"size"_s)));
             auto fd = reply.value();
             auto encodedStream = this->stream();
             encodedStream->setNodeId(stream.nodeId);
@@ -334,10 +336,10 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
             connect(encodedStream, &PipeWireEncodedStream::newPacket, this, &PortalSession::onPacketReceived);
             connect(encodedStream, &PipeWireEncodedStream::sizeChanged, this, &PortalSession::setSize);
             connect(encodedStream, &PipeWireEncodedStream::cursorChanged, this, &PortalSession::cursorUpdate);
-            QDBusConnection::sessionBus().connect(u"org.freedesktop.portal.Desktop"_qs,
+            QDBusConnection::sessionBus().connect(u"org.freedesktop.portal.Desktop"_s,
                                                   d->sessionPath.path(),
-                                                  u"org.freedesktop.portal.Session"_qs,
-                                                  u"Closed"_qs,
+                                                  u"org.freedesktop.portal.Session"_s,
+                                                  u"Closed"_s,
                                                   this,
                                                   SLOT(onSessionClosed()));
 
