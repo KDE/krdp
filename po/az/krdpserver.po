@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-27 00:44+0000\n"
+"POT-Creation-Date: 2025-07-22 00:44+0000\n"
 "PO-Revision-Date: 2025-05-22 16:52+0400\n"
 "Last-Translator: linux <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -69,12 +69,12 @@ msgstr "Girişə icazə verilən istifadəçilərin şifrələri KWallet-də sax
 msgid "Autostart the server on login"
 msgstr "Girişdə serveri avtomatik başlatmaq"
 
-#: SessionController.cpp:100
+#: SessionController.cpp:102
 #, kde-format
 msgid "RDP Server"
 msgstr "RDP Serveri"
 
-#: SessionController.cpp:103
+#: SessionController.cpp:105
 #, kde-format
 msgid "Quit"
 msgstr "Çıxış"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-27 00:44+0000\n"
+"POT-Creation-Date: 2025-07-22 00:44+0000\n"
 "PO-Revision-Date: 2024-10-03 13:22+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -70,12 +70,12 @@ msgstr "يُسمح للمستخدمين بالولوج، وستخزن كلمات
 msgid "Autostart the server on login"
 msgstr "تشغيل الخادم تلقائيًا عند الولوج"
 
-#: SessionController.cpp:100
+#: SessionController.cpp:102
 #, kde-format
 msgid "RDP Server"
 msgstr "خادم سطح المكتب البعيد"
 
-#: SessionController.cpp:103
+#: SessionController.cpp:105
 #, kde-format
 msgid "Quit"
 msgstr "أنهِ"

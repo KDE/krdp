@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-27 00:44+0000\n"
+"POT-Creation-Date: 2025-07-22 00:44+0000\n"
 "PO-Revision-Date: 2024-12-24 20:39+0530\n"
 "Last-Translator: kali <shreekantkalwar@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -71,12 +71,12 @@ msgstr "उपयोक्तारः प्रवेशं कर्तुं 
 msgid "Autostart the server on login"
 msgstr "प्रवेशसमये सर्वरं स्वयमेव आरभत"
 
-#: SessionController.cpp:100
+#: SessionController.cpp:102
 #, kde-format
 msgid "RDP Server"
 msgstr "आरडीपी सर्वर"
 
-#: SessionController.cpp:103
+#: SessionController.cpp:105
 #, kde-format
 msgid "Quit"
 msgstr "परिजहातु"
