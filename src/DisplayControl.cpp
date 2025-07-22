@@ -11,13 +11,6 @@
 
 using namespace KRdp;
 
-static BOOL disp_channel_id_assigned(DispServerContext *disp_context, uint32_t channel_id)
-{
-    qDebug() << "bound";
-    Q_UNUSED(disp_context)
-    return TRUE;
-}
-
 static UINT display_control_receive_monitor_layout(DispServerContext *context, const DISPLAY_CONTROL_MONITOR_LAYOUT_PDU *pdu)
 {
     if (pdu->NumMonitors < 0) {
@@ -54,8 +47,8 @@ bool DisplayControl::initialize()
     m_dispManager = disp_server_context_new(peerContext->virtualChannelManager);
     m_dispManager->rdpcontext = m_session->rdpPeerContext();
     m_dispManager->custom = this;
+
     m_dispManager->DispMonitorLayout = display_control_receive_monitor_layout;
-    // m_dispManager->ChannelIdAssigned = disp_channel_id_assigned;
 
     m_dispManager->MaxNumMonitors = 1;
     m_dispManager->MaxMonitorAreaFactorA = 8192;

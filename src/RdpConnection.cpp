@@ -117,7 +117,6 @@ BOOL peerPostConnect(freerdp_peer *peer)
  */
 BOOL peerActivate(freerdp_peer *peer)
 {
-    qDebug() << "activate";
     auto context = reinterpret_cast<PeerContext *>(peer->context);
     if (context->connection->onActivate()) {
         return TRUE;
@@ -153,6 +152,7 @@ public:
     std::unique_ptr<DisplayControl> displayControl;
 
     freerdp_peer *peer = nullptr;
+    bool dynamicChannelsInitialized = false;
 
     std::jthread thread;
 
@@ -404,17 +404,13 @@ void RdpConnection::run(std::stop_token stopToken)
         if (d->peer->connected && WTSVirtualChannelManagerIsChannelJoined(context->virtualChannelManager, DRDYNVC_SVC_CHANNEL_NAME)) {
             auto state = WTSVirtualChannelManagerGetDrdynvcState(context->virtualChannelManager);
             // Dynamic channels can only be set up properly once the dynamic channel channel is properly setup.
-            if (state == DRDYNVC_STATE_READY) {
-                static bool once = false;
-                if (!once) {
-                    d->displayControl->initialize();
-                    once = true;
-                }
+            if (state == DRDYNVC_STATE_READY && !d->dynamicChannelsInitialized) {
+                d->dynamicChannelsInitialized = true;
+                d->displayControl->initialize();
 
                 if (d->videoStream->initialize()) {
                     d->videoStream->setEnabled(true);
                     setState(State::Streaming);
-
                 } else {
                     break;
                 }
@@ -458,21 +454,10 @@ bool RdpConnection::onCapabilities()
         freerdp_settings_set_uint32(settings, FreeRDP_ColorDepth, 32);
     }
 
-    if (!freerdp_settings_get_bool(settings, FreeRDP_DesktopResize)) {
-        qCWarning(KRDP) << "Client doesn't support resizing, aborting";
-        return false;
-    }
-
     if (freerdp_settings_get_uint32(settings,FreeRDP_PointerCacheSize) <= 0) {
         qCWarning(KRDP) << "Client doesn't support pointer caching, aborting";
         return false;
     }
-
-    qDebug() << "DAVE" << freerdp_settings_get_uint32(settings, FreeRDP_DesktopWidth);
-    qDebug() << "DAVE SMART" << freerdp_settings_get_uint32(settings, FreeRDP_SmartSizingWidth);
-
-    qDebug() << "DAVE ADMIN " << freerdp_settings_get_bool(settings, FreeRDP_RestrictedAdminModeRequired);
-
 
     return true;
 }
@@ -485,9 +470,6 @@ bool RdpConnection::onActivate()
 bool RdpConnection::onPostConnect()
 {
     qCInfo(KRDP) << "New client connected:" << d->peer->hostname << freerdp_peer_os_major_type_string(d->peer) << freerdp_peer_os_minor_type_string(d->peer);
-
-    auto settings = d->peer->context->settings;
-    qDebug() << "DAVE" << freerdp_settings_get_uint32(settings, FreeRDP_DesktopWidth);
 
     // Cleanup the temporary file so we don't leak it.
     d->samFile.remove();
