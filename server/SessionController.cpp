@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 
 #include "SessionController.h"
+#include "DisplayControl.h"
 
 #include <QAction>
 #include <QCoreApplication>
@@ -38,13 +39,20 @@ public:
         connect(session.get(), &KRdp::AbstractSession::frameReceived, connection->videoStream(), &KRdp::VideoStream::queueFrame);
         connect(session.get(), &KRdp::AbstractSession::cursorUpdate, this, &SessionWrapper::onCursorUpdate);
         connect(session.get(), &KRdp::AbstractSession::error, this, &SessionWrapper::sessionError);
-        connect(session.get(), &KRdp::AbstractSession::clipboardDataChanged, connection->clipboard(), &KRdp::Clipboard::setServerData);
+        // connect(session.get(), &KRdp::AbstractSession::clipboardDataChanged, connection->clipboard(), &KRdp::Clipboard::setServerData);
 
         connect(connection->videoStream(), &KRdp::VideoStream::enabledChanged, this, &SessionWrapper::onVideoStreamEnabledChanged);
         connect(connection->videoStream(), &KRdp::VideoStream::requestedFrameRateChanged, this, &SessionWrapper::onRequestedFrameRateChanged);
         connect(connection->inputHandler(), &KRdp::InputHandler::inputEvent, session.get(), &KRdp::AbstractSession::sendEvent);
-        connect(connection->clipboard(), &KRdp::Clipboard::clientDataChanged, session.get(), [clipboard = connection->clipboard(), this]() {
-            session->setClipboardData(clipboard->getClipboard());
+        // connect(connection->clipboard(), &KRdp::Clipboard::clientDataChanged, session.get(), [clipboard = connection->clipboard(), this]() {
+        // session->setClipboardData(clipboard->getClipboard());
+        // });
+
+        connect(connection->displayControl(), &KRdp::DisplayControl::requestedScreenSizeChanged, session.get(), [session = session.get()](const QSize &size) {
+            KRdp::VirtualMonitor vm;
+            vm.dpr = 1.0;
+            vm.size = size;
+            session->setVirtualMonitor(vm);
         });
 
         connect(connection, &QObject::destroyed, this, &SessionWrapper::onConnectionDestroyed);

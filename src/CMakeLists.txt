@@ -20,6 +20,8 @@ target_sources(KRdp PRIVATE
     AbstractSession.cpp
     Clipboard.cpp
     Clipboard.h
+    DisplayControl.cpp
+    DisplayControl.h
     RdpConnection.cpp
     Server.cpp
     Server.h

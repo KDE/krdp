@@ -22,6 +22,7 @@ class VideoStream;
 class Cursor;
 class NetworkDetection;
 class Clipboard;
+class DisplayControl;
 
 /**
  * An RDP session.
@@ -97,10 +98,9 @@ public:
 
     Clipboard *clipboard() const;
 
-    NetworkDetection *networkDetection() const;
+    DisplayControl *displayControl() const;
 
-Q_SIGNALS:
-    void requestedScreenSizeChanged(const QSize &size);
+    NetworkDetection *networkDetection() const;
 
 private:
     friend BOOL peerCapabilities(freerdp_peer *);
@@ -112,6 +112,7 @@ private:
     friend class VideoStream;
     friend class NetworkDetection;
     friend class Clipboard;
+    friend class DisplayControl;
 
     void setState(State newState);
     void initialize();

@@ -31,6 +31,7 @@
 #include "AbstractSession.h"
 #include "Clipboard.h"
 #include "Cursor.h"
+#include "DisplayControl.h"
 #include "InputHandler.h"
 #include "NetworkDetection.h"
 #include "PeerContext_p.h"
@@ -149,9 +150,7 @@ public:
     std::unique_ptr<Cursor> cursor;
     std::unique_ptr<NetworkDetection> networkDetection;
     std::unique_ptr<Clipboard> clipboard;
-
-    DispServerContext *dispManager;
-    bool dispManagerInited = false;
+    std::unique_ptr<DisplayControl> displayControl;
 
     freerdp_peer *peer = nullptr;
 
@@ -159,42 +158,6 @@ public:
 
     QTemporaryFile samFile;
 };
-
-
-static BOOL
-disp_channel_id_assigned (DispServerContext *disp_context,
-                         uint32_t           channel_id)
-{
-    qDebug() << "channel asigned!!!";
-    return TRUE;
-}
-
-static UINT display_control_receive_monitor_layout(DispServerContext* context,
-                                                   const DISPLAY_CONTROL_MONITOR_LAYOUT_PDU* pdu)
-{
-    for (int i = 0; i < pdu->NumMonitors; i++) {
-        const DISPLAY_CONTROL_MONITOR_LAYOUT* monitor = &pdu->Monitors[i];
-        printf("Monitor %d: pos=(%d,%d), size=%dx%d\n",
-               i,
-               monitor->Left, monitor->Top,
-               monitor->Width, monitor->Height);
-    }
-
-    if (pdu->NumMonitors < 0) {
-        return CHANNEL_RC_BAD_CHANNEL;
-    }
-    if (pdu->NumMonitors > 1) {
-        return CHANNEL_RC_BAD_CHANNEL;
-    }
-    QSize monitorSize = QSize(pdu->Monitors[0].Width, pdu->Monitors[0].Height);
-
-    auto c = static_cast<RdpConnection*>(context->custom);
-    Q_EMIT c->requestedScreenSizeChanged(monitorSize);
-
-    return CHANNEL_RC_OK;
-}
-
-
 
 RdpConnection::RdpConnection(Server *server, qintptr socketHandle)
     : QObject(nullptr)
@@ -214,6 +177,7 @@ RdpConnection::RdpConnection(Server *server, qintptr socketHandle)
     d->cursor = std::make_unique<Cursor>(this);
     d->networkDetection = std::make_unique<NetworkDetection>(this);
     d->clipboard = std::make_unique<Clipboard>(this);
+    d->displayControl = std::make_unique<DisplayControl>(this);
 
     QMetaObject::invokeMethod(this, &RdpConnection::initialize, Qt::QueuedConnection);
 }
@@ -282,6 +246,11 @@ Cursor *RdpConnection::cursor() const
 Clipboard *RdpConnection::clipboard() const
 {
     return d->clipboard.get();
+}
+
+DisplayControl *RdpConnection::displayControl() const
+{
+    return d->displayControl.get();
 }
 
 NetworkDetection *RdpConnection::networkDetection() const
@@ -406,19 +375,6 @@ void RdpConnection::initialize()
     // Perform actual communication on a separate thread.
     d->thread = std::jthread(std::bind(&RdpConnection::run, this, std::placeholders::_1));
     pthread_setname_np(d->thread.native_handle(), "krdp_session");
-
-
-    auto peerContext = reinterpret_cast<PeerContext *>(rdpPeerContext());
-
-    d->dispManager = disp_server_context_new(peerContext->virtualChannelManager);
-    d->dispManager->DispMonitorLayout = display_control_receive_monitor_layout;
-    d->dispManager->ChannelIdAssigned = disp_channel_id_assigned;
-    d->dispManager->MaxNumMonitors = 1;
-    d->dispManager->MaxMonitorAreaFactorA = 8192; // ??
-    d->dispManager->MaxMonitorAreaFactorB = 8192;
-    d->dispManager->custom = this;
-
-    d->dispManager->rdpcontext = rdpPeerContext();
 }
 
 void RdpConnection::run(std::stop_token stopToken)
@@ -449,11 +405,10 @@ void RdpConnection::run(std::stop_token stopToken)
             auto state = WTSVirtualChannelManagerGetDrdynvcState(context->virtualChannelManager);
             // Dynamic channels can only be set up properly once the dynamic channel channel is properly setup.
             if (state == DRDYNVC_STATE_READY) {
-
-                if (!d->dispManagerInited) {
-                    d->dispManagerInited = true;
-                    d->dispManager->Open(d->dispManager);
-                    d->dispManager->DisplayControlCaps(d->dispManager);
+                static bool once = false;
+                if (!once) {
+                    d->displayControl->initialize();
+                    once = true;
                 }
 
                 if (d->videoStream->initialize()) {
@@ -479,14 +434,6 @@ void RdpConnection::run(std::stop_token stopToken)
                 break;
             }
         }
-
-        if (d->peer->connected && WTSVirtualChannelManagerIsChannelJoined(context->virtualChannelManager, "disp")) {
-            qDebug() << "???";
-        }
-        if (d->peer->connected && WTSVirtualChannelManagerIsChannelJoined(context->virtualChannelManager, "disp2")) {
-            qDebug() << "??222?";
-        }
-
 
         d->networkDetection->update();
     }
@@ -550,6 +497,7 @@ bool RdpConnection::onPostConnect()
 
 bool RdpConnection::onClose()
 {
+    // d->dispManager->close();
     d->clipboard->close();
     d->videoStream->close();
     setState(State::Closed);
