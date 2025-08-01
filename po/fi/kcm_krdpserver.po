@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-07-01 00:43+0000\n"
-"PO-Revision-Date: 2025-04-03 17:50+0300\n"
+"PO-Revision-Date: 2025-07-13 23:18+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -157,7 +157,7 @@ msgstr "Käytä RDP-palvelinta"
 #, kde-format
 msgctxt "@info:status"
 msgid "Systemd not found. krdpserver will require manual activation."
-msgstr ""
+msgstr "Systemd:tä ei löytynyt. Käyttäjän pitää aktivoida krdpserver."
 
 #: ui/main.qml:124 ui/main_phone.qml:101
 #, kde-format
