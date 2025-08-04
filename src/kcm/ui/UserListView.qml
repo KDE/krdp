@@ -10,7 +10,6 @@ import org.kde.kirigami as Kirigami
 import org.kde.kirigamiaddons.formcard 1 as FormCard
 import org.kde.kcmutils as KCM
 
-
 ListView {
     id: userListView
     clip: true
@@ -39,16 +38,28 @@ ListView {
         explanation: xi18nc("@info:placeholder", "Click <interface>Add New…</interface> to add one")
     }
 
-    model: settings.users
+    model: kcm.users
+
+    section.property: "isSystemUser"
+    section.delegate: Kirigami.ListSectionHeader {
+        text: section ? i18n("System users") : i18n("Other users")
+    }
 
     delegate: QQC2.ItemDelegate {
         id: itemDelegate
+        required property string userName
+        required property bool isSystemUser
+
         width: userListView.width
-        text: modelData
+        text: userName
         // Help line up text and actions
         Kirigami.Theme.useAlternateBackgroundColor: true
         contentItem: RowLayout {
             spacing: Kirigami.Units.mediumSpacing
+
+            QQC2.CheckBox {
+                visible: itemDelegate.isSystemUser
+            }
 
             QQC2.Label {
                 Layout.fillHeight: true
@@ -70,6 +81,7 @@ ListView {
                     text: modifyUserButton.text
                     visible: modifyUserButton.hovered || (Kirigami.Settings.tabletMode && modifyUserButton.pressed)
                 }
+                visible: !itemDelegate.isSystemUser
             }
 
             QQC2.Button {
@@ -84,6 +96,7 @@ ListView {
                     text: deleteUserButton.text
                     visible: deleteUserButton.hovered || (Kirigami.Settings.tabletMode && deleteUserButton.pressed)
                 }
+                visible: !itemDelegate.isSystemUser
             }
         }
         onClicked: {

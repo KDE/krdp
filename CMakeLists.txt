@@ -30,6 +30,7 @@ include(ECMSetupVersion)
 include(ECMQtDeclareLoggingCategory)
 include(ECMEnableSanitizers)
 include(ECMDeprecationSettings)
+include(ECMQmlModule)
 
 option(BUILD_EXAMPLES "Build example applications" ON)
 option(BUILD_PLASMA_SESSION "Build support for Plasma Screencasting extensions" ON)

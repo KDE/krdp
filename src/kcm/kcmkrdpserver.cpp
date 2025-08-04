@@ -38,6 +38,7 @@ static const QString dbusSystemdPropertiesInterface = u"org.freedesktop.DBus.Pro
 KRDPServerConfig::KRDPServerConfig(QObject *parent, const KPluginMetaData &data)
     : KQuickManagedConfigModule(parent, data)
     , m_serverSettings(new KRDPServerSettings(this))
+    , m_usersModel(new UsersModel(m_serverSettings, this))
 {
     setButtons(Help | Apply | Default);
 

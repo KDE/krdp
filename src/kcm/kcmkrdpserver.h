@@ -5,10 +5,12 @@
 #pragma once
 
 #include "krdpserversettings.h"
+#include "usersmodel.h"
 #include <KQuickManagedConfigModule>
 #include <qt6keychain/keychain.h>
 
 class KRDPServerConfigImpl;
+class QAbstractItemModel;
 
 class KRDPServerConfig : public KQuickManagedConfigModule
 {
@@ -19,6 +21,8 @@ public:
 
     Q_PROPERTY(QString hostName READ hostName CONSTANT)
     Q_PROPERTY(bool managementAvailable READ managementAvailable CONSTANT)
+
+    Q_PROPERTY(QAbstractItemModel *users READ usersModel CONSTANT)
 
     Q_INVOKABLE QString toLocalFile(const QUrl &url);
 
@@ -47,6 +51,10 @@ public:
 
     QString hostName() const;
     bool managementAvailable() const;
+    QAbstractItemModel *usersModel() const
+    {
+        return m_usersModel;
+    };
 
 public Q_SLOTS:
     void save() override;
@@ -63,6 +71,7 @@ Q_SIGNALS:
 private:
     void createRestoreToken();
     KRDPServerSettings *m_serverSettings;
+    UsersModel *m_usersModel;
     Q_SLOT void servicePropertiesChanged();
     bool m_isH264Supported { false };
 };
