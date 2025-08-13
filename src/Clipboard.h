@@ -10,6 +10,8 @@
 #include <freerdp/freerdp.h>
 #include <freerdp/server/cliprdr.h>
 
+#include <mutex>
+
 #include "krdp_export.h"
 
 namespace KRdp

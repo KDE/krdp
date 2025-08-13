@@ -42,6 +42,7 @@ public:
     bool enabled = false;
     const QMimeData *serverData = nullptr;
     std::unique_ptr<QMimeData> clientData;
+    std::mutex clientDataMutex;
 
     static UINT clientFormatList(CliprdrServerContext *context, const CLIPRDR_FORMAT_LIST *formatList)
     {
@@ -145,6 +146,7 @@ void Clipboard::setServerData(const QMimeData *data)
 
 std::unique_ptr<QMimeData> Clipboard::getClipboard() const
 {
+    std::lock_guard lock(d->clientDataMutex);
     return std::move(d->clientData);
 }
 
@@ -215,14 +217,20 @@ uint32_t Clipboard::Private::onClientFormatDataResponse(const CLIPRDR_FORMAT_DAT
 
     const auto nCharacters = formatDataResponse->common.dataLen / 2 - 1; // Each char16_t is 2 bytes, plus null terminator
     if (nCharacters < 0) {
-        clientData.reset();
+        {
+            std::lock_guard lock(clientDataMutex);
+            clientData.reset();
+        }
         Q_EMIT q->clientDataChanged();
         return CHANNEL_RC_OK; // empty string
     }
 
-    clientData.reset(new QMimeData());
+    {
+        std::lock_guard lock(clientDataMutex);
+        clientData.reset(new QMimeData());
 
-    clientData->setText(QString::fromUtf16(reinterpret_cast<const char16_t *>(formatDataResponse->requestedFormatData), nCharacters));
+        clientData->setText(QString::fromUtf16(reinterpret_cast<const char16_t *>(formatDataResponse->requestedFormatData), nCharacters));
+    }
     Q_EMIT q->clientDataChanged();
 
     return CHANNEL_RC_OK;
