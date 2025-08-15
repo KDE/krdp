@@ -128,7 +128,7 @@ msgstr "اسم المستخدم:"
 #, kde-format
 msgctxt "@info"
 msgid "Username already exists!"
-msgstr "اسم المستخدم موجود بالفعل!"
+msgstr "اسم المستخدم موجود فعلًا!"
 
 #: ui/EditUserModal.qml:98
 #, kde-format
