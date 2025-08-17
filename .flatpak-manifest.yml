@@ -1,80 +1,72 @@
 # SPDX-FileCopyrightText: 2023 Arjen Hiemstra <ahiemstra@heimr.nl>
 # SPDX-License-Identifier: BSD-2-Clause
 
-id:              org.kde.krdp
-branch:          master
-runtime:         org.kde.Platform
-runtime-version: "6.9"
-sdk:             org.kde.Sdk
-
-command: krdpserver
+id: 'org.kde.krdp'
+branch: 'master'
+runtime: 'org.kde.Platform'
+runtime-version: '6.9'
+sdk: 'org.kde.Sdk'
+command: 'krdpserver'
 tags:
--   nightly
-desktop-file-name-suffix: " (Nightly)"
-
+  - 'nightly'
+desktop-file-name-suffix: ' (Nightly)'
 finish-args:
--   "--share=ipc"
--   "--share=network"
--   "--device=all"
--   "--socket=x11"
--   "--socket=wayland"
--   "--filesystem=home:ro"
--   "--env=QT_LOGGING_DEBUG=*.debug=true qt.qpa.input*.debug=false"
-
+  - '--share=ipc'
+  - '--share=network'
+  - '--device=all'
+  - '--socket=x11'
+  - '--socket=wayland'
+  - '--filesystem=home:ro'
+  - '--env=QT_LOGGING_DEBUG=*.debug=true qt.qpa.input*.debug=false'
 add-extensions: {}
-
 modules:
--   name: FreeRDP
+  - name: 'FreeRDP'
     config-opts:
-    -   "-DWITH_SERVER=ON"
-    -   "-DCHANNEL_URBDRC=OFF"
-    -   "-DWITH_FFMPEG=OFF"
-    -   "-DWITH_KRB5=OFF"
-    -   "-DWITH_FUSE=OFF"
-    buildsystem: cmake-ninja
+      - '-DWITH_SERVER=ON'
+      - '-DCHANNEL_URBDRC=OFF'
+      - '-DWITH_FFMPEG=OFF'
+      - '-DWITH_KRB5=OFF'
+      - '-DWITH_FUSE=OFF'
+    buildsystem: 'cmake-ninja'
     builddir: true
     sources:
-    -   type: git
-        url: https://github.com/FreeRDP/FreeRDP
-        tag: 3.10.3
-
--   name: libsecret
-    buildsystem: meson
+      - type: 'git'
+        url: 'https://github.com/FreeRDP/FreeRDP'
+        tag: '3.10.3'
+  - name: 'libsecret'
+    buildsystem: 'meson'
     sources:
-    -   type: archive
-        url: "https://download.gnome.org/sources/libsecret/0.20/libsecret-0.20.5.tar.xz"
-        sha256: "3fb3ce340fcd7db54d87c893e69bfc2b1f6e4d4b279065ffe66dac9f0fd12b4d"
+      - type: 'archive'
+        url: 'https://download.gnome.org/sources/libsecret/0.20/libsecret-0.20.5.tar.xz'
+        sha256: '3fb3ce340fcd7db54d87c893e69bfc2b1f6e4d4b279065ffe66dac9f0fd12b4d'
     config-opts:
-    -   "-Dgcrypt=false"
-    -   "-Dgtk_doc=false"
-    -   "-Dintrospection=false"
-    -   "-Dmanpage=false"
-    -   "-Dvapi=false"
-
--   name: qtkeychain
-    buildsystem: cmake-ninja
+      - '-Dgcrypt=false'
+      - '-Dgtk_doc=false'
+      - '-Dintrospection=false'
+      - '-Dmanpage=false'
+      - '-Dvapi=false'
+  - name: 'qtkeychain'
+    buildsystem: 'cmake-ninja'
     sources:
-    -   type: archive
-        url: "https://github.com/frankosterfeld/qtkeychain/archive/0.14.2.tar.gz"
-        sha256: "cf2e972b783ba66334a79a30f6b3a1ea794a1dc574d6c3bebae5ffd2f0399571"
+      - type: 'archive'
+        url: 'https://github.com/frankosterfeld/qtkeychain/archive/0.14.2.tar.gz'
+        sha256: 'cf2e972b783ba66334a79a30f6b3a1ea794a1dc574d6c3bebae5ffd2f0399571'
     config-opts:
-    -   "-DCMAKE_INSTALL_LIBDIR=/app/lib"
-    -   "-DLIB_INSTALL_DIR=/app/lib"
-    -   "-DBUILD_TRANSLATIONS=NO"
-    -   "-DBUILD_WITH_QT6=ON"
-
--   name: kpipewire
+      - '-DCMAKE_INSTALL_LIBDIR=/app/lib'
+      - '-DLIB_INSTALL_DIR=/app/lib'
+      - '-DBUILD_TRANSLATIONS=NO'
+      - '-DBUILD_WITH_QT6=ON'
+  - name: 'kpipewire'
     config-opts:
-    -   "-DBUILD_TESTING=OFF"
-    buildsystem: cmake-ninja
+      - '-DBUILD_TESTING=OFF'
+    buildsystem: 'cmake-ninja'
     sources:
-    -   type: git
-        url: https://invent.kde.org/plasma/kpipewire
-
--   name: krdp
-    buildsystem: cmake-ninja
+      - type: 'git'
+        url: 'https://invent.kde.org/plasma/kpipewire'
+  - name: 'krdp'
+    buildsystem: 'cmake-ninja'
     config-opts:
-    -   "-DBUILD_PLASMA_SESSION=OFF"
+      - '-DBUILD_PLASMA_SESSION=OFF'
     sources:
-    -   type: dir
-        path: "."
+      - type: 'dir'
+        path: '.'
