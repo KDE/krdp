@@ -42,26 +42,47 @@ public:
     bool enabled = false;
     const QMimeData *serverData = nullptr;
     std::unique_ptr<QMimeData> clientData;
-    std::mutex clientDataMutex;
+
+    template<typename>
+    struct function_arg_trait;
+    template<typename Argument>
+    struct function_arg_trait<uint32_t (Private::*)(Argument)> {
+        typedef Argument argument_t;
+    };
+
+    template<auto func>
+    inline static UINT processInMainThread(Clipboard *clipboard, function_arg_trait<decltype(func)>::argument_t packet)
+    {
+        uint32_t channelState;
+        QMetaObject::invokeMethod(
+            clipboard,
+            [clipboard](function_arg_trait<decltype(func)>::argument_t packet) {
+                return ((*clipboard->d).*func)(packet);
+            },
+            Qt::BlockingQueuedConnection,
+            qReturnArg(channelState),
+            packet);
+        return channelState;
+    }
 
     static UINT clientFormatList(CliprdrServerContext *context, const CLIPRDR_FORMAT_LIST *formatList)
     {
-        return reinterpret_cast<Clipboard *>(context->custom)->d->onClientFormatList(formatList);
+        return processInMainThread<&Private::onClientFormatList>(reinterpret_cast<Clipboard *>(context->custom), formatList);
     }
 
     static UINT clientFormatListResponse(CliprdrServerContext *context, const CLIPRDR_FORMAT_LIST_RESPONSE *formatListResponse)
     {
-        return reinterpret_cast<Clipboard *>(context->custom)->d->onClientFormatListResponse(formatListResponse);
+        return processInMainThread<&Private::onClientFormatListResponse>(reinterpret_cast<Clipboard *>(context->custom), formatListResponse);
     }
 
     static UINT clientFormatDataRequest(CliprdrServerContext *context, const CLIPRDR_FORMAT_DATA_REQUEST *formatDataRequest)
     {
-        return reinterpret_cast<Clipboard *>(context->custom)->d->onClientFormatDataRequest(formatDataRequest);
+        return processInMainThread<&Private::onClientFormatDataRequest>(reinterpret_cast<Clipboard *>(context->custom), formatDataRequest);
     }
 
     static UINT clientFormatDataResponse(CliprdrServerContext *context, const CLIPRDR_FORMAT_DATA_RESPONSE *formatDataResponse)
     {
-        return reinterpret_cast<Clipboard *>(context->custom)->d->onClientFormatDataResponse(formatDataResponse);
+        return processInMainThread<&Private::onClientFormatDataResponse>(reinterpret_cast<Clipboard *>(context->custom), formatDataResponse);
     }
 };
 
@@ -146,7 +167,6 @@ void Clipboard::setServerData(const QMimeData *data)
 
 std::unique_ptr<QMimeData> Clipboard::getClipboard() const
 {
-    std::lock_guard lock(d->clientDataMutex);
     return std::move(d->clientData);
 }
 
@@ -217,20 +237,14 @@ uint32_t Clipboard::Private::onClientFormatDataResponse(const CLIPRDR_FORMAT_DAT
 
     const auto nCharacters = formatDataResponse->common.dataLen / 2 - 1; // Each char16_t is 2 bytes, plus null terminator
     if (nCharacters < 0) {
-        {
-            std::lock_guard lock(clientDataMutex);
-            clientData.reset();
-        }
+        clientData.reset();
         Q_EMIT q->clientDataChanged();
         return CHANNEL_RC_OK; // empty string
     }
 
-    {
-        std::lock_guard lock(clientDataMutex);
-        clientData.reset(new QMimeData());
+    clientData.reset(new QMimeData());
 
-        clientData->setText(QString::fromUtf16(reinterpret_cast<const char16_t *>(formatDataResponse->requestedFormatData), nCharacters));
-    }
+    clientData->setText(QString::fromUtf16(reinterpret_cast<const char16_t *>(formatDataResponse->requestedFormatData), nCharacters));
     Q_EMIT q->clientDataChanged();
 
     return CHANNEL_RC_OK;
