@@ -159,7 +159,7 @@ void SessionController::stopFromSNI()
     // Uses dbus to stop the server service, like in the KCM
     // This kills all krdpserver instances, like a "panic button"
     QDBusInterface unit(u"org.freedesktop.systemd1"_s,
-                        u"/org/freedesktop/systemd1/unit/plasma_2dkrdp_5fserver_2eservice"_s,
+                        u"/org/freedesktop/systemd1/unit/app_2dorg_2ekde_2ekrdpserver_2eservice"_s,
                         u"org.freedesktop.systemd1.Unit"_s);
 
     unit.asyncCall(u"Stop"_s);

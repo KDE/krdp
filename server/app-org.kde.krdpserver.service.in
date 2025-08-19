@@ -12,4 +12,3 @@ Restart=on-abnormal
 
 [Install]
 WantedBy=plasma-workspace.target
-Alias=plasma-krdp_server.service
