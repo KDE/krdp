@@ -14,4 +14,4 @@ Dependencies:
       'third-party/qtkeychain': '@latest'
 
 Options:
-  require-passing-tests-on: ['Linux']
+  require-passing-tests-on: ['@all']
