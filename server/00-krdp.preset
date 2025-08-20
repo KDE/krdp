@@ -1,0 +1,6 @@
+# SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
+# SPDX-FileCopyrightText: 2025 Nate Graham <nate@kde.org>
+
+# This service should never be enabled by default, irrespective of
+# distro policy regarding the default enablement state of user units.
+disable app-org.kde.krdpserver.service
