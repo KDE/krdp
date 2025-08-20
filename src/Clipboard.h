@@ -32,9 +32,11 @@ public:
 
     bool enabled();
 
+    // this can be called from any thread
     void setServerData(const QMimeData *data);
 
     Q_SIGNAL void clientDataChanged();
+    // this can be called from any thread
     std::unique_ptr<QMimeData> getClipboard() const;
 
 private:

@@ -136,12 +136,17 @@ void Clipboard::close()
 
 void Clipboard::setServerData(const QMimeData *data)
 {
-    if (d->serverData) {
-        delete d->serverData;
-    }
+    QMetaObject::invokeMethod(
+        this,
+        [this, data]() {
+            if (d->serverData) {
+                delete d->serverData;
+            }
 
-    d->serverData = data;
-    QMetaObject::invokeMethod(this, &Clipboard::sendServerData, Qt::QueuedConnection);
+            d->serverData = data;
+            sendServerData();
+        },
+        Qt::QueuedConnection);
 }
 
 std::unique_ptr<QMimeData> Clipboard::getClipboard() const
