@@ -73,13 +73,13 @@ msgstr "No s'ha pogut generar automàtica de certificats!"
 #, kde-format
 msgctxt "@title:window"
 msgid "Select Certificate Key file"
-msgstr "Seleccioneu un fitxer de clau de certificat"
+msgstr "Trieu un fitxer de clau de certificat"
 
 #: ui/CertLoader.qml:16
 #, kde-format
 msgctxt "@title:window"
 msgid "Select Certificate file"
-msgstr "Seleccioneu el fitxer de certificat"
+msgstr "Trieu el fitxer de certificat"
 
 #: ui/CodecError.qml:13
 #, kde-format
@@ -239,7 +239,7 @@ msgstr "Camí del certificat:"
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate File…"
-msgstr "Seleccioneu un fitxer de certificat…"
+msgstr "Tria un fitxer de certificat…"
 
 #: ui/main.qml:301
 #, kde-format
@@ -251,7 +251,7 @@ msgstr "Camí de la clau del certificat:"
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate Key File…"
-msgstr "Seleccioneu un fitxer de clau de certificat…"
+msgstr "Tria un fitxer de clau de certificat…"
 
 #: ui/main_phone.qml:94
 #, kde-format
@@ -326,7 +326,7 @@ msgstr "Afig almenys un compte d'usuari per a activar l'inici de sessió remot"
 #, kde-kuit-format
 msgctxt "@info:placeholder"
 msgid "Click <interface>Add New…</interface> to add one"
-msgstr "Feu clic en <interface>Afig nou…</interface> per a afegir-ne un"
+msgstr "Cliqueu damunt <interface>Afig nou…</interface> per a afegir-ne un"
 
 #: ui/UserListView.qml:64
 #, kde-format
