@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-22 00:44+0000\n"
+"POT-Creation-Date: 2025-09-05 00:43+0000\n"
 "PO-Revision-Date: 2024-08-19 23:58+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -63,8 +63,14 @@ msgstr "동영상 스트림 품질"
 msgid "Users allowed to login, passwords are stored in KWallet"
 msgstr "로그인이 허용된 사용자, 암호는 KWallet에 저장됨"
 
-#. i18n: ectx: label, entry (Autostart), group (General)
+#. i18n: ectx: label, entry (SystemUserEnabled), group (General)
 #: krdpserversettings.kcfg:35
+#, kde-format
+msgid "Whether the current user can log in via PAM"
+msgstr ""
+
+#. i18n: ectx: label, entry (Autostart), group (General)
+#: krdpserversettings.kcfg:39
 #, kde-format
 msgid "Autostart the server on login"
 msgstr "로그인할 때 서버 자동으로 시작"

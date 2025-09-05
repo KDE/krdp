@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-22 00:44+0000\n"
+"POT-Creation-Date: 2025-09-05 00:43+0000\n"
 "PO-Revision-Date: 2024-05-27 19:11\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -63,8 +63,14 @@ msgstr "视频流的画质"
 msgid "Users allowed to login, passwords are stored in KWallet"
 msgstr "用户允许登录，密码保存在 KWallet"
 
-#. i18n: ectx: label, entry (Autostart), group (General)
+#. i18n: ectx: label, entry (SystemUserEnabled), group (General)
 #: krdpserversettings.kcfg:35
+#, kde-format
+msgid "Whether the current user can log in via PAM"
+msgstr ""
+
+#. i18n: ectx: label, entry (Autostart), group (General)
+#: krdpserversettings.kcfg:39
 #, kde-format
 msgid "Autostart the server on login"
 msgstr "登录时自动启动服务器"

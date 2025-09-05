@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_krdpserver\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-01 00:43+0000\n"
+"POT-Creation-Date: 2025-09-05 00:43+0000\n"
 "PO-Revision-Date: 2025-07-01 12:31+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -57,8 +57,14 @@ msgid "Users allowed to login, passwords are stored in KWallet"
 msgstr ""
 "Usuarios que pueden iniciar sesión (las contraseñas se guardan en KWallet)"
 
-#. i18n: ectx: label, entry (Autostart), group (General)
+#. i18n: ectx: label, entry (SystemUserEnabled), group (General)
 #: krdpserversettings.kcfg:35
+#, kde-format
+msgid "Whether the current user can log in via PAM"
+msgstr ""
+
+#. i18n: ectx: label, entry (Autostart), group (General)
+#: krdpserversettings.kcfg:39
 #, kde-format
 msgid "Autostart the server on login"
 msgstr "Lanzar automáticamente el servidor al iniciar sesión"
@@ -304,45 +310,64 @@ msgstr ""
 msgid "Restart Server"
 msgstr "Reiniciar el servidor"
 
-#: ui/UserListView.qml:20
+#: ui/UserListView.qml:19
 #, kde-format
 msgctxt "@title"
-msgid "Usernames"
-msgstr "Nombres de usuarios"
+msgid "Additional Users"
+msgstr ""
 
-#: ui/UserListView.qml:24
+#: ui/UserListView.qml:23
 #, kde-format
 msgctxt "@action:button"
 msgid "Add New…"
 msgstr "Añadir nuevo…"
 
-#: ui/UserListView.qml:25
+#: ui/UserListView.qml:24
 #, kde-format
 msgctxt "@action:button"
 msgid "Add New User Account…"
 msgstr "Añadir nueva cuenta de usuario…"
 
-#: ui/UserListView.qml:38
+#: ui/UserListView.qml:37
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "Add at least one user account to enable remote login"
 msgstr ""
 "Añada al menos una cuenta de usuario para activar el inicio de sesión remoto"
 
-#: ui/UserListView.qml:39
+#: ui/UserListView.qml:38
 #, kde-kuit-format
 msgctxt "@info:placeholder"
 msgid "Click <interface>Add New…</interface> to add one"
 msgstr "Pulse <interface>Añadir nuevo…</interface> para añadir uno"
 
-#: ui/UserListView.qml:64
+#: ui/UserListView.qml:45
+#, kde-format
+msgid "System users"
+msgstr ""
+
+#: ui/UserListView.qml:45
+#, kde-format
+msgid "Other users"
+msgstr ""
+
+#: ui/UserListView.qml:67
+#, kde-format
+msgid "Login with your system password"
+msgstr ""
+
+#: ui/UserListView.qml:74
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify user…"
 msgstr "Modificar usuario…"
 
-#: ui/UserListView.qml:78
+#: ui/UserListView.qml:89
 #, kde-format
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "Eliminar usuario…"
+
+#~ msgctxt "@title"
+#~ msgid "Usernames"
+#~ msgstr "Nombres de usuarios"

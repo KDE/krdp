@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-22 00:44+0000\n"
+"POT-Creation-Date: 2025-09-05 00:43+0000\n"
 "PO-Revision-Date: 2024-08-08 12:36+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -67,8 +67,14 @@ msgstr ""
 "Els usuaris autoritzats a iniciar sessió, les contrasenyes s'emmagatzemen al "
 "KWallet"
 
-#. i18n: ectx: label, entry (Autostart), group (General)
+#. i18n: ectx: label, entry (SystemUserEnabled), group (General)
 #: krdpserversettings.kcfg:35
+#, kde-format
+msgid "Whether the current user can log in via PAM"
+msgstr ""
+
+#. i18n: ectx: label, entry (Autostart), group (General)
+#: krdpserversettings.kcfg:39
 #, kde-format
 msgid "Autostart the server on login"
 msgstr "Inicia automàticament el servidor en iniciar la sessió"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-01 00:43+0000\n"
+"POT-Creation-Date: 2025-09-05 00:43+0000\n"
 "PO-Revision-Date: 2025-07-01 04:03+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -54,8 +54,14 @@ msgstr "ვიდეონაკადის ხარისხი"
 msgid "Users allowed to login, passwords are stored in KWallet"
 msgstr "მომხმარებლებს შეუძლიათ შესვლა, პაროლები დამახსოვრებულია KWallet-ში"
 
-#. i18n: ectx: label, entry (Autostart), group (General)
+#. i18n: ectx: label, entry (SystemUserEnabled), group (General)
 #: krdpserversettings.kcfg:35
+#, kde-format
+msgid "Whether the current user can log in via PAM"
+msgstr ""
+
+#. i18n: ectx: label, entry (Autostart), group (General)
+#: krdpserversettings.kcfg:39
 #, kde-format
 msgid "Autostart the server on login"
 msgstr "სერვერის ავტომატური გაშვვება სისტემაში შესვლისას"
@@ -299,48 +305,67 @@ msgstr ""
 msgid "Restart Server"
 msgstr "სერვერის გადატვირთვა"
 
-#: ui/UserListView.qml:20
+#: ui/UserListView.qml:19
 #, kde-format
 msgctxt "@title"
-msgid "Usernames"
-msgstr "მომხმარებლის სახელები"
+msgid "Additional Users"
+msgstr ""
 
-#: ui/UserListView.qml:24
+#: ui/UserListView.qml:23
 #, kde-format
 msgctxt "@action:button"
 msgid "Add New…"
 msgstr "ახლის დამატება…"
 
-#: ui/UserListView.qml:25
+#: ui/UserListView.qml:24
 #, kde-format
 msgctxt "@action:button"
 msgid "Add New User Account…"
 msgstr "ახალი მომხმარებლის ანგარიშის დამატება…"
 
-#: ui/UserListView.qml:38
+#: ui/UserListView.qml:37
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "Add at least one user account to enable remote login"
 msgstr "დაშორებული შესვლის ჩასართავად, დაამატეთ ერთი მომხმარებელი მაინც"
 
-#: ui/UserListView.qml:39
+#: ui/UserListView.qml:38
 #, kde-kuit-format
 msgctxt "@info:placeholder"
 msgid "Click <interface>Add New…</interface> to add one"
 msgstr ""
 "დააწკაპუნეთ ღილაკზე <interface>ახლის დამატება…</interface> ახლის დასამატებლად"
 
-#: ui/UserListView.qml:64
+#: ui/UserListView.qml:45
+#, kde-format
+msgid "System users"
+msgstr ""
+
+#: ui/UserListView.qml:45
+#, kde-format
+msgid "Other users"
+msgstr ""
+
+#: ui/UserListView.qml:67
+#, kde-format
+msgid "Login with your system password"
+msgstr ""
+
+#: ui/UserListView.qml:74
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify user…"
 msgstr "მომხმარებლის ჩასწორება…"
 
-#: ui/UserListView.qml:78
+#: ui/UserListView.qml:89
 #, kde-format
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "მომხმარებლის წაშლა…"
+
+#~ msgctxt "@title"
+#~ msgid "Usernames"
+#~ msgstr "მომხმარებლის სახელები"
 
 #~ msgid "The address the server listens on"
 #~ msgstr "მისამართი, რომელზეც სერვერი უსმენს"

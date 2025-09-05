@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_krdpserver\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-01 00:43+0000\n"
+"POT-Creation-Date: 2025-09-05 00:43+0000\n"
 "PO-Revision-Date: 2024-10-02 13:18+0200\n"
 "Last-Translator: Flori G <Renner03@protonmail.com>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -56,8 +56,14 @@ msgid "Users allowed to login, passwords are stored in KWallet"
 msgstr ""
 "Benutzer die sich anmelden dürfen. Passwörter werden in KWallet gespeichert"
 
-#. i18n: ectx: label, entry (Autostart), group (General)
+#. i18n: ectx: label, entry (SystemUserEnabled), group (General)
 #: krdpserversettings.kcfg:35
+#, kde-format
+msgid "Whether the current user can log in via PAM"
+msgstr ""
+
+#. i18n: ectx: label, entry (Autostart), group (General)
+#: krdpserversettings.kcfg:39
 #, kde-format
 msgid "Autostart the server on login"
 msgstr "Server bei Anmeldung automatisch starten"
@@ -311,25 +317,25 @@ msgstr ""
 msgid "Restart Server"
 msgstr "Server neu starten"
 
-#: ui/UserListView.qml:20
+#: ui/UserListView.qml:19
 #, kde-format
 msgctxt "@title"
-msgid "Usernames"
-msgstr "Benutzernamen"
+msgid "Additional Users"
+msgstr ""
 
-#: ui/UserListView.qml:24
+#: ui/UserListView.qml:23
 #, kde-format
 msgctxt "@action:button"
 msgid "Add New…"
 msgstr "Neuen hinzufügen …"
 
-#: ui/UserListView.qml:25
+#: ui/UserListView.qml:24
 #, kde-format
 msgctxt "@action:button"
 msgid "Add New User Account…"
 msgstr "Neuen Benutzer hinzufügen …"
 
-#: ui/UserListView.qml:38
+#: ui/UserListView.qml:37
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "Add at least one user account to enable remote login"
@@ -337,7 +343,7 @@ msgstr ""
 "Sie müssen mindestens einen Benutzer hinzugefügt haben, um den Fernzugriff "
 "zu aktivieren"
 
-#: ui/UserListView.qml:39
+#: ui/UserListView.qml:38
 #, kde-kuit-format
 msgctxt "@info:placeholder"
 msgid "Click <interface>Add New…</interface> to add one"
@@ -345,14 +351,33 @@ msgstr ""
 "Klicken Sie auf den Knopf <interface>Neuen hinzufügen …</interface> um einen "
 "hinzuzufügen"
 
-#: ui/UserListView.qml:64
+#: ui/UserListView.qml:45
+#, kde-format
+msgid "System users"
+msgstr ""
+
+#: ui/UserListView.qml:45
+#, kde-format
+msgid "Other users"
+msgstr ""
+
+#: ui/UserListView.qml:67
+#, kde-format
+msgid "Login with your system password"
+msgstr ""
+
+#: ui/UserListView.qml:74
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify user…"
 msgstr "Benuzter bearbeiten …"
 
-#: ui/UserListView.qml:78
+#: ui/UserListView.qml:89
 #, kde-format
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "Benutzer entfernen …"
+
+#~ msgctxt "@title"
+#~ msgid "Usernames"
+#~ msgstr "Benutzernamen"
