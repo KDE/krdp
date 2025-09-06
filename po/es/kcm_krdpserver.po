@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcm_krdpserver\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-09-05 00:43+0000\n"
-"PO-Revision-Date: 2025-07-01 12:31+0100\n"
+"PO-Revision-Date: 2025-09-06 01:21+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 25.04.2\n"
+"X-Generator: Lokalize 25.08.0\n"
 
 #. i18n: ectx: label, entry (ListenPort), group (General)
 #: krdpserversettings.kcfg:14
@@ -61,7 +61,7 @@ msgstr ""
 #: krdpserversettings.kcfg:35
 #, kde-format
 msgid "Whether the current user can log in via PAM"
-msgstr ""
+msgstr "Indica si el usuario actual puede iniciar sesión mediante PAM"
 
 #. i18n: ectx: label, entry (Autostart), group (General)
 #: krdpserversettings.kcfg:39
@@ -314,7 +314,7 @@ msgstr "Reiniciar el servidor"
 #, kde-format
 msgctxt "@title"
 msgid "Additional Users"
-msgstr ""
+msgstr "Usuarios adicionales"
 
 #: ui/UserListView.qml:23
 #, kde-format
@@ -344,17 +344,17 @@ msgstr "Pulse <interface>Añadir nuevo…</interface> para añadir uno"
 #: ui/UserListView.qml:45
 #, kde-format
 msgid "System users"
-msgstr ""
+msgstr "Usuarios del sistema"
 
 #: ui/UserListView.qml:45
 #, kde-format
 msgid "Other users"
-msgstr ""
+msgstr "Otros usuarios"
 
 #: ui/UserListView.qml:67
 #, kde-format
 msgid "Login with your system password"
-msgstr ""
+msgstr "Iniciar sesión con su contraseña del sistema"
 
 #: ui/UserListView.qml:74
 #, kde-format
@@ -367,7 +367,3 @@ msgstr "Modificar usuario…"
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "Eliminar usuario…"
-
-#~ msgctxt "@title"
-#~ msgid "Usernames"
-#~ msgstr "Nombres de usuarios"

@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-09-05 00:43+0000\n"
-"PO-Revision-Date: 2025-07-02 17:13+0300\n"
+"PO-Revision-Date: 2025-09-05 09:49+0300\n"
 "Last-Translator: Emir SARI <emir_sari@îcloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 25.04.2\n"
+"X-Generator: Lokalize 25.08.0\n"
 
 #. i18n: ectx: label, entry (ListenPort), group (General)
 #: krdpserversettings.kcfg:14
@@ -60,7 +60,7 @@ msgstr ""
 #: krdpserversettings.kcfg:35
 #, kde-format
 msgid "Whether the current user can log in via PAM"
-msgstr ""
+msgstr "Kullanıcıların PAM ile oturum açıp açamayacağı"
 
 #. i18n: ectx: label, entry (Autostart), group (General)
 #: krdpserversettings.kcfg:39
@@ -308,7 +308,7 @@ msgstr "Sunucuyu Yeniden Başlat"
 #, kde-format
 msgctxt "@title"
 msgid "Additional Users"
-msgstr ""
+msgstr "Ek Kullanıcılar"
 
 #: ui/UserListView.qml:23
 #, kde-format
@@ -339,17 +339,17 @@ msgstr ""
 #: ui/UserListView.qml:45
 #, kde-format
 msgid "System users"
-msgstr ""
+msgstr "Sistem Kullanıcıları"
 
 #: ui/UserListView.qml:45
 #, kde-format
 msgid "Other users"
-msgstr ""
+msgstr "Diğer Kullanıcılar"
 
 #: ui/UserListView.qml:67
 #, kde-format
 msgid "Login with your system password"
-msgstr ""
+msgstr "Sistem parolasıyla oturum aç"
 
 #: ui/UserListView.qml:74
 #, kde-format

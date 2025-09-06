@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-09-05 00:43+0000\n"
-"PO-Revision-Date: 2025-07-01 12:05+0200\n"
+"PO-Revision-Date: 2025-09-05 09:24+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Lokalize 25.08.0\n"
 
 #. i18n: ectx: label, entry (ListenPort), group (General)
 #: krdpserversettings.kcfg:14
@@ -61,7 +61,7 @@ msgstr ""
 #: krdpserversettings.kcfg:35
 #, kde-format
 msgid "Whether the current user can log in via PAM"
-msgstr ""
+msgstr "Si l'usuari actual pot iniciar la sessió mitjançant PAM"
 
 #. i18n: ectx: label, entry (Autostart), group (General)
 #: krdpserversettings.kcfg:39
@@ -314,7 +314,7 @@ msgstr "Reinicia el servidor"
 #, kde-format
 msgctxt "@title"
 msgid "Additional Users"
-msgstr ""
+msgstr "Usuaris addicionals"
 
 #: ui/UserListView.qml:23
 #, kde-format
@@ -343,17 +343,17 @@ msgstr "Cliqueu damunt <interface>Afig nou…</interface> per a afegir-ne un"
 #: ui/UserListView.qml:45
 #, kde-format
 msgid "System users"
-msgstr ""
+msgstr "Usuaris del sistema"
 
 #: ui/UserListView.qml:45
 #, kde-format
 msgid "Other users"
-msgstr ""
+msgstr "Altres usuaris"
 
 #: ui/UserListView.qml:67
 #, kde-format
 msgid "Login with your system password"
-msgstr ""
+msgstr "Inicieu la sessió amb la contrasenya del vostre sistema"
 
 #: ui/UserListView.qml:74
 #, kde-format
@@ -366,7 +366,3 @@ msgstr "Modifica l'usuari…"
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "Elimina l'usuari…"
-
-#~ msgctxt "@title"
-#~ msgid "Usernames"
-#~ msgstr "Noms d'usuari"

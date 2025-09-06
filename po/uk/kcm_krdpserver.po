@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-09-05 00:43+0000\n"
-"PO-Revision-Date: 2025-07-01 16:07+0300\n"
+"PO-Revision-Date: 2025-09-05 09:07+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -59,6 +59,7 @@ msgstr "Користувачі можуть входити до системи, 
 #, kde-format
 msgid "Whether the current user can log in via PAM"
 msgstr ""
+"Визначає, чи може поточний користувач входити до системи за допомогою PAM"
 
 #. i18n: ectx: label, entry (Autostart), group (General)
 #: krdpserversettings.kcfg:39
@@ -311,7 +312,7 @@ msgstr "Перезапустити сервер"
 #, kde-format
 msgctxt "@title"
 msgid "Additional Users"
-msgstr ""
+msgstr "Додаткові користувачі"
 
 #: ui/UserListView.qml:23
 #, kde-format
@@ -342,17 +343,17 @@ msgstr "Натисніть <interface>Додати новий…</interface>, щ
 #: ui/UserListView.qml:45
 #, kde-format
 msgid "System users"
-msgstr ""
+msgstr "Користувачі системи"
 
 #: ui/UserListView.qml:45
 #, kde-format
 msgid "Other users"
-msgstr ""
+msgstr "Інші користувачі"
 
 #: ui/UserListView.qml:67
 #, kde-format
 msgid "Login with your system password"
-msgstr ""
+msgstr "Вхід за допомогою вашого пароля до системи"
 
 #: ui/UserListView.qml:74
 #, kde-format

@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-09-05 00:43+0000\n"
-"PO-Revision-Date: 2025-07-23 14:06+0200\n"
+"PO-Revision-Date: 2025-09-05 23:04+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 25.04.3\n"
+"X-Generator: Lokalize 25.08.0\n"
 
 #. i18n: ectx: label, entry (ListenPort), group (General)
 #: krdpserversettings.kcfg:14
@@ -62,7 +62,7 @@ msgstr ""
 #: krdpserversettings.kcfg:35
 #, kde-format
 msgid "Whether the current user can log in via PAM"
-msgstr ""
+msgstr "Uneko erabiltzaileak PAM bidez saioa hasi dezakeen ala ez"
 
 #. i18n: ectx: label, entry (Autostart), group (General)
 #: krdpserversettings.kcfg:39
@@ -310,7 +310,7 @@ msgstr "Zerbitzaria berrabiarazi"
 #, kde-format
 msgctxt "@title"
 msgid "Additional Users"
-msgstr ""
+msgstr "Erabiltzaile gehigarriak"
 
 #: ui/UserListView.qml:23
 #, kde-format
@@ -339,17 +339,17 @@ msgstr "Klik egin <interface> Gehitu …berria</interface>n bat gehitzeko"
 #: ui/UserListView.qml:45
 #, kde-format
 msgid "System users"
-msgstr ""
+msgstr "Sistemaren erabiltzaileak"
 
 #: ui/UserListView.qml:45
 #, kde-format
 msgid "Other users"
-msgstr ""
+msgstr "Beste erabiltzaile batzuk"
 
 #: ui/UserListView.qml:67
 #, kde-format
 msgid "Login with your system password"
-msgstr ""
+msgstr "Hasi saioa zure sistemaren pasahitzarekin"
 
 #: ui/UserListView.qml:74
 #, kde-format
