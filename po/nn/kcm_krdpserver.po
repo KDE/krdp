@@ -359,7 +359,3 @@ msgstr "Endra brukar …"
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "Fjern brukar …"
-
-#~ msgctxt "@title"
-#~ msgid "Usernames"
-#~ msgstr "Brukarnamn"
