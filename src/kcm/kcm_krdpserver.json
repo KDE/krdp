@@ -34,7 +34,6 @@
         "Description[sv]": "Anpassa fjärrskrivbord",
         "Description[tr]": "Uzak Masaüstünü Yapılandır",
         "Description[uk]": "Налаштовування віддаленої стільниці",
-        "Description[x-test]": "xxConfigure Remote Desktopxx",
         "Description[zh_CN]": "配置远程桌面",
         "Description[zh_TW]": "設定遠端桌面",
         "FormFactors": [
@@ -78,7 +77,6 @@
         "Name[sv]": "Fjärrskrivbord",
         "Name[tr]": "Uzak Masaüstü",
         "Name[uk]": "Віддалена стільниця",
-        "Name[x-test]": "xxRemote Desktopxx",
         "Name[zh_CN]": "远程桌面",
         "Name[zh_TW]": "遠端桌面"
     },
@@ -115,7 +113,6 @@
     "X-KDE-Keywords[sv]": "KRDP,fjärrskrivbord",
     "X-KDE-Keywords[tr]": "uzak masaüstü,krdp,rdp",
     "X-KDE-Keywords[uk]": "KRDP,remote desktop,віддалена стільниця",
-    "X-KDE-Keywords[x-test]": "xxKRDPxx,xxremote desktopxx",
     "X-KDE-Keywords[zh_CN]": "KRDP,remote desktop,yuancheng,yuanchengzhuomian,远程,远程桌面",
     "X-KDE-Keywords[zh_TW]": "KRDP,遠端桌面",
     "X-KDE-OnlyShowOnQtPlatforms": [
