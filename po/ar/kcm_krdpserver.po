@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-09-05 00:43+0000\n"
-"PO-Revision-Date: 2025-08-13 20:13+0400\n"
+"PO-Revision-Date: 2025-09-15 13:05+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -58,7 +58,7 @@ msgstr "يُسمح للمستخدمين بالولوج، وستخزن كلمات
 #: krdpserversettings.kcfg:35
 #, kde-format
 msgid "Whether the current user can log in via PAM"
-msgstr ""
+msgstr "ما إذا كان المستخدم الحالي يمكنه الولوج باستخدام PAM"
 
 #. i18n: ectx: label, entry (Autostart), group (General)
 #: krdpserversettings.kcfg:39
@@ -306,7 +306,7 @@ msgstr "أعد تشغيل الخادم"
 #, kde-format
 msgctxt "@title"
 msgid "Additional Users"
-msgstr ""
+msgstr "مستخدمون إضافيون"
 
 #: ui/UserListView.qml:23
 #, kde-format
@@ -335,17 +335,17 @@ msgstr "انقر فوق <interface>أضف جديدًا...</interface> لإضاف
 #: ui/UserListView.qml:45
 #, kde-format
 msgid "System users"
-msgstr ""
+msgstr "مستخدمو النظام"
 
 #: ui/UserListView.qml:45
 #, kde-format
 msgid "Other users"
-msgstr ""
+msgstr "مستخدمون أخرين"
 
 #: ui/UserListView.qml:67
 #, kde-format
 msgid "Login with your system password"
-msgstr ""
+msgstr "الولوج بكلمة سر نظامك"
 
 #: ui/UserListView.qml:74
 #, kde-format
