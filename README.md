@@ -102,3 +102,49 @@ RDP connections. Additionally, monitor selection can be done using the
 - Input on a high DPI screen may be offset incorrectly. This is due to a bug in
 the Remote Desktop Portal that has been fixed in the meantime. The fix will be 
 released with KDE Plasma 5.27.8.
+
+# CLI
+
+While currently not very well supported it is possible to configure
+KRdp purely from a CLI. This is particularly useful when you have access over
+SSH but haven't yet configured KRdp.
+
+```bash
+# Authorize the krdpserver for remote desktop access
+flatpak permission-set kde-authorized remote-desktop org.kde.krdpserver yes
+
+# Generate a server certificate
+mkdir --parents "$HOME/.local/share/krdpserver"
+certificatePath="$HOME/.local/share/krdpserver/krdp.crt"
+certificateKeyPath="$HOME/.local/share/krdpserver/krdp.key"
+openssl req -nodes -new -x509 -keyout "$certificateKeyPath" -out "$certificatePath" -days 1 -batch
+
+# Configure the certificate and enable system user authentication
+kwriteconfig6 --file krdpserverrc --group General --key Certificate "$certificatePath"
+kwriteconfig6 --file krdpserverrc --group General --key CertificateKey "$certificateKeyPath"
+kwriteconfig6 --file krdpserverrc --group General --key SystemUserEnabled true
+
+# Enable/restart the systemd service
+systemctl --user enable --now app-org.kde.krdpserver.service
+systemctl --user restart app-org.kde.krdpserver.service
+```
+
+## SDDM Autologin
+
+Since SDDM currently has no RDP support, you either need to already be logged in,
+or let SDDM auto log in to the user.
+
+**Mind that your session starts physically unlocked on your PC.**
+**Also when you are remote logging into your session it will be physically unlocked.**
+
+```bash
+# Configure autologin for your current user
+user=$(whoami)
+sudo kwriteconfig6 --file /etc/sddm.conf.d/kde_settings.conf --group Autologin --key User $user
+
+# Enable automatic relogin on logout to avoid scenarios where the system is stuck on sddm
+sudo kwriteconfig6 --file /etc/sddm.conf.d/kde_settings.conf --group Autologin --key Relogin true
+
+# Restart sddm to force an autologin (don't run this if you are already logged in :D)
+## systemctl restart sddm.service
+```
