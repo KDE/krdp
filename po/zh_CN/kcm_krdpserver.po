@@ -14,8 +14,8 @@ msgstr ""
 "X-Crowdin-Project: kdeorg\n"
 "X-Crowdin-Project-ID: 269464\n"
 "X-Crowdin-Language: zh-CN\n"
-"X-Crowdin-File: /kf6-trunk/messages/krdp/kcm_krdpserver.pot\n"
-"X-Crowdin-File-ID: 53676\n"
+"X-Crowdin-File: /kf6-stable/messages/krdp/kcm_krdpserver.pot\n"
+"X-Crowdin-File-ID: 53700\n"
 
 #. i18n: ectx: label, entry (ListenPort), group (General)
 #: krdpserversettings.kcfg:14
@@ -57,7 +57,7 @@ msgstr "用户允许登录，密码保存在 KWallet"
 #: krdpserversettings.kcfg:35
 #, kde-format
 msgid "Whether the current user can log in via PAM"
-msgstr ""
+msgstr "当前用户是否可以通过 PAM 登录"
 
 #. i18n: ectx: label, entry (Autostart), group (General)
 #: krdpserversettings.kcfg:39
@@ -301,7 +301,7 @@ msgstr "重启服务器"
 #, kde-format
 msgctxt "@title"
 msgid "Additional Users"
-msgstr ""
+msgstr "额外用户"
 
 #: ui/UserListView.qml:23
 #, kde-format
@@ -330,17 +330,17 @@ msgstr "点击 <interface>新增…</interface> 添加一个用户账户"
 #: ui/UserListView.qml:45
 #, kde-format
 msgid "System users"
-msgstr ""
+msgstr "系统用户"
 
 #: ui/UserListView.qml:45
 #, kde-format
 msgid "Other users"
-msgstr ""
+msgstr "其他用户"
 
 #: ui/UserListView.qml:67
 #, kde-format
 msgid "Login with your system password"
-msgstr ""
+msgstr "使用您的系统密码登录"
 
 #: ui/UserListView.qml:74
 #, kde-format
@@ -353,7 +353,3 @@ msgstr "修改用户…"
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "移除用户…"
-
-#~ msgctxt "@title"
-#~ msgid "Usernames"
-#~ msgstr "用户名"
