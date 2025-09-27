@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-09-05 00:43+0000\n"
-"PO-Revision-Date: 2025-08-22 14:04+0300\n"
+"PO-Revision-Date: 2025-09-24 15:30+0300\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
 "Language: lv\n"
@@ -58,7 +58,7 @@ msgstr "Lietotāji, kuriem ir atļauts ierakstīties, paroles glabājas „KWall
 #: krdpserversettings.kcfg:35
 #, kde-format
 msgid "Whether the current user can log in via PAM"
-msgstr ""
+msgstr "Vai pašreizējais lietotājs var ierakstīties caur PAM"
 
 #. i18n: ectx: label, entry (Autostart), group (General)
 #: krdpserversettings.kcfg:39
@@ -306,7 +306,7 @@ msgstr "Pārstartēt serveri"
 #, kde-format
 msgctxt "@title"
 msgid "Additional Users"
-msgstr ""
+msgstr "Papildu lietotāji"
 
 #: ui/UserListView.qml:23
 #, kde-format
@@ -337,17 +337,17 @@ msgstr ""
 #: ui/UserListView.qml:45
 #, kde-format
 msgid "System users"
-msgstr ""
+msgstr "Sistēmas lietotāji"
 
 #: ui/UserListView.qml:45
 #, kde-format
 msgid "Other users"
-msgstr ""
+msgstr "Citi lietotāji"
 
 #: ui/UserListView.qml:67
 #, kde-format
 msgid "Login with your system password"
-msgstr ""
+msgstr "Ierakstīšanās ar sistēmas paroli"
 
 #: ui/UserListView.qml:74
 #, kde-format
