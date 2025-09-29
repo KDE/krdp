@@ -7,6 +7,7 @@
 #include <QCoreApplication>
 #include <QDBusInterface>
 #include <QMenu>
+#include <QProcess>
 
 #include <KLocalizedString>
 
@@ -99,9 +100,18 @@ SessionController::SessionController(KRdp::Server *server, SessionType sessionTy
     auto menu = new QMenu(u"quitMenu"_s);
     // Disable default quit button since it has confirmation dialog
     m_sni->setStandardActionsEnabled(false);
-    m_sni->setTitle(i18n("RDP Server"));
+    m_sni->setTitle(i18nc("Use the same name as the KCM, it's a server to remotely access the desktop.", "Remote Desktop"));
+    m_sni->setToolTipTitle(m_sni->title()); // If we don't set a tooltip title, we don't get a subtitle.
+    m_sni->setToolTipSubTitle(i18nc("Remote desktop server is running", "Server is currently running"));
     m_sni->setIconByName(u"preferences-system-network-remote"_s);
     m_sni->setStatus(KStatusNotifierItem::Passive);
+    m_sni->setCategory(KStatusNotifierItem::SystemServices);
+    auto configureAction = new QAction(i18n("Configure Server"), menu);
+    configureAction->setIcon(QIcon::fromTheme(QStringLiteral("configure-symbolic")));
+    connect(configureAction, &QAction::triggered, this, [] {
+        QProcess::startDetached(QStringLiteral("kcmshell6"), {QStringLiteral("kcm_krdpserver")});
+    });
+    menu->addAction(configureAction);
     auto quitAction = new QAction(i18n("Quit"), menu);
     quitAction->setIcon(QIcon::fromTheme(QStringLiteral("application-exit")));
     connect(quitAction, &QAction::triggered, this, &SessionController::stopFromSNI);
