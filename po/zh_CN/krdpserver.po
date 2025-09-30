@@ -67,7 +67,7 @@ msgstr "用户允许登录，密码保存在 KWallet"
 #: krdpserversettings.kcfg:35
 #, kde-format
 msgid "Whether the current user can log in via PAM"
-msgstr ""
+msgstr "当前用户是否可以通过 PAM 登录"
 
 #. i18n: ectx: label, entry (Autostart), group (General)
 #: krdpserversettings.kcfg:39
