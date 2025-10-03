@@ -351,7 +351,3 @@ msgstr "Upravit uživatele…"
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "Odstranit uživatele…"
-
-#~ msgctxt "@title"
-#~ msgid "Usernames"
-#~ msgstr "Uživatelská jména"
