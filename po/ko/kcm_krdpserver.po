@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-09-05 00:43+0000\n"
-"PO-Revision-Date: 2025-07-20 01:46+0200\n"
+"PO-Revision-Date: 2025-10-09 01:01+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -57,7 +57,7 @@ msgstr "로그인이 허용된 사용자, 암호는 KWallet에 저장됨"
 #: krdpserversettings.kcfg:35
 #, kde-format
 msgid "Whether the current user can log in via PAM"
-msgstr ""
+msgstr "현재 사용자를 PAM으로 로그인할지 여부"
 
 #. i18n: ectx: label, entry (Autostart), group (General)
 #: krdpserversettings.kcfg:39
@@ -304,7 +304,7 @@ msgstr "서버 다시 시작"
 #, kde-format
 msgctxt "@title"
 msgid "Additional Users"
-msgstr ""
+msgstr "추가 사용자"
 
 #: ui/UserListView.qml:23
 #, kde-format
@@ -333,17 +333,17 @@ msgstr "<interface>새로 추가…</interface>를 클릭하여 추가하십시�
 #: ui/UserListView.qml:45
 #, kde-format
 msgid "System users"
-msgstr ""
+msgstr "시스템 사용자"
 
 #: ui/UserListView.qml:45
 #, kde-format
 msgid "Other users"
-msgstr ""
+msgstr "기타 사용자"
 
 #: ui/UserListView.qml:67
 #, kde-format
 msgid "Login with your system password"
-msgstr ""
+msgstr "시스템 암호로 로그인"
 
 #: ui/UserListView.qml:74
 #, kde-format
