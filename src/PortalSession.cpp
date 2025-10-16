@@ -332,6 +332,8 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
             encodedStream->setNodeId(stream.nodeId);
             encodedStream->setFd(fd.takeFileDescriptor());
             encodedStream->setEncodingPreference(PipeWireBaseEncodedStream::EncodingPreference::Speed);
+            // Ensure we encode in full color range so FFmpeg decodes correctly.
+            encodedStream->setColorRange(PipeWireBaseEncodedStream::ColorRange::Full);
             encodedStream->setEncoder(PipeWireEncodedStream::H264Baseline);
             connect(encodedStream, &PipeWireEncodedStream::newPacket, this, &PortalSession::onPacketReceived);
             connect(encodedStream, &PipeWireEncodedStream::sizeChanged, this, &PortalSession::setSize);
