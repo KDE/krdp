@@ -185,6 +185,7 @@ void PlasmaScreencastV1Session::start()
         auto encodedStream = stream();
         encodedStream->setNodeId(nodeId);
         encodedStream->setEncodingPreference(PipeWireBaseEncodedStream::EncodingPreference::Speed);
+        encodedStream->setColorRange(PipeWireBaseEncodedStream::ColorRange::Full);
         encodedStream->setEncoder(PipeWireEncodedStream::H264Baseline);
         connect(encodedStream, &PipeWireEncodedStream::newPacket, this, &PlasmaScreencastV1Session::onPacketReceived);
         connect(encodedStream, &PipeWireEncodedStream::sizeChanged, this, &PlasmaScreencastV1Session::setSize);
