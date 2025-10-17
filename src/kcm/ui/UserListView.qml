@@ -16,7 +16,7 @@ ListView {
     headerPositioning: ListView.OverlayHeader
     header: Kirigami.InlineViewHeader {
         width: userListView.width
-        text: i18nc("@title", "Additional Users")
+        text: i18nc("@title", "Usernames")
         actions: [
             Kirigami.Action {
                 icon.name: "list-add-symbolic"
