@@ -42,7 +42,8 @@ ListView {
 
     section.property: "systemUser"
     section.delegate: Kirigami.ListSectionHeader {
-        text: section ? i18n("System users") : i18n("Other users")
+        // The attached section is cast to a string by Qt, so we have to compare our boolean as a string
+        text: section == "true" ? i18n("System users") : i18n("Other users")
     }
 
     delegate: QQC2.ItemDelegate {
