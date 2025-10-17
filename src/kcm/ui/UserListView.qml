@@ -56,6 +56,7 @@ ListView {
             spacing: Kirigami.Units.mediumSpacing
 
             QQC2.CheckBox {
+                id: checkbox
                 visible: model.systemUser
                 checked: model.systemUserEnabled
                 onToggled: model.systemUserEnabled = checked
@@ -101,9 +102,10 @@ ListView {
         }
         onClicked: {
             if (model.systemUser) {
-                return;
+                checkbox.click();
+            } else {
+                root.modifyUser(itemDelegate.text);
             }
-            root.modifyUser(itemDelegate.text);
         }
     }
 }
