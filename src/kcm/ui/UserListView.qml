@@ -99,6 +99,9 @@ ListView {
             }
         }
         onClicked: {
+            if (model.systemUser) {
+                return;
+            }
             root.modifyUser(itemDelegate.text);
         }
     }
