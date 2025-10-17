@@ -50,6 +50,7 @@ ListView {
         id: itemDelegate
         width: userListView.width
         text: model.userName
+        highlighted: pressed || down
         // Help line up text and actions
         Kirigami.Theme.useAlternateBackgroundColor: true
         contentItem: RowLayout {
@@ -68,6 +69,7 @@ ListView {
                 title: itemDelegate.text
                 subtitle: model.systemUser ? i18n("Login with your system password") : ""
                 elide: Text.ElideRight
+                selected: itemDelegate.highlighted
             }
 
             QQC2.Button {
