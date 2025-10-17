@@ -6,7 +6,9 @@ import QtQuick
 import QtQuick.Controls as QQC2
 import QtQuick.Layouts
 import QtQuick.Dialogs as QtDialogs
+import QtQml.Models as QtModels
 import org.kde.kirigami as Kirigami
+import org.kde.kirigami.delegates as KD
 import org.kde.kirigamiaddons.formcard 1 as FormCard
 import org.kde.kcmutils as KCM
 
@@ -47,67 +49,87 @@ ListView {
         text: section == "true" ? i18nc("@title:group", "System Users") : i18nc("@title:group", "Other Users")
     }
 
-    delegate: QQC2.ItemDelegate {
-        id: itemDelegate
-        width: userListView.width
-        text: model.userName
-        highlighted: pressed || down
-        // Help line up text and actions
-        Kirigami.Theme.useAlternateBackgroundColor: true
-        contentItem: RowLayout {
-            spacing: Kirigami.Units.mediumSpacing
+    delegate: QtModels.DelegateChooser {
 
-            QQC2.CheckBox {
-                id: checkbox
-                visible: model.systemUser
+        role: "systemUser"
+
+        // System user account
+        QtModels.DelegateChoice {
+            roleValue: "true"
+
+            KD.CheckSubtitleDelegate {
+                id: checkDelegate
+
+                width: userListView.width
+                icon.width: 0
+
+                text: model.userName
+                subtitle: i18nc("@info:usagetip used as a subtitle for a title+subtitle list item", "Login with your system password")
+
+                // Help line up text and actions
+                Kirigami.Theme.useAlternateBackgroundColor: true
+
                 checked: model.systemUserEnabled
                 onToggled: model.systemUserEnabled = checked
             }
-
-            Kirigami.TitleSubtitle {
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                title: itemDelegate.text
-                subtitle: model.systemUser ? i18n("Login with your system password") : ""
-                elide: Text.ElideRight
-                selected: itemDelegate.highlighted
-            }
-
-            QQC2.Button {
-                id: modifyUserButton
-                icon.name: "edit-entry-symbolic"
-                text: i18nc("@action:button", "Modify user…")
-                display: QQC2.AbstractButton.IconOnly
-                onClicked: {
-                    root.modifyUser(itemDelegate.text);
-                }
-                QQC2.ToolTip {
-                    text: modifyUserButton.text
-                    visible: modifyUserButton.hovered || (Kirigami.Settings.tabletMode && modifyUserButton.pressed)
-                }
-                visible: !model.systemUser
-            }
-
-            QQC2.Button {
-                id: deleteUserButton
-                icon.name: "edit-delete-remove-symbolic"
-                text: i18nc("@action:button", "Remove user…")
-                display: QQC2.AbstractButton.IconOnly
-                onClicked: {
-                    root.deleteUser(itemDelegate.text);
-                }
-                QQC2.ToolTip {
-                    text: deleteUserButton.text
-                    visible: deleteUserButton.hovered || (Kirigami.Settings.tabletMode && deleteUserButton.pressed)
-                }
-                visible: !model.systemUser
-            }
         }
-        onClicked: {
-            if (model.systemUser) {
-                checkbox.click();
-            } else {
-                root.modifyUser(itemDelegate.text);
+
+        // Manually-created user account
+        QtModels.DelegateChoice {
+            roleValue: "false"
+
+            // Hand-rolled delegate to get some action buttons on the trailing side
+            QQC2.ItemDelegate {
+                id: itemDelegate
+
+                width: userListView.width
+                highlighted: pressed || down
+                text: model.userName
+
+                // Help line up text and actions
+                Kirigami.Theme.useAlternateBackgroundColor: true
+
+                onClicked: root.modifyUser(itemDelegate.text);
+
+                contentItem: RowLayout {
+                    spacing: Kirigami.Units.mediumSpacing
+
+                    Kirigami.TitleSubtitle {
+                        Layout.fillHeight: true
+                        Layout.fillWidth: true
+                        title: itemDelegate.text
+                        elide: Text.ElideRight
+                        selected: itemDelegate.highlighted
+                    }
+
+                    QQC2.Button {
+                        id: modifyUserButton
+                        icon.name: "edit-entry-symbolic"
+                        text: i18nc("@action:button", "Modify user…")
+                        display: QQC2.AbstractButton.IconOnly
+                        onClicked: {
+                            root.modifyUser(itemDelegate.text);
+                        }
+                        QQC2.ToolTip {
+                            text: modifyUserButton.text
+                            visible: modifyUserButton.hovered || (Kirigami.Settings.tabletMode && modifyUserButton.pressed)
+                        }
+                    }
+
+                    QQC2.Button {
+                        id: deleteUserButton
+                        icon.name: "edit-delete-remove-symbolic"
+                        text: i18nc("@action:button", "Remove user…")
+                        display: QQC2.AbstractButton.IconOnly
+                        onClicked: {
+                            root.deleteUser(itemDelegate.text);
+                        }
+                        QQC2.ToolTip {
+                            text: deleteUserButton.text
+                            visible: deleteUserButton.hovered || (Kirigami.Settings.tabletMode && deleteUserButton.pressed)
+                        }
+                    }
+                }
             }
         }
     }
