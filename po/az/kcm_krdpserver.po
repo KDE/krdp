@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-09-05 00:43+0000\n"
+"POT-Creation-Date: 2025-10-18 03:15+0000\n"
 "PO-Revision-Date: 2025-05-22 16:49+0400\n"
 "Last-Translator: linux <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -333,28 +333,28 @@ msgid "Click <interface>Add New…</interface> to add one"
 msgstr ""
 "<interface>Əlavə etmək...</interface> düyməsi ilə istifadəçi əlavə edin"
 
-#: ui/UserListView.qml:45
+#: ui/UserListView.qml:47
 #, kde-format
 msgid "System users"
 msgstr ""
 
-#: ui/UserListView.qml:45
+#: ui/UserListView.qml:47
 #, kde-format
 msgid "Other users"
 msgstr ""
 
-#: ui/UserListView.qml:67
+#: ui/UserListView.qml:71
 #, kde-format
 msgid "Login with your system password"
 msgstr ""
 
-#: ui/UserListView.qml:74
+#: ui/UserListView.qml:79
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify user…"
 msgstr "İstifadəçiyə dəyişiklik etmək..."
 
-#: ui/UserListView.qml:89
+#: ui/UserListView.qml:94
 #, kde-format
 msgctxt "@action:button"
 msgid "Remove user…"

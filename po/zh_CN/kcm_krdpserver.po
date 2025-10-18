@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-09-05 00:43+0000\n"
+"POT-Creation-Date: 2025-10-18 03:15+0000\n"
 "PO-Revision-Date: 2024-05-19 19:42\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -327,28 +327,28 @@ msgctxt "@info:placeholder"
 msgid "Click <interface>Add New…</interface> to add one"
 msgstr "点击 <interface>新增…</interface> 添加一个用户账户"
 
-#: ui/UserListView.qml:45
+#: ui/UserListView.qml:47
 #, kde-format
 msgid "System users"
 msgstr "系统用户"
 
-#: ui/UserListView.qml:45
+#: ui/UserListView.qml:47
 #, kde-format
 msgid "Other users"
 msgstr "其他用户"
 
-#: ui/UserListView.qml:67
+#: ui/UserListView.qml:71
 #, kde-format
 msgid "Login with your system password"
 msgstr "使用您的系统密码登录"
 
-#: ui/UserListView.qml:74
+#: ui/UserListView.qml:79
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify user…"
 msgstr "修改用户…"
 
-#: ui/UserListView.qml:89
+#: ui/UserListView.qml:94
 #, kde-format
 msgctxt "@action:button"
 msgid "Remove user…"
