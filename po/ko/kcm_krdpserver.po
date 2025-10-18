@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-09-05 00:43+0000\n"
+"POT-Creation-Date: 2025-10-18 00:43+0000\n"
 "PO-Revision-Date: 2025-10-09 01:01+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -303,8 +303,8 @@ msgstr "서버 다시 시작"
 #: ui/UserListView.qml:19
 #, kde-format
 msgctxt "@title"
-msgid "Additional Users"
-msgstr "추가 사용자"
+msgid "Usernames"
+msgstr "사용자 이름"
 
 #: ui/UserListView.qml:23
 #, kde-format
@@ -330,33 +330,37 @@ msgctxt "@info:placeholder"
 msgid "Click <interface>Add New…</interface> to add one"
 msgstr "<interface>새로 추가…</interface>를 클릭하여 추가하십시오"
 
-#: ui/UserListView.qml:45
-#, kde-format
-msgid "System users"
+#: ui/UserListView.qml:47
+#, fuzzy, kde-format
+#| msgid "System users"
+msgctxt "@title:group"
+msgid "System Users"
 msgstr "시스템 사용자"
 
-#: ui/UserListView.qml:45
-#, kde-format
-msgid "Other users"
+#: ui/UserListView.qml:47
+#, fuzzy, kde-format
+#| msgid "Other users"
+msgctxt "@title:group"
+msgid "Other Users"
 msgstr "기타 사용자"
 
-#: ui/UserListView.qml:67
+#: ui/UserListView.qml:71
 #, kde-format
 msgid "Login with your system password"
 msgstr "시스템 암호로 로그인"
 
-#: ui/UserListView.qml:74
+#: ui/UserListView.qml:79
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify user…"
 msgstr "사용자 수정…"
 
-#: ui/UserListView.qml:89
+#: ui/UserListView.qml:94
 #, kde-format
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "사용자 삭제…"
 
 #~ msgctxt "@title"
-#~ msgid "Usernames"
-#~ msgstr "사용자 이름"
+#~ msgid "Additional Users"
+#~ msgstr "추가 사용자"

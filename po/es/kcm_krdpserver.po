@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_krdpserver\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-09-05 00:43+0000\n"
+"POT-Creation-Date: 2025-10-18 00:43+0000\n"
 "PO-Revision-Date: 2025-09-06 01:21+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -311,10 +311,12 @@ msgid "Restart Server"
 msgstr "Reiniciar el servidor"
 
 #: ui/UserListView.qml:19
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@label:textbox"
+#| msgid "Username:"
 msgctxt "@title"
-msgid "Additional Users"
-msgstr "Usuarios adicionales"
+msgid "Usernames"
+msgstr "Nombre de usuario:"
 
 #: ui/UserListView.qml:23
 #, kde-format
@@ -341,29 +343,37 @@ msgctxt "@info:placeholder"
 msgid "Click <interface>Add New…</interface> to add one"
 msgstr "Pulse <interface>Añadir nuevo…</interface> para añadir uno"
 
-#: ui/UserListView.qml:45
-#, kde-format
-msgid "System users"
+#: ui/UserListView.qml:47
+#, fuzzy, kde-format
+#| msgid "System users"
+msgctxt "@title:group"
+msgid "System Users"
 msgstr "Usuarios del sistema"
 
-#: ui/UserListView.qml:45
-#, kde-format
-msgid "Other users"
+#: ui/UserListView.qml:47
+#, fuzzy, kde-format
+#| msgid "Other users"
+msgctxt "@title:group"
+msgid "Other Users"
 msgstr "Otros usuarios"
 
-#: ui/UserListView.qml:67
+#: ui/UserListView.qml:71
 #, kde-format
 msgid "Login with your system password"
 msgstr "Iniciar sesión con su contraseña del sistema"
 
-#: ui/UserListView.qml:74
+#: ui/UserListView.qml:79
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify user…"
 msgstr "Modificar usuario…"
 
-#: ui/UserListView.qml:89
+#: ui/UserListView.qml:94
 #, kde-format
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "Eliminar usuario…"
+
+#~ msgctxt "@title"
+#~ msgid "Additional Users"
+#~ msgstr "Usuarios adicionales"

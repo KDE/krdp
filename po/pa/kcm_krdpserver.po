@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-09-05 00:43+0000\n"
+"POT-Creation-Date: 2025-10-18 00:43+0000\n"
 "PO-Revision-Date: 2024-10-01 17:29-0500\n"
 "Last-Translator: A S Alam <aalam@punlinux.org>\n"
 "Language-Team: pa\n"
@@ -300,10 +300,12 @@ msgid "Restart Server"
 msgstr "ਸਰਵਰ ਨੂੰ ਮੁੜ-ਚਾਲੂ ਕਰੋ"
 
 #: ui/UserListView.qml:19
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@label:textbox"
+#| msgid "Username:"
 msgctxt "@title"
-msgid "Additional Users"
-msgstr ""
+msgid "Usernames"
+msgstr "ਵਰਤੋਂਕਾਰ ਨਾਂ:"
 
 #: ui/UserListView.qml:23
 #, kde-format
@@ -329,28 +331,30 @@ msgctxt "@info:placeholder"
 msgid "Click <interface>Add New…</interface> to add one"
 msgstr ""
 
-#: ui/UserListView.qml:45
+#: ui/UserListView.qml:47
 #, kde-format
-msgid "System users"
+msgctxt "@title:group"
+msgid "System Users"
 msgstr ""
 
-#: ui/UserListView.qml:45
+#: ui/UserListView.qml:47
 #, kde-format
-msgid "Other users"
+msgctxt "@title:group"
+msgid "Other Users"
 msgstr ""
 
-#: ui/UserListView.qml:67
+#: ui/UserListView.qml:71
 #, kde-format
 msgid "Login with your system password"
 msgstr ""
 
-#: ui/UserListView.qml:74
+#: ui/UserListView.qml:79
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify user…"
 msgstr ""
 
-#: ui/UserListView.qml:89
+#: ui/UserListView.qml:94
 #, kde-format
 msgctxt "@action:button"
 msgid "Remove user…"

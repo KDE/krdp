@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-09-05 00:43+0000\n"
+"POT-Creation-Date: 2025-10-18 00:43+0000\n"
 "PO-Revision-Date: 2025-09-06 17:35+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
@@ -306,8 +306,8 @@ msgstr "Рестартиране на сървъра"
 #: ui/UserListView.qml:19
 #, kde-format
 msgctxt "@title"
-msgid "Additional Users"
-msgstr "Допълнителни потребители"
+msgid "Usernames"
+msgstr "Потребителски имена"
 
 #: ui/UserListView.qml:23
 #, kde-format
@@ -335,33 +335,37 @@ msgid "Click <interface>Add New…</interface> to add one"
 msgstr ""
 "Щракнете върху <interface>Добавяне на нов...</interface>, за да го добавите"
 
-#: ui/UserListView.qml:45
-#, kde-format
-msgid "System users"
+#: ui/UserListView.qml:47
+#, fuzzy, kde-format
+#| msgid "System users"
+msgctxt "@title:group"
+msgid "System Users"
 msgstr "Системни потребители"
 
-#: ui/UserListView.qml:45
-#, kde-format
-msgid "Other users"
+#: ui/UserListView.qml:47
+#, fuzzy, kde-format
+#| msgid "Other users"
+msgctxt "@title:group"
+msgid "Other Users"
 msgstr "Други потребители"
 
-#: ui/UserListView.qml:67
+#: ui/UserListView.qml:71
 #, kde-format
 msgid "Login with your system password"
 msgstr "Влезте с вашата системна парола"
 
-#: ui/UserListView.qml:74
+#: ui/UserListView.qml:79
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify user…"
 msgstr "Промяна на потребителя..."
 
-#: ui/UserListView.qml:89
+#: ui/UserListView.qml:94
 #, kde-format
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "Премахване на потребител..."
 
 #~ msgctxt "@title"
-#~ msgid "Usernames"
-#~ msgstr "Потребителски имена"
+#~ msgid "Additional Users"
+#~ msgstr "Допълнителни потребители"

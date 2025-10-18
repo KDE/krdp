@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-09-05 00:43+0000\n"
+"POT-Creation-Date: 2025-10-18 00:43+0000\n"
 "PO-Revision-Date: 2025-09-05 16:12+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -310,8 +310,8 @@ msgstr "Server herstarten"
 #: ui/UserListView.qml:19
 #, kde-format
 msgctxt "@title"
-msgid "Additional Users"
-msgstr "Additionele gebruikers"
+msgid "Usernames"
+msgstr "Gebruikersnamen"
 
 #: ui/UserListView.qml:23
 #, kde-format
@@ -340,36 +340,40 @@ msgid "Click <interface>Add New…</interface> to add one"
 msgstr ""
 "Klik op <interface>Nieuwe toevoegen…</interface> om er een toe te voegen"
 
-#: ui/UserListView.qml:45
-#, kde-format
-msgid "System users"
+#: ui/UserListView.qml:47
+#, fuzzy, kde-format
+#| msgid "System users"
+msgctxt "@title:group"
+msgid "System Users"
 msgstr "Systeemgebruikers"
 
-#: ui/UserListView.qml:45
-#, kde-format
-msgid "Other users"
+#: ui/UserListView.qml:47
+#, fuzzy, kde-format
+#| msgid "Other users"
+msgctxt "@title:group"
+msgid "Other Users"
 msgstr "Overige gebruikers"
 
-#: ui/UserListView.qml:67
+#: ui/UserListView.qml:71
 #, kde-format
 msgid "Login with your system password"
 msgstr "Aanmelden met uw systeemwachtwoord"
 
-#: ui/UserListView.qml:74
+#: ui/UserListView.qml:79
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify user…"
 msgstr "Gebruiker wijzigen…"
 
-#: ui/UserListView.qml:89
+#: ui/UserListView.qml:94
 #, kde-format
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "Gebruiker verwijderen…"
 
 #~ msgctxt "@title"
-#~ msgid "Usernames"
-#~ msgstr "Gebruikersnamen"
+#~ msgid "Additional Users"
+#~ msgstr "Additionele gebruikers"
 
 #~ msgid "The address the server listens on"
 #~ msgstr "Het adres waarop de server luistert"

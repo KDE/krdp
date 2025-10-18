@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-09-05 00:43+0000\n"
+"POT-Creation-Date: 2025-10-18 00:43+0000\n"
 "PO-Revision-Date: 2025-09-05 08:46+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -308,8 +308,8 @@ msgstr "სერვერის გადატვირთვა"
 #: ui/UserListView.qml:19
 #, kde-format
 msgctxt "@title"
-msgid "Additional Users"
-msgstr "დამატებითი მომხმარებლები"
+msgid "Usernames"
+msgstr "მომხმარებლის სახელები"
 
 #: ui/UserListView.qml:23
 #, kde-format
@@ -336,36 +336,40 @@ msgid "Click <interface>Add New…</interface> to add one"
 msgstr ""
 "დააწკაპუნეთ ღილაკზე <interface>ახლის დამატება…</interface> ახლის დასამატებლად"
 
-#: ui/UserListView.qml:45
-#, kde-format
-msgid "System users"
+#: ui/UserListView.qml:47
+#, fuzzy, kde-format
+#| msgid "System users"
+msgctxt "@title:group"
+msgid "System Users"
 msgstr "სისტემური მომხმარებლები"
 
-#: ui/UserListView.qml:45
-#, kde-format
-msgid "Other users"
+#: ui/UserListView.qml:47
+#, fuzzy, kde-format
+#| msgid "Other users"
+msgctxt "@title:group"
+msgid "Other Users"
 msgstr "სხვა მომხმარებლები"
 
-#: ui/UserListView.qml:67
+#: ui/UserListView.qml:71
 #, kde-format
 msgid "Login with your system password"
 msgstr "შედით თქვენი სისტემური პაროლით"
 
-#: ui/UserListView.qml:74
+#: ui/UserListView.qml:79
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify user…"
 msgstr "მომხმარებლის ჩასწორება…"
 
-#: ui/UserListView.qml:89
+#: ui/UserListView.qml:94
 #, kde-format
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "მომხმარებლის წაშლა…"
 
 #~ msgctxt "@title"
-#~ msgid "Usernames"
-#~ msgstr "მომხმარებლის სახელები"
+#~ msgid "Additional Users"
+#~ msgstr "დამატებითი მომხმარებლები"
 
 #~ msgid "The address the server listens on"
 #~ msgstr "მისამართი, რომელზეც სერვერი უსმენს"
