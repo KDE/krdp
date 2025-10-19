@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-10-18 00:43+0000\n"
-"PO-Revision-Date: 2025-09-05 09:07+0300\n"
+"PO-Revision-Date: 2025-10-18 16:00+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -341,15 +341,13 @@ msgid "Click <interface>Add New…</interface> to add one"
 msgstr "Натисніть <interface>Додати новий…</interface>, щоб додати новий"
 
 #: ui/UserListView.qml:47
-#, fuzzy, kde-format
-#| msgid "System users"
+#, kde-format
 msgctxt "@title:group"
 msgid "System Users"
 msgstr "Користувачі системи"
 
 #: ui/UserListView.qml:47
-#, fuzzy, kde-format
-#| msgid "Other users"
+#, kde-format
 msgctxt "@title:group"
 msgid "Other Users"
 msgstr "Інші користувачі"

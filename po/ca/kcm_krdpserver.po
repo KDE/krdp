@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-10-18 00:43+0000\n"
-"PO-Revision-Date: 2025-09-05 09:24+0200\n"
+"PO-Revision-Date: 2025-10-18 10:34+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 25.08.0\n"
+"X-Generator: Lokalize 25.04.0\n"
 
 #. i18n: ectx: label, entry (ListenPort), group (General)
 #: krdpserversettings.kcfg:14
@@ -341,15 +341,13 @@ msgid "Click <interface>Add New…</interface> to add one"
 msgstr "Feu clic a <interface>Afegeix nou…</interface> per a afegir-ne un"
 
 #: ui/UserListView.qml:47
-#, fuzzy, kde-format
-#| msgid "System users"
+#, kde-format
 msgctxt "@title:group"
 msgid "System Users"
 msgstr "Usuaris del sistema"
 
 #: ui/UserListView.qml:47
-#, fuzzy, kde-format
-#| msgid "Other users"
+#, kde-format
 msgctxt "@title:group"
 msgid "Other Users"
 msgstr "Altres usuaris"

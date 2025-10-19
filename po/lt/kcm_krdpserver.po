@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-10-18 00:43+0000\n"
-"PO-Revision-Date: 2025-09-26 01:03+0300\n"
+"PO-Revision-Date: 2025-10-18 13:23+0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: lt\n"
@@ -340,15 +340,13 @@ msgid "Click <interface>Add New…</interface> to add one"
 msgstr "Norėdami pridėti, spustelėkite <interface>Pridėti naują…</interface>"
 
 #: ui/UserListView.qml:47
-#, fuzzy, kde-format
-#| msgid "System users"
+#, kde-format
 msgctxt "@title:group"
 msgid "System Users"
 msgstr "Sistemos naudotojai"
 
 #: ui/UserListView.qml:47
-#, fuzzy, kde-format
-#| msgid "Other users"
+#, kde-format
 msgctxt "@title:group"
 msgid "Other Users"
 msgstr "Kiti naudotojai"

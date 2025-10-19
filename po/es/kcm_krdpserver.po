@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcm_krdpserver\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-10-18 00:43+0000\n"
-"PO-Revision-Date: 2025-09-06 01:21+0100\n"
+"PO-Revision-Date: 2025-10-19 02:16+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 25.08.0\n"
+"X-Generator: Lokalize 25.08.2\n"
 
 #. i18n: ectx: label, entry (ListenPort), group (General)
 #: krdpserversettings.kcfg:14
@@ -311,12 +311,10 @@ msgid "Restart Server"
 msgstr "Reiniciar el servidor"
 
 #: ui/UserListView.qml:19
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Username:"
+#, kde-format
 msgctxt "@title"
 msgid "Usernames"
-msgstr "Nombre de usuario:"
+msgstr "Nombres de usuario"
 
 #: ui/UserListView.qml:23
 #, kde-format
@@ -344,15 +342,13 @@ msgid "Click <interface>Add New…</interface> to add one"
 msgstr "Pulse <interface>Añadir nuevo…</interface> para añadir uno"
 
 #: ui/UserListView.qml:47
-#, fuzzy, kde-format
-#| msgid "System users"
+#, kde-format
 msgctxt "@title:group"
 msgid "System Users"
 msgstr "Usuarios del sistema"
 
 #: ui/UserListView.qml:47
-#, fuzzy, kde-format
-#| msgid "Other users"
+#, kde-format
 msgctxt "@title:group"
 msgid "Other Users"
 msgstr "Otros usuarios"
@@ -373,7 +369,3 @@ msgstr "Modificar usuario…"
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "Eliminar usuario…"
-
-#~ msgctxt "@title"
-#~ msgid "Additional Users"
-#~ msgstr "Usuarios adicionales"
