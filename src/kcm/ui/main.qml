@@ -33,6 +33,11 @@ KCM.ScrollViewKCM {
         parent: root
     }
 
+    StartupFailureDialog {
+        id: startupFailureDialog
+        parent: root
+    }
+
     Connections {
         target: kcm
         function onKrdpServerSettingsChanged(): void {
@@ -51,6 +56,9 @@ KCM.ScrollViewKCM {
         }
         function onServerRunning(isServerRunning: bool): void {
             toggleServerSwitch.checked = isServerRunning;
+        }
+        function onServerStartFailed(): void {
+            startupFailureDialog.open();
         }
     }
 

@@ -340,6 +340,24 @@ void KRDPServerConfig::checkServerRunning()
     });
 }
 
+void KRDPServerConfig::checkServerFailureState()
+{
+    auto msg = QDBusMessage::createMethodCall(dbusSystemdDestination, dbusKrdpServerServicePath, dbusSystemdPropertiesInterface, u"Get"_s);
+    msg.setArguments({u"org.freedesktop.systemd1.Unit"_s, u"ActiveState"_s});
+
+    QDBusPendingCall pcall = QDBusConnection::sessionBus().asyncCall(msg);
+    auto watcher = new QDBusPendingCallWatcher(pcall, this);
+
+    connect(watcher, &QDBusPendingCallWatcher::finished, this, [&](QDBusPendingCallWatcher *w) {
+        QDBusPendingReply<QVariant> reply(*w);
+        const QString replyString = reply.value().toString();
+        if (replyString == u"failed"_s) {
+            Q_EMIT serverStartFailed();
+        }
+        w->deleteLater();
+    });
+}
+
 void KRDPServerConfig::copyAddressToClipboard(const QString &address)
 {
     QGuiApplication::clipboard()->setText(address.trimmed());
@@ -347,6 +365,7 @@ void KRDPServerConfig::copyAddressToClipboard(const QString &address)
 
 void KRDPServerConfig::servicePropertiesChanged()
 {
+    checkServerFailureState();
     checkServerRunning();
 }
 

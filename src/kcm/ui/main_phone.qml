@@ -34,6 +34,11 @@ FormCard.FormCardPage {
         parent: root
     }
 
+    StartupFailureDialog {
+        id: startupFailureDialog
+        parent: root
+    }
+
     Connections {
         target: kcm
         function onKrdpServerSettingsChanged(): void {
@@ -57,6 +62,9 @@ FormCard.FormCardPage {
         }
         function onServerRunning(isServerRunning: bool): void {
             enableServer.checked = isServerRunning;
+        }
+        function onServerStartFailed(): void {
+            startupFailureDialog.open();
         }
     }
 
