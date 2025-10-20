@@ -7,6 +7,7 @@
 #include "krdpserversettings.h"
 #include "usersmodel.h"
 #include <KQuickManagedConfigModule>
+#include <QDBusPendingCallWatcher>
 #include <qt6keychain/keychain.h>
 
 class KRDPServerConfigImpl;
@@ -67,9 +68,12 @@ Q_SIGNALS:
     void passwordLoaded(const QString &user, const QString &password);
     void keychainError(const QString &errorText);
     void serverRunning(const bool &isServerRunning);
+    void serverStartFailed();
 
 private:
     void createRestoreToken();
+
+    void checkServerFailureState();
     KRDPServerSettings *m_serverSettings;
     UsersModel *m_usersModel;
     Q_SLOT void servicePropertiesChanged();
