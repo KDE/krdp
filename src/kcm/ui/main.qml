@@ -57,7 +57,8 @@ KCM.ScrollViewKCM {
         function onServerRunning(isServerRunning: bool): void {
             toggleServerSwitch.checked = isServerRunning;
         }
-        function onServerStartFailed(): void {
+        function onServerStartFailed(errorText: string): void {
+            startupFailureDialog.errorText = errorText;
             startupFailureDialog.open();
         }
     }
