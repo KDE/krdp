@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-18 00:43+0000\n"
+"POT-Creation-Date: 2025-10-21 00:43+0000\n"
 "PO-Revision-Date: 2025-09-08 18:30+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
@@ -301,64 +301,66 @@ msgstr ""
 msgid "Restart Server"
 msgstr "Starta om server"
 
-#: ui/UserListView.qml:19
+#: ui/UserListView.qml:21
 #, kde-format
 msgctxt "@title"
 msgid "Usernames"
 msgstr "Användarnamn"
 
-#: ui/UserListView.qml:23
+#: ui/UserListView.qml:25
 #, kde-format
 msgctxt "@action:button"
 msgid "Add New…"
 msgstr "Lägg till nytt…"
 
-#: ui/UserListView.qml:24
+#: ui/UserListView.qml:26
 #, kde-format
 msgctxt "@action:button"
 msgid "Add New User Account…"
 msgstr "Lägg till nytt användarkonto…"
 
-#: ui/UserListView.qml:37
+#: ui/UserListView.qml:39
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "Add at least one user account to enable remote login"
 msgstr ""
 "Lägg till åtminstone ett användarkonto för att aktivera fjärrinloggning"
 
-#: ui/UserListView.qml:38
+#: ui/UserListView.qml:40
 #, kde-kuit-format
 msgctxt "@info:placeholder"
 msgid "Click <interface>Add New…</interface> to add one"
 msgstr ""
 "Klicka på <interface>Lägg till nytt…</interface> för att lägga till ett"
 
-#: ui/UserListView.qml:47
+#: ui/UserListView.qml:49
 #, fuzzy, kde-format
 #| msgid "System users"
 msgctxt "@title:group"
 msgid "System Users"
 msgstr "Systemanvändare"
 
-#: ui/UserListView.qml:47
+#: ui/UserListView.qml:49
 #, fuzzy, kde-format
 #| msgid "Other users"
 msgctxt "@title:group"
 msgid "Other Users"
 msgstr "Övriga användare"
 
-#: ui/UserListView.qml:71
-#, kde-format
+#: ui/UserListView.qml:67
+#, fuzzy, kde-format
+#| msgid "Login with your system password"
+msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
 msgid "Login with your system password"
 msgstr "Logga in med systemlösenordet"
 
-#: ui/UserListView.qml:79
+#: ui/UserListView.qml:108
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify user…"
 msgstr "Ändra användare…"
 
-#: ui/UserListView.qml:94
+#: ui/UserListView.qml:122
 #, kde-format
 msgctxt "@action:button"
 msgid "Remove user…"

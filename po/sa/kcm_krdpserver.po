@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-18 00:43+0000\n"
+"POT-Creation-Date: 2025-10-21 00:43+0000\n"
 "PO-Revision-Date: 2024-12-20 21:52+0530\n"
 "Last-Translator: kali <skkalwar999@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -309,60 +309,61 @@ msgstr ""
 msgid "Restart Server"
 msgstr "सर्वरं पुनः आरभत"
 
-#: ui/UserListView.qml:19
+#: ui/UserListView.qml:21
 #, kde-format
 msgctxt "@title"
 msgid "Usernames"
 msgstr "उपयोक्तृनाम"
 
-#: ui/UserListView.qml:23
+#: ui/UserListView.qml:25
 #, kde-format
 msgctxt "@action:button"
 msgid "Add New…"
 msgstr "Add New..."
 
-#: ui/UserListView.qml:24
+#: ui/UserListView.qml:26
 #, kde-format
 msgctxt "@action:button"
 msgid "Add New User Account…"
 msgstr "नूतनं उपयोक्तृलेखं योजयतु..."
 
-#: ui/UserListView.qml:37
+#: ui/UserListView.qml:39
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "Add at least one user account to enable remote login"
 msgstr "दूरस्थप्रवेशं सक्षमं कर्तुं न्यूनातिन्यूनम् एकं उपयोक्तृलेखं योजयन्तु"
 
-#: ui/UserListView.qml:38
+#: ui/UserListView.qml:40
 #, kde-kuit-format
 msgctxt "@info:placeholder"
 msgid "Click <interface>Add New…</interface> to add one"
 msgstr "एकं योजयितुं <interface>Add New...</interface> नुदन्तु"
 
-#: ui/UserListView.qml:47
+#: ui/UserListView.qml:49
 #, kde-format
 msgctxt "@title:group"
 msgid "System Users"
 msgstr ""
 
-#: ui/UserListView.qml:47
+#: ui/UserListView.qml:49
 #, kde-format
 msgctxt "@title:group"
 msgid "Other Users"
 msgstr ""
 
-#: ui/UserListView.qml:71
+#: ui/UserListView.qml:67
 #, kde-format
+msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
 msgid "Login with your system password"
 msgstr ""
 
-#: ui/UserListView.qml:79
+#: ui/UserListView.qml:108
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify user…"
 msgstr "उपयोक्तृं परिवर्तयतु..."
 
-#: ui/UserListView.qml:94
+#: ui/UserListView.qml:122
 #, kde-format
 msgctxt "@action:button"
 msgid "Remove user…"

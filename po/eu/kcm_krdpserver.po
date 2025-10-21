@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-18 00:43+0000\n"
+"POT-Creation-Date: 2025-10-21 00:43+0000\n"
 "PO-Revision-Date: 2025-10-18 12:17+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -306,60 +306,62 @@ msgstr ""
 msgid "Restart Server"
 msgstr "Zerbitzaria berrabiarazi"
 
-#: ui/UserListView.qml:19
+#: ui/UserListView.qml:21
 #, kde-format
 msgctxt "@title"
 msgid "Usernames"
 msgstr "Erabiltzaile-izenak"
 
-#: ui/UserListView.qml:23
+#: ui/UserListView.qml:25
 #, kde-format
 msgctxt "@action:button"
 msgid "Add New…"
 msgstr "Gehitu …berria"
 
-#: ui/UserListView.qml:24
+#: ui/UserListView.qml:26
 #, kde-format
 msgctxt "@action:button"
 msgid "Add New User Account…"
 msgstr "Gehitu erabiltzaile-kontu berria…"
 
-#: ui/UserListView.qml:37
+#: ui/UserListView.qml:39
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "Add at least one user account to enable remote login"
 msgstr "Gehitu gutxienez erabiltzaile kontu bat urrunetik saio-hastea gaitzeko"
 
-#: ui/UserListView.qml:38
+#: ui/UserListView.qml:40
 #, kde-kuit-format
 msgctxt "@info:placeholder"
 msgid "Click <interface>Add New…</interface> to add one"
 msgstr "Klik egin <interface> Gehitu …berria</interface>n bat gehitzeko"
 
-#: ui/UserListView.qml:47
+#: ui/UserListView.qml:49
 #, kde-format
 msgctxt "@title:group"
 msgid "System Users"
 msgstr "Sistemaren erabiltzaileak"
 
-#: ui/UserListView.qml:47
+#: ui/UserListView.qml:49
 #, kde-format
 msgctxt "@title:group"
 msgid "Other Users"
 msgstr "Beste erabiltzaile batzuk"
 
-#: ui/UserListView.qml:71
-#, kde-format
+#: ui/UserListView.qml:67
+#, fuzzy, kde-format
+#| msgid "Login with your system password"
+msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
 msgid "Login with your system password"
 msgstr "Hasi saioa zure sistemaren pasahitzarekin"
 
-#: ui/UserListView.qml:79
+#: ui/UserListView.qml:108
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify user…"
 msgstr "Aldatu …erabiltzailea"
 
-#: ui/UserListView.qml:94
+#: ui/UserListView.qml:122
 #, kde-format
 msgctxt "@action:button"
 msgid "Remove user…"

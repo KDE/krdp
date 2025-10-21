@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-18 00:43+0000\n"
+"POT-Creation-Date: 2025-10-21 00:43+0000\n"
 "PO-Revision-Date: 2025-10-18 13:23+0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -307,25 +307,25 @@ msgstr ""
 msgid "Restart Server"
 msgstr "Paleisti serverį iš naujo"
 
-#: ui/UserListView.qml:19
+#: ui/UserListView.qml:21
 #, kde-format
 msgctxt "@title"
 msgid "Usernames"
 msgstr "Naudotojų vardai"
 
-#: ui/UserListView.qml:23
+#: ui/UserListView.qml:25
 #, kde-format
 msgctxt "@action:button"
 msgid "Add New…"
 msgstr "Pridėti naują…"
 
-#: ui/UserListView.qml:24
+#: ui/UserListView.qml:26
 #, kde-format
 msgctxt "@action:button"
 msgid "Add New User Account…"
 msgstr "Pridėti naują naudotojo paskyrą…"
 
-#: ui/UserListView.qml:37
+#: ui/UserListView.qml:39
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "Add at least one user account to enable remote login"
@@ -333,36 +333,38 @@ msgstr ""
 "Norėdami įjungti nuotolinį prisijungimą pridėkite bent vieną naudotojo "
 "paskyrą"
 
-#: ui/UserListView.qml:38
+#: ui/UserListView.qml:40
 #, kde-kuit-format
 msgctxt "@info:placeholder"
 msgid "Click <interface>Add New…</interface> to add one"
 msgstr "Norėdami pridėti, spustelėkite <interface>Pridėti naują…</interface>"
 
-#: ui/UserListView.qml:47
+#: ui/UserListView.qml:49
 #, kde-format
 msgctxt "@title:group"
 msgid "System Users"
 msgstr "Sistemos naudotojai"
 
-#: ui/UserListView.qml:47
+#: ui/UserListView.qml:49
 #, kde-format
 msgctxt "@title:group"
 msgid "Other Users"
 msgstr "Kiti naudotojai"
 
-#: ui/UserListView.qml:71
-#, kde-format
+#: ui/UserListView.qml:67
+#, fuzzy, kde-format
+#| msgid "Login with your system password"
+msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
 msgid "Login with your system password"
 msgstr "Prisijungti naudojant savo sistemos slaptažodį"
 
-#: ui/UserListView.qml:79
+#: ui/UserListView.qml:108
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify user…"
 msgstr "Modifikuoti naudotoją…"
 
-#: ui/UserListView.qml:94
+#: ui/UserListView.qml:122
 #, kde-format
 msgctxt "@action:button"
 msgid "Remove user…"
