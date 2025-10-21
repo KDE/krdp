@@ -352,7 +352,19 @@ void KRDPServerConfig::checkServerFailureState()
         QDBusPendingReply<QVariant> reply(*w);
         const QString replyString = reply.value().toString();
         if (replyString == u"failed"_s) {
-            Q_EMIT serverStartFailed();
+            QProcess invokationIdProcess;
+            invokationIdProcess.setProcessChannelMode(QProcess::MergedChannels);
+            invokationIdProcess.startCommand(u"systemctl --user show -p InvocationID --value app-org.kde.krdpserver.service --no-pager -o cat"_s);
+            invokationIdProcess.waitForFinished(100);
+            const auto invocationId = QString::fromUtf8(invokationIdProcess.readAll()).trimmed();
+
+            QProcess logsProcess;
+            logsProcess.setProcessChannelMode(QProcess::MergedChannels);
+            logsProcess.startCommand(u"journalctl _SYSTEMD_INVOCATION_ID=%1 --no-pager -o cat"_s.arg(invocationId));
+            logsProcess.waitForFinished();
+            const auto logs = QString::fromUtf8(logsProcess.readAll());
+
+            Q_EMIT serverStartFailed(logs);
         }
         w->deleteLater();
     });

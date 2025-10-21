@@ -68,7 +68,7 @@ Q_SIGNALS:
     void passwordLoaded(const QString &user, const QString &password);
     void keychainError(const QString &errorText);
     void serverRunning(const bool &isServerRunning);
-    void serverStartFailed();
+    void serverStartFailed(const QString &errorMessage);
 
 private:
     void createRestoreToken();
