@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-10-21 00:43+0000\n"
-"PO-Revision-Date: 2025-10-18 05:55+0200\n"
+"PO-Revision-Date: 2025-10-21 06:12+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -349,8 +349,7 @@ msgid "Other Users"
 msgstr "სხვა მომხმარებლები"
 
 #: ui/UserListView.qml:67
-#, fuzzy, kde-format
-#| msgid "Login with your system password"
+#, kde-format
 msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
 msgid "Login with your system password"
 msgstr "შედით თქვენი სისტემური პაროლით"
