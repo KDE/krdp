@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-10-21 00:43+0000\n"
-"PO-Revision-Date: 2025-09-08 18:30+0200\n"
+"PO-Revision-Date: 2025-10-22 20:18+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
 "Language: sv\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 25.08.0\n"
+"X-Generator: Lokalize 25.08.2\n"
 
 #. i18n: ectx: label, entry (ListenPort), group (General)
 #: krdpserversettings.kcfg:14
@@ -334,22 +334,19 @@ msgstr ""
 "Klicka på <interface>Lägg till nytt…</interface> för att lägga till ett"
 
 #: ui/UserListView.qml:49
-#, fuzzy, kde-format
-#| msgid "System users"
+#, kde-format
 msgctxt "@title:group"
 msgid "System Users"
 msgstr "Systemanvändare"
 
 #: ui/UserListView.qml:49
-#, fuzzy, kde-format
-#| msgid "Other users"
+#, kde-format
 msgctxt "@title:group"
 msgid "Other Users"
 msgstr "Övriga användare"
 
 #: ui/UserListView.qml:67
-#, fuzzy, kde-format
-#| msgid "Login with your system password"
+#, kde-format
 msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
 msgid "Login with your system password"
 msgstr "Logga in med systemlösenordet"

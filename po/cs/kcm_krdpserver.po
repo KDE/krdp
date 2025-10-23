@@ -296,12 +296,10 @@ msgid "Restart Server"
 msgstr "Restartovat server"
 
 #: ui/UserListView.qml:21
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Username:"
+#, kde-format
 msgctxt "@title"
 msgid "Usernames"
-msgstr "Uživatelské jméno:"
+msgstr "Uživatelská jména"
 
 #: ui/UserListView.qml:25
 #, kde-format

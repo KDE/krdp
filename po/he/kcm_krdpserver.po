@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-10-21 00:43+0000\n"
-"PO-Revision-Date: 2025-10-18 14:24+0300\n"
+"PO-Revision-Date: 2025-10-21 14:39+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -345,8 +345,7 @@ msgid "Other Users"
 msgstr "משתמשים אחרים"
 
 #: ui/UserListView.qml:67
-#, fuzzy, kde-format
-#| msgid "Login with your system password"
+#, kde-format
 msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
 msgid "Login with your system password"
 msgstr "כניסה עם סיסמת המערכת שלך"
