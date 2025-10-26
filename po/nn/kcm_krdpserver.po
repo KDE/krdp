@@ -304,12 +304,10 @@ msgid "Restart Server"
 msgstr "Start tenaren på nytt"
 
 #: ui/UserListView.qml:21
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Username:"
+#, kde-format
 msgctxt "@title"
 msgid "Usernames"
-msgstr "Brukarnamn:"
+msgstr "Brukarnamn"
 
 #: ui/UserListView.qml:25
 #, kde-format
