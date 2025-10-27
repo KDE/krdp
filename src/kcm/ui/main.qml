@@ -33,11 +33,6 @@ KCM.ScrollViewKCM {
         parent: root
     }
 
-    StartupFailureDialog {
-        id: startupFailureDialog
-        parent: root
-    }
-
     Connections {
         target: kcm
         function onKrdpServerSettingsChanged(): void {
@@ -56,10 +51,13 @@ KCM.ScrollViewKCM {
         }
         function onServerRunning(isServerRunning: bool): void {
             toggleServerSwitch.checked = isServerRunning;
+            if (isServerRunning){
+                startupErrorMessage.visible = false;
+            }
         }
         function onServerStartFailed(errorText: string): void {
-            startupFailureDialog.errorText = errorText;
-            startupFailureDialog.open();
+            startupErrorMessage.errorText = errorText;
+            startupErrorMessage.visible = true;
         }
     }
 
@@ -121,6 +119,16 @@ KCM.ScrollViewKCM {
             position: Kirigami.InlineMessage.Position.Header
             Layout.fillWidth: true
             text: i18nc("@info:status", "Systemd not found. krdpserver will require manual activation.")
+        }
+
+        Kirigami.InlineMessage {
+            id: startupErrorMessage
+            property string errorText: ""
+            type: Kirigami.MessageType.Error
+            visible: false
+            position: Kirigami.InlineMessage.Position.Header
+            Layout.fillWidth: true
+            text: i18nc("@info:status", "Error message from the RDP server:\n%1", errorText)
         }
 
         // Non-InlineMessage header content does need margins; put it all in here
