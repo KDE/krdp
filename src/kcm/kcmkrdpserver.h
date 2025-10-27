@@ -7,7 +7,6 @@
 #include "krdpserversettings.h"
 #include "usersmodel.h"
 #include <KQuickManagedConfigModule>
-#include <QDBusPendingCallWatcher>
 #include <qt6keychain/keychain.h>
 
 class KRDPServerConfigImpl;

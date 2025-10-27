@@ -12,6 +12,7 @@
 #include <QClipboard>
 #include <QDBusArgument>
 #include <QDBusConnection>
+#include <QDBusPendingCallWatcher>
 #include <QDBusReply>
 #include <QDir>
 #include <QFileInfo>
@@ -352,11 +353,11 @@ void KRDPServerConfig::checkServerFailureState()
         QDBusPendingReply<QVariant> reply(*w);
         const QString replyString = reply.value().toString();
         if (replyString == u"failed"_s) {
-            QProcess invokationIdProcess;
-            invokationIdProcess.setProcessChannelMode(QProcess::MergedChannels);
-            invokationIdProcess.startCommand(u"systemctl --user show -p InvocationID --value app-org.kde.krdpserver.service --no-pager -o cat"_s);
-            invokationIdProcess.waitForFinished(100);
-            const auto invocationId = QString::fromUtf8(invokationIdProcess.readAll()).trimmed();
+            QProcess invocationIdProcess;
+            invocationIdProcess.setProcessChannelMode(QProcess::MergedChannels);
+            invocationIdProcess.startCommand(u"systemctl --user show -p InvocationID --value app-org.kde.krdpserver.service --no-pager -o cat"_s);
+            invocationIdProcess.waitForFinished(100);
+            const auto invocationId = QString::fromUtf8(invocationIdProcess.readAll()).trimmed();
 
             QProcess logsProcess;
             logsProcess.setProcessChannelMode(QProcess::MergedChannels);
