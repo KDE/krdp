@@ -81,7 +81,7 @@ KCM.ScrollViewKCM {
             checkable: true
             visible: kcm.managementAvailable
             Component.onCompleted: {
-                kcm.checkServerRunning();
+                kcm.checkServerState();
             }
             onTriggered: source => {
                 kcm.toggleServer(source.checked);

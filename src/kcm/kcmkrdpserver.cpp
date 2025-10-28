@@ -279,7 +279,7 @@ void KRDPServerConfig::restartServer()
     auto pendingCall = QDBusConnection::sessionBus().asyncCall(restartMsg);
     auto watcher = new QDBusPendingCallWatcher(pendingCall, this);
     connect(watcher, &QDBusPendingCallWatcher::finished, this, [&](QDBusPendingCallWatcher *w) {
-        checkServerRunning();
+        checkServerState();
         w->deleteLater();
     });
 }
@@ -325,23 +325,7 @@ void KRDPServerConfig::generateCertificate()
     m_serverSettings->save();
 }
 
-void KRDPServerConfig::checkServerRunning()
-{
-    // Checks if there is PID, and if there is, process is running.
-    auto msg = QDBusMessage::createMethodCall(dbusSystemdDestination, dbusKrdpServerServicePath, dbusSystemdPropertiesInterface, u"Get"_s);
-    msg.setArguments({u"org.freedesktop.systemd1.Service"_s, u"MainPID"_s});
-
-    QDBusPendingCall pcall = QDBusConnection::sessionBus().asyncCall(msg);
-    auto watcher = new QDBusPendingCallWatcher(pcall, this);
-
-    connect(watcher, &QDBusPendingCallWatcher::finished, this, [&](QDBusPendingCallWatcher *w) {
-        QDBusPendingReply<QVariant> reply(*w);
-        Q_EMIT serverRunning(reply.value().toInt() > 0 ? true : false);
-        w->deleteLater();
-    });
-}
-
-void KRDPServerConfig::checkServerFailureState()
+void KRDPServerConfig::checkServerState()
 {
     auto msg = QDBusMessage::createMethodCall(dbusSystemdDestination, dbusKrdpServerServicePath, dbusSystemdPropertiesInterface, u"Get"_s);
     msg.setArguments({u"org.freedesktop.systemd1.Unit"_s, u"ActiveState"_s});
@@ -352,7 +336,9 @@ void KRDPServerConfig::checkServerFailureState()
     connect(watcher, &QDBusPendingCallWatcher::finished, this, [&](QDBusPendingCallWatcher *w) {
         QDBusPendingReply<QVariant> reply(*w);
         const QString replyString = reply.value().toString();
-        if (replyString == u"failed"_s) {
+        if (replyString == u"active"_s || replyString == u"activating"_s || replyString == u"reloading"_s) {
+            Q_EMIT serverRunning(true);
+        } else if (replyString == u"failed"_s) {
             QProcess invocationIdProcess;
             invocationIdProcess.setProcessChannelMode(QProcess::MergedChannels);
             invocationIdProcess.startCommand(u"systemctl --user show -p InvocationID --value app-org.kde.krdpserver.service --no-pager -o cat"_s);
@@ -365,7 +351,10 @@ void KRDPServerConfig::checkServerFailureState()
             logsProcess.waitForFinished();
             const auto logs = QString::fromUtf8(logsProcess.readAll());
 
+            Q_EMIT serverRunning(false);
             Q_EMIT serverStartFailed(logs);
+        } else if (replyString == u"inactive"_s) {
+            Q_EMIT serverRunning(false);
         }
         w->deleteLater();
     });
@@ -378,8 +367,7 @@ void KRDPServerConfig::copyAddressToClipboard(const QString &address)
 
 void KRDPServerConfig::servicePropertiesChanged()
 {
-    checkServerFailureState();
-    checkServerRunning();
+    checkServerState();
 }
 
 #include "kcmkrdpserver.moc"
