@@ -42,12 +42,13 @@ public:
     Q_INVOKABLE void restartServer();
 
     Q_INVOKABLE void generateCertificate();
-    Q_INVOKABLE void checkServerRunning();
     Q_INVOKABLE void copyAddressToClipboard(const QString &address);
     Q_INVOKABLE KRDPServerSettings *settings() const
     {
         return m_serverSettings;
     };
+
+    Q_INVOKABLE void checkServerState();
 
     QString hostName() const;
     bool managementAvailable() const;
@@ -72,7 +73,6 @@ Q_SIGNALS:
 private:
     void createRestoreToken();
 
-    void checkServerFailureState();
     KRDPServerSettings *m_serverSettings;
     UsersModel *m_usersModel;
     Q_SLOT void servicePropertiesChanged();
