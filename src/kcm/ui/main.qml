@@ -14,6 +14,10 @@ KCM.ScrollViewKCM {
 
     property var settings: kcm.settings()
 
+    // Used to avoid showing error when KCM is opened first time
+    // and last run ended in an error, to avoid confusing users.
+    property bool kcmJustOpened: true
+
     extraFooterTopPadding: true // This makes separator below scrollview visible
 
     EditUserModal {
@@ -80,6 +84,7 @@ KCM.ScrollViewKCM {
             checkable: true
             visible: kcm.managementAvailable
             onTriggered: source => {
+                root.kcmJustOpened = false;
                 kcm.toggleServer(source.checked);
                 if (!source.checked) {
                     // If we manually toggle the check off, always turn off the warning
@@ -123,7 +128,7 @@ KCM.ScrollViewKCM {
         Kirigami.InlineMessage {
             id: startupErrorMessage
             type: Kirigami.MessageType.Error
-            visible: kcm.serverStatus === 3
+            visible: kcm.serverStatus === 3 && !root.kcmJustOpened
             position: Kirigami.InlineMessage.Position.Header
             Layout.fillWidth: true
             text: i18nc("@info:status", "Error message from the RDP server:\n%1", kcm.errorMessage)
