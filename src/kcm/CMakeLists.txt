@@ -4,6 +4,8 @@
 
 add_definitions(-DTRANSLATION_DOMAIN=\"kcm_krdpserver\")
 
+pkg_check_modules(JOURNALD "libsystemd" REQUIRED)
+
 kcmutils_add_qml_kcm(kcm_krdpserver)
 
 kcmutils_generate_module_data(kcm_krdpserver
@@ -62,6 +64,7 @@ target_link_libraries(kcm_krdpserver PRIVATE
     KF6::KCMUtilsQuick
     KF6::I18n
     K::KPipeWireRecord
+    ${JOURNALD_LIBRARIES}
 )
 
 ecm_qt_install_logging_categories(EXPORT kcm_krdpserver DESTINATION ${KDE_INSTALL_LOGGINGCATEGORIESDIR})

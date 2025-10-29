@@ -8,6 +8,8 @@
 #include "krdpserversettings.h"
 #include <PipeWireRecord>
 
+#include "org.freedesktop.impl.portal.PermissionStore.h"
+#include <KLocalizedString>
 #include <KPluginFactory>
 #include <QClipboard>
 #include <QDBusArgument>
@@ -21,8 +23,7 @@
 #include <QNetworkInterface>
 #include <QProcess>
 #include <qt6keychain/keychain.h>
-
-#include "org.freedesktop.impl.portal.PermissionStore.h"
+#include <systemd/sd-journal.h>
 
 using namespace Qt::StringLiterals;
 
@@ -339,25 +340,101 @@ void KRDPServerConfig::checkServerState()
         if (replyString == u"active"_s || replyString == u"activating"_s || replyString == u"reloading"_s) {
             Q_EMIT serverRunning(true);
         } else if (replyString == u"failed"_s) {
-            QProcess invocationIdProcess;
-            invocationIdProcess.setProcessChannelMode(QProcess::MergedChannels);
-            invocationIdProcess.startCommand(u"systemctl --user show -p InvocationID --value app-org.kde.krdpserver.service --no-pager -o cat"_s);
-            invocationIdProcess.waitForFinished(100);
-            const auto invocationId = QString::fromUtf8(invocationIdProcess.readAll()).trimmed();
+            auto invocationIdMsg = QDBusMessage::createMethodCall(dbusSystemdDestination, dbusKrdpServerServicePath, dbusSystemdPropertiesInterface, u"Get"_s);
+            invocationIdMsg.setArguments({u"org.freedesktop.systemd1.Unit"_s, u"InvocationID"_s});
 
-            QProcess logsProcess;
-            logsProcess.setProcessChannelMode(QProcess::MergedChannels);
-            logsProcess.startCommand(u"journalctl _SYSTEMD_INVOCATION_ID=%1 --no-pager -o cat"_s.arg(invocationId));
-            logsProcess.waitForFinished();
-            const auto logs = QString::fromUtf8(logsProcess.readAll());
+            QDBusPendingCall pcall = QDBusConnection::sessionBus().asyncCall(invocationIdMsg);
+            auto idWatcher = new QDBusPendingCallWatcher(pcall, this);
+            connect(idWatcher, &QDBusPendingCallWatcher::finished, this, [&](QDBusPendingCallWatcher *w) {
+                QDBusPendingReply<QDBusVariant> reply(*w);
+                auto replyString = QStringLiteral("%1").arg(reply.value().variant().toByteArray().toHex());
+                auto logs = getLastJournalEntries(u"app-org.kde.krdpserver.service"_s, replyString);
+                Q_EMIT serverStartFailed(logs.join(u"\n"_s));
+            });
 
             Q_EMIT serverRunning(false);
-            Q_EMIT serverStartFailed(logs);
         } else if (replyString == u"inactive"_s) {
             Q_EMIT serverRunning(false);
         }
         w->deleteLater();
     });
+}
+
+QStringList KRDPServerConfig::getLastJournalEntries(const QString &unit, const QString &invocationId)
+{
+    sd_journal *journal;
+
+    int returnValue = sd_journal_open(&journal, (SD_JOURNAL_LOCAL_ONLY | SD_JOURNAL_CURRENT_USER));
+    if (returnValue != 0) {
+        Q_EMIT serverStartFailed(i18n("Failed to open journal to read the error messages."));
+        sd_journal_close(journal);
+        return {};
+    }
+
+    sd_journal_flush_matches(journal);
+
+    const QString match1 = QStringLiteral("USER_UNIT=%1").arg(unit);
+    returnValue = sd_journal_add_match(journal, match1.toUtf8().constData(), 0);
+    if (returnValue != 0) {
+        sd_journal_close(journal);
+        return {};
+    }
+
+    sd_journal_add_disjunction(journal);
+
+    const QString match2 = QStringLiteral("_SYSTEMD_USER_UNIT=%1").arg(unit);
+    returnValue = sd_journal_add_match(journal, match2.toUtf8().constData(), 0);
+    if (returnValue != 0) {
+        sd_journal_close(journal);
+        return {};
+    }
+
+    sd_journal_add_conjunction(journal);
+
+    const QString match3 = QStringLiteral("_SYSTEMD_INVOCATION_ID=%1").arg(invocationId);
+    returnValue = sd_journal_add_match(journal, match3.toUtf8().constData(), 0);
+    if (returnValue != 0) {
+        sd_journal_close(journal);
+        return {};
+    }
+
+    returnValue = sd_journal_seek_tail(journal);
+    if (returnValue != 0) {
+        sd_journal_close(journal);
+        return {};
+    }
+
+    QStringList reply;
+    for (int i = 0; i < 50; ++i) {
+        returnValue = sd_journal_previous(journal);
+        if (returnValue != 1) {
+            // previous failed, no more entries
+            sd_journal_close(journal);
+            return reply;
+        }
+        QString line;
+
+        size_t length;
+        const void *data;
+        // Look only for krdpserver identifier, ignore rest
+        returnValue = sd_journal_get_data(journal, "SYSLOG_IDENTIFIER", &data, &length);
+        if (returnValue == 0) {
+            auto identifier = (QString::fromUtf8(reinterpret_cast<const char *>(data), length).section(u'=', 1));
+            if (identifier != u"krdpserver"_s) {
+                continue;
+            }
+        }
+        // Get the message itself
+        returnValue = sd_journal_get_data(journal, "MESSAGE", &data, &length);
+        if (returnValue == 0) {
+            line.append(QString::fromUtf8(reinterpret_cast<const char *>(data), length).section(u'=', 1));
+            reply << line;
+        }
+    }
+
+    sd_journal_close(journal);
+
+    return reply;
 }
 
 void KRDPServerConfig::copyAddressToClipboard(const QString &address)
