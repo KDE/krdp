@@ -72,6 +72,7 @@ Q_SIGNALS:
 
 private:
     void createRestoreToken();
+    QStringList getLastJournalEntries(const QString &unit, const QString &invocationId);
 
     KRDPServerSettings *m_serverSettings;
     UsersModel *m_usersModel;
