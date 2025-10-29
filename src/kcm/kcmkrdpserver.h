@@ -19,6 +19,17 @@ public:
     explicit KRDPServerConfig(QObject *parent, const KPluginMetaData &data);
     ~KRDPServerConfig() override;
 
+    enum Status {
+        Unknown,
+        Running,
+        Stopped,
+        Failed
+    };
+    Q_ENUM(Status);
+
+    Q_PROPERTY(Status serverStatus READ serverStatus NOTIFY serverStatusChanged);
+    Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY errorMessageChanged);
+
     Q_PROPERTY(QString hostName READ hostName CONSTANT)
     Q_PROPERTY(bool managementAvailable READ managementAvailable CONSTANT)
 
@@ -48,7 +59,9 @@ public:
         return m_serverSettings;
     };
 
-    Q_INVOKABLE void checkServerState();
+    void updateServerStatus();
+    Status serverStatus() const;
+    QString errorMessage() const;
 
     QString hostName() const;
     bool managementAvailable() const;
@@ -67,10 +80,12 @@ Q_SIGNALS:
     void generateCertificateFailed();
     void passwordLoaded(const QString &user, const QString &password);
     void keychainError(const QString &errorText);
-    void serverRunning(const bool &isServerRunning);
-    void serverStartFailed(const QString &errorMessage);
+    void serverStatusChanged();
+    void errorMessageChanged();
 
 private:
+    void setServerStatus(Status status);
+    void setErrorMessage(const QString &errorMessage);
     void createRestoreToken();
     QStringList getLastJournalEntries(const QString &unit, const QString &invocationId);
 
@@ -78,4 +93,6 @@ private:
     UsersModel *m_usersModel;
     Q_SLOT void servicePropertiesChanged();
     bool m_isH264Supported { false };
+    Status m_currentServerStatus;
+    QString m_lastErrorMessage;
 };

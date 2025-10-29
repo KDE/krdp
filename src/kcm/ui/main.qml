@@ -49,15 +49,11 @@ KCM.ScrollViewKCM {
             keychainErrorDialog.errorText = errorText;
             keychainErrorDialog.open();
         }
-        function onServerRunning(isServerRunning: bool): void {
-            toggleServerSwitch.checked = isServerRunning;
-            if (isServerRunning){
-                startupErrorMessage.visible = false;
+        function onServerStatusChanged() : void {
+            // TODO: why cant i access kcm.Status like kcm.Failed?
+            if (kcm.serverStatus !== 1) {
+                toggleServerSwitch.checked = false;
             }
-        }
-        function onServerStartFailed(errorText: string): void {
-            startupErrorMessage.errorText = errorText;
-            startupErrorMessage.visible = true;
         }
     }
 
@@ -80,14 +76,16 @@ KCM.ScrollViewKCM {
             text: i18nc("@option:check Enable RDP server", "Enable RDP server")
             checkable: true
             visible: kcm.managementAvailable
-            Component.onCompleted: {
-                kcm.checkServerState();
-            }
             onTriggered: source => {
                 kcm.toggleServer(source.checked);
                 if (!source.checked) {
                     // If we manually toggle the check off, always turn off the warning
                     restartServerWarning.visible = false;
+                }
+            }
+            Component.onCompleted: {
+                if (kcm.serverStatus === 1) {
+                    toggleServerSwitch.checked = true;
                 }
             }
             displayComponent: QQC2.Switch {
@@ -123,12 +121,11 @@ KCM.ScrollViewKCM {
 
         Kirigami.InlineMessage {
             id: startupErrorMessage
-            property string errorText: ""
             type: Kirigami.MessageType.Error
-            visible: false
+            visible: kcm.serverStatus === 3
             position: Kirigami.InlineMessage.Position.Header
             Layout.fillWidth: true
-            text: i18nc("@info:status", "Error message from the RDP server:\n%1", errorText)
+            text: i18nc("@info:status", "Error message from the RDP server:\n%1", kcm.errorMessage)
         }
 
         // Non-InlineMessage header content does need margins; put it all in here
@@ -159,7 +156,7 @@ KCM.ScrollViewKCM {
             ColumnLayout {
                 spacing: 0
                 Layout.fillWidth: true
-                visible: toggleServerSwitch.checked
+                visible: kcm.serverStatus === 1
 
                 Repeater {
                     id: addressesRepeater
