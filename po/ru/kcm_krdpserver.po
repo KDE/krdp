@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-10-18 03:15+0000\n"
-"PO-Revision-Date: 2025-05-20 14:09+0300\n"
+"PO-Revision-Date: 2025-10-28 19:27+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
 "%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Lokalize 25.04.1\n"
+"X-Generator: Lokalize 25.08.2\n"
 
 #. i18n: ectx: label, entry (ListenPort), group (General)
 #: krdpserversettings.kcfg:14
@@ -59,7 +59,7 @@ msgstr "Пользователи, которым разрешён вход, па
 #: krdpserversettings.kcfg:35
 #, kde-format
 msgid "Whether the current user can log in via PAM"
-msgstr ""
+msgstr "Разрешён ли текущему пользователю вход с использованием PAM"
 
 #. i18n: ectx: label, entry (Autostart), group (General)
 #: krdpserversettings.kcfg:39
@@ -167,6 +167,8 @@ msgstr "Включить RDP-сервер"
 msgctxt "@info:status"
 msgid "Systemd not found. krdpserver will require manual activation."
 msgstr ""
+"Система инициализации Systemd не найдена. Для запуска krdpserver потребуется "
+"запускать его вручную."
 
 #: ui/main.qml:124 ui/main_phone.qml:101
 #, kde-format
@@ -310,7 +312,7 @@ msgstr "Перезапустить сервер"
 #, kde-format
 msgctxt "@title"
 msgid "Additional Users"
-msgstr ""
+msgstr "Дополнительные пользователи"
 
 #: ui/UserListView.qml:23
 #, kde-format
@@ -342,17 +344,17 @@ msgstr ""
 #: ui/UserListView.qml:47
 #, kde-format
 msgid "System users"
-msgstr ""
+msgstr "Системные пользователи"
 
 #: ui/UserListView.qml:47
 #, kde-format
 msgid "Other users"
-msgstr ""
+msgstr "Другие пользователи"
 
 #: ui/UserListView.qml:71
 #, kde-format
 msgid "Login with your system password"
-msgstr ""
+msgstr "Войти с использованием пароля от системы"
 
 #: ui/UserListView.qml:79
 #, kde-format
