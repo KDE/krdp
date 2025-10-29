@@ -59,7 +59,7 @@ public:
         return m_serverSettings;
     };
 
-    void updateServerStatus();
+    Q_INVOKABLE void updateServerStatus();
     Status serverStatus() const;
     QString errorMessage() const;
 

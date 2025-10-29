@@ -51,7 +51,10 @@ KCM.ScrollViewKCM {
         }
         function onServerStatusChanged() : void {
             // TODO: why cant i access kcm.Status like kcm.Failed?
-            if (kcm.serverStatus !== 1) {
+            if (kcm.serverStatus === 1) {
+                toggleServerSwitch.checked = true;
+            }
+            if (kcm.serverStatus === 3) {
                 toggleServerSwitch.checked = false;
             }
         }
@@ -84,9 +87,7 @@ KCM.ScrollViewKCM {
                 }
             }
             Component.onCompleted: {
-                if (kcm.serverStatus === 1) {
-                    toggleServerSwitch.checked = true;
-                }
+                kcm.updateServerStatus();
             }
             displayComponent: QQC2.Switch {
                 action: toggleServerSwitch
