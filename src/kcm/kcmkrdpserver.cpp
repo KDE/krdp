@@ -9,7 +9,6 @@
 #include <PipeWireRecord>
 
 #include "org.freedesktop.impl.portal.PermissionStore.h"
-#include <KLocalizedString>
 #include <KPluginFactory>
 #include <QClipboard>
 #include <QDBusArgument>
@@ -270,6 +269,7 @@ void KRDPServerConfig::toggleServer(const bool enabled)
     if (enabled) {
         createRestoreToken();
     }
+    updateServerStatus();
 }
 
 void KRDPServerConfig::restartServer()
@@ -280,7 +280,7 @@ void KRDPServerConfig::restartServer()
     auto pendingCall = QDBusConnection::sessionBus().asyncCall(restartMsg);
     auto watcher = new QDBusPendingCallWatcher(pendingCall, this);
     connect(watcher, &QDBusPendingCallWatcher::finished, this, [&](QDBusPendingCallWatcher *w) {
-        checkServerState();
+        updateServerStatus();
         w->deleteLater();
     });
 }
@@ -326,7 +326,7 @@ void KRDPServerConfig::generateCertificate()
     m_serverSettings->save();
 }
 
-void KRDPServerConfig::checkServerState()
+void KRDPServerConfig::updateServerStatus()
 {
     auto msg = QDBusMessage::createMethodCall(dbusSystemdDestination, dbusKrdpServerServicePath, dbusSystemdPropertiesInterface, u"Get"_s);
     msg.setArguments({u"org.freedesktop.systemd1.Unit"_s, u"ActiveState"_s});
@@ -334,30 +334,57 @@ void KRDPServerConfig::checkServerState()
     QDBusPendingCall pcall = QDBusConnection::sessionBus().asyncCall(msg);
     auto watcher = new QDBusPendingCallWatcher(pcall, this);
 
-    connect(watcher, &QDBusPendingCallWatcher::finished, this, [&](QDBusPendingCallWatcher *w) {
+    connect(watcher, &QDBusPendingCallWatcher::finished, this, [this](QDBusPendingCallWatcher *w) {
         QDBusPendingReply<QVariant> reply(*w);
         const QString replyString = reply.value().toString();
-        if (replyString == u"active"_s || replyString == u"activating"_s || replyString == u"reloading"_s) {
-            Q_EMIT serverRunning(true);
+        if (replyString == u"active"_s || replyString == u"reloading"_s) {
+            setServerStatus(Status::Running);
         } else if (replyString == u"failed"_s) {
             auto invocationIdMsg = QDBusMessage::createMethodCall(dbusSystemdDestination, dbusKrdpServerServicePath, dbusSystemdPropertiesInterface, u"Get"_s);
             invocationIdMsg.setArguments({u"org.freedesktop.systemd1.Unit"_s, u"InvocationID"_s});
 
             QDBusPendingCall pcall = QDBusConnection::sessionBus().asyncCall(invocationIdMsg);
             auto idWatcher = new QDBusPendingCallWatcher(pcall, this);
-            connect(idWatcher, &QDBusPendingCallWatcher::finished, this, [&](QDBusPendingCallWatcher *w) {
+            connect(idWatcher, &QDBusPendingCallWatcher::finished, this, [this](QDBusPendingCallWatcher *w) {
                 QDBusPendingReply<QDBusVariant> reply(*w);
-                auto replyString = QStringLiteral("%1").arg(reply.value().variant().toByteArray().toHex());
-                auto logs = getLastJournalEntries(u"app-org.kde.krdpserver.service"_s, replyString);
-                Q_EMIT serverStartFailed(logs.join(u"\n"_s));
+                const auto replyString = QStringLiteral("%1").arg(reply.value().variant().toByteArray().toHex());
+                setErrorMessage(getLastJournalEntries(u"app-org.kde.krdpserver.service"_s, replyString).join(u"\n"_s));
             });
 
-            Q_EMIT serverRunning(false);
+            setServerStatus(Status::Failed);
         } else if (replyString == u"inactive"_s) {
-            Q_EMIT serverRunning(false);
+            setServerStatus(Status::Stopped);
+        } else {
+            setServerStatus(Status::Unknown);
         }
         w->deleteLater();
     });
+}
+
+KRDPServerConfig::Status KRDPServerConfig::serverStatus() const
+{
+    return m_currentServerStatus;
+}
+
+void KRDPServerConfig::setServerStatus(Status status)
+{
+    if (m_currentServerStatus != status) {
+        m_currentServerStatus = status;
+        Q_EMIT serverStatusChanged();
+    }
+}
+
+QString KRDPServerConfig::errorMessage() const
+{
+    return m_lastErrorMessage;
+}
+
+void KRDPServerConfig::setErrorMessage(const QString &errorMessage)
+{
+    if (m_lastErrorMessage != errorMessage) {
+        m_lastErrorMessage = errorMessage;
+        Q_EMIT errorMessageChanged();
+    }
 }
 
 QStringList KRDPServerConfig::getLastJournalEntries(const QString &unit, const QString &invocationId)
@@ -366,7 +393,7 @@ QStringList KRDPServerConfig::getLastJournalEntries(const QString &unit, const Q
 
     int returnValue = sd_journal_open(&journal, (SD_JOURNAL_LOCAL_ONLY | SD_JOURNAL_CURRENT_USER));
     if (returnValue != 0) {
-        Q_EMIT serverStartFailed(i18n("Failed to open journal to read the error messages."));
+        qCWarning(KRDPKCM) << "Failed to open journal to read the error messages.";
         sd_journal_close(journal);
         return {};
     }
@@ -444,7 +471,7 @@ void KRDPServerConfig::copyAddressToClipboard(const QString &address)
 
 void KRDPServerConfig::servicePropertiesChanged()
 {
-    checkServerState();
+    updateServerStatus();
 }
 
 #include "kcmkrdpserver.moc"
