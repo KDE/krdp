@@ -317,9 +317,7 @@ msgid "Restart Server"
 msgstr "Server neu starten"
 
 #: ui/UserListView.qml:21
-#, fuzzy, kde-format
-#| msgctxt "@title"
-#| msgid "Usernames"
+#, kde-format
 msgctxt "@title"
 msgid "Usernames"
 msgstr "Benutzernamen"
