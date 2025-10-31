@@ -41,6 +41,7 @@ KRDPServerConfig::KRDPServerConfig(QObject *parent, const KPluginMetaData &data)
     , m_serverSettings(new KRDPServerSettings(this))
     , m_usersModel(new UsersModel(m_serverSettings, this))
 {
+    qmlRegisterUncreatableMetaObject(SystemdService::staticMetaObject, "org.kde.plasma.private.kcm_krdpserver", 1, 0, "SystemdServiceState", QString());
     setButtons(Help | Apply | Default);
 
     auto recorder = PipeWireRecord();
@@ -338,7 +339,7 @@ void KRDPServerConfig::updateServerStatus()
         QDBusPendingReply<QVariant> reply(*w);
         const QString replyString = reply.value().toString();
         if (replyString == u"active"_s || replyString == u"reloading"_s) {
-            setServerStatus(Status::Running);
+            setServerStatus(SystemdService::Status::Running);
         } else if (replyString == u"failed"_s) {
             auto invocationIdMsg = QDBusMessage::createMethodCall(dbusSystemdDestination, dbusKrdpServerServicePath, dbusSystemdPropertiesInterface, u"Get"_s);
             invocationIdMsg.setArguments({u"org.freedesktop.systemd1.Unit"_s, u"InvocationID"_s});
@@ -351,22 +352,22 @@ void KRDPServerConfig::updateServerStatus()
                 setErrorMessage(getLastJournalEntries(u"app-org.kde.krdpserver.service"_s, replyString).join(u"\n"_s));
             });
 
-            setServerStatus(Status::Failed);
+            setServerStatus(SystemdService::Status::Failed);
         } else if (replyString == u"inactive"_s) {
-            setServerStatus(Status::Stopped);
+            setServerStatus(SystemdService::Status::Stopped);
         } else {
-            setServerStatus(Status::Unknown);
+            setServerStatus(SystemdService::Status::Unknown);
         }
         w->deleteLater();
     });
 }
 
-KRDPServerConfig::Status KRDPServerConfig::serverStatus() const
+SystemdService::Status KRDPServerConfig::serverStatus() const
 {
     return m_currentServerStatus;
 }
 
-void KRDPServerConfig::setServerStatus(Status status)
+void KRDPServerConfig::setServerStatus(SystemdService::Status status)
 {
     if (m_currentServerStatus != status) {
         m_currentServerStatus = status;

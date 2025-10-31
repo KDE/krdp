@@ -8,6 +8,7 @@ import QtQuick.Layouts
 import QtQuick.Dialogs as QtDialogs
 import org.kde.kirigami as Kirigami
 import org.kde.kcmutils as KCM
+import org.kde.plasma.private.kcm_krdpserver
 
 KCM.ScrollViewKCM {
     id: root
@@ -19,6 +20,9 @@ KCM.ScrollViewKCM {
     property bool kcmJustOpened: true
 
     extraFooterTopPadding: true // This makes separator below scrollview visible
+
+	Component.onCompleted: console.log("DAVE", SystemdServiceState.Running);
+
 
     EditUserModal {
         id: editUserModal
@@ -61,6 +65,7 @@ KCM.ScrollViewKCM {
             if (kcm.serverStatus === 3) {
                 toggleServerSwitch.checked = false;
             }
+            startupErrorMessage.visible = (kcm.serverStatus === 3 && !root.kcmJustOpened);
         }
     }
 
@@ -129,7 +134,6 @@ KCM.ScrollViewKCM {
             id: startupErrorMessage
             type: Kirigami.MessageType.Error
             showCloseButton: true
-            visible: kcm.serverStatus === 3 && !root.kcmJustOpened
             position: Kirigami.InlineMessage.Position.Header
             Layout.fillWidth: true
             text: xi18nc("@info:status", "Error message from the RDP server:<nl/>%1", kcm.errorMessage)
