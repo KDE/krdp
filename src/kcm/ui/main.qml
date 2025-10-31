@@ -128,6 +128,7 @@ KCM.ScrollViewKCM {
         Kirigami.InlineMessage {
             id: startupErrorMessage
             type: Kirigami.MessageType.Error
+            showCloseButton: true
             visible: kcm.serverStatus === 3 && !root.kcmJustOpened
             position: Kirigami.InlineMessage.Position.Header
             Layout.fillWidth: true
