@@ -61,6 +61,7 @@ KCM.ScrollViewKCM {
             if (kcm.serverStatus === 3) {
                 toggleServerSwitch.checked = false;
             }
+            startupErrorMessage.visible = (kcm.serverStatus === 3 && !root.kcmJustOpened);
         }
     }
 
@@ -129,7 +130,6 @@ KCM.ScrollViewKCM {
             id: startupErrorMessage
             type: Kirigami.MessageType.Error
             showCloseButton: true
-            visible: kcm.serverStatus === 3 && !root.kcmJustOpened
             position: Kirigami.InlineMessage.Position.Header
             Layout.fillWidth: true
             text: xi18nc("@info:status", "Error message from the RDP server:<nl/>%1", kcm.errorMessage)
