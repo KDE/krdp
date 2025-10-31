@@ -131,7 +131,7 @@ KCM.ScrollViewKCM {
             visible: kcm.serverStatus === 3 && !root.kcmJustOpened
             position: Kirigami.InlineMessage.Position.Header
             Layout.fillWidth: true
-            text: i18nc("@info:status", "Error message from the RDP server:\n%1", kcm.errorMessage)
+            text: xi18nc("@info:status", "Error message from the RDP server:<nl/>%1", kcm.errorMessage)
         }
 
         // Non-InlineMessage header content does need margins; put it all in here
