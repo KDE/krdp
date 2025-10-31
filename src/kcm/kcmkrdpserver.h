@@ -12,6 +12,18 @@
 class KRDPServerConfigImpl;
 class QAbstractItemModel;
 
+namespace SystemdService
+{
+Q_NAMESPACE
+enum Status {
+    Unknown,
+    Running,
+    Stopped,
+    Failed
+};
+Q_ENUM_NS(Status);
+}
+
 class KRDPServerConfig : public KQuickManagedConfigModule
 {
     Q_OBJECT
@@ -19,15 +31,7 @@ public:
     explicit KRDPServerConfig(QObject *parent, const KPluginMetaData &data);
     ~KRDPServerConfig() override;
 
-    enum Status {
-        Unknown,
-        Running,
-        Stopped,
-        Failed
-    };
-    Q_ENUM(Status);
-
-    Q_PROPERTY(Status serverStatus READ serverStatus NOTIFY serverStatusChanged);
+    Q_PROPERTY(SystemdService::Status serverStatus READ serverStatus NOTIFY serverStatusChanged);
     Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY errorMessageChanged);
 
     Q_PROPERTY(QString hostName READ hostName CONSTANT)
@@ -60,7 +64,7 @@ public:
     };
 
     Q_INVOKABLE void updateServerStatus();
-    Status serverStatus() const;
+    SystemdService::Status serverStatus() const;
     QString errorMessage() const;
 
     QString hostName() const;
@@ -84,7 +88,7 @@ Q_SIGNALS:
     void errorMessageChanged();
 
 private:
-    void setServerStatus(Status status);
+    void setServerStatus(SystemdService::Status status);
     void setErrorMessage(const QString &errorMessage);
     void createRestoreToken();
     QStringList getLastJournalEntries(const QString &unit, const QString &invocationId);
@@ -93,6 +97,6 @@ private:
     UsersModel *m_usersModel;
     Q_SLOT void servicePropertiesChanged();
     bool m_isH264Supported { false };
-    Status m_currentServerStatus;
+    SystemdService::Status m_currentServerStatus;
     QString m_lastErrorMessage;
 };

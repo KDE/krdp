@@ -8,6 +8,7 @@ import QtQuick.Layouts
 import QtQuick.Dialogs as QtDialogs
 import org.kde.kirigami as Kirigami
 import org.kde.kcmutils as KCM
+import org.kde.plasma.private.kcm_krdpserver
 
 KCM.ScrollViewKCM {
     id: root
@@ -54,14 +55,13 @@ KCM.ScrollViewKCM {
             keychainErrorDialog.open();
         }
         function onServerStatusChanged() : void {
-            // TODO: why cant i access kcm.Status like kcm.Failed?
-            if (kcm.serverStatus === 1) {
+            if (kcm.serverStatus === SystemdServiceState.Running) {
                 toggleServerSwitch.checked = true;
             }
-            if (kcm.serverStatus === 3) {
+            if (kcm.serverStatus === SystemdServiceState.Failed) {
                 toggleServerSwitch.checked = false;
             }
-            startupErrorMessage.visible = (kcm.serverStatus === 3 && !root.kcmJustOpened);
+            startupErrorMessage.visible = (kcm.serverStatus === SystemdServiceState.Failed && !root.kcmJustOpened);
         }
     }
 
