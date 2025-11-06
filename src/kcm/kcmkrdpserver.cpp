@@ -12,6 +12,7 @@
 #include <QClipboard>
 #include <QDBusArgument>
 #include <QDBusConnection>
+#include <QDBusPendingCallWatcher>
 #include <QDBusReply>
 #include <QDir>
 #include <QFileInfo>
@@ -268,6 +269,7 @@ void KRDPServerConfig::toggleServer(const bool enabled)
     if (enabled) {
         createRestoreToken();
     }
+    updateServerStatus();
 }
 
 void KRDPServerConfig::restartServer()
@@ -278,7 +280,7 @@ void KRDPServerConfig::restartServer()
     auto pendingCall = QDBusConnection::sessionBus().asyncCall(restartMsg);
     auto watcher = new QDBusPendingCallWatcher(pendingCall, this);
     connect(watcher, &QDBusPendingCallWatcher::finished, this, [&](QDBusPendingCallWatcher *w) {
-        checkServerRunning();
+        updateServerStatus();
         w->deleteLater();
     });
 }
@@ -324,20 +326,173 @@ void KRDPServerConfig::generateCertificate()
     m_serverSettings->save();
 }
 
-void KRDPServerConfig::checkServerRunning()
+void KRDPServerConfig::updateServerStatus()
 {
-    // Checks if there is PID, and if there is, process is running.
     auto msg = QDBusMessage::createMethodCall(dbusSystemdDestination, dbusKrdpServerServicePath, dbusSystemdPropertiesInterface, u"Get"_s);
-    msg.setArguments({u"org.freedesktop.systemd1.Service"_s, u"MainPID"_s});
+    msg.setArguments({u"org.freedesktop.systemd1.Unit"_s, u"ActiveState"_s});
 
     QDBusPendingCall pcall = QDBusConnection::sessionBus().asyncCall(msg);
     auto watcher = new QDBusPendingCallWatcher(pcall, this);
 
-    connect(watcher, &QDBusPendingCallWatcher::finished, this, [&](QDBusPendingCallWatcher *w) {
+    connect(watcher, &QDBusPendingCallWatcher::finished, this, [this](QDBusPendingCallWatcher *w) {
         QDBusPendingReply<QVariant> reply(*w);
-        Q_EMIT serverRunning(reply.value().toInt() > 0 ? true : false);
+        const QString replyString = reply.value().toString();
+        if (replyString == "active"_L1 || replyString == "reloading"_L1) {
+            setServerStatus(SystemdService::Status::Running);
+        } else if (replyString == "failed"_L1) {
+            auto invocationIdMsg = QDBusMessage::createMethodCall(dbusSystemdDestination, dbusKrdpServerServicePath, dbusSystemdPropertiesInterface, u"Get"_s);
+            invocationIdMsg.setArguments({u"org.freedesktop.systemd1.Unit"_s, u"InvocationID"_s});
+
+            QDBusPendingCall pcall = QDBusConnection::sessionBus().asyncCall(invocationIdMsg);
+            auto idWatcher = new QDBusPendingCallWatcher(pcall, this);
+            connect(idWatcher, &QDBusPendingCallWatcher::finished, this, [this](QDBusPendingCallWatcher *w) {
+                QDBusPendingReply<QDBusVariant> reply(*w);
+                const auto replyString = QString::fromUtf8(reply.value().variant().toByteArray().toHex());
+                setErrorMessage(getLastJournalEntries(u"app-org.kde.krdpserver.service"_s, replyString).join("\n"_L1));
+            });
+
+            setServerStatus(SystemdService::Status::Failed);
+        } else if (replyString == "inactive"_L1) {
+            setServerStatus(SystemdService::Status::Stopped);
+        } else {
+            setServerStatus(SystemdService::Status::Unknown);
+            qWarning(KRDPKCM) << "Systemd unit replied with unknown reply: " << replyString;
+        }
         w->deleteLater();
     });
+}
+
+SystemdService::Status KRDPServerConfig::serverStatus() const
+{
+    return m_currentServerStatus;
+}
+
+void KRDPServerConfig::setServerStatus(SystemdService::Status status)
+{
+    if (m_currentServerStatus != status) {
+        m_currentServerStatus = status;
+        Q_EMIT serverStatusChanged();
+    }
+}
+
+bool KRDPServerConfig::isServerRunning() const
+{
+    switch (m_currentServerStatus) {
+    case SystemdService::Running:
+        return true;
+    case SystemdService::Unknown:
+    case SystemdService::Stopped:
+    case SystemdService::Failed:
+        return false;
+    }
+    qFatal("Unhandled SystemdService::Status value");
+    return false;
+}
+
+QString KRDPServerConfig::errorMessage() const
+{
+    return m_lastErrorMessage;
+}
+
+void KRDPServerConfig::setErrorMessage(const QString &errorMessage)
+{
+    m_lastErrorMessage = errorMessage;
+    Q_EMIT errorMessageChanged();
+}
+
+QString KRDPServerConfig::journalValue(sd_journal *journal, const QString &field)
+{
+    size_t length = 0;
+    const void *data = nullptr;
+    auto returnValue = sd_journal_get_data(journal, field.toStdString().c_str(), &data, &length);
+    QString line;
+    if (returnValue == 0) {
+        line = (QString::fromUtf8(static_cast<const char *>(data), narrow<qsizetype>(length)).section(u'=', 1));
+    }
+    return line;
+}
+
+QStringList KRDPServerConfig::getLastJournalEntries(const QString &unit, const QString &invocationId)
+{
+    sd_journal *journal = nullptr;
+    auto cleanup = qScopeGuard([journal] {
+        sd_journal_close(journal);
+    });
+
+    int returnValue = sd_journal_open(&journal, (SD_JOURNAL_LOCAL_ONLY | SD_JOURNAL_CURRENT_USER));
+    if (returnValue != 0) {
+        qCWarning(KRDPKCM) << "Failed to open journal to read the error messages.";
+        return {};
+    }
+
+    sd_journal_flush_matches(journal);
+
+    const QString match1 = QStringLiteral("USER_UNIT=%1").arg(unit);
+    returnValue = sd_journal_add_match(journal, match1.toUtf8().constData(), 0);
+    if (returnValue != 0) {
+        qCWarning(KRDPKCM) << "Failed to add a match " << match1 << " to journal, return value is " << returnValue;
+        return {};
+    }
+
+    returnValue = sd_journal_add_disjunction(journal);
+    if (returnValue != 0) {
+        qCWarning(KRDPKCM) << "Failed to add a disjunction to journal, return value is " << returnValue;
+        return {};
+    }
+
+    const QString match2 = QStringLiteral("_SYSTEMD_USER_UNIT=%1").arg(unit);
+    returnValue = sd_journal_add_match(journal, match2.toUtf8().constData(), 0);
+    if (returnValue != 0) {
+        qCWarning(KRDPKCM) << "Failed to add a match " << match2 << " to journal, return value is " << returnValue;
+        return {};
+    }
+
+    returnValue = sd_journal_add_conjunction(journal);
+    if (returnValue != 0) {
+        qCWarning(KRDPKCM) << "Failed to add a conjunction to journal, return value is " << returnValue;
+        return {};
+    }
+
+    const QString match3 = QStringLiteral("_SYSTEMD_INVOCATION_ID=%1").arg(invocationId);
+    returnValue = sd_journal_add_match(journal, match3.toUtf8().constData(), 0);
+    if (returnValue != 0) {
+        qCWarning(KRDPKCM) << "Failed to add a match " << match3 << " to journal, return value is " << returnValue;
+        return {};
+    }
+
+    returnValue = sd_journal_add_conjunction(journal);
+    if (returnValue != 0) {
+        qCWarning(KRDPKCM) << "Failed to add a conjunction to journal, return value is " << returnValue;
+        return {};
+    }
+
+    const QString match4 = QStringLiteral("SYSLOG_IDENTIFIER=krdpserver");
+    returnValue = sd_journal_add_match(journal, match4.toUtf8().constData(), 0);
+    if (returnValue != 0) {
+        qCWarning(KRDPKCM) << "Failed to add a match " << match4 << " to journal, return value is " << returnValue;
+        return {};
+    }
+
+    returnValue = sd_journal_seek_tail(journal);
+    if (returnValue != 0) {
+        qCWarning(KRDPKCM) << "Could not seek the tail of the journal, return value is " << returnValue;
+        return {};
+    }
+
+    QStringList reply;
+
+    while (sd_journal_previous(journal) != 0) {
+        // Get the message itself
+        reply << journalValue(journal, "MESSAGE"_L1);
+    }
+
+    if (reply.isEmpty()) {
+        qCDebug(KRDPKCM) << "Journal for KRDP Unit with invocationId" << invocationId << "is empty.";
+    } else {
+        qCDebug(KRDPKCM) << "Journal for KRPD Unit with invocationId" << invocationId << "replied:" << reply;
+    }
+
+    return reply;
 }
 
 void KRDPServerConfig::copyAddressToClipboard(const QString &address)
@@ -347,7 +502,7 @@ void KRDPServerConfig::copyAddressToClipboard(const QString &address)
 
 void KRDPServerConfig::servicePropertiesChanged()
 {
-    checkServerRunning();
+    updateServerStatus();
 }
 
 #include "kcmkrdpserver.moc"

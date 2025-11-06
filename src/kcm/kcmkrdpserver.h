@@ -8,9 +8,22 @@
 #include "usersmodel.h"
 #include <KQuickManagedConfigModule>
 #include <qt6keychain/keychain.h>
+#include <systemd/sd-journal.h>
 
 class KRDPServerConfigImpl;
 class QAbstractItemModel;
+
+namespace SystemdService
+{
+Q_NAMESPACE
+enum Status {
+    Unknown,
+    Running,
+    Stopped,
+    Failed
+};
+Q_ENUM_NS(Status);
+}
 
 class KRDPServerConfig : public KQuickManagedConfigModule
 {
@@ -18,6 +31,9 @@ class KRDPServerConfig : public KQuickManagedConfigModule
 public:
     explicit KRDPServerConfig(QObject *parent, const KPluginMetaData &data);
     ~KRDPServerConfig() override;
+
+    Q_PROPERTY(SystemdService::Status serverStatus READ serverStatus NOTIFY serverStatusChanged);
+    Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY errorMessageChanged);
 
     Q_PROPERTY(QString hostName READ hostName CONSTANT)
     Q_PROPERTY(bool managementAvailable READ managementAvailable CONSTANT)
@@ -42,12 +58,17 @@ public:
     Q_INVOKABLE void restartServer();
 
     Q_INVOKABLE void generateCertificate();
-    Q_INVOKABLE void checkServerRunning();
     Q_INVOKABLE void copyAddressToClipboard(const QString &address);
     Q_INVOKABLE KRDPServerSettings *settings() const
     {
         return m_serverSettings;
     };
+
+    Q_INVOKABLE void updateServerStatus();
+    SystemdService::Status serverStatus() const;
+    Q_INVOKABLE [[nodiscard]] bool isServerRunning() const;
+
+    QString errorMessage() const;
 
     QString hostName() const;
     bool managementAvailable() const;
@@ -66,12 +87,31 @@ Q_SIGNALS:
     void generateCertificateFailed();
     void passwordLoaded(const QString &user, const QString &password);
     void keychainError(const QString &errorText);
-    void serverRunning(const bool &isServerRunning);
+    void serverStatusChanged();
+    void errorMessageChanged();
+    void isServerRunningChanged();
 
 private:
+    void setServerStatus(SystemdService::Status status);
+    void setErrorMessage(const QString &errorMessage);
     void createRestoreToken();
+    QStringList getLastJournalEntries(const QString &unit, const QString &invocationId);
+    QString journalValue(sd_journal *journal, const QString &field);
+
     KRDPServerSettings *m_serverSettings;
     UsersModel *m_usersModel;
     Q_SLOT void servicePropertiesChanged();
     bool m_isH264Supported { false };
+    SystemdService::Status m_currentServerStatus;
+    QString m_lastErrorMessage;
+
+    template<typename Output, typename Input>
+    Output narrow(Input i)
+    {
+        Output o = i;
+        if (i != Input(o)) {
+            std::abort();
+        }
+        return o;
+    }
 };

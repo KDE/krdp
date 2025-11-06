@@ -62,6 +62,7 @@ target_link_libraries(kcm_krdpserver PRIVATE
     KF6::KCMUtilsQuick
     KF6::I18n
     K::KPipeWireRecord
+    Systemd::systemd
 )
 
 ecm_qt_install_logging_categories(EXPORT kcm_krdpserver DESTINATION ${KDE_INSTALL_LOGGINGCATEGORIESDIR})

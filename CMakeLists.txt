@@ -59,6 +59,9 @@ if(BUILD_PLASMA_SESSION)
     find_package(PlasmaWaylandProtocols REQUIRED)
 endif()
 
+find_package(Systemd 254)
+set_package_properties(Systemd PROPERTIES TYPE REQUIRED PURPOSE "Required by KCM to activate the KRDP Server units.")
+
 find_package(PAM REQUIRED)
 set_package_properties(PAM PROPERTIES DESCRIPTION "PAM Libraries"
                        URL "https://www.kernel.org/pub/linux/libs/pam/"

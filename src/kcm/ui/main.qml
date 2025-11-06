@@ -14,6 +14,10 @@ KCM.ScrollViewKCM {
 
     property var settings: kcm.settings()
 
+    // Used to avoid showing error when KCM is opened first time
+    // and last run ended in an error, to avoid confusing users.
+    property bool kcmJustOpened: true
+
     extraFooterTopPadding: true // This makes separator below scrollview visible
 
     EditUserModal {
@@ -49,8 +53,9 @@ KCM.ScrollViewKCM {
             keychainErrorDialog.errorText = errorText;
             keychainErrorDialog.open();
         }
-        function onServerRunning(isServerRunning: bool): void {
-            toggleServerSwitch.checked = isServerRunning;
+        function onServerStatusChanged() : void {
+            toggleServerSwitch.checked = kcm.isServerRunning();
+            serverAddressLayout.visible = kcm.isServerRunning();
         }
     }
 
@@ -73,15 +78,16 @@ KCM.ScrollViewKCM {
             text: i18nc("@option:check Enable RDP server", "Enable RDP server")
             checkable: true
             visible: kcm.managementAvailable
-            Component.onCompleted: {
-                kcm.checkServerRunning();
-            }
             onTriggered: source => {
+                root.kcmJustOpened = false;
                 kcm.toggleServer(source.checked);
                 if (!source.checked) {
                     // If we manually toggle the check off, always turn off the warning
                     restartServerWarning.visible = false;
                 }
+            }
+            Component.onCompleted: {
+                kcm.updateServerStatus();
             }
             displayComponent: QQC2.Switch {
                 action: toggleServerSwitch
@@ -114,6 +120,20 @@ KCM.ScrollViewKCM {
             text: i18nc("@info:status", "Systemd not found. krdpserver will require manual activation.")
         }
 
+        Kirigami.InlineMessage {
+            id: startupErrorMessage
+            type: Kirigami.MessageType.Error
+            showCloseButton: true
+            position: Kirigami.InlineMessage.Position.Header
+            Layout.fillWidth: true
+            text: xi18nc("@info:status", "Error message from the RDP server:<nl/>%1", kcm.errorMessage)
+        }
+        // Closing the error message breaks the visibility binding, so handle it separately here
+        Binding {
+            target: startupErrorMessage
+            property: "visible"
+            value: (kcm.errorMessage !== "" && !root.kcmJustOpened)
+        }
         // Non-InlineMessage header content does need margins; put it all in here
         // so we can do that in a single place
         ColumnLayout {
@@ -140,9 +160,10 @@ KCM.ScrollViewKCM {
             // ...But here we want zero spacing again since otherwise the delegates
             // take up too much vertical space
             ColumnLayout {
+                id: serverAddressLayout
                 spacing: 0
                 Layout.fillWidth: true
-                visible: toggleServerSwitch.checked
+                visible: false
 
                 Repeater {
                     id: addressesRepeater
