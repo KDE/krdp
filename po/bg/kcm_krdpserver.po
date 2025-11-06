@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-21 00:43+0000\n"
+"POT-Creation-Date: 2025-11-06 15:22+0000\n"
 "PO-Revision-Date: 2025-10-21 13:43+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
@@ -155,19 +155,25 @@ msgctxt "@info"
 msgid "Received following error with password keychain: %1"
 msgstr "Получена е следната грешка с ключодържателя на паролата: %1"
 
-#: ui/main.qml:73
+#: ui/main.qml:78
 #, kde-format
 msgctxt "@option:check Enable RDP server"
 msgid "Enable RDP server"
 msgstr "Активиране на RDP сървър"
 
-#: ui/main.qml:114
+#: ui/main.qml:120
 #, kde-format
 msgctxt "@info:status"
 msgid "Systemd not found. krdpserver will require manual activation."
 msgstr "Systemd не е намерен. krdpserver ще изисква ръчна активация."
 
-#: ui/main.qml:124 ui/main_phone.qml:101
+#: ui/main.qml:129
+#, kde-kuit-format
+msgctxt "@info:status"
+msgid "Error message from the RDP server:<nl/>%1"
+msgstr ""
+
+#: ui/main.qml:144 ui/main_phone.qml:101
 #, kde-format
 msgid ""
 "Set up remote login to connect using apps supporting the “RDP” remote "
@@ -176,85 +182,85 @@ msgstr ""
 "Настройте дистанционно влизане, за да се свържете с помощта на приложения, "
 "поддържащи протокола за отдалечен работен плот „RDP“."
 
-#: ui/main.qml:133
+#: ui/main.qml:153
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Use any of the following addresses to connect to this device:"
 msgstr "Използване на някой от следните адреси, за връзка с това устройство:"
 
-#: ui/main.qml:165 ui/main_phone.qml:157
+#: ui/main.qml:186 ui/main_phone.qml:157
 #, kde-format
 msgctxt "@action:button"
 msgid "Copy Address to Clipboard"
 msgstr "Копиране на адреса в клипборда"
 
-#: ui/main.qml:192
+#: ui/main.qml:213
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Server Settings"
 msgstr "Настройки на сървъра"
 
-#: ui/main.qml:198
+#: ui/main.qml:219
 #, kde-format
 msgctxt "@option:check"
 msgid "Autostart on login"
 msgstr "Автоматично стартиране при влизане"
 
-#: ui/main.qml:214
+#: ui/main.qml:235
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Listening Port:"
 msgstr "Порт за следене:"
 
-#: ui/main.qml:229
+#: ui/main.qml:250
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Video quality:"
 msgstr "Качество на видеото:"
 
-#: ui/main.qml:248
+#: ui/main.qml:269
 #, kde-format
 msgctxt "@label:slider"
 msgid "Responsiveness"
 msgstr "Скорост на реакция"
 
-#: ui/main.qml:254
+#: ui/main.qml:275
 #, kde-format
 msgctxt "@label:slider"
 msgid "Quality"
 msgstr "Качество"
 
-#: ui/main.qml:261
+#: ui/main.qml:282
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Security Certificates"
 msgstr "Сертификати за сигурност"
 
-#: ui/main.qml:266
+#: ui/main.qml:287
 #, kde-format
 msgctxt "@label:check generate security certificates automatically"
 msgid "Generate automatically"
 msgstr "Автоматично генериране"
 
-#: ui/main.qml:284
+#: ui/main.qml:305
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate path:"
 msgstr "Път на сертификата:"
 
-#: ui/main.qml:299
+#: ui/main.qml:320
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate File…"
 msgstr "Избиране на файл със сертификат..."
 
-#: ui/main.qml:311
+#: ui/main.qml:332
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate key path:"
 msgstr "Път на ключа на сертификата:"
 
-#: ui/main.qml:327
+#: ui/main.qml:348
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate Key File…"

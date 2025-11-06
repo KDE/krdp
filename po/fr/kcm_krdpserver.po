@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-21 00:43+0000\n"
+"POT-Creation-Date: 2025-11-06 15:22+0000\n"
 "PO-Revision-Date: 2025-10-22 09:21+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: French <French <kde-francophone@kde.org>>\n"
@@ -154,13 +154,13 @@ msgctxt "@info"
 msgid "Received following error with password keychain: %1"
 msgstr "Erreur suivante reçue avec le trousseau de mots de passe : %1"
 
-#: ui/main.qml:73
+#: ui/main.qml:78
 #, kde-format
 msgctxt "@option:check Enable RDP server"
 msgid "Enable RDP server"
 msgstr "Activer le serveur « RDP »"
 
-#: ui/main.qml:114
+#: ui/main.qml:120
 #, kde-format
 msgctxt "@info:status"
 msgid "Systemd not found. krdpserver will require manual activation."
@@ -168,7 +168,13 @@ msgstr ""
 "Impossible de trouver le module « systemd ». Le module « krdpserver » "
 "nécessitera une activation manuelle."
 
-#: ui/main.qml:124 ui/main_phone.qml:101
+#: ui/main.qml:129
+#, kde-kuit-format
+msgctxt "@info:status"
+msgid "Error message from the RDP server:<nl/>%1"
+msgstr ""
+
+#: ui/main.qml:144 ui/main_phone.qml:101
 #, kde-format
 msgid ""
 "Set up remote login to connect using apps supporting the “RDP” remote "
@@ -177,86 +183,86 @@ msgstr ""
 "Configurez la connexion à distance pour vous connecter à l'aide "
 "d'applications prenant en charge le protocole de bureau à distance « RDP »."
 
-#: ui/main.qml:133
+#: ui/main.qml:153
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Use any of the following addresses to connect to this device:"
 msgstr ""
 "Utilisez l'une des adresses suivantes pour vous connecter à ce périphérique :"
 
-#: ui/main.qml:165 ui/main_phone.qml:157
+#: ui/main.qml:186 ui/main_phone.qml:157
 #, kde-format
 msgctxt "@action:button"
 msgid "Copy Address to Clipboard"
 msgstr "Copier l'adresse dans le presse-papier"
 
-#: ui/main.qml:192
+#: ui/main.qml:213
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Server Settings"
 msgstr "Configuration du serveur"
 
-#: ui/main.qml:198
+#: ui/main.qml:219
 #, kde-format
 msgctxt "@option:check"
 msgid "Autostart on login"
 msgstr "Démarrer automatiquement à la connexion"
 
-#: ui/main.qml:214
+#: ui/main.qml:235
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Listening Port:"
 msgstr "Port en écoute :"
 
-#: ui/main.qml:229
+#: ui/main.qml:250
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Video quality:"
 msgstr "Qualité vidéo :"
 
-#: ui/main.qml:248
+#: ui/main.qml:269
 #, kde-format
 msgctxt "@label:slider"
 msgid "Responsiveness"
 msgstr "Réactivité"
 
-#: ui/main.qml:254
+#: ui/main.qml:275
 #, kde-format
 msgctxt "@label:slider"
 msgid "Quality"
 msgstr "Qualité"
 
-#: ui/main.qml:261
+#: ui/main.qml:282
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Security Certificates"
 msgstr "Certificats de sécurité"
 
-#: ui/main.qml:266
+#: ui/main.qml:287
 #, kde-format
 msgctxt "@label:check generate security certificates automatically"
 msgid "Generate automatically"
 msgstr "Générer automatiquement"
 
-#: ui/main.qml:284
+#: ui/main.qml:305
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate path:"
 msgstr "Emplacement du certificat :"
 
-#: ui/main.qml:299
+#: ui/main.qml:320
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate File…"
 msgstr "Sélectionner un fichier de certificat…"
 
-#: ui/main.qml:311
+#: ui/main.qml:332
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate key path:"
 msgstr "Emplacement de la clé du certificat :"
 
-#: ui/main.qml:327
+#: ui/main.qml:348
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate Key File…"

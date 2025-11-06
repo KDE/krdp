@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-21 00:43+0000\n"
+"POT-Creation-Date: 2025-11-06 15:22+0000\n"
 "PO-Revision-Date: 2024-08-08 22:05+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
@@ -155,19 +155,25 @@ msgctxt "@info"
 msgid "Received following error with password keychain: %1"
 msgstr "Fekk følgjande feilmelding med passord-nøkkelring: %1"
 
-#: ui/main.qml:73
+#: ui/main.qml:78
 #, kde-format
 msgctxt "@option:check Enable RDP server"
 msgid "Enable RDP server"
 msgstr "Bruk RDP-tenar"
 
-#: ui/main.qml:114
+#: ui/main.qml:120
 #, kde-format
 msgctxt "@info:status"
 msgid "Systemd not found. krdpserver will require manual activation."
 msgstr ""
 
-#: ui/main.qml:124 ui/main_phone.qml:101
+#: ui/main.qml:129
+#, kde-kuit-format
+msgctxt "@info:status"
+msgid "Error message from the RDP server:<nl/>%1"
+msgstr ""
+
+#: ui/main.qml:144 ui/main_phone.qml:101
 #, kde-format
 msgid ""
 "Set up remote login to connect using apps supporting the “RDP” remote "
@@ -176,85 +182,85 @@ msgstr ""
 "Set opp ekstern innlogging for å kopla til med appar som støttar «eksternt "
 "skrivebord»-protokollen RDP."
 
-#: ui/main.qml:133
+#: ui/main.qml:153
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Use any of the following addresses to connect to this device:"
 msgstr "Bruk ei av desse adressene til å kopla til eininga:"
 
-#: ui/main.qml:165 ui/main_phone.qml:157
+#: ui/main.qml:186 ui/main_phone.qml:157
 #, kde-format
 msgctxt "@action:button"
 msgid "Copy Address to Clipboard"
 msgstr "Kopier adressa til utklippstavla"
 
-#: ui/main.qml:192
+#: ui/main.qml:213
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Server Settings"
 msgstr "Tenarinnstillingar"
 
-#: ui/main.qml:198
+#: ui/main.qml:219
 #, kde-format
 msgctxt "@option:check"
 msgid "Autostart on login"
 msgstr "Start automatisk ved innlogging"
 
-#: ui/main.qml:214
+#: ui/main.qml:235
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Listening Port:"
 msgstr "Lytteport:"
 
-#: ui/main.qml:229
+#: ui/main.qml:250
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Video quality:"
 msgstr "Videokvalitet:"
 
-#: ui/main.qml:248
+#: ui/main.qml:269
 #, kde-format
 msgctxt "@label:slider"
 msgid "Responsiveness"
 msgstr "Reaksjonsevne"
 
-#: ui/main.qml:254
+#: ui/main.qml:275
 #, kde-format
 msgctxt "@label:slider"
 msgid "Quality"
 msgstr "Kvalitet"
 
-#: ui/main.qml:261
+#: ui/main.qml:282
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Security Certificates"
 msgstr "Tryggleikssertifikat"
 
-#: ui/main.qml:266
+#: ui/main.qml:287
 #, kde-format
 msgctxt "@label:check generate security certificates automatically"
 msgid "Generate automatically"
 msgstr "Generer automatisk"
 
-#: ui/main.qml:284
+#: ui/main.qml:305
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate path:"
 msgstr "Sertifikatadresse:"
 
-#: ui/main.qml:299
+#: ui/main.qml:320
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate File…"
 msgstr "Vel sertifikatfil …"
 
-#: ui/main.qml:311
+#: ui/main.qml:332
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate key path:"
 msgstr "Adresse til sertifikatnøkkel:"
 
-#: ui/main.qml:327
+#: ui/main.qml:348
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate Key File…"
