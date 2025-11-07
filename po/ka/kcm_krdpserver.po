@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-06 15:22+0000\n"
-"PO-Revision-Date: 2025-10-21 06:12+0200\n"
+"PO-Revision-Date: 2025-11-06 20:40+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -171,7 +171,7 @@ msgstr "Systemd აღმოჩენილი არაა. krdserver-ს ხ�
 #, kde-kuit-format
 msgctxt "@info:status"
 msgid "Error message from the RDP server:<nl/>%1"
-msgstr ""
+msgstr "შეცდომის შეტყობინება RDP სერვერიდან:<nl/>%1"
 
 #: ui/main.qml:144 ui/main_phone.qml:101
 #, kde-format
