@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-06 15:22+0000\n"
-"PO-Revision-Date: 2025-10-22 00:22+0200\n"
+"PO-Revision-Date: 2025-11-08 11:14+0100\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -173,7 +173,7 @@ msgstr "Systemd niet gevonden. krdpserver zal handmatige activatie vereisen."
 #, kde-kuit-format
 msgctxt "@info:status"
 msgid "Error message from the RDP server:<nl/>%1"
-msgstr ""
+msgstr "Foutmelding van de RDP-server:<nl/>%1"
 
 #: ui/main.qml:144 ui/main_phone.qml:101
 #, kde-format

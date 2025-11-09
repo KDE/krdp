@@ -169,7 +169,7 @@ msgstr "Systemd 没有找到。krdpserver 将需要手动激活。"
 #, kde-kuit-format
 msgctxt "@info:status"
 msgid "Error message from the RDP server:<nl/>%1"
-msgstr ""
+msgstr "来自 RDP 服务器的错误消息：<nl/>%1"
 
 #: ui/main.qml:144 ui/main_phone.qml:101
 #, kde-format
@@ -304,12 +304,10 @@ msgid "Restart Server"
 msgstr "重启服务器"
 
 #: ui/UserListView.qml:21
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Username:"
+#, kde-format
 msgctxt "@title"
 msgid "Usernames"
-msgstr "用户名："
+msgstr "用户名"
 
 #: ui/UserListView.qml:25
 #, kde-format
@@ -336,22 +334,19 @@ msgid "Click <interface>Add New…</interface> to add one"
 msgstr "点击 <interface>新增…</interface> 添加一个用户账户"
 
 #: ui/UserListView.qml:49
-#, fuzzy, kde-format
-#| msgid "System users"
+#, kde-format
 msgctxt "@title:group"
 msgid "System Users"
 msgstr "系统用户"
 
 #: ui/UserListView.qml:49
-#, fuzzy, kde-format
-#| msgid "Other users"
+#, kde-format
 msgctxt "@title:group"
 msgid "Other Users"
 msgstr "其他用户"
 
 #: ui/UserListView.qml:67
-#, fuzzy, kde-format
-#| msgid "Login with your system password"
+#, kde-format
 msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
 msgid "Login with your system password"
 msgstr "使用您的系统密码登录"
@@ -367,7 +362,3 @@ msgstr "修改用户…"
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "移除用户…"
-
-#~ msgctxt "@title"
-#~ msgid "Additional Users"
-#~ msgstr "额外用户"
