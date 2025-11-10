@@ -370,7 +370,3 @@ msgstr "Промяна на потребителя..."
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "Премахване на потребител..."
-
-#~ msgctxt "@title"
-#~ msgid "Additional Users"
-#~ msgstr "Допълнителни потребители"
