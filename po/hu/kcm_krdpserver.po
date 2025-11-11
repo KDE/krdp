@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-10-18 03:15+0000\n"
-"PO-Revision-Date: 2025-05-21 21:42+0200\n"
+"PO-Revision-Date: 2025-11-10 21:31+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language: hu\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 25.04.1\n"
+"X-Generator: Lokalize 25.08.2\n"
 
 #. i18n: ectx: label, entry (ListenPort), group (General)
 #: krdpserversettings.kcfg:14
@@ -59,7 +59,7 @@ msgstr ""
 #: krdpserversettings.kcfg:35
 #, kde-format
 msgid "Whether the current user can log in via PAM"
-msgstr ""
+msgstr "A jelenlegi felhasználó bejelentkezhet-e PAM-on keresztül"
 
 #. i18n: ectx: label, entry (Autostart), group (General)
 #: krdpserversettings.kcfg:39
@@ -166,7 +166,7 @@ msgstr "RDP kiszolgáló engedélyezése"
 #, kde-format
 msgctxt "@info:status"
 msgid "Systemd not found. krdpserver will require manual activation."
-msgstr ""
+msgstr "A systemd nem található. A krdpserver saját kezű aktiválást igényel."
 
 #: ui/main.qml:124 ui/main_phone.qml:101
 #, kde-format
@@ -310,7 +310,7 @@ msgstr "Kiszolgáló újraindítása"
 #, kde-format
 msgctxt "@title"
 msgid "Additional Users"
-msgstr ""
+msgstr "További felhasználók"
 
 #: ui/UserListView.qml:23
 #, kde-format
@@ -342,17 +342,17 @@ msgstr ""
 #: ui/UserListView.qml:47
 #, kde-format
 msgid "System users"
-msgstr ""
+msgstr "Rendszerfelhasználók"
 
 #: ui/UserListView.qml:47
 #, kde-format
 msgid "Other users"
-msgstr ""
+msgstr "Egyéb felhasználók"
 
 #: ui/UserListView.qml:71
 #, kde-format
 msgid "Login with your system password"
-msgstr ""
+msgstr "Jelentkezzen be a rendszerjelszavával"
 
 #: ui/UserListView.qml:79
 #, kde-format
