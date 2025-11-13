@@ -308,9 +308,7 @@ msgid "Restart Server"
 msgstr "Käynnistä palvelin uudelleen"
 
 #: ui/UserListView.qml:21
-#, fuzzy, kde-format
-#| msgctxt "@title"
-#| msgid "Usernames"
+#, kde-format
 msgctxt "@title"
 msgid "Usernames"
 msgstr "Käyttäjätunnukset"
