@@ -361,7 +361,3 @@ msgstr "Промяна на потребителя..."
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "Премахване на потребител..."
-
-#~ msgctxt "@title"
-#~ msgid "Usernames"
-#~ msgstr "Потребителски имена"
