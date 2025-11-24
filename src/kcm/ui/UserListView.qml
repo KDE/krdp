@@ -82,9 +82,6 @@ ListView {
                 id: itemDelegate
 
                 width: userListView.width
-                height: Kirigami.Units.gridUnit * 3
-
-                highlighted: pressed || down
 
                 // Help line up text and actions
                 Kirigami.Theme.useAlternateBackgroundColor: true
@@ -92,11 +89,9 @@ ListView {
                 onClicked: root.modifyUser(model.userName)
 
                 contentItem: Kirigami.TitleSubtitleWithActions {
-                    anchors.fill: parent
-                    anchors.margins: Kirigami.Units.largeSpacing
                     title: model.userName
                     elide: Text.ElideRight
-                    selected: itemDelegate.highlighted
+                    selected: itemDelegate.pressed || itemDelegate.highlighted
                     actions: [
                         Kirigami.Action {
                             icon.name: "edit-entry-symbolic"
