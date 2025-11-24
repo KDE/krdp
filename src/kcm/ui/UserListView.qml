@@ -97,7 +97,7 @@ ListView {
                             icon.name: "edit-entry-symbolic"
                             text: i18nc("@action:button", "Modify user…")
                             onTriggered: {
-                                root.modifyUser(model.userName);
+                                itemDelegate.click();
                             }
                             tooltip: text
                         },
