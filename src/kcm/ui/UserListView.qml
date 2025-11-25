@@ -92,6 +92,7 @@ ListView {
                     title: model.userName
                     elide: Text.ElideRight
                     selected: itemDelegate.pressed || itemDelegate.highlighted
+                    displayHint: QQC2.Button.IconOnly
                     actions: [
                         Kirigami.Action {
                             icon.name: "edit-entry-symbolic"
@@ -108,7 +109,6 @@ ListView {
                                 root.deleteUser(model.userName);
                             }
                             tooltip: text
-                            displayHint: Kirigami.DisplayHint.IconOnly
                         }
                     ]
                 }
