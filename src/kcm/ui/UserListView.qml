@@ -78,57 +78,39 @@ ListView {
         QtModels.DelegateChoice {
             roleValue: "false"
 
-            // Hand-rolled delegate to get some action buttons on the trailing side
             QQC2.ItemDelegate {
                 id: itemDelegate
 
                 width: userListView.width
-                highlighted: pressed || down
-                text: model.userName
 
                 // Help line up text and actions
                 Kirigami.Theme.useAlternateBackgroundColor: true
 
-                onClicked: root.modifyUser(itemDelegate.text);
+                onClicked: root.modifyUser(model.userName)
 
-                contentItem: RowLayout {
-                    spacing: Kirigami.Units.mediumSpacing
-
-                    Kirigami.TitleSubtitle {
-                        Layout.fillHeight: true
-                        Layout.fillWidth: true
-                        title: itemDelegate.text
-                        elide: Text.ElideRight
-                        selected: itemDelegate.highlighted
-                    }
-
-                    QQC2.Button {
-                        id: modifyUserButton
-                        icon.name: "edit-entry-symbolic"
-                        text: i18nc("@action:button", "Modify user…")
-                        display: QQC2.AbstractButton.IconOnly
-                        onClicked: {
-                            root.modifyUser(itemDelegate.text);
+                contentItem: Kirigami.TitleSubtitleWithActions {
+                    title: model.userName
+                    elide: Text.ElideRight
+                    selected: itemDelegate.pressed || itemDelegate.highlighted
+                    displayHint: QQC2.Button.IconOnly
+                    actions: [
+                        Kirigami.Action {
+                            icon.name: "edit-entry-symbolic"
+                            text: i18nc("@action:button", "Modify user…")
+                            onTriggered: {
+                                itemDelegate.click();
+                            }
+                            tooltip: text
+                        },
+                        Kirigami.Action {
+                            icon.name: "edit-delete-remove-symbolic"
+                            text: i18nc("@action:button", "Remove user…")
+                            onTriggered: {
+                                root.deleteUser(model.userName);
+                            }
+                            tooltip: text
                         }
-                        QQC2.ToolTip {
-                            text: modifyUserButton.text
-                            visible: modifyUserButton.hovered || (Kirigami.Settings.tabletMode && modifyUserButton.pressed)
-                        }
-                    }
-
-                    QQC2.Button {
-                        id: deleteUserButton
-                        icon.name: "edit-delete-remove-symbolic"
-                        text: i18nc("@action:button", "Remove user…")
-                        display: QQC2.AbstractButton.IconOnly
-                        onClicked: {
-                            root.deleteUser(itemDelegate.text);
-                        }
-                        QQC2.ToolTip {
-                            text: deleteUserButton.text
-                            visible: deleteUserButton.hovered || (Kirigami.Settings.tabletMode && deleteUserButton.pressed)
-                        }
-                    }
+                    ]
                 }
             }
         }
