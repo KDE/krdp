@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2025-12-09 00:44+0000\n"
 "PO-Revision-Date: 2024-12-15 17:35+0530\n"
 "Last-Translator: Kali <EMAIL@ADDRESS>\n"
 "Language-Team: Hindi <fedora-trans-hi@redhat.com>\n"
@@ -363,13 +363,13 @@ msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
 msgid "Login with your system password"
 msgstr ""
 
-#: ui/UserListView.qml:108
+#: ui/UserListView.qml:99
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify user…"
 msgstr "उपयोगकर्ता संशोधित करें…"
 
-#: ui/UserListView.qml:122
+#: ui/UserListView.qml:107
 #, kde-format
 msgctxt "@action:button"
 msgid "Remove user…"

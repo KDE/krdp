@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_krdpserver\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2025-12-09 00:44+0000\n"
 "PO-Revision-Date: 2025-11-07 00:55+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -365,13 +365,13 @@ msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
 msgid "Login with your system password"
 msgstr "Iniciar sesión con su contraseña del sistema"
 
-#: ui/UserListView.qml:108
+#: ui/UserListView.qml:99
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify user…"
 msgstr "Modificar usuario…"
 
-#: ui/UserListView.qml:122
+#: ui/UserListView.qml:107
 #, kde-format
 msgctxt "@action:button"
 msgid "Remove user…"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2025-12-09 00:44+0000\n"
 "PO-Revision-Date: 2025-11-10 21:31+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -363,13 +363,13 @@ msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
 msgid "Login with your system password"
 msgstr "Jelentkezzen be a rendszerjelszavával"
 
-#: ui/UserListView.qml:108
+#: ui/UserListView.qml:99
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify user…"
 msgstr "Felhasználó módosítása…"
 
-#: ui/UserListView.qml:122
+#: ui/UserListView.qml:107
 #, kde-format
 msgctxt "@action:button"
 msgid "Remove user…"
