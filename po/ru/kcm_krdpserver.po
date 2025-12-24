@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-12-09 00:44+0000\n"
-"PO-Revision-Date: 2025-10-28 19:27+0300\n"
+"PO-Revision-Date: 2025-12-23 19:11+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
 "%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Lokalize 25.08.2\n"
+"X-Generator: Lokalize 25.12.0\n"
 
 #. i18n: ectx: label, entry (ListenPort), group (General)
 #: krdpserversettings.kcfg:14
@@ -174,7 +174,7 @@ msgstr ""
 #, kde-kuit-format
 msgctxt "@info:status"
 msgid "Error message from the RDP server:<nl/>%1"
-msgstr ""
+msgstr "Сообщение RDP-сервера об ошибке:<nl/>%1"
 
 #: ui/main.qml:144 ui/main_phone.qml:101
 #, kde-format
@@ -351,13 +351,13 @@ msgstr ""
 #, kde-format
 msgctxt "@title:group"
 msgid "System Users"
-msgstr ""
+msgstr "Системные пользователи"
 
 #: ui/UserListView.qml:49
 #, kde-format
 msgctxt "@title:group"
 msgid "Other Users"
-msgstr ""
+msgstr "Другие пользователи"
 
 #: ui/UserListView.qml:67
 #, kde-format
