@@ -3,20 +3,21 @@
 # Copyright (C) 2024 This file is copyright:
 # This file is distributed under the same license as the krdp package.
 # SPDX-FileCopyrightText: 2024 Flori G <Renner03@protonmail.com>
+# SPDX-FileCopyrightText: 2026 Alois Spitzbart <spitz234@hotmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_krdpserver\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-12-09 00:44+0000\n"
-"PO-Revision-Date: 2024-10-02 13:18+0200\n"
-"Last-Translator: Flori G <Renner03@protonmail.com>\n"
+"PO-Revision-Date: 2026-01-06 12:59+0100\n"
+"Last-Translator: Alois Spitzbart <spitz234@hotmail.com>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 24.08.1\n"
+"X-Generator: Lokalize 26.03.70\n"
 
 #. i18n: ectx: label, entry (ListenPort), group (General)
 #: krdpserversettings.kcfg:14
@@ -59,7 +60,7 @@ msgstr ""
 #: krdpserversettings.kcfg:35
 #, kde-format
 msgid "Whether the current user can log in via PAM"
-msgstr ""
+msgstr "Ob sich der aktuelle Benutzer mittels PAM einloggen kann"
 
 #. i18n: ectx: label, entry (Autostart), group (General)
 #: krdpserversettings.kcfg:39
@@ -167,12 +168,13 @@ msgstr "RDP-Server aktivieren"
 msgctxt "@info:status"
 msgid "Systemd not found. krdpserver will require manual activation."
 msgstr ""
+"Systemd nicht gefunden. „krdpserver“ benötigt eine manuelle Aktivierung."
 
 #: ui/main.qml:129
 #, kde-kuit-format
 msgctxt "@info:status"
 msgid "Error message from the RDP server:<nl/>%1"
-msgstr ""
+msgstr "Fehlermeldung des RDP-Servers:<nl/>%1"
 
 #: ui/main.qml:144 ui/main_phone.qml:101
 #, kde-format
@@ -273,36 +275,28 @@ msgstr "Schlüsseldatei des Zertifikats auswählen …"
 #, kde-format
 msgctxt "@title:group"
 msgid "Remote Desktop Access"
-msgstr ""
+msgstr "Zugriff auf entfernte Arbeitsflächen"
 
 #: ui/main_phone.qml:105
-#, fuzzy, kde-format
-#| msgctxt "@option:check Enable RDP server"
-#| msgid "Enable RDP server"
+#, kde-format
 msgctxt "@option:check"
 msgid "Enable RDP Server"
 msgstr "RDP-Server aktivieren"
 
 #: ui/main_phone.qml:128
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Username:"
+#, kde-format
 msgid "Hostname:"
-msgstr "Benutzername:"
+msgstr "Rechnername:"
 
 #: ui/main_phone.qml:134
-#, fuzzy, kde-format
-#| msgctxt "@info:usagetip"
-#| msgid "Use any of the following addresses to connect to this device:"
+#, kde-format
 msgid "Use any of the following addresses to connect to this device:"
 msgstr ""
 "Nutzen Sie eine der folgenden Addressen, um eine Verbindung zu diesem Gerät "
 "herzustellen:"
 
 #: ui/main_phone.qml:172
-#, fuzzy, kde-format
-#| msgctxt "title:group Group of RDP server settings"
-#| msgid "Server Settings"
+#, kde-format
 msgctxt "@title:group"
 msgid "Server Settings"
 msgstr "Server-Einstellungen"
@@ -360,19 +354,19 @@ msgstr ""
 #, kde-format
 msgctxt "@title:group"
 msgid "System Users"
-msgstr ""
+msgstr "Systembenutzer"
 
 #: ui/UserListView.qml:49
 #, kde-format
 msgctxt "@title:group"
 msgid "Other Users"
-msgstr ""
+msgstr "Weitere Benutzer"
 
 #: ui/UserListView.qml:67
 #, kde-format
 msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
 msgid "Login with your system password"
-msgstr ""
+msgstr "Melden Sie sich mit Ihrem Systempasswort an"
 
 #: ui/UserListView.qml:99
 #, kde-format
