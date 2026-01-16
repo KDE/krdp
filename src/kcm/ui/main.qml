@@ -55,7 +55,7 @@ KCM.ScrollViewKCM {
         }
         function onServerStatusChanged() : void {
             toggleServerSwitch.checked = kcm.isServerRunning();
-            serverAddressLayout.visible = kcm.isServerRunning();
+            addressScrollView.visible = kcm.isServerRunning();
         }
     }
 
@@ -157,40 +157,43 @@ KCM.ScrollViewKCM {
                 Layout.alignment: Qt.AlignHCenter
             }
 
-            // ...But here we want zero spacing again since otherwise the delegates
-            // take up too much vertical space
-            ColumnLayout {
-                id: serverAddressLayout
-                spacing: 0
-                Layout.fillWidth: true
+            QQC2.ScrollView {
+                id: addressScrollView
+                implicitHeight: Math.min(contentHeight, Kirigami.Units.gridUnit * 4)
                 visible: false
+                Layout.fillWidth: true
+                Layout.leftMargin: Kirigami.Units.gridUnit
+                Flow {
+                    id: serverAddressLayout
+                    spacing: Kirigami.Units.largeSpacing
+                    width: addressScrollView.availableWidth
 
-                Repeater {
-                    id: addressesRepeater
-                    model: kcm.listenAddressList()
+                    Repeater {
+                        id: addressesRepeater
+                        model: kcm.listenAddressList()
 
-                    RowLayout {
-                        spacing: Kirigami.Units.mediumSpacing
+                        RowLayout {
+                            spacing: Kirigami.Units.smallSpacing
 
-                        Kirigami.SelectableLabel {
-                            id: addressLabel
-                            text: modelData
-                            Layout.leftMargin: Kirigami.Units.gridUnit
-                            Layout.alignment: Qt.AlignHCenter
-                            verticalAlignment: Text.AlignVCenter
-                        }
-
-                        QQC2.Button {
-                            id: copyAddressButton
-                            icon.name: "edit-copy-symbolic"
-                            text: i18nc("@action:button", "Copy Address to Clipboard")
-                            display: QQC2.AbstractButton.IconOnly
-                            onClicked: {
-                                kcm.copyAddressToClipboard(addressLabel.text);
+                            Kirigami.SelectableLabel {
+                                id: addressLabel
+                                text: modelData
+                                Layout.alignment: Qt.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
                             }
-                            QQC2.ToolTip {
-                                text: copyAddressButton.text
-                                visible: copyAddressButton.hovered || (Kirigami.Settings.tabletMode && copyAddressButton.pressed)
+
+                            QQC2.Button {
+                                id: copyAddressButton
+                                icon.name: "edit-copy-symbolic"
+                                text: i18nc("@action:button", "Copy Address to Clipboard")
+                                display: QQC2.AbstractButton.IconOnly
+                                onClicked: {
+                                    kcm.copyAddressToClipboard(addressLabel.text);
+                                }
+                                QQC2.ToolTip {
+                                    text: copyAddressButton.text
+                                    visible: copyAddressButton.hovered || (Kirigami.Settings.tabletMode && copyAddressButton.pressed)
+                                }
                             }
                         }
                     }
