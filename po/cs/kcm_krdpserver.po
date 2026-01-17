@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-09 00:44+0000\n"
+"POT-Creation-Date: 2026-01-17 02:38+0000\n"
 "PO-Revision-Date: 2024-08-28 11:21+0200\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -182,79 +182,79 @@ msgctxt "@info:usagetip"
 msgid "Use any of the following addresses to connect to this device:"
 msgstr ""
 
-#: ui/main.qml:186 ui/main_phone.qml:157
+#: ui/main.qml:188 ui/main_phone.qml:157
 #, kde-format
 msgctxt "@action:button"
 msgid "Copy Address to Clipboard"
 msgstr "Kopírovat adresu do schránky"
 
-#: ui/main.qml:213
+#: ui/main.qml:216
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Server Settings"
 msgstr "Nastavení serveru"
 
-#: ui/main.qml:219
+#: ui/main.qml:222
 #, kde-format
 msgctxt "@option:check"
 msgid "Autostart on login"
 msgstr "Automaticky spustit při přihlášení"
 
-#: ui/main.qml:235
+#: ui/main.qml:238
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Listening Port:"
 msgstr "Naslouchací port:"
 
-#: ui/main.qml:250
+#: ui/main.qml:253
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Video quality:"
 msgstr "Kvalita videa:"
 
-#: ui/main.qml:269
+#: ui/main.qml:272
 #, kde-format
 msgctxt "@label:slider"
 msgid "Responsiveness"
 msgstr ""
 
-#: ui/main.qml:275
+#: ui/main.qml:278
 #, kde-format
 msgctxt "@label:slider"
 msgid "Quality"
 msgstr "Kvalita"
 
-#: ui/main.qml:282
+#: ui/main.qml:285
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Security Certificates"
 msgstr "Bezpečnostní certifikáty"
 
-#: ui/main.qml:287
+#: ui/main.qml:290
 #, kde-format
 msgctxt "@label:check generate security certificates automatically"
 msgid "Generate automatically"
 msgstr "Generovat automaticky"
 
-#: ui/main.qml:305
+#: ui/main.qml:308
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate path:"
 msgstr "Cesta k certifikátu:"
 
-#: ui/main.qml:320
+#: ui/main.qml:323
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate File…"
 msgstr "Vyberte soubor certifikátu…"
 
-#: ui/main.qml:332
+#: ui/main.qml:335
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate key path:"
 msgstr "Cesta ke klíči certifikátu:"
 
-#: ui/main.qml:348
+#: ui/main.qml:351
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate Key File…"
