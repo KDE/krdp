@@ -128,5 +128,7 @@
     "X-KDE-OnlyShowOnQtPlatforms": [
         "wayland"
     ],
-    "X-KDE-System-Settings-Parent-Category": "network"
+    "X-KDE-System-Settings-Parent-Category": "security-privacy",
+    "X-KDE-Weight": 35
+
 }
