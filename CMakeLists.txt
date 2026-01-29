@@ -59,8 +59,8 @@ if(BUILD_PLASMA_SESSION)
     find_package(PlasmaWaylandProtocols REQUIRED)
 endif()
 
-find_package(Systemd 254)
-set_package_properties(Systemd PROPERTIES TYPE REQUIRED PURPOSE "Required by KCM to activate the KRDP Server units.")
+find_package(Systemd 254 QUIET)
+set_package_properties(Systemd PROPERTIES TYPE OPTIONAL PURPOSE "If available, used by KCM to integrate with systemd to enable/disable the service and show logs")
 
 find_package(PAM REQUIRED)
 set_package_properties(PAM PROPERTIES DESCRIPTION "PAM Libraries"
