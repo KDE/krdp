@@ -62,7 +62,12 @@ target_link_libraries(kcm_krdpserver PRIVATE
     KF6::KCMUtilsQuick
     KF6::I18n
     K::KPipeWireRecord
-    Systemd::systemd
 )
+
+# Link libsystemd when found and advertise feature to code
+if (Systemd_FOUND)
+    target_link_libraries(kcm_krdpserver PRIVATE Systemd::systemd)
+    target_compile_definitions(kcm_krdpserver PRIVATE HAVE_SYSTEMD)
+endif()
 
 ecm_qt_install_logging_categories(EXPORT kcm_krdpserver DESTINATION ${KDE_INSTALL_LOGGINGCATEGORIESDIR})

@@ -8,7 +8,9 @@
 #include "usersmodel.h"
 #include <KQuickManagedConfigModule>
 #include <qt6keychain/keychain.h>
+#ifdef HAVE_SYSTEMD
 #include <systemd/sd-journal.h>
+#endif
 
 class KRDPServerConfigImpl;
 class QAbstractItemModel;
@@ -96,7 +98,9 @@ private:
     void setErrorMessage(const QString &errorMessage);
     void createRestoreToken();
     QStringList getLastJournalEntries(const QString &unit, const QString &invocationId);
+#ifdef HAVE_SYSTEMD
     QString journalValue(sd_journal *journal, const QString &field);
+#endif
 
     KRDPServerSettings *m_serverSettings;
     UsersModel *m_usersModel;

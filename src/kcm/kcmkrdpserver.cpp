@@ -400,6 +400,7 @@ void KRDPServerConfig::setErrorMessage(const QString &errorMessage)
     Q_EMIT errorMessageChanged();
 }
 
+#ifdef HAVE_SYSTEMD
 QString KRDPServerConfig::journalValue(sd_journal *journal, const QString &field)
 {
     size_t length = 0;
@@ -494,6 +495,14 @@ QStringList KRDPServerConfig::getLastJournalEntries(const QString &unit, const Q
 
     return reply;
 }
+#else
+QStringList KRDPServerConfig::getLastJournalEntries(const QString &unit, const QString &invocationId)
+{
+    Q_UNUSED(unit);
+    Q_UNUSED(invocationId);
+    return {};
+}
+#endif
 
 void KRDPServerConfig::copyAddressToClipboard(const QString &address)
 {
