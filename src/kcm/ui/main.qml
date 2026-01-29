@@ -113,11 +113,11 @@ KCM.ScrollViewKCM {
         }
 
         Kirigami.InlineMessage {
-            type: Kirigami.MessageType.Warning
+            type: Kirigami.MessageType.Error
             visible: !kcm.managementAvailable
             position: Kirigami.InlineMessage.Position.Header
             Layout.fillWidth: true
-            text: i18nc("@info:status", "Systemd not found. krdpserver will require manual activation.")
+            text: i18nc("@info:status", "Could not connect to Systemd over DBus.")
         }
 
         Kirigami.InlineMessage {
