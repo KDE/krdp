@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-01-17 00:45+0000\n"
-"PO-Revision-Date: 2026-01-30 13:31+0000\n"
+"PO-Revision-Date: 2026-02-02 17:08+0000\n"
 "Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
 "Language-Team: Icelandic\n"
 "Language: is\n"
@@ -90,6 +90,9 @@ msgid ""
 "Remote desktop cannot be enabled because your system does not support H264 "
 "video encoding. Please contact your distribution regarding how to enable it."
 msgstr ""
+"Ekki er hægt að virkja fjartengda skjáborðið því kerfið þitt styður ekki "
+"H264-kóðun myndmerkis. Hafðu samband við þá sem pakka dreifingunni þinni "
+"varðandi hvernig sé hægt að virkja hana."
 
 #: ui/DeleteUserModal.qml:14
 #, kde-format
@@ -299,6 +302,8 @@ msgid ""
 "Restart the server to apply changed settings. This may disconnect active "
 "connections."
 msgstr ""
+"Endurræstu miðlarann til að virkja breyttar stillingar. Þetta gæti aftengt "
+"virkar tengingar."
 
 #: ui/RestartServerWarning.qml:17
 #, kde-format
