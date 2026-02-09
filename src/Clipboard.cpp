@@ -111,7 +111,7 @@ bool Clipboard::initialize()
         return false;
     }
 
-    d->clipContext->useLongFormatNames = FALSE;
+    d->clipContext->useLongFormatNames = TRUE;
     d->clipContext->streamFileClipEnabled = FALSE;
     d->clipContext->fileClipNoFilePaths = FALSE;
     d->clipContext->canLockClipData = FALSE;
@@ -176,12 +176,15 @@ void Clipboard::sendServerData()
         return;
     }
 
-    CLIPRDR_FORMAT_LIST formatList;
+    CLIPRDR_FORMAT format = {};
+    format.formatId = CF_UNICODETEXT;
+    format.formatName = nullptr;
+
+    CLIPRDR_FORMAT_LIST formatList = {};
     formatList.common.msgType = CB_FORMAT_LIST;
     formatList.common.msgFlags = 0;
     formatList.numFormats = 1;
-    formatList.formats = reinterpret_cast<CLIPRDR_FORMAT *>(malloc(sizeof(CLIPRDR_FORMAT)));
-    formatList.formats[0].formatId = CF_UNICODETEXT;
+    formatList.formats = &format;
     d->clipContext->ServerFormatList(d->clipContext.get(), &formatList);
 }
 
@@ -204,6 +207,12 @@ uint32_t Clipboard::Private::onClientFormatList(const CLIPRDR_FORMAT_LIST *forma
         }
     }
 
+    // Acknowledge the client's format list (required by CLIPRDR protocol)
+    CLIPRDR_FORMAT_LIST_RESPONSE response = {};
+    response.common.msgType = CB_FORMAT_LIST_RESPONSE;
+    response.common.msgFlags = CB_RESPONSE_OK;
+    clipContext->ServerFormatListResponse(clipContext.get(), &response);
+
     return CHANNEL_RC_OK;
 }
 
@@ -215,14 +224,24 @@ uint32_t Clipboard::Private::onClientFormatListResponse(const CLIPRDR_FORMAT_LIS
 uint32_t Clipboard::Private::onClientFormatDataRequest(const CLIPRDR_FORMAT_DATA_REQUEST *formatDataRequest)
 {
     if (!serverData || formatDataRequest->requestedFormatId != CF_UNICODETEXT) {
+        CLIPRDR_FORMAT_DATA_RESPONSE response = {};
+        response.common.msgType = CB_FORMAT_DATA_RESPONSE;
+        response.common.msgFlags = CB_RESPONSE_FAIL;
+        response.common.dataLen = 0;
+        response.requestedFormatData = nullptr;
+        clipContext->ServerFormatDataResponse(clipContext.get(), &response);
         return CHANNEL_RC_OK;
     }
 
-    auto data = serverData->text().toStdU16String();
+    auto text = serverData->text();
+    // CF_UNICODETEXT requires null-terminated UTF-16LE
+    QByteArray utf16Data(reinterpret_cast<const char *>(text.utf16()), (text.length() + 1) * 2);
 
-    CLIPRDR_FORMAT_DATA_RESPONSE response{
-        .common = CLIPRDR_HEADER({.msgType = CB_FORMAT_DATA_RESPONSE, .msgFlags = CB_RESPONSE_OK, .dataLen = uint32_t(data.length()) * 2}),
-        .requestedFormatData = reinterpret_cast<BYTE *>(data.data())};
+    CLIPRDR_FORMAT_DATA_RESPONSE response = {};
+    response.common.msgType = CB_FORMAT_DATA_RESPONSE;
+    response.common.msgFlags = CB_RESPONSE_OK;
+    response.common.dataLen = utf16Data.size();
+    response.requestedFormatData = reinterpret_cast<const BYTE *>(utf16Data.constData());
 
     clipContext->ServerFormatDataResponse(clipContext.get(), &response);
 
