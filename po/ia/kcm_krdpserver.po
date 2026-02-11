@@ -1,13 +1,13 @@
 # Copyright (C) 2024 This file is copyright:
 # This file is distributed under the same license as the krdp package.
 #
-# SPDX-FileCopyrightText: 2024, 2025 giovanni <g.sora@tiscali.it>
+# SPDX-FileCopyrightText: 2024, 2025, 2026 giovanni <g.sora@tiscali.it>
 msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-01-17 00:45+0000\n"
-"PO-Revision-Date: 2025-03-04 15:17+0100\n"
+"PO-Revision-Date: 2026-02-10 12:04+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -58,7 +58,7 @@ msgstr "Usatores permittite a acceder,contrasignos es immagazinate in KWallet"
 #: krdpserversettings.kcfg:35
 #, kde-format
 msgid "Whether the current user can log in via PAM"
-msgstr ""
+msgstr "Si le usator currente pote acceder via PAM"
 
 #. i18n: ectx: label, entry (Autostart), group (General)
 #: krdpserversettings.kcfg:39
@@ -165,13 +165,13 @@ msgstr "Habilita servitor RDP"
 #, kde-format
 msgctxt "@info:status"
 msgid "Systemd not found. krdpserver will require manual activation."
-msgstr ""
+msgstr "Systemd non trovate. krdpserver requirira activation manual."
 
 #: ui/main.qml:129
 #, kde-kuit-format
 msgctxt "@info:status"
 msgid "Error message from the RDP server:<nl/>%1"
-msgstr ""
+msgstr "Message de error ex le servitor de RDP:<nl/>%1"
 
 #: ui/main.qml:144 ui/main_phone.qml:101
 #, kde-format
@@ -343,19 +343,19 @@ msgstr "Clicca <interface>Adde Nove…</interface> per adder un"
 #, kde-format
 msgctxt "@title:group"
 msgid "System Users"
-msgstr ""
+msgstr "Usatores de systema"
 
 #: ui/UserListView.qml:49
 #, kde-format
 msgctxt "@title:group"
 msgid "Other Users"
-msgstr ""
+msgstr "Altere usatores"
 
 #: ui/UserListView.qml:67
 #, kde-format
 msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
 msgid "Login with your system password"
-msgstr ""
+msgstr "Accede con tu contrasigno de systema"
 
 #: ui/UserListView.qml:99
 #, kde-format
