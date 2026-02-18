@@ -24,11 +24,6 @@ class KRDP_EXPORT Clipboard : public QObject
     Q_OBJECT
 
 public:
-    /**
-     * TODO: This clipboard is currently not implemented. It only
-     * works as a dummy clipboard that does nothing to avoid crashes if
-     * cliprdr channel is opened.
-     */
     explicit Clipboard(RdpConnection *session);
     ~Clipboard() override;
 
