@@ -186,13 +186,12 @@ void PortalSession::sendEvent(const std::shared_ptr<QEvent> &event)
     }
     case QEvent::Wheel: {
         auto we = std::static_pointer_cast<QWheelEvent>(event);
-        auto delta = we->angleDelta();
-        if (delta.y() != 0) {
-            d->remoteInterface->NotifyPointerAxisDiscrete(d->sessionPath, QVariantMap{}, 0 /* Vertical */, delta.y() / 120);
-        }
-        if (delta.x() != 0) {
-            d->remoteInterface->NotifyPointerAxisDiscrete(d->sessionPath, QVariantMap{}, 1 /* Horizontal */, delta.x() / 120);
-        }
+        auto delta = we->pixelDelta();
+        // pixelDelta contains the scroll value already converted to
+        // degrees by InputHandler. The vertical axis is negated to
+        // account for the sign convention in
+        // xdg-desktop-portal-kde's requestPointerAxis.
+        d->remoteInterface->NotifyPointerAxis(d->sessionPath, QVariantMap{}, delta.x(), -delta.y());
         break;
     }
     case QEvent::KeyPress:

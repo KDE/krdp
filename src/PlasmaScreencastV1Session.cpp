@@ -229,12 +229,16 @@ void PlasmaScreencastV1Session::sendEvent(const std::shared_ptr<QEvent> &event)
     }
     case QEvent::Wheel: {
         auto we = std::static_pointer_cast<QWheelEvent>(event);
-        auto delta = we->angleDelta();
+        auto delta = we->pixelDelta();
+        // pixelDelta contains the scroll value already converted to
+        // degrees by InputHandler, preserving sub-notch precision
+        // from clients that send high-resolution wheel values
+        // (e.g. Microsoft Remote Desktop).
         if (delta.y() != 0) {
-            d->remoteInterface->axis(WL_POINTER_AXIS_VERTICAL_SCROLL, delta.y() / 120);
+            d->remoteInterface->axis(WL_POINTER_AXIS_VERTICAL_SCROLL, wl_fixed_from_double(delta.y()));
         }
         if (delta.x() != 0) {
-            d->remoteInterface->axis(WL_POINTER_AXIS_HORIZONTAL_SCROLL, delta.x() / 120);
+            d->remoteInterface->axis(WL_POINTER_AXIS_HORIZONTAL_SCROLL, wl_fixed_from_double(delta.x()));
         }
         break;
     }

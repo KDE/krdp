@@ -75,6 +75,7 @@ class KRDP_NO_EXPORT InputHandler::Private
 public:
     RdpConnection *session;
     rdpInput *input;
+    QPointF lastMousePosition;
 };
 
 InputHandler::InputHandler(KRdp::RdpConnection *session)
@@ -108,6 +109,12 @@ bool InputHandler::mouseEvent(uint16_t x, uint16_t y, uint16_t flags)
 {
     QPointF position = QPointF(x, y);
 
+    // Track last known mouse position for wheel events from clients
+    // that send (0,0) as the position (e.g. Microsoft Remote Desktop)
+    if (flags & PTR_FLAGS_MOVE) {
+        d->lastMousePosition = position;
+    }
+
     Qt::MouseButton button = Qt::NoButton;
     if (flags & PTR_FLAGS_BUTTON1) {
         button = Qt::LeftButton;
@@ -118,19 +125,39 @@ bool InputHandler::mouseEvent(uint16_t x, uint16_t y, uint16_t flags)
     }
 
     if (flags & PTR_FLAGS_WHEEL || flags & PTR_FLAGS_HWHEEL) {
+        // Use last known mouse position if the client sends (0,0)
+        if (position.isNull() && !d->lastMousePosition.isNull()) {
+            position = d->lastMousePosition;
+        }
         auto axis = flags & WheelRotationMask;
         if (axis & PTR_FLAGS_WHEEL_NEGATIVE) {
             axis = (~axis & WheelRotationMask) + 1;
         }
         axis *= flags & PTR_FLAGS_WHEEL_NEGATIVE ? 1 : -1;
+        // The RDP protocol uses 120 units per standard wheel notch
+        // (15 degrees of rotation). Dividing by 8 converts to degrees,
+        // which we store in pixelDelta as a continuous scroll value.
+        auto degrees = axis / 8.0;
         if (flags & PTR_FLAGS_WHEEL) {
-            auto event =
-                std::make_shared<QWheelEvent>(position, QPointF{}, QPoint{}, QPoint{0, axis}, Qt::NoButton, Qt::KeyboardModifiers{}, Qt::NoScrollPhase, false);
+            auto event = std::make_shared<QWheelEvent>(position,
+                                                       QPointF{},
+                                                       QPoint{0, qRound(degrees)},
+                                                       QPoint{0, axis},
+                                                       Qt::NoButton,
+                                                       Qt::KeyboardModifiers{},
+                                                       Qt::NoScrollPhase,
+                                                       false);
             Q_EMIT inputEvent(event);
         }
         if (flags & PTR_FLAGS_HWHEEL) {
-            auto event =
-                std::make_shared<QWheelEvent>(position, QPointF{}, QPoint{}, QPoint{-axis, 0}, Qt::NoButton, Qt::KeyboardModifiers{}, Qt::NoScrollPhase, false);
+            auto event = std::make_shared<QWheelEvent>(position,
+                                                       QPointF{},
+                                                       QPoint{qRound(-degrees), 0},
+                                                       QPoint{-axis, 0},
+                                                       Qt::NoButton,
+                                                       Qt::KeyboardModifiers{},
+                                                       Qt::NoScrollPhase,
+                                                       false);
             Q_EMIT inputEvent(event);
         }
         return true;
