@@ -237,7 +237,11 @@ RdpConnection::RdpConnection(Server *server, qintptr socketHandle)
 
 RdpConnection::~RdpConnection()
 {
-    if (d->state == State::Streaming) {
+    // Close the peer first to unblock WaitForMultipleObjects in the
+    // run thread. Without this, thread.join() can deadlock when the
+    // session is not in the Streaming state but the thread is still
+    // blocked waiting for socket events.
+    if (d->peer) {
         d->peer->Close(d->peer);
     }
 
