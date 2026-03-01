@@ -127,6 +127,11 @@ PortalSession::PortalSession()
 
 PortalSession::~PortalSession()
 {
+    if (d->sessionPath.path().isEmpty()) {
+        qCDebug(KRDP) << "No portal session to close (session was never created)";
+        return;
+    }
+
     // Make sure to clear any modifier keys that were pressed when the session closed, otherwise
     // we risk those keys getting stuck and the original session becoming unusable.
     for (auto keycode : {KEY_LEFTCTRL, KEY_RIGHTCTRL, KEY_LEFTSHIFT, KEY_RIGHTSHIFT, KEY_LEFTALT, KEY_RIGHTALT, KEY_LEFTMETA, KEY_RIGHTMETA}) {
