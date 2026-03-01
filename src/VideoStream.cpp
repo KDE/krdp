@@ -259,6 +259,18 @@ bool VideoStream::onChannelIdAssigned(uint32_t channelId)
 
 uint32_t VideoStream::onCapsAdvertise(const RDPGFX_CAPS_ADVERTISE_PDU *capsAdvertise)
 {
+    // Windows clients (mstsc) send CapsAdvertise twice: once during
+    // initial setup and again after confirming. If we already confirmed
+    // caps, this is a GFX channel reset — clear surface state so
+    // surfaces get re-created on the next frame.
+    if (d->capsConfirmed) {
+        qCDebug(KRDP) << "GFX channel reset (re-advertisement), resetting surface state";
+        d->capsConfirmed = false;
+        d->pendingReset = true;
+        d->surface = Surface{};
+        d->pendingFrames.clear();
+    }
+
     auto capsSets = capsAdvertise->capsSets;
     auto count = capsAdvertise->capsSetCount;
 
