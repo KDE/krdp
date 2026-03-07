@@ -75,8 +75,8 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
 
-ecm_set_disabled_deprecation_versions(QT 6.7.0
-    KF 6.12.0
+ecm_set_disabled_deprecation_versions(QT 6.11.0
+    KF 6.23.0
 )
 
 add_subdirectory(src)
