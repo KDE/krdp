@@ -88,7 +88,7 @@ protected:
     QSize size() const;
     QSize logicalSize() const;
     std::optional<VirtualMonitor> virtualMonitor() const;
-    int activeStream() const;
+    std::optional<int> activeStream() const;
 
     void setStarted(bool started);
     void setSize(QSize size);

@@ -174,7 +174,14 @@ void PlasmaScreencastV1Session::start()
 {
     if (auto vm = virtualMonitor()) {
         d->request = d->m_screencasting.createVirtualMonitorStream(vm->name, vm->size, vm->dpr, Screencasting::Metadata);
-    } else if (!activeStream()) {
+    } else if (const auto streamIndex = activeStream()) {
+        if (*streamIndex >= qApp->screens().size()) {
+            qCWarning(KRDP) << "Invalid monitor index" << *streamIndex;
+            return;
+        }
+        auto screen = qApp->screens().at(*streamIndex);
+        d->request = d->m_screencasting.createOutputStream(screen, Screencasting::Metadata);
+    } else {
         d->request = d->m_screencasting.createWorkspaceStream(Screencasting::Metadata);
     }
     connect(d->request, &ScreencastingStream::failed, this, &PlasmaScreencastV1Session::error);

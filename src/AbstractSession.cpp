@@ -44,9 +44,9 @@ QSize AbstractSession::logicalSize() const
     return d->logicalSize;
 }
 
-int AbstractSession::activeStream() const
+std::optional<int> AbstractSession::activeStream() const
 {
-    return d->activeStream.value_or(-1);
+    return d->activeStream;
 }
 
 std::optional<VirtualMonitor> AbstractSession::virtualMonitor() const

@@ -274,7 +274,7 @@ void PortalSession::onDevicesSelected(uint code, const QVariantMap & /*result*/)
         parameters = {{QStringLiteral("types"), 4u}}; // VIRTUAL
     } else {
         parameters = {{QStringLiteral("types"), 1u}, // MONITOR
-                      {QStringLiteral("multiple"), activeStream() >= 0}};
+                      {QStringLiteral("multiple"), activeStream().has_value()}};
     }
 
     new PortalRequest(d->screencastInterface->SelectSources(d->sessionPath, parameters), this, &PortalSession::onSourcesSelected);
@@ -324,11 +324,13 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
         if (reply.isValid()) {
             qCDebug(KRDP) << "Started Freedesktop Portal session";
 
-            if (activeStream() >= streams.size()) {
+            auto streamIndex = activeStream().value_or(0);
+            if (streamIndex >= streams.size()) {
                 qCWarning(KRDP) << "Requested monitor index out of range, using first monitor";
                 setActiveStream(0);
+                streamIndex = 0;
             }
-            auto stream = streams.at(activeStream() >= 0 ? activeStream() : 0);
+            auto stream = streams.at(streamIndex);
 
             setLogicalSize(qdbus_cast<QSize>(stream.map.value(u"size"_s)));
             auto fd = reply.value();
