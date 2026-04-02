@@ -134,7 +134,7 @@ void SessionController::onNewConnection(KRdp::RdpConnection *newConnection)
     if (m_virtualMonitor) {
         wrapper->session->setVirtualMonitor(*m_virtualMonitor);
     } else if (m_monitorIndex) {
-        wrapper->session->setActiveStream(m_monitorIndex.value());
+        wrapper->session->setActiveStream(*m_monitorIndex);
     }
     wrapper->session->setVideoQuality(m_quality.value());
 
