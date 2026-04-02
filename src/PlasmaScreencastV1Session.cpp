@@ -162,6 +162,7 @@ PlasmaScreencastV1Session::PlasmaScreencastV1Session()
     , d(std::make_unique<Private>())
 {
     d->remoteInterface = new FakeInput();
+    d->remoteInterface->authenticate(QStringLiteral("krdpserver"), QString());
 }
 
 PlasmaScreencastV1Session::~PlasmaScreencastV1Session()
