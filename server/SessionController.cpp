@@ -133,8 +133,8 @@ void SessionController::onNewConnection(KRdp::RdpConnection *newConnection)
     auto wrapper = std::make_unique<SessionWrapper>(newConnection, makeSession(), m_sni);
     if (m_virtualMonitor) {
         wrapper->session->setVirtualMonitor(*m_virtualMonitor);
-    } else {
-        wrapper->session->setActiveStream(m_monitorIndex.value_or(-1));
+    } else if (m_monitorIndex) {
+        wrapper->session->setActiveStream(m_monitorIndex.value());
     }
     wrapper->session->setVideoQuality(m_quality.value());
 
