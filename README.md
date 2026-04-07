@@ -12,7 +12,7 @@ Remote Desktop System Settings page (KCM) that lives in the Networking category.
 Features:
 - User can toggle the server (running the`krdpserver` binary) on and off using a toggle switch.
 - The server can be set to auto-start at session login.
-- The KCM uses SystemD DBus messages to toggle the server on and off and auto-start it.
+- The KCM uses systemd DBus messages to toggle the server on and off and auto-start it.
 - User can easily add, modify, and remove usernames and passwords that are allowed to connect to the server.
 - User can change the port of the server.
     - Do note that the address is currently set to `0.0.0.0`, which means any interface that accepts connections for `krdpserver` will work.
