@@ -1,13 +1,13 @@
 # Copyright (C) 2024 This file is copyright:
 # This file is distributed under the same license as the krdp package.
-# SPDX-FileCopyrightText: 2024, 2025 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
+# SPDX-FileCopyrightText: 2024, 2025, 2026 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-01-17 02:38+0000\n"
-"PO-Revision-Date: 2025-12-06 15:49+0100\n"
+"PO-Revision-Date: 2026-04-11 09:09+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: pl\n"
 "Language: pl\n"
@@ -212,7 +212,7 @@ msgstr "Uruchamiaj wraz z systemem"
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Listening Port:"
-msgstr "Port nasłuchujący:"
+msgstr "Nasłuchuj na porcie:"
 
 #: ui/main.qml:253
 #, kde-format
@@ -224,7 +224,7 @@ msgstr "Jakość obrazu:"
 #, kde-format
 msgctxt "@label:slider"
 msgid "Responsiveness"
-msgstr "Responsywność"
+msgstr "Szybkość"
 
 #: ui/main.qml:278
 #, kde-format
