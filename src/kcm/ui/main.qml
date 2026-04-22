@@ -258,6 +258,7 @@ KCM.ScrollViewKCM {
                 from: 50
                 to: 100
                 stepSize: 5
+                Kirigami.StyleHints.tickMarkStepSize: stepSize
                 value: settings.quality
                 onMoved: {
                     settings.quality = value;
