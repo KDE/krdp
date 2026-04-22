@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-01-17 02:38+0000\n"
-"PO-Revision-Date: 2026-04-18 16:01+0200\n"
+"PO-Revision-Date: 2026-04-21 19:22+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
 "Language: nn\n"
@@ -171,7 +171,7 @@ msgstr "Fann ikkje Systemd. krdpserver krev manuell aktivering."
 #, kde-kuit-format
 msgctxt "@info:status"
 msgid "Error message from the RDP server:<nl/>%1"
-msgstr ""
+msgstr "Feilmelding frå RDP-tenaren:<nl/>%1"
 
 #: ui/main.qml:144 ui/main_phone.qml:101
 #, kde-format
