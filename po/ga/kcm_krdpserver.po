@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-17 00:45+0000\n"
+"POT-Creation-Date: 2026-04-23 00:45+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Irish Gaelic <kde-i18n-doc@kde.org>\n"
@@ -213,49 +213,49 @@ msgctxt "@label:textbox"
 msgid "Video quality:"
 msgstr ""
 
-#: ui/main.qml:272
+#: ui/main.qml:273
 #, kde-format
 msgctxt "@label:slider"
 msgid "Responsiveness"
 msgstr ""
 
-#: ui/main.qml:278
+#: ui/main.qml:279
 #, kde-format
 msgctxt "@label:slider"
 msgid "Quality"
 msgstr ""
 
-#: ui/main.qml:285
+#: ui/main.qml:286
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Security Certificates"
 msgstr ""
 
-#: ui/main.qml:290
+#: ui/main.qml:291
 #, kde-format
 msgctxt "@label:check generate security certificates automatically"
 msgid "Generate automatically"
 msgstr ""
 
-#: ui/main.qml:308
+#: ui/main.qml:309
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate path:"
 msgstr ""
 
-#: ui/main.qml:323
+#: ui/main.qml:324
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate File…"
 msgstr ""
 
-#: ui/main.qml:335
+#: ui/main.qml:336
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate key path:"
 msgstr ""
 
-#: ui/main.qml:351
+#: ui/main.qml:352
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate Key File…"
