@@ -6,6 +6,7 @@
 
 #include <memory>
 
+#include <QImage>
 #include <QObject>
 #include <QPoint>
 #include <QRegion>
@@ -31,6 +32,10 @@ struct VideoFrame {
      */
     QByteArray data;
     /**
+     * Raw frame data for classic raster updates.
+     */
+    QImage image;
+    /**
      * Area of the frame that was actually damaged.
      * TODO: Actually use this information.
      */
@@ -38,11 +43,10 @@ struct VideoFrame {
     /**
      * Whether the packet contains all the information
      */
-    bool isKeyFrame;
+    bool isKeyFrame = false;
     /**
      * When was this frame presented.
      */
     std::chrono::system_clock::time_point presentationTimeStamp;
 };
-
 }

@@ -74,6 +74,7 @@ target_link_libraries(KRdp PUBLIC
     KF6::ConfigCore
     K::KPipeWire
     K::KPipeWireRecord
+    K::KPipeWireDmaBuf
     XKB::XKB
 )
 

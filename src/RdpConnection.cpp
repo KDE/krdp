@@ -364,18 +364,16 @@ void RdpConnection::initialize()
 
     freerdp_settings_set_uint32(settings, FreeRDP_ColorDepth, 32);
 
-    // Plain YUV420 AVC is currently the most straightforward of the the AVC
-    // related codecs to implement. Moreover, it makes the encoding side also
-    // simpler so it is currently the only supported codec. This uses the RdpGfx
-    // pipeline, so make sure to request that.
+    const bool useH264Encoding = d->videoStream->configuredEncodingMode() == VideoStream::EncodingMode::H264;
     freerdp_settings_set_bool(settings, FreeRDP_SupportGraphicsPipeline, true);
     freerdp_settings_set_bool(settings, FreeRDP_GfxAVC444, false);
     freerdp_settings_set_bool(settings, FreeRDP_GfxAVC444v2, false);
-    freerdp_settings_set_bool(settings, FreeRDP_GfxH264, true);
-
+    freerdp_settings_set_bool(settings, FreeRDP_GfxH264, useH264Encoding);
+    freerdp_settings_set_bool(settings, FreeRDP_GfxProgressive, !useH264Encoding);
 
     freerdp_settings_set_bool(settings, FreeRDP_GfxSmallCache, false);
     freerdp_settings_set_bool(settings, FreeRDP_GfxThinClient, false);
+    freerdp_settings_set_bool(settings, FreeRDP_SupportDynamicChannels, true);
 
     freerdp_settings_set_bool(settings, FreeRDP_HasExtendedMouseEvent, true);
     freerdp_settings_set_bool(settings, FreeRDP_HasHorizontalWheel, true);
@@ -494,8 +492,6 @@ void RdpConnection::run(std::stop_token stopToken)
 bool RdpConnection::onCapabilities()
 {
     auto settings = d->peer->context->settings;
-    // We only support GraphicsPipeline clients currently as that is required
-    // for AVC streaming.
     if (!freerdp_settings_get_bool(settings, FreeRDP_SupportGraphicsPipeline)) {
         qCWarning(KRDP) << "Client does not support graphics pipeline which is required";
         return false;
