@@ -45,6 +45,7 @@ public:
         Initial,
         Starting,
         Running,
+        Activated,
         Streaming,
         Closed,
     };

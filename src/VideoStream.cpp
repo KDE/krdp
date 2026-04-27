@@ -14,9 +14,14 @@
 
 #include <QDateTime>
 #include <QQueue>
+#include <QSet>
 
+#include <DmaBufHandler>
+#include <PipeWireEncodedStream>
+#include <freerdp/codec/progressive.h>
 #include <freerdp/freerdp.h>
 #include <freerdp/peer.h>
+#include <freerdp/update.h>
 
 #include "NetworkDetection.h"
 #include "PeerContext_p.h"
@@ -31,7 +36,8 @@ namespace clk = std::chrono;
 
 // Maximum number of frames to contain in the queue.
 constexpr clk::system_clock::duration FrameRateEstimateAveragePeriod = clk::seconds(1);
-
+constexpr qsizetype MaximumInFlightFrames = 2;
+constexpr uint32_t ProgressiveCodecContextId = 1;
 struct RdpCapsInformation {
     uint32_t version;
     RDPGFX_CAPSET capSet;
@@ -95,6 +101,7 @@ uint32_t gfxQoEFrameAcknowledge(RdpgfxServerContext *, const RDPGFX_QOE_FRAME_AC
 
 struct Surface {
     uint16_t id;
+    uint32_t codecContextId;
     QSize size;
 };
 
@@ -107,11 +114,16 @@ class KRDP_NO_EXPORT VideoStream::Private
 {
 public:
     using RdpGfxContextPtr = std::unique_ptr<RdpgfxServerContext, decltype(&rdpgfx_server_context_free)>;
+    using ProgressiveContextPtr = std::unique_ptr<PROGRESSIVE_CONTEXT, decltype(&progressive_context_free)>;
 
     RdpConnection *session;
+    EncodingMode encodingMode = VideoStream::configuredEncodingMode();
     std::unique_ptr<PipeWireEncodedStream> encodedStream;
+    std::unique_ptr<PipeWireSourceStream> sourceStream;
+    DmaBufHandler dmaBufHandler;
 
     RdpGfxContextPtr gfxContext = RdpGfxContextPtr(nullptr, rdpgfx_server_context_free);
+    ProgressiveContextPtr progressive = ProgressiveContextPtr(nullptr, progressive_context_free);
 
     uint32_t frameId = 0;
     uint32_t channelId = 0;
@@ -125,6 +137,10 @@ public:
     bool enabled = false;
     bool streamingEnabled = false;
     bool capsConfirmed = false;
+    bool channelOpen = false;
+    bool avcSupported = false;
+    bool yuv420Supported = false;
+    bool progressiveSupported = false;
 
     std::jthread frameSubmissionThread;
     std::mutex frameQueueMutex;
@@ -141,26 +157,113 @@ public:
 
     std::atomic_int encodedFrames = 0;
     std::atomic_int frameDelay = 0;
+    bool initialized = false;
+    quint8 quality = 100;
 };
+
+static QString encodingModeName(VideoStream::EncodingMode mode)
+{
+    switch (mode) {
+    case VideoStream::EncodingMode::H264:
+        return QStringLiteral("h264");
+    case VideoStream::EncodingMode::Progressive:
+        return QStringLiteral("progressive");
+    }
+}
+
+VideoStream::EncodingMode VideoStream::configuredEncodingMode()
+{
+    const QString mode = qEnvironmentVariable("KRDP_ENCODING_MODE", QStringLiteral("progressive")).trimmed().toLower();
+    if (mode.isEmpty() || mode == QStringLiteral("progressive")) {
+        return EncodingMode::Progressive;
+    }
+    if (mode == QStringLiteral("h264")) {
+        return EncodingMode::H264;
+    }
+
+    qCWarning(KRDP) << "Unknown KRDP_ENCODING_MODE value" << mode << "- defaulting to h264";
+    return EncodingMode::H264;
+}
+
+static RECTANGLE_16 toRectangle16(const QRect &rect)
+{
+    RECTANGLE_16 result = {};
+    result.left = rect.left();
+    result.top = rect.top();
+    result.right = rect.right() + 1;
+    result.bottom = rect.bottom() + 1;
+    return result;
+}
+
+static std::optional<REGION16> toRegion16(const QRegion &region, const QRect &frameRect)
+{
+    REGION16 invalidRegion = {};
+    region16_init(&invalidRegion);
+
+    const QRegion clipped = region.isEmpty() ? QRegion(frameRect) : region.intersected(frameRect);
+    for (const QRect &rect : clipped) {
+        if (!rect.isValid()) {
+            continue;
+        }
+
+        const RECTANGLE_16 rectangle = toRectangle16(rect);
+        if (!region16_union_rect(&invalidRegion, &invalidRegion, &rectangle)) {
+            region16_uninit(&invalidRegion);
+            return std::nullopt;
+        }
+    }
+
+    if (region16_is_empty(&invalidRegion)) {
+        const RECTANGLE_16 fullFrame = toRectangle16(frameRect);
+        if (!region16_union_rect(&invalidRegion, &invalidRegion, &fullFrame)) {
+            region16_uninit(&invalidRegion);
+            return std::nullopt;
+        }
+    }
+
+    return invalidRegion;
+}
 
 VideoStream::VideoStream(RdpConnection *session)
     : QObject(nullptr)
     , d(std::make_unique<Private>())
 {
     d->session = session;
-    d->encodedStream = std::make_unique<PipeWireEncodedStream>();
-    d->encodedStream->setEncodingPreference(PipeWireBaseEncodedStream::EncodingPreference::Speed);
-    // Ensure we encode in full color range so FFmpeg decodes correctly.
-    d->encodedStream->setColorRange(PipeWireBaseEncodedStream::ColorRange::Full);
-    d->encodedStream->setEncoder(PipeWireEncodedStream::H264Baseline);
-    d->encodedStream->setMaxFramerate(d->requestedFrameRate, 1);
-    d->encodedStream->setMaxPendingFrames(d->requestedFrameRate);
+    if (d->encodingMode == EncodingMode::H264) {
+        d->encodedStream = std::make_unique<PipeWireEncodedStream>();
+        d->encodedStream->setEncodingPreference(PipeWireBaseEncodedStream::EncodingPreference::Speed);
+        d->encodedStream->setColorRange(PipeWireBaseEncodedStream::ColorRange::Full);
+        d->encodedStream->setEncoder(PipeWireEncodedStream::H264Baseline);
+        d->encodedStream->setQuality(d->quality);
+        d->encodedStream->setMaxFramerate(d->requestedFrameRate, 1);
+        d->encodedStream->setMaxPendingFrames(d->requestedFrameRate);
 
-    connect(d->encodedStream.get(), &PipeWireEncodedStream::newPacket, this, &VideoStream::onPacketReceived);
-    connect(d->encodedStream.get(), &PipeWireEncodedStream::sizeChanged, this, [this](const QSize &size) {
-        d->size = size;
-    });
-    connect(d->encodedStream.get(), &PipeWireEncodedStream::cursorChanged, this, &VideoStream::cursorChanged);
+        connect(d->encodedStream.get(), &PipeWireEncodedStream::newPacket, this, &VideoStream::onPacketReceived);
+        connect(d->encodedStream.get(), &PipeWireEncodedStream::sizeChanged, this, [this](const QSize &size) {
+            d->size = size;
+        });
+        connect(d->encodedStream.get(), &PipeWireEncodedStream::cursorChanged, this, &VideoStream::cursorChanged);
+    } else {
+        d->sourceStream = std::make_unique<PipeWireSourceStream>();
+        d->sourceStream->setAllowDmaBuf(true);
+        d->sourceStream->setDamageEnabled(true);
+        d->sourceStream->setMaxFramerate({static_cast<quint32>(d->requestedFrameRate.load()), 1});
+        connect(d->sourceStream.get(), &PipeWireSourceStream::frameReceived, this, &VideoStream::onFrameReceived, Qt::QueuedConnection);
+        connect(d->sourceStream.get(), &PipeWireSourceStream::streamParametersChanged, this, [this]() {
+            const QSize size = d->sourceStream->size();
+            d->size = size;
+        });
+        connect(
+            d->sourceStream.get(),
+            &PipeWireSourceStream::frameReceived,
+            this,
+            [this](const PipeWireFrame &frame) {
+                if (frame.cursor) {
+                    Q_EMIT cursorChanged(*frame.cursor);
+                }
+            },
+            Qt::QueuedConnection);
+    }
 }
 
 VideoStream::~VideoStream()
@@ -170,40 +273,44 @@ VideoStream::~VideoStream()
 
 bool VideoStream::initialize()
 {
-    if (d->gfxContext) {
+    if (d->initialized) {
         return true;
     }
 
-    auto peerContext = reinterpret_cast<PeerContext *>(d->session->rdpPeerContext());
-
-    d->gfxContext = Private::RdpGfxContextPtr{rdpgfx_server_context_new(peerContext->virtualChannelManager), rdpgfx_server_context_free};
+    d->gfxContext.reset(rdpgfx_server_context_new(contextForPeer(d->session->rdpPeer())->virtualChannelManager));
     if (!d->gfxContext) {
-        qCWarning(KRDP) << "Failed creating RDPGFX context";
+        qCWarning(KRDP) << "Failed to create graphics pipeline context";
         return false;
     }
 
+    d->gfxContext->custom = this;
     d->gfxContext->ChannelIdAssigned = gfxChannelIdAssigned;
     d->gfxContext->CapsAdvertise = gfxCapsAdvertise;
     d->gfxContext->FrameAcknowledge = gfxFrameAcknowledge;
     d->gfxContext->QoeFrameAcknowledge = gfxQoEFrameAcknowledge;
-
-    d->gfxContext->custom = this;
     d->gfxContext->rdpcontext = d->session->rdpPeerContext();
 
-    if (!d->gfxContext->Open(d->gfxContext.get())) {
-        qCWarning(KRDP) << "Could not open GFX context";
+    if (!d->gfxContext->Initialize(d->gfxContext.get(), FALSE)) {
+        qCWarning(KRDP) << "Failed to initialize graphics pipeline context";
+        d->gfxContext.reset();
         return false;
     }
+
+    d->progressive.reset(progressive_context_new(TRUE));
+    if (!d->progressive) {
+        qCWarning(KRDP) << "Failed to create progressive codec context";
+        d->gfxContext.reset();
+        return false;
+    }
+
+    d->initialized = true;
 
     connect(d->session->networkDetection(), &NetworkDetection::rttChanged, this, &VideoStream::updateRequestedFrameRate);
 
     d->frameSubmissionThread = std::jthread([this](std::stop_token token) {
         while (!token.stop_requested()) {
-            // Don't dequeue frames until the GFX channel is ready.
-            // This preserves the I-frame (keyframe) in the queue until
-            // CapsAdvertise has completed and we can actually send it.
-            if (!d->gfxContext || !d->capsConfirmed) {
-                std::this_thread::sleep_for(std::chrono::milliseconds(16));
+            if (!hasInFlightCapacity() || !d->gfxContext || !d->capsConfirmed) {
+                std::this_thread::sleep_for(std::chrono::milliseconds(1));
                 continue;
             }
 
@@ -222,7 +329,7 @@ bool VideoStream::initialize()
         }
     });
 
-    qCDebug(KRDP) << "Video stream initialized";
+    qCDebug(KRDP) << "Video stream initialized in" << encodingModeName(d->encodingMode) << "mode";
 
     return true;
 }
@@ -232,9 +339,9 @@ void VideoStream::close()
     if (d->encodedStream) {
         d->encodedStream->stop();
     }
-
-    // Stop the frame submission thread first to prevent
-    // use-after-free on gfxContext during close.
+    if (d->sourceStream) {
+        d->sourceStream->setActive(false);
+    }
     if (d->frameSubmissionThread.joinable()) {
         d->frameSubmissionThread.request_stop();
         d->frameSubmissionThread.join();
@@ -249,12 +356,16 @@ void VideoStream::close()
         d->frameQueue.clear();
     }
 
-    if (!d->gfxContext) {
-        return;
-    }
+    destroySurface();
 
-    d->gfxContext->Close(d->gfxContext.get());
-    d->gfxContext.reset();
+    if (d->gfxContext) {
+        if (d->channelOpen) {
+            d->gfxContext->Close(d->gfxContext.get());
+            d->channelOpen = false;
+        }
+        d->gfxContext.reset();
+    }
+    d->initialized = false;
 
     Q_EMIT closed();
 }
@@ -266,7 +377,21 @@ void VideoStream::queueFrame(const KRdp::VideoFrame &frame)
     }
 
     std::lock_guard lock(d->frameQueueMutex);
-    d->frameQueue.append(frame);
+
+    if (d->encodingMode == EncodingMode::H264) {
+        d->frameQueue.append(frame);
+        return;
+    } else if (d->encodingMode == EncodingMode::Progressive) {
+        // for the raster path we only need to keep the latest frame, but accumulate damage
+        QRegion lastDamage;
+        if (!d->frameQueue.isEmpty()) {
+            lastDamage = d->frameQueue.last().damage;
+            d->frameQueue.clear();
+        }
+        KRdp::VideoFrame nextFrame = frame;
+        nextFrame.damage += lastDamage;
+        d->frameQueue.append(std::move(frame));
+    }
 }
 
 void VideoStream::reset()
@@ -296,26 +421,45 @@ void VideoStream::setStreamingEnabled(bool enabled)
     }
 
     d->streamingEnabled = enabled;
-    if (enabled && d->nodeId != 0) {
-        d->encodedStream->start();
-    } else {
-        d->encodedStream->stop();
+    if (d->encodedStream) {
+        if (enabled && d->nodeId != 0) {
+            d->encodedStream->start();
+        } else {
+            d->encodedStream->stop();
+        }
+    }
+    if (d->sourceStream) {
+        d->sourceStream->setActive(enabled && d->nodeId != 0);
     }
 }
 
 void VideoStream::setVideoQuality(quint8 quality)
 {
-    d->encodedStream->setQuality(quality);
+    d->quality = quality;
+    if (d->encodedStream) {
+        d->encodedStream->setQuality(quality);
+    }
 }
 
 void VideoStream::setPipeWireSource(quint32 nodeId, int fd)
 {
     d->nodeId = nodeId;
-    d->encodedStream->setNodeId(nodeId);
-    d->encodedStream->setFd(fd);
-
-    if (d->streamingEnabled) {
-        d->encodedStream->start();
+    if (d->encodedStream) {
+        d->encodedStream->setNodeId(nodeId);
+        d->encodedStream->setFd(fd);
+        if (d->streamingEnabled) {
+            d->encodedStream->start();
+        }
+    }
+    if (d->sourceStream) {
+        d->sourceStream->setUsageHint(fd >= 0 ? PipeWireSourceStream::UsageHint::EncodeSoftware : PipeWireSourceStream::UsageHint::EncodeHardware);
+        if (!d->sourceStream->createStream(nodeId, fd)) {
+            qCWarning(KRDP) << "Could not create PipeWire source stream" << d->sourceStream->error();
+            d->session->close(RdpConnection::CloseReason::VideoInitFailed);
+            return;
+        }
+        d->size = d->sourceStream->size();
+        d->sourceStream->setActive(d->streamingEnabled);
     }
 }
 
@@ -336,7 +480,8 @@ uint32_t VideoStream::onCapsAdvertise(const RDPGFX_CAPS_ADVERTISE_PDU *capsAdver
         qCDebug(KRDP) << "GFX channel reset (re-advertisement), resetting surface state";
         d->capsConfirmed = false;
         d->pendingReset = true;
-        d->surface = Surface{};
+        destroySurface();
+        std::lock_guard lock(d->pendingFramesMutex);
         d->pendingFrames.clear();
     }
 
@@ -354,7 +499,7 @@ uint32_t VideoStream::onCapsAdvertise(const RDPGFX_CAPS_ADVERTISE_PDU *capsAdver
         caps.version = set.version;
         caps.capSet = set;
 
-        switch (set.version) {
+        switch (caps.version) {
         case RDPGFX_CAPVERSION_107:
         case RDPGFX_CAPVERSION_106:
         case RDPGFX_CAPVERSION_105:
@@ -379,19 +524,37 @@ uint32_t VideoStream::onCapsAdvertise(const RDPGFX_CAPS_ADVERTISE_PDU *capsAdver
             break;
         }
 
-        qCDebug(KRDP) << " " << capVersionToString(caps.version) << "AVC:" << caps.avcSupported << "YUV420:" << caps.yuv420Supported;
+        qCDebug(KRDP) << " " << capVersionToString(caps.version) << "flags:" << Qt::hex << set.flags << Qt::dec << "AVC:" << caps.avcSupported
+                      << "YUV420:" << caps.yuv420Supported;
 
         capsInformation.push_back(caps);
     }
 
-    auto supported = std::any_of(capsInformation.begin(), capsInformation.end(), [](const RdpCapsInformation &caps) {
-        return caps.avcSupported && caps.yuv420Supported;
+    d->avcSupported = std::any_of(capsInformation.begin(), capsInformation.end(), [](const RdpCapsInformation &caps) {
+        return caps.avcSupported;
     });
+    d->yuv420Supported = std::any_of(capsInformation.begin(), capsInformation.end(), [](const RdpCapsInformation &caps) {
+        return caps.yuv420Supported;
+    });
+    d->progressiveSupported = !capsInformation.empty();
 
-    if (!supported) {
-        qCWarning(KRDP) << "Client does not support H.264 in YUV420 mode!";
-        d->session->close(RdpConnection::CloseReason::VideoInitFailed);
-        return CHANNEL_RC_INITIALIZATION_ERROR;
+    switch (d->encodingMode) {
+    case EncodingMode::H264:
+        if (!std::any_of(capsInformation.begin(), capsInformation.end(), [](const RdpCapsInformation &caps) {
+                return caps.avcSupported && caps.yuv420Supported;
+            })) {
+            qCWarning(KRDP) << "Client does not support H.264 in YUV420 mode";
+            d->session->close(RdpConnection::CloseReason::VideoInitFailed);
+            return CHANNEL_RC_INITIALIZATION_ERROR;
+        }
+        break;
+    case EncodingMode::Progressive:
+        if (capsInformation.empty()) {
+            qCWarning(KRDP) << "Client advertised no graphics capability sets";
+            d->session->close(RdpConnection::CloseReason::VideoInitFailed);
+            return CHANNEL_RC_INITIALIZATION_ERROR;
+        }
+        break;
     }
 
     auto maxVersion = std::max_element(capsInformation.begin(), capsInformation.end(), [](const auto &first, const auto &second) {
@@ -402,7 +565,11 @@ uint32_t VideoStream::onCapsAdvertise(const RDPGFX_CAPS_ADVERTISE_PDU *capsAdver
 
     RDPGFX_CAPS_CONFIRM_PDU capsConfirmPdu;
     capsConfirmPdu.capsSet = &(maxVersion->capSet);
-    d->gfxContext->CapsConfirm(d->gfxContext.get(), &capsConfirmPdu);
+    const UINT status = d->gfxContext->CapsConfirm(d->gfxContext.get(), &capsConfirmPdu);
+    if (status != CHANNEL_RC_OK) {
+        qCWarning(KRDP) << "CapsConfirm failed" << status;
+        return status;
+    }
 
     d->capsConfirmed = true;
 
@@ -421,10 +588,6 @@ uint32_t VideoStream::onFrameAcknowledge(const RDPGFX_FRAME_ACKNOWLEDGE_PDU *fra
         return CHANNEL_RC_OK;
     }
 
-    if (frameAcknowledge->queueDepth & SUSPEND_FRAME_ACKNOWLEDGEMENT) {
-        qDebug() << "suspend frame ack";
-    }
-
     d->frameDelay = d->encodedFrames - frameAcknowledge->totalFramesDecoded;
     d->pendingFrames.erase(itr);
 
@@ -434,14 +597,104 @@ uint32_t VideoStream::onFrameAcknowledge(const RDPGFX_FRAME_ACKNOWLEDGE_PDU *fra
 void VideoStream::onPacketReceived(const PipeWireEncodedStream::Packet &data)
 {
     VideoFrame frameData;
+    frameData.format = VideoFrame::Format::H264;
     frameData.size = d->size;
     frameData.data = data.data();
     frameData.isKeyFrame = data.isKeyFrame();
     queueFrame(frameData);
 }
 
+void VideoStream::onFrameReceived(const PipeWireFrame &data)
+{
+    VideoFrame frameData;
+
+    frameData.format = VideoFrame::Format::Bgrx32;
+    frameData.size = data.dataFrame ? data.dataFrame->size : QSize(data.dmabuf ? data.dmabuf->width : 0, data.dmabuf ? data.dmabuf->height : 0);
+    frameData.damage = data.damage.value_or(QRegion(QRect(QPoint(0, 0), frameData.size)));
+    if (data.presentationTimestamp) {
+        frameData.presentationTimeStamp = clk::system_clock::time_point(*data.presentationTimestamp);
+    }
+
+    if (data.dataFrame) {
+        frameData.image = data.dataFrame->toImage().convertToFormat(QImage::Format_RGB32);
+    } else if (data.dmabuf) {
+        QImage image(frameData.size, QImage::Format_RGBA8888_Premultiplied);
+        if (!d->dmaBufHandler.downloadFrame(image, data)) {
+            qCWarning(KRDP) << "Failed to download DMA-BUF frame";
+            return;
+        }
+        frameData.image = std::move(image);
+    } else {
+        qCWarning(KRDP) << "PipeWire frame did not contain usable image data";
+        return;
+    }
+
+    queueFrame(frameData);
+}
+
+bool VideoStream::openChannel()
+{
+    if (!d->gfxContext) {
+        return false;
+    }
+    if (d->channelOpen) {
+        return true;
+    }
+
+    if (!d->gfxContext->Open(d->gfxContext.get())) {
+        qCWarning(KRDP) << "Failed to open RDPGFX dynamic channel";
+        return false;
+    }
+
+    d->channelOpen = true;
+    return true;
+}
+
+void VideoStream::destroySurface()
+{
+    if (d->surface.id == 0) {
+        return;
+    }
+
+    if (d->gfxContext && d->surface.codecContextId != 0) {
+        RDPGFX_DELETE_ENCODING_CONTEXT_PDU deleteEncodingContextPdu = {};
+        deleteEncodingContextPdu.surfaceId = d->surface.id;
+        deleteEncodingContextPdu.codecContextId = d->surface.codecContextId;
+        const UINT status = d->gfxContext->DeleteEncodingContext(d->gfxContext.get(), &deleteEncodingContextPdu);
+        if (status != CHANNEL_RC_OK && status != CHANNEL_RC_NOT_INITIALIZED) {
+            qCWarning(KRDP) << "DeleteEncodingContext failed" << status;
+        }
+    }
+
+    if (d->gfxContext) {
+        RDPGFX_DELETE_SURFACE_PDU deleteSurfacePdu = {};
+        deleteSurfacePdu.surfaceId = d->surface.id;
+        const UINT status = d->gfxContext->DeleteSurface(d->gfxContext.get(), &deleteSurfacePdu);
+        if (status != CHANNEL_RC_OK && status != CHANNEL_RC_NOT_INITIALIZED) {
+            qCWarning(KRDP) << "DeleteSurface failed" << status;
+        }
+    }
+
+    if (d->progressive) {
+        progressive_delete_surface_context(d->progressive.get(), d->surface.id);
+    }
+
+    d->surface = Surface{};
+}
+
 void VideoStream::performReset(QSize size)
 {
+    if (!d->gfxContext) {
+        auto settings = d->session->rdpPeerContext()->settings;
+        freerdp_settings_set_uint32(settings, FreeRDP_DesktopWidth, size.width());
+        freerdp_settings_set_uint32(settings, FreeRDP_DesktopHeight, size.height());
+        d->session->rdpPeerContext()->update->DesktopResize(d->session->rdpPeerContext());
+        d->surface.size = size;
+        return;
+    }
+
+    destroySurface();
+
     RDPGFX_RESET_GRAPHICS_PDU resetGraphicsPdu;
     resetGraphicsPdu.width = size.width();
     resetGraphicsPdu.height = size.height();
@@ -474,29 +727,79 @@ void VideoStream::performReset(QSize size)
 
     d->surface = Surface{
         .id = surfaceId,
+        .codecContextId = d->progressiveSupported ? ProgressiveCodecContextId : 0,
         .size = size,
     };
+
+    if (d->progressiveSupported) {
+        if (progressive_create_surface_context(d->progressive.get(), surfaceId, size.width(), size.height()) < 0) {
+            qCWarning(KRDP) << "Failed to create progressive surface context";
+            destroySurface();
+            return;
+        }
+    }
 
     RDPGFX_MAP_SURFACE_TO_OUTPUT_PDU mapSurfaceToOutputPdu;
     mapSurfaceToOutputPdu.outputOriginX = 0;
     mapSurfaceToOutputPdu.outputOriginY = 0;
     mapSurfaceToOutputPdu.surfaceId = surfaceId;
-    d->gfxContext->MapSurfaceToOutput(d->gfxContext.get(), &mapSurfaceToOutputPdu);
+    status = d->gfxContext->MapSurfaceToOutput(d->gfxContext.get(), &mapSurfaceToOutputPdu);
+    if (status != CHANNEL_RC_OK) {
+        qCWarning(KRDP) << "MapSurfaceToOutput failed" << status << "surface" << surfaceId;
+        destroySurface();
+        return;
+    }
+}
+
+bool VideoStream::hasInFlightCapacity() const
+{
+    std::lock_guard lock(d->pendingFramesMutex);
+    return d->pendingFrames.size() < MaximumInFlightFrames;
 }
 
 void VideoStream::sendFrame(const VideoFrame &frame)
 {
-    if (!d->gfxContext || !d->capsConfirmed) {
+    auto peer = d->session->rdpPeer();
+    if (peer->IsWriteBlocked && peer->IsWriteBlocked(peer)) {
         return;
     }
 
-    if (frame.data.size() == 0) {
+    if (!d->gfxContext || !d->capsConfirmed) {
         return;
     }
 
     if (d->pendingReset) {
         d->pendingReset = false;
         performReset(frame.size);
+    }
+    if (d->surface.size != frame.size) {
+        performReset(frame.size);
+    }
+
+    switch (frame.format) {
+    case VideoFrame::Format::H264:
+        sendFrameH264(frame);
+        return;
+    case VideoFrame::Format::Bgrx32:
+        sendFrameProgressive(frame);
+        return;
+    }
+}
+
+void VideoStream::sendFrameH264(const VideoFrame &frame)
+{
+    if (!d->avcSupported || !d->yuv420Supported) {
+        qCDebug(KRDP) << "Skipping H264 frame, client does not advertise AVC420 support";
+        return;
+    }
+
+    if (frame.data.isEmpty()) {
+        return;
+    }
+
+    if (d->surface.id == 0) {
+        qCWarning(KRDP) << "No graphics surface available for H264 frame submission";
+        return;
     }
 
     d->session->networkDetection()->startBandwidthMeasure();
@@ -522,19 +825,21 @@ void VideoStream::sendFrame(const VideoFrame &frame)
     RDPGFX_SURFACE_COMMAND surfaceCommand;
     surfaceCommand.surfaceId = d->surface.id;
     surfaceCommand.codecId = RDPGFX_CODECID_AVC420;
+    surfaceCommand.contextId = 0;
     surfaceCommand.format = PIXEL_FORMAT_BGRX32;
-
     surfaceCommand.left = 0;
     surfaceCommand.top = 0;
     surfaceCommand.right = frame.size.width();
     surfaceCommand.bottom = frame.size.height();
+    surfaceCommand.width = frame.size.width();
+    surfaceCommand.height = frame.size.height();
     surfaceCommand.length = 0;
     surfaceCommand.data = nullptr;
 
     RDPGFX_AVC420_BITMAP_STREAM avcStream;
     surfaceCommand.extra = &avcStream;
 
-    avcStream.data = (BYTE *)frame.data.data();
+    avcStream.data = reinterpret_cast<BYTE *>(const_cast<char *>(frame.data.constData()));
     avcStream.length = frame.data.length();
 
     avcStream.meta.numRegionRects = 1;
@@ -550,12 +855,116 @@ void VideoStream::sendFrame(const VideoFrame &frame)
     qualities[0].p = 0;
     qualities[0].qualityVal = 100;
 
-    d->gfxContext->StartFrame(d->gfxContext.get(), &startFramePdu);
-    d->gfxContext->SurfaceCommand(d->gfxContext.get(), &surfaceCommand);
+    const UINT startStatus = d->gfxContext->StartFrame(d->gfxContext.get(), &startFramePdu);
+    if (startStatus != CHANNEL_RC_OK) {
+        qCWarning(KRDP) << "StartFrame failed" << startStatus << "frameId" << frameId;
+        d->session->networkDetection()->stopBandwidthMeasure();
+        return;
+    }
 
-    d->gfxContext->EndFrame(d->gfxContext.get(), &endFramePdu);
+    const UINT commandStatus = d->gfxContext->SurfaceCommand(d->gfxContext.get(), &surfaceCommand);
+    if (commandStatus != CHANNEL_RC_OK) {
+        qCWarning(KRDP) << "SurfaceCommand failed" << commandStatus << "frameId" << frameId << "surface" << d->surface.id << "encodedBytes"
+                        << frame.data.size();
+    }
+
+    const UINT endStatus = d->gfxContext->EndFrame(d->gfxContext.get(), &endFramePdu);
+    if (endStatus != CHANNEL_RC_OK) {
+        qCWarning(KRDP) << "EndFrame failed" << endStatus << "frameId" << frameId;
+    }
 
     d->session->networkDetection()->stopBandwidthMeasure();
+}
+
+void VideoStream::sendFrameProgressive(const VideoFrame &frame)
+{
+    if (!d->progressiveSupported || !d->progressive) {
+        qCDebug(KRDP) << "Skipping raster frame, progressive codec path is unavailable";
+        return;
+    }
+
+    if (frame.image.isNull()) {
+        return;
+    }
+
+    if (d->surface.id == 0) {
+        qCWarning(KRDP) << "No graphics surface available for progressive frame submission";
+        return;
+    }
+
+    QImage image = frame.image.convertToFormat(QImage::Format_RGB32);
+    const QRect frameRect(QPoint(0, 0), image.size());
+    auto invalidRegion = toRegion16(frame.damage, frameRect);
+    if (!invalidRegion) {
+        qCWarning(KRDP) << "Failed to build invalid region for progressive frame";
+        return;
+    }
+
+    BYTE *encodedData = nullptr;
+    UINT32 encodedSize = 0;
+    const UINT32 rectCount = region16_n_rects(&*invalidRegion);
+    const int compressionStatus = progressive_compress(d->progressive.get(),
+                                                       image.constBits(),
+                                                       image.sizeInBytes(),
+                                                       PIXEL_FORMAT_BGRX32,
+                                                       image.width(),
+                                                       image.height(),
+                                                       image.bytesPerLine(),
+                                                       &*invalidRegion,
+                                                       &encodedData,
+                                                       &encodedSize);
+    if (compressionStatus < 0 || !encodedData || encodedSize == 0) {
+        region16_uninit(&*invalidRegion);
+        qCWarning(KRDP) << "Failed to compress progressive frame"
+                        << "status" << compressionStatus << "rects" << rectCount << "size" << frame.size;
+        return;
+    }
+
+    d->session->networkDetection()->startBandwidthMeasure();
+
+    auto frameId = d->frameId++;
+
+    d->encodedFrames++;
+
+    {
+        std::lock_guard lock(d->pendingFramesMutex);
+        d->pendingFrames.insert(frameId);
+    }
+
+    RDPGFX_START_FRAME_PDU startFramePdu;
+    RDPGFX_END_FRAME_PDU endFramePdu;
+
+    auto now = QDateTime::currentDateTimeUtc().time();
+    startFramePdu.timestamp = now.hour() << 22 | now.minute() << 16 | now.second() << 10 | now.msec();
+
+    startFramePdu.frameId = frameId;
+    endFramePdu.frameId = frameId;
+
+    const RECTANGLE_16 *extents = region16_extents(&*invalidRegion);
+
+    RDPGFX_SURFACE_COMMAND surfaceCommand;
+    surfaceCommand.surfaceId = d->surface.id;
+    surfaceCommand.codecId = RDPGFX_CODECID_CAPROGRESSIVE;
+    surfaceCommand.contextId = d->surface.codecContextId;
+    surfaceCommand.format = PIXEL_FORMAT_BGRX32;
+    surfaceCommand.left = extents->left;
+    surfaceCommand.top = extents->top;
+    surfaceCommand.right = extents->right;
+    surfaceCommand.bottom = extents->bottom;
+    surfaceCommand.width = frame.size.width();
+    surfaceCommand.height = frame.size.height();
+    surfaceCommand.length = encodedSize;
+    surfaceCommand.data = encodedData;
+    surfaceCommand.extra = nullptr;
+
+    const UINT status = d->gfxContext->SurfaceFrameCommand(d->gfxContext.get(), &surfaceCommand, &startFramePdu, &endFramePdu);
+    if (status != CHANNEL_RC_OK) {
+        qCWarning(KRDP) << "SurfaceFrameCommand failed" << status << "frameId" << frameId << "surface" << d->surface.id << "encodedBytes" << encodedSize
+                        << "damageRects" << rectCount;
+    }
+
+    d->session->networkDetection()->stopBandwidthMeasure();
+    region16_uninit(&*invalidRegion);
 }
 
 void VideoStream::updateRequestedFrameRate()
@@ -596,6 +1005,9 @@ void VideoStream::updateRequestedFrameRate()
         if (d->encodedStream) {
             d->encodedStream->setMaxFramerate(frameRate, 1);
             d->encodedStream->setMaxPendingFrames(frameRate);
+        }
+        if (d->sourceStream) {
+            d->sourceStream->setMaxFramerate({static_cast<quint32>(frameRate), 1});
         }
     }
 }

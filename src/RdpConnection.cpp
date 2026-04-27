@@ -364,18 +364,16 @@ void RdpConnection::initialize()
 
     freerdp_settings_set_uint32(settings, FreeRDP_ColorDepth, 32);
 
-    // Plain YUV420 AVC is currently the most straightforward of the the AVC
-    // related codecs to implement. Moreover, it makes the encoding side also
-    // simpler so it is currently the only supported codec. This uses the RdpGfx
-    // pipeline, so make sure to request that.
+    const bool useH264Encoding = d->videoStream->configuredEncodingMode() == VideoStream::EncodingMode::H264;
     freerdp_settings_set_bool(settings, FreeRDP_SupportGraphicsPipeline, true);
     freerdp_settings_set_bool(settings, FreeRDP_GfxAVC444, false);
     freerdp_settings_set_bool(settings, FreeRDP_GfxAVC444v2, false);
-    freerdp_settings_set_bool(settings, FreeRDP_GfxH264, true);
-
+    freerdp_settings_set_bool(settings, FreeRDP_GfxH264, useH264Encoding);
+    freerdp_settings_set_bool(settings, FreeRDP_GfxProgressive, !useH264Encoding);
 
     freerdp_settings_set_bool(settings, FreeRDP_GfxSmallCache, false);
     freerdp_settings_set_bool(settings, FreeRDP_GfxThinClient, false);
+    freerdp_settings_set_bool(settings, FreeRDP_SupportDynamicChannels, true);
 
     freerdp_settings_set_bool(settings, FreeRDP_HasExtendedMouseEvent, true);
     freerdp_settings_set_bool(settings, FreeRDP_HasHorizontalWheel, true);
@@ -419,7 +417,8 @@ void RdpConnection::run(std::stop_token stopToken)
 {
     auto context = reinterpret_cast<PeerContext *>(d->peer->context);
     auto channelEvent = WTSVirtualChannelManagerGetEventHandle(context->virtualChannelManager);
-
+    BYTE lastDrdynvcState = 0xFF;
+    bool lastDrdynvcJoined = false;
     setState(State::Running);
 
     while (!stopToken.stop_requested()) {
@@ -438,30 +437,56 @@ void RdpConnection::run(std::stop_token stopToken)
             break;
         }
 
-        // Initialize any dynamic channels once the dynamic channel channel is setup.
-        if (d->peer->connected && WTSVirtualChannelManagerIsChannelJoined(context->virtualChannelManager, DRDYNVC_SVC_CHANNEL_NAME)) {
-            auto state = WTSVirtualChannelManagerGetDrdynvcState(context->virtualChannelManager);
-            // Dynamic channels can only be set up properly once the dynamic channel channel is properly setup.
-            if (state == DRDYNVC_STATE_READY) {
-                if (d->videoStream->initialize()) {
-                    d->videoStream->setEnabled(true);
-                    setState(State::Streaming);
-                } else {
-                    break;
-                }
-            } else if (state == DRDYNVC_STATE_NONE) {
-                // This ensures that WTSVirtualChannelManagerCheckFileDescriptor() will be called, which initializes the drdynvc channel.
-                SetEvent(channelEvent);
+        if (d->peer->connected && d->state == State::Activated) {
+            if (d->videoStream->initialize()) {
+                d->videoStream->setEnabled(true);
+            } else {
+                break;
             }
         }
 
-        if (WaitForSingleObject(channelEvent, 0) == WAIT_OBJECT_0 && WTSVirtualChannelManagerCheckFileDescriptor(context->virtualChannelManager) != TRUE) {
+        const bool cliprdrJoined = WTSVirtualChannelManagerIsChannelJoined(context->virtualChannelManager, CLIPRDR_SVC_CHANNEL_NAME);
+        const bool drdynvcJoined = WTSVirtualChannelManagerIsChannelJoined(context->virtualChannelManager, DRDYNVC_SVC_CHANNEL_NAME);
+        const BYTE drdynvcState = WTSVirtualChannelManagerGetDrdynvcState(context->virtualChannelManager);
+
+        if (d->peer->connected && d->state == State::Activated && drdynvcJoined && drdynvcState == DRDYNVC_STATE_NONE) {
+            if (WTSVirtualChannelManagerOpen(context->virtualChannelManager) != TRUE) {
+                qCDebug(KRDP) << "Unable to open Virtual Channel Manager for drdynvc";
+                break;
+            }
+        }
+
+        if (WTSVirtualChannelManagerCheckFileDescriptorEx(context->virtualChannelManager, FALSE) != TRUE) {
             qCDebug(KRDP) << "Unable to check Virtual Channel Manager file descriptor, closing connection";
             break;
         }
 
-        if (d->peer->connected && WTSVirtualChannelManagerIsChannelJoined(context->virtualChannelManager, CLIPRDR_SVC_CHANNEL_NAME)) {
+        if (d->peer->connected && d->state == State::Activated && cliprdrJoined) {
             if (!d->clipboard->initialize()) {
+                break;
+            }
+        }
+
+        if (drdynvcJoined != lastDrdynvcJoined || drdynvcState != lastDrdynvcState) {
+            lastDrdynvcJoined = drdynvcJoined;
+            lastDrdynvcState = drdynvcState;
+        }
+
+        if (d->peer->connected && d->state == State::Activated && drdynvcJoined) {
+            switch (drdynvcState) {
+            case DRDYNVC_STATE_NONE:
+                break;
+            case DRDYNVC_STATE_INITIALIZED:
+                break;
+            case DRDYNVC_STATE_READY:
+                if (!d->videoStream->openChannel()) {
+                    qCWarning(KRDP) << "Unable to open RDPGFX channel";
+                } else {
+                    setState(State::Streaming);
+                }
+                break;
+            case DRDYNVC_STATE_FAILED:
+            default:
                 break;
             }
         }
@@ -476,8 +501,6 @@ void RdpConnection::run(std::stop_token stopToken)
 bool RdpConnection::onCapabilities()
 {
     auto settings = d->peer->context->settings;
-    // We only support GraphicsPipeline clients currently as that is required
-    // for AVC streaming.
     if (!freerdp_settings_get_bool(settings, FreeRDP_SupportGraphicsPipeline)) {
         qCWarning(KRDP) << "Client does not support graphics pipeline which is required";
         return false;
@@ -504,6 +527,7 @@ bool RdpConnection::onCapabilities()
 
 bool RdpConnection::onActivate()
 {
+    setState(State::Activated);
     return true;
 }
 

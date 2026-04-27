@@ -7,48 +7,22 @@
 #include <memory>
 #include <optional>
 
-#include <QImage>
 #include <QObject>
 #include <QPoint>
 #include <QRegion>
 #include <QSize>
 
 #include <PipeWireEncodedStream>
+#include <PipeWireSourceStream>
 #include <freerdp/server/rdpgfx.h>
 
+#include "VideoFrame.h"
 #include "krdp_export.h"
 
 namespace KRdp
 {
 
 class RdpConnection;
-
-/**
- * A frame of compressed video data.
- */
-struct VideoFrame {
-    /**
-     * The size of the frame, in pixels.
-     */
-    QSize size;
-    /**
-     * h264 compressed data in YUV420 color space.
-     */
-    QByteArray data;
-    /**
-     * Area of the frame that was actually damaged.
-     * TODO: Actually use this information.
-     */
-    QRegion damage;
-    /**
-     * Whether the packet contains all the information
-     */
-    bool isKeyFrame;
-    /**
-     * When was this frame presented.
-     */
-    std::chrono::system_clock::time_point presentationTimeStamp;
-};
 
 /**
  * A class that encapsulates an RdpGfx video stream.
@@ -70,8 +44,15 @@ class KRDP_EXPORT VideoStream : public QObject
     Q_OBJECT
 
 public:
+    enum class EncodingMode {
+        H264,
+        Progressive,
+    };
+
     explicit VideoStream(RdpConnection *session);
     ~VideoStream() override;
+
+    static EncodingMode configuredEncodingMode();
 
     bool initialize();
     void close();
@@ -105,6 +86,8 @@ public:
     void setVideoQuality(quint8 quality);
     void setPipeWireSource(quint32 nodeId, int fd = -1);
 
+    bool openChannel();
+
 private:
     friend BOOL gfxChannelIdAssigned(RdpgfxServerContext *, uint32_t);
     friend uint32_t gfxCapsAdvertise(RdpgfxServerContext *, const RDPGFX_CAPS_ADVERTISE_PDU *);
@@ -115,8 +98,13 @@ private:
     uint32_t onFrameAcknowledge(const RDPGFX_FRAME_ACKNOWLEDGE_PDU *frameAcknowledge);
 
     void onPacketReceived(const PipeWireEncodedStream::Packet &data);
+    void onFrameReceived(const PipeWireFrame &frame);
+    void destroySurface();
     void performReset(QSize size);
+    bool hasInFlightCapacity() const;
     void sendFrame(const VideoFrame &frame);
+    void sendFrameH264(const VideoFrame &frame);
+    void sendFrameProgressive(const VideoFrame &frame);
 
     void updateRequestedFrameRate();
 

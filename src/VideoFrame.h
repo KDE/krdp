@@ -6,6 +6,7 @@
 
 #include <memory>
 
+#include <QImage>
 #include <QObject>
 #include <QPoint>
 #include <QRegion>
@@ -22,14 +23,27 @@ class RdpConnection;
  * A frame of compressed video data.
  */
 struct VideoFrame {
+    enum class Format {
+        H264,
+        Bgrx32,
+    };
+
     /**
      * The size of the frame, in pixels.
      */
     QSize size;
     /**
+     * Frame transport format.
+     */
+    Format format = Format::H264;
+    /**
      * h264 compressed data in YUV420 color space.
      */
     QByteArray data;
+    /**
+     * Raw frame data for classic raster updates.
+     */
+    QImage image;
     /**
      * Area of the frame that was actually damaged.
      * TODO: Actually use this information.
@@ -38,7 +52,7 @@ struct VideoFrame {
     /**
      * Whether the packet contains all the information
      */
-    bool isKeyFrame;
+    bool isKeyFrame = false;
     /**
      * When was this frame presented.
      */
