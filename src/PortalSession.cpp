@@ -276,6 +276,7 @@ void PortalSession::onDevicesSelected(uint code, const QVariantMap & /*result*/)
         parameters = {{QStringLiteral("types"), 1u}, // MONITOR
                       {QStringLiteral("multiple"), activeStream().has_value()}};
     }
+    parameters[QStringLiteral("cursor_mode")] = 4u; // Metadata
 
     new PortalRequest(d->screencastInterface->SelectSources(d->sessionPath, parameters), this, &PortalSession::onSourcesSelected);
 }
