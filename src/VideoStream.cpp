@@ -447,14 +447,18 @@ void VideoStream::performReset(QSize size)
     resetGraphicsPdu.height = size.height();
     resetGraphicsPdu.monitorCount = 1;
 
-    auto monitors = new MONITOR_DEF[1];
-    monitors[0].left = 0;
-    monitors[0].right = size.width();
-    monitors[0].top = 0;
-    monitors[0].bottom = size.height();
-    monitors[0].flags = MONITOR_PRIMARY;
-    resetGraphicsPdu.monitorDefArray = monitors;
-    d->gfxContext->ResetGraphics(d->gfxContext.get(), &resetGraphicsPdu);
+    MONITOR_DEF monitor = {};
+    monitor.left = 0;
+    monitor.right = size.width();
+    monitor.top = 0;
+    monitor.bottom = size.height();
+    monitor.flags = MONITOR_PRIMARY;
+    resetGraphicsPdu.monitorDefArray = &monitor;
+    UINT status = d->gfxContext->ResetGraphics(d->gfxContext.get(), &resetGraphicsPdu);
+    if (status != CHANNEL_RC_OK) {
+        qCWarning(KRDP) << "ResetGraphics failed" << status << "for size" << size;
+        return;
+    }
 
     RDPGFX_CREATE_SURFACE_PDU createSurfacePdu;
     createSurfacePdu.width = size.width();
@@ -462,7 +466,11 @@ void VideoStream::performReset(QSize size)
     uint16_t surfaceId = d->nextSurfaceId++;
     createSurfacePdu.surfaceId = surfaceId;
     createSurfacePdu.pixelFormat = GFX_PIXEL_FORMAT_XRGB_8888;
-    d->gfxContext->CreateSurface(d->gfxContext.get(), &createSurfacePdu);
+    status = d->gfxContext->CreateSurface(d->gfxContext.get(), &createSurfacePdu);
+    if (status != CHANNEL_RC_OK) {
+        qCWarning(KRDP) << "CreateSurface failed" << status << "surface" << surfaceId << "size" << size;
+        return;
+    }
 
     d->surface = Surface{
         .id = surfaceId,
