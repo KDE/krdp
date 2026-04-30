@@ -12,13 +12,13 @@
 
 #include <linux/input-event-codes.h>
 #include <sys/mman.h>
+#include <unistd.h>
 #include <xkbcommon/xkbcommon.h>
 
+#include "krdp_logging.h"
 #include "qwayland-fake-input.h"
 #include "qwayland-wayland.h"
 #include "screencasting_p.h"
-
-#include "krdp_logging.h"
 
 namespace KRdp
 {
