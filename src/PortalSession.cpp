@@ -16,7 +16,6 @@
 #include <KSystemClipboard>
 
 #include "PortalSession_p.h"
-#include "VideoFrame.h"
 #include "krdp_logging.h"
 #include "xdp_dbus_remotedesktop_interface.h"
 #include "xdp_dbus_screencast_interface.h"
@@ -158,8 +157,7 @@ void PortalSession::start()
 
 void PortalSession::sendEvent(const std::shared_ptr<QEvent> &event)
 {
-    auto encodedStream = stream();
-    if (!encodedStream || !encodedStream->isActive()) {
+    if (!isStarted()) {
         return;
     }
 
@@ -186,7 +184,7 @@ void PortalSession::sendEvent(const std::shared_ptr<QEvent> &event)
         auto me = std::static_pointer_cast<QMouseEvent>(event);
         auto position = me->position();
         auto logicalPosition = QPointF{(position.x() / size().width()) * logicalSize().width(), (position.y() / size().height()) * logicalSize().height()};
-        d->remoteInterface->NotifyPointerMotionAbsolute(d->sessionPath, QVariantMap{}, encodedStream->nodeId(), logicalPosition.x(), logicalPosition.y());
+        d->remoteInterface->NotifyPointerMotionAbsolute(d->sessionPath, QVariantMap{}, nodeId(), logicalPosition.x(), logicalPosition.y());
         break;
     }
     case QEvent::Wheel: {
@@ -335,16 +333,8 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
 
             setLogicalSize(qdbus_cast<QSize>(stream.map.value(u"size"_s)));
             auto fd = reply.value();
-            auto encodedStream = this->stream();
-            encodedStream->setNodeId(stream.nodeId);
-            encodedStream->setFd(fd.takeFileDescriptor());
-            encodedStream->setEncodingPreference(PipeWireBaseEncodedStream::EncodingPreference::Speed);
-            // Ensure we encode in full color range so FFmpeg decodes correctly.
-            encodedStream->setColorRange(PipeWireBaseEncodedStream::ColorRange::Full);
-            encodedStream->setEncoder(PipeWireEncodedStream::H264Baseline);
-            connect(encodedStream, &PipeWireEncodedStream::newPacket, this, &PortalSession::onPacketReceived);
-            connect(encodedStream, &PipeWireEncodedStream::sizeChanged, this, &PortalSession::setSize);
-            connect(encodedStream, &PipeWireEncodedStream::cursorChanged, this, &PortalSession::cursorUpdate);
+            setNodeId(stream.nodeId);
+            setPipeWireFd(fd.takeFileDescriptor());
             QDBusConnection::sessionBus().connect(u"org.freedesktop.portal.Desktop"_s,
                                                   d->sessionPath.path(),
                                                   u"org.freedesktop.portal.Session"_s,
@@ -366,18 +356,6 @@ void PortalSession::onSessionClosed()
     qCWarning(KRDP) << "Portal session was closed!";
     Q_EMIT error();
 }
-
-void PortalSession::onPacketReceived(const PipeWireEncodedStream::Packet &data)
-{
-    VideoFrame frameData;
-
-    frameData.size = size();
-    frameData.data = data.data();
-    frameData.isKeyFrame = data.isKeyFrame();
-
-    Q_EMIT frameReceived(frameData);
-}
-
 }
 
 #include "moc_PortalSession_p.cpp"

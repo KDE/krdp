@@ -6,8 +6,13 @@
 
 #include "krdp_export.h"
 
-#include <PipeWireEncodedStream>
-#include <PipeWireSourceStream>
+#include <memory>
+#include <optional>
+
+#include <QEvent>
+#include <QObject>
+#include <QSize>
+#include <QString>
 
 class QMimeData;
 
@@ -34,15 +39,10 @@ public:
      */
     virtual void start() = 0;
 
-    bool streamingEnabled() const;
-    void setStreamingEnabled(bool enable);
-    void setVideoFrameRate(quint32 framerate);
     void setActiveStream(int stream);
     void setVirtualMonitor(const VirtualMonitor &vm);
-    void setVideoQuality(quint8 quality);
-
-    void requestStreamingEnable(QObject *requester);
-    void requestStreamingDisable(QObject *requester);
+    quint32 nodeId() const;
+    int takePipeWireFd();
 
     /**
      * Set the system's clipboard data.
@@ -63,28 +63,12 @@ Q_SIGNALS:
     void error();
 
     /**
-     * Emitted whenever a new frame has been received.
-     *
-     * Received in this case means that the portal has sent the data and it has
-     * been encoded by libav.
-     */
-    void frameReceived(const VideoFrame &frame);
-
-    /**
-     * Emitted whenever a new cursor update was received.
-     *
-     * These are separate from frames as RDP has a separate protocol for mouse
-     * movement that is more performant than embedding things into the video
-     * stream.
-     */
-    void cursorUpdate(const PipeWireCursor &cursor);
-
-    /**
      * Emitted whenever the system's clipboard data changes.
      */
     void clipboardDataChanged(const QMimeData *data);
 
 protected:
+    bool isStarted() const;
     QSize size() const;
     QSize logicalSize() const;
     std::optional<VirtualMonitor> virtualMonitor() const;
@@ -93,7 +77,8 @@ protected:
     void setStarted(bool started);
     void setSize(QSize size);
     void setLogicalSize(QSize size);
-    PipeWireEncodedStream *stream();
+    void setNodeId(quint32 nodeId);
+    void setPipeWireFd(int fd);
 
 private:
     class Private;

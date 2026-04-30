@@ -18,7 +18,6 @@
 #include "qwayland-wayland.h"
 #include "screencasting_p.h"
 
-#include "VideoStream.h"
 #include "krdp_logging.h"
 
 namespace KRdp
@@ -189,22 +188,14 @@ void PlasmaScreencastV1Session::start()
         qCDebug(KRDP) << "Started Plasma session";
 
         setLogicalSize(d->request->size());
-        auto encodedStream = stream();
-        encodedStream->setNodeId(nodeId);
-        encodedStream->setEncodingPreference(PipeWireBaseEncodedStream::EncodingPreference::Speed);
-        encodedStream->setColorRange(PipeWireBaseEncodedStream::ColorRange::Full);
-        encodedStream->setEncoder(PipeWireEncodedStream::H264Baseline);
-        connect(encodedStream, &PipeWireEncodedStream::newPacket, this, &PlasmaScreencastV1Session::onPacketReceived);
-        connect(encodedStream, &PipeWireEncodedStream::sizeChanged, this, &PlasmaScreencastV1Session::setSize);
-        connect(encodedStream, &PipeWireEncodedStream::cursorChanged, this, &PlasmaScreencastV1Session::cursorUpdate);
+        setNodeId(nodeId);
         setStarted(true);
     });
 }
 
 void PlasmaScreencastV1Session::sendEvent(const std::shared_ptr<QEvent> &event)
 {
-    auto encodedStream = stream();
-    if (!encodedStream || !encodedStream->isActive()) {
+    if (!isStarted()) {
         return;
     }
 
@@ -292,16 +283,4 @@ void PlasmaScreencastV1Session::setClipboardData(std::unique_ptr<QMimeData> data
 {
     Q_UNUSED(data);
 }
-
-void PlasmaScreencastV1Session::onPacketReceived(const PipeWireEncodedStream::Packet &data)
-{
-    VideoFrame frameData;
-
-    frameData.size = size();
-    frameData.data = data.data();
-    frameData.isKeyFrame = data.isKeyFrame();
-
-    Q_EMIT frameReceived(frameData);
-}
-
 }

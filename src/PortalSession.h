@@ -52,7 +52,6 @@ private:
     void onDevicesSelected(uint code, const QVariantMap &result);
     void onSourcesSelected(uint code, const QVariantMap &result);
     void onSessionStarted(uint code, const QVariantMap &result);
-    void onPacketReceived(const PipeWireEncodedStream::Packet &data);
     Q_SLOT void onSessionClosed();
 
     class Private;

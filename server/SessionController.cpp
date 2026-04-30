@@ -10,6 +10,8 @@
 
 #include <KLocalizedString>
 
+#include <PipeWireSourceStream>
+
 #include <Clipboard.h>
 #include <Cursor.h>
 #include <InputHandler.h>
@@ -35,13 +37,12 @@ public:
     {
         m_sni = sni;
 
-        connect(session.get(), &KRdp::AbstractSession::frameReceived, connection->videoStream(), &KRdp::VideoStream::queueFrame);
-        connect(session.get(), &KRdp::AbstractSession::cursorUpdate, this, &SessionWrapper::onCursorUpdate);
         connect(session.get(), &KRdp::AbstractSession::error, this, &SessionWrapper::sessionError);
+        connect(session.get(), &KRdp::AbstractSession::started, this, &SessionWrapper::onSessionStarted);
         connect(session.get(), &KRdp::AbstractSession::clipboardDataChanged, connection->clipboard(), &KRdp::Clipboard::setServerData);
 
+        connect(connection->videoStream(), &KRdp::VideoStream::cursorChanged, this, &SessionWrapper::onCursorUpdate);
         connect(connection->videoStream(), &KRdp::VideoStream::enabledChanged, this, &SessionWrapper::onVideoStreamEnabledChanged);
-        connect(connection->videoStream(), &KRdp::VideoStream::requestedFrameRateChanged, this, &SessionWrapper::onRequestedFrameRateChanged);
         connect(connection->inputHandler(), &KRdp::InputHandler::inputEvent, session.get(), &KRdp::AbstractSession::sendEvent);
         connect(connection->clipboard(), &KRdp::Clipboard::clientDataChanged, session.get(), [clipboard = connection->clipboard(), this]() {
             session->setClipboardData(clipboard->getClipboard());
@@ -64,16 +65,14 @@ public:
 
     void onVideoStreamEnabledChanged()
     {
-        if (connection->videoStream()->enabled()) {
-            session->requestStreamingEnable(connection->videoStream());
-        } else {
-            session->requestStreamingDisable(connection->videoStream());
-        }
+        connection->videoStream()->setStreamingEnabled(m_sessionStarted && connection->videoStream()->enabled());
     }
 
-    void onRequestedFrameRateChanged()
+    void onSessionStarted()
     {
-        session->setVideoFrameRate(connection->videoStream()->requestedFrameRate());
+        m_sessionStarted = true;
+        connection->videoStream()->setPipeWireSource(session->nodeId(), session->takePipeWireFd());
+        connection->videoStream()->setStreamingEnabled(connection->videoStream()->enabled());
     }
 
     void onConnectionDestroyed()
@@ -87,6 +86,7 @@ public:
     std::unique_ptr<KRdp::AbstractSession> session;
     QPointer<KRdp::RdpConnection> connection;
     KStatusNotifierItem *m_sni;
+    bool m_sessionStarted = false;
 };
 
 SessionController::SessionController(KRdp::Server *server, SessionType sessionType)
@@ -136,7 +136,8 @@ void SessionController::onNewConnection(KRdp::RdpConnection *newConnection)
     } else if (m_monitorIndex) {
         wrapper->session->setActiveStream(*m_monitorIndex);
     }
-    wrapper->session->setVideoQuality(m_quality.value());
+    wrapper->connection->videoStream()->setVideoQuality(m_quality.value());
+    wrapper->session->start();
 
     connect(wrapper.get(), &SessionWrapper::connectionDestroyed, this, [this](SessionWrapper *wrapper) {
         m_wrappers.erase(std::remove_if(m_wrappers.begin(),

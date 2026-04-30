@@ -11,8 +11,9 @@
 #include <QTimer>
 #include <QUrl>
 
+#include <PipeWireEncodedStream>
+
 #include "PortalSession.h"
-#include "VideoStream.h"
 
 using namespace Qt::StringLiterals;
 
@@ -30,10 +31,10 @@ int main(int argc, char **argv)
     parser.process(application);
 
     KRdp::PortalSession session;
-    session.requestStreamingEnable(&application);
+    PipeWireEncodedStream encodedStream;
     session.setActiveStream(parser.value(u"monitor"_s).toInt());
     if (parser.isSet(u"quality"_s)) {
-        session.setVideoQuality(parser.value(u"quality"_s).toUShort());
+        encodedStream.setQuality(parser.value(u"quality"_s).toUShort());
     }
 
     signal(SIGINT, [](int) {
@@ -50,8 +51,19 @@ int main(int argc, char **argv)
         return -1;
     }
 
-    QObject::connect(&session, &KRdp::PortalSession::frameReceived, &session, [&file](const KRdp::VideoFrame &frame) {
-        file.write(frame.data);
+    QObject::connect(&session, &KRdp::PortalSession::started, &session, [&session, &encodedStream]() {
+        encodedStream.setNodeId(session.nodeId());
+        auto fd = session.takePipeWireFd();
+        if (fd >= 0) {
+            encodedStream.setFd(fd);
+        }
+        encodedStream.setEncodingPreference(PipeWireBaseEncodedStream::EncodingPreference::Speed);
+        encodedStream.setColorRange(PipeWireBaseEncodedStream::ColorRange::Full);
+        encodedStream.setEncoder(PipeWireEncodedStream::H264Baseline);
+        encodedStream.start();
+    });
+    QObject::connect(&encodedStream, &PipeWireEncodedStream::newPacket, &session, [&file](const PipeWireEncodedStream::Packet &packet) {
+        file.write(packet.data());
     });
 
     QTimer timer;

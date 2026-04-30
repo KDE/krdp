@@ -13,6 +13,7 @@
 #include <QRegion>
 #include <QSize>
 
+#include <PipeWireEncodedStream>
 #include <freerdp/server/rdpgfx.h>
 
 #include "krdp_export.h"
@@ -75,6 +76,7 @@ public:
     bool initialize();
     void close();
     Q_SIGNAL void closed();
+    Q_SIGNAL void cursorChanged(const PipeWireCursor &cursor);
 
     /**
      * Queue a frame to be sent to the client.
@@ -99,9 +101,9 @@ public:
     bool enabled() const;
     void setEnabled(bool enabled);
     Q_SIGNAL void enabledChanged();
-
-    uint32_t requestedFrameRate() const;
-    Q_SIGNAL void requestedFrameRateChanged();
+    void setStreamingEnabled(bool enabled);
+    void setVideoQuality(quint8 quality);
+    void setPipeWireSource(quint32 nodeId, int fd = -1);
 
 private:
     friend BOOL gfxChannelIdAssigned(RdpgfxServerContext *, uint32_t);
@@ -112,6 +114,7 @@ private:
     uint32_t onCapsAdvertise(const RDPGFX_CAPS_ADVERTISE_PDU *capsAdvertise);
     uint32_t onFrameAcknowledge(const RDPGFX_FRAME_ACKNOWLEDGE_PDU *frameAcknowledge);
 
+    void onPacketReceived(const PipeWireEncodedStream::Packet &data);
     void performReset(QSize size);
     void sendFrame(const VideoFrame &frame);
 

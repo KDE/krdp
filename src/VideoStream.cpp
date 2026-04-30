@@ -109,17 +109,21 @@ public:
     using RdpGfxContextPtr = std::unique_ptr<RdpgfxServerContext, decltype(&rdpgfx_server_context_free)>;
 
     RdpConnection *session;
+    std::unique_ptr<PipeWireEncodedStream> encodedStream;
 
     RdpGfxContextPtr gfxContext = RdpGfxContextPtr(nullptr, rdpgfx_server_context_free);
 
     uint32_t frameId = 0;
     uint32_t channelId = 0;
+    quint32 nodeId = 0;
 
     uint16_t nextSurfaceId = 1;
     Surface surface;
+    QSize size;
 
     bool pendingReset = true;
     bool enabled = false;
+    bool streamingEnabled = false;
     bool capsConfirmed = false;
 
     std::jthread frameSubmissionThread;
@@ -144,6 +148,19 @@ VideoStream::VideoStream(RdpConnection *session)
     , d(std::make_unique<Private>())
 {
     d->session = session;
+    d->encodedStream = std::make_unique<PipeWireEncodedStream>();
+    d->encodedStream->setEncodingPreference(PipeWireBaseEncodedStream::EncodingPreference::Speed);
+    // Ensure we encode in full color range so FFmpeg decodes correctly.
+    d->encodedStream->setColorRange(PipeWireBaseEncodedStream::ColorRange::Full);
+    d->encodedStream->setEncoder(PipeWireEncodedStream::H264Baseline);
+    d->encodedStream->setMaxFramerate(d->requestedFrameRate, 1);
+    d->encodedStream->setMaxPendingFrames(d->requestedFrameRate);
+
+    connect(d->encodedStream.get(), &PipeWireEncodedStream::newPacket, this, &VideoStream::onPacketReceived);
+    connect(d->encodedStream.get(), &PipeWireEncodedStream::sizeChanged, this, [this](const QSize &size) {
+        d->size = size;
+    });
+    connect(d->encodedStream.get(), &PipeWireEncodedStream::cursorChanged, this, &VideoStream::cursorChanged);
 }
 
 VideoStream::~VideoStream()
@@ -212,8 +229,8 @@ bool VideoStream::initialize()
 
 void VideoStream::close()
 {
-    if (!d->gfxContext) {
-        return;
+    if (d->encodedStream) {
+        d->encodedStream->stop();
     }
 
     // Stop the frame submission thread first to prevent
@@ -230,6 +247,10 @@ void VideoStream::close()
     {
         std::lock_guard lock(d->frameQueueMutex);
         d->frameQueue.clear();
+    }
+
+    if (!d->gfxContext) {
+        return;
     }
 
     d->gfxContext->Close(d->gfxContext.get());
@@ -268,9 +289,34 @@ void VideoStream::setEnabled(bool enabled)
     Q_EMIT enabledChanged();
 }
 
-uint32_t VideoStream::requestedFrameRate() const
+void VideoStream::setStreamingEnabled(bool enabled)
 {
-    return d->requestedFrameRate;
+    if (d->streamingEnabled == enabled) {
+        return;
+    }
+
+    d->streamingEnabled = enabled;
+    if (enabled && d->nodeId != 0) {
+        d->encodedStream->start();
+    } else {
+        d->encodedStream->stop();
+    }
+}
+
+void VideoStream::setVideoQuality(quint8 quality)
+{
+    d->encodedStream->setQuality(quality);
+}
+
+void VideoStream::setPipeWireSource(quint32 nodeId, int fd)
+{
+    d->nodeId = nodeId;
+    d->encodedStream->setNodeId(nodeId);
+    d->encodedStream->setFd(fd);
+
+    if (d->streamingEnabled) {
+        d->encodedStream->start();
+    }
 }
 
 bool VideoStream::onChannelIdAssigned(uint32_t channelId)
@@ -383,6 +429,15 @@ uint32_t VideoStream::onFrameAcknowledge(const RDPGFX_FRAME_ACKNOWLEDGE_PDU *fra
     d->pendingFrames.erase(itr);
 
     return CHANNEL_RC_OK;
+}
+
+void VideoStream::onPacketReceived(const PipeWireEncodedStream::Packet &data)
+{
+    VideoFrame frameData;
+    frameData.size = d->size;
+    frameData.data = data.data();
+    frameData.isKeyFrame = data.isKeyFrame();
+    queueFrame(frameData);
 }
 
 void VideoStream::performReset(QSize size)
@@ -530,7 +585,10 @@ void VideoStream::updateRequestedFrameRate()
 
     if (frameRate != d->requestedFrameRate) {
         d->requestedFrameRate = frameRate;
-        Q_EMIT requestedFrameRateChanged();
+        if (d->encodedStream) {
+            d->encodedStream->setMaxFramerate(frameRate, 1);
+            d->encodedStream->setMaxPendingFrames(frameRate);
+        }
     }
 }
 }
