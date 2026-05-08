@@ -41,7 +41,6 @@ ecm_qt_declare_logging_category(KRdp
     CATEGORY_NAME org.kde.krdp
     DESCRIPTION "KRdp"
     EXPORT KRdp
-    DEFAULT_SEVERITY Debug
 )
 
 ecm_generate_export_header(KRdp

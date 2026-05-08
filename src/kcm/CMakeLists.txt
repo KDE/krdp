@@ -30,7 +30,6 @@ ecm_qt_declare_logging_category(kcm_krdpserver
     CATEGORY_NAME org.kde.krdp
     DESCRIPTION "KRdp"
     EXPORT kcm_krdpserver
-    DEFAULT_SEVERITY Debug
 )
 
 target_sources(kcm_krdpserver PRIVATE
@@ -50,7 +49,6 @@ ecm_qt_declare_logging_category(kcm_krdpserver
     CATEGORY_NAME org.kde.krdp.kcm
     DESCRIPTION "KRDPKCM"
     EXPORT kcm_krdpserver
-    DEFAULT_SEVERITY Debug
 )
 
 target_link_libraries(kcm_krdpserver PRIVATE
