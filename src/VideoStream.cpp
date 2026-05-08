@@ -22,6 +22,7 @@
 #include <freerdp/freerdp.h>
 #include <freerdp/peer.h>
 #include <freerdp/update.h>
+#include <qassert.h>
 
 #include "NetworkDetection.h"
 #include "PeerContext_p.h"
@@ -169,6 +170,7 @@ static QString encodingModeName(VideoStream::EncodingMode mode)
     case VideoStream::EncodingMode::Progressive:
         return QStringLiteral("progressive");
     }
+    Q_UNREACHABLE();
 }
 
 VideoStream::EncodingMode VideoStream::configuredEncodingMode()
@@ -377,8 +379,10 @@ void VideoStream::queueFrame(const KRdp::VideoFrame &frame)
     }
 
     std::lock_guard lock(d->frameQueueMutex);
-
     if (d->encodingMode == EncodingMode::H264) {
+        if (frame.isKeyFrame) {
+            d->frameQueue.clear();
+        }
         d->frameQueue.append(frame);
         return;
     } else if (d->encodingMode == EncodingMode::Progressive) {
