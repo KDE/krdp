@@ -1,13 +1,13 @@
 # Copyright (C) 2024 This file is copyright:
 # This file is distributed under the same license as the krdp package.
-# SPDX-FileCopyrightText: 2024, 2025, 2026 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
+# SPDX-FileCopyrightText: 2024-2026 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-01-17 02:38+0000\n"
-"PO-Revision-Date: 2026-04-11 09:09+0200\n"
+"PO-Revision-Date: 2026-05-09 16:19+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: pl\n"
 "Language: pl\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
-"X-Generator: Lokalize 25.08.2\n"
+"X-Generator: Lokalize 26.04.0\n"
 
 #. i18n: ectx: label, entry (ListenPort), group (General)
 #: krdpserversettings.kcfg:14
@@ -180,8 +180,8 @@ msgid ""
 "Set up remote login to connect using apps supporting the “RDP” remote "
 "desktop protocol."
 msgstr ""
-"Ustaw zdalne dane dostępowe, aby móc łączyć się przy użyciu aplikacji "
-"obsługujących protokół pulpitu zdalnego \"RDP\"."
+"Ustaw dane dostępowe do dostępu zdalnego, aby móc łączyć się przy użyciu "
+"aplikacji obsługujących protokół pulpitu zdalnego \"RDP\"."
 
 #: ui/main.qml:153
 #, kde-format
@@ -322,7 +322,7 @@ msgstr "Nazwy użytkowników"
 #, kde-format
 msgctxt "@action:button"
 msgid "Add New…"
-msgstr "Dodaj nowy…"
+msgstr "Dodaj nowego…"
 
 #: ui/UserListView.qml:26
 #, kde-format
