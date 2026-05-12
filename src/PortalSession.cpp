@@ -9,6 +9,7 @@
 #include <QMouseEvent>
 #include <QQueue>
 
+#include <linux/input-event-codes.h>
 #include <linux/input.h>
 
 #include <KConfigGroup>
@@ -24,6 +25,26 @@ using namespace Qt::StringLiterals;
 
 namespace KRdp
 {
+
+int toLinuxMouseButton(Qt::MouseButton button)
+{
+    switch (button) {
+    case Qt::LeftButton:
+        return BTN_LEFT;
+    case Qt::MiddleButton:
+        return BTN_MIDDLE;
+    case Qt::RightButton:
+        return BTN_RIGHT;
+    case Qt::BackButton:
+        return BTN_SIDE; // I don't understand why this isn't BTN_BACK, but it makes things work..
+    case Qt::ForwardButton:
+        return BTN_EXTRA;
+    case Qt::TaskButton:
+        return BTN_TASK;
+    default:
+        return 0;
+    }
+}
 
 static const QString dbusService = QStringLiteral("org.freedesktop.portal.Desktop");
 static const QString dbusPath = QStringLiteral("/org/freedesktop/portal/desktop");
@@ -165,14 +186,8 @@ void PortalSession::sendEvent(const std::shared_ptr<QEvent> &event)
     case QEvent::MouseButtonPress:
     case QEvent::MouseButtonRelease: {
         auto me = std::static_pointer_cast<QMouseEvent>(event);
-        int button = 0;
-        if (me->button() == Qt::LeftButton) {
-            button = BTN_LEFT;
-        } else if (me->button() == Qt::MiddleButton) {
-            button = BTN_MIDDLE;
-        } else if (me->button() == Qt::RightButton) {
-            button = BTN_RIGHT;
-        } else {
+        const int button = toLinuxMouseButton(me->button());
+        if (!button) {
             qCWarning(KRDP) << "Unsupported mouse button" << me->button();
             return;
         }
