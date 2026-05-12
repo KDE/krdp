@@ -419,7 +419,8 @@ void RdpConnection::run(std::stop_token stopToken)
 {
     auto context = reinterpret_cast<PeerContext *>(d->peer->context);
     auto channelEvent = WTSVirtualChannelManagerGetEventHandle(context->virtualChannelManager);
-
+    BYTE lastDrdynvcState = 0xFF;
+    bool lastDrdynvcJoined = false;
     setState(State::Running);
 
     while (!stopToken.stop_requested()) {
@@ -438,31 +439,48 @@ void RdpConnection::run(std::stop_token stopToken)
             break;
         }
 
-        // Initialize any dynamic channels once the dynamic channel channel is setup.
-        if (d->peer->connected && WTSVirtualChannelManagerIsChannelJoined(context->virtualChannelManager, DRDYNVC_SVC_CHANNEL_NAME)) {
-            auto state = WTSVirtualChannelManagerGetDrdynvcState(context->virtualChannelManager);
-            // Dynamic channels can only be set up properly once the dynamic channel channel is properly setup.
-            if (state == DRDYNVC_STATE_READY) {
-                if (d->videoStream->initialize()) {
-                    d->videoStream->setEnabled(true);
-                    setState(State::Streaming);
-                } else {
-                    break;
-                }
-            } else if (state == DRDYNVC_STATE_NONE) {
-                // This ensures that WTSVirtualChannelManagerCheckFileDescriptor() will be called, which initializes the drdynvc channel.
-                SetEvent(channelEvent);
+        if (d->peer->connected && d->state == State::Activated) {
+            if (d->videoStream->initialize()) {
+                d->videoStream->setEnabled(true);
+            } else {
+                break;
             }
         }
 
-        if (WaitForSingleObject(channelEvent, 0) == WAIT_OBJECT_0 && WTSVirtualChannelManagerCheckFileDescriptor(context->virtualChannelManager) != TRUE) {
+        const bool cliprdrJoined = WTSVirtualChannelManagerIsChannelJoined(context->virtualChannelManager, CLIPRDR_SVC_CHANNEL_NAME);
+        const bool drdynvcJoined = WTSVirtualChannelManagerIsChannelJoined(context->virtualChannelManager, DRDYNVC_SVC_CHANNEL_NAME);
+        const BYTE drdynvcState = WTSVirtualChannelManagerGetDrdynvcState(context->virtualChannelManager);
+
+        if (d->peer->connected && d->state == State::Activated && drdynvcJoined && drdynvcState == DRDYNVC_STATE_NONE) {
+            if (WTSVirtualChannelManagerOpen(context->virtualChannelManager) != TRUE) {
+                qCDebug(KRDP) << "Unable to open Virtual Channel Manager for drdynvc";
+                break;
+            }
+        }
+
+        if (WTSVirtualChannelManagerCheckFileDescriptorEx(context->virtualChannelManager, FALSE) != TRUE) {
             qCDebug(KRDP) << "Unable to check Virtual Channel Manager file descriptor, closing connection";
             break;
         }
 
-        if (d->peer->connected && WTSVirtualChannelManagerIsChannelJoined(context->virtualChannelManager, CLIPRDR_SVC_CHANNEL_NAME)) {
+        if (d->peer->connected && d->state == State::Activated && cliprdrJoined) {
             if (!d->clipboard->initialize()) {
                 break;
+            }
+        }
+
+        if (drdynvcJoined != lastDrdynvcJoined || drdynvcState != lastDrdynvcState) {
+            lastDrdynvcJoined = drdynvcJoined;
+            lastDrdynvcState = drdynvcState;
+        }
+
+        if (d->peer->connected && d->state == State::Activated && drdynvcJoined) {
+            if (drdynvcState == DRDYNVC_STATE_READY) {
+                if (!d->videoStream->openChannel()) {
+                    qCWarning(KRDP) << "Unable to open RDPGFX channel";
+                } else {
+                    setState(State::Streaming);
+                }
             }
         }
 
@@ -504,6 +522,7 @@ bool RdpConnection::onCapabilities()
 
 bool RdpConnection::onActivate()
 {
+    setState(State::Activated);
     return true;
 }
 
