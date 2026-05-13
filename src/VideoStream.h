@@ -5,7 +5,6 @@
 #pragma once
 
 #include <memory>
-#include <optional>
 
 #include <QObject>
 #include <QPoint>
@@ -52,7 +51,7 @@ public:
     explicit VideoStream(RdpConnection *session);
     ~VideoStream() override;
 
-    static EncodingMode configuredEncodingMode();
+    static bool h264Disabled();
 
     bool initialize();
     void close();
@@ -100,6 +99,7 @@ private:
 
     void onPacketReceived(const PipeWireEncodedStream::Packet &data);
     void onFrameReceived(const PipeWireFrame &frame);
+    void setActiveEncodingMode(EncodingMode mode);
     void destroySurface();
     void performReset(QSize size);
     bool hasInFlightCapacity() const;

@@ -118,7 +118,7 @@ public:
     using ProgressiveContextPtr = std::unique_ptr<PROGRESSIVE_CONTEXT, decltype(&progressive_context_free)>;
 
     RdpConnection *session;
-    EncodingMode encodingMode = VideoStream::configuredEncodingMode();
+    std::optional<EncodingMode> activeEncodingMode;
     std::unique_ptr<PipeWireEncodedStream> encodedStream;
     std::unique_ptr<PipeWireSourceStream> sourceStream;
     DmaBufHandler dmaBufHandler;
@@ -129,6 +129,7 @@ public:
     uint32_t frameId = 0;
     uint32_t channelId = 0;
     quint32 nodeId = 0;
+    int pipeWireFd = -1;
 
     uint16_t nextSurfaceId = 1;
     Surface surface;
@@ -139,9 +140,6 @@ public:
     bool streamingEnabled = false;
     bool capsConfirmed = false;
     bool channelOpen = false;
-    bool avcSupported = false;
-    bool yuv420Supported = false;
-    bool progressiveSupported = false;
 
     std::jthread frameSubmissionThread;
     std::mutex frameQueueMutex;
@@ -183,18 +181,10 @@ static QString encodingModeName(VideoStream::EncodingMode mode)
     Q_UNREACHABLE();
 }
 
-VideoStream::EncodingMode VideoStream::configuredEncodingMode()
+bool VideoStream::h264Disabled()
 {
-    const QString mode = qEnvironmentVariable("KRDP_ENCODING_MODE").trimmed().toLower();
-    if (mode == QStringLiteral("h264") || mode.isEmpty()) {
-        return EncodingMode::H264;
-    }
-    if (mode == QStringLiteral("progressive")) {
-        return EncodingMode::Progressive;
-    }
-
-    qCDebug(KRDP) << "Unknown KRDP_ENCODING_MODE value" << mode << "- defaulting to h264";
-    return EncodingMode::H264;
+    static const bool h264Disabled = qEnvironmentVariableIntValue("KRDP_DISABLE_H264") != 0;
+    return h264Disabled;
 }
 
 static RECTANGLE_16 toRectangle16(const QRect &rect)
@@ -241,7 +231,31 @@ VideoStream::VideoStream(RdpConnection *session)
     , d(std::make_unique<Private>())
 {
     d->session = session;
-    if (d->encodingMode == EncodingMode::H264) {
+}
+
+void VideoStream::setActiveEncodingMode(EncodingMode mode)
+{
+    if (d->activeEncodingMode == mode) {
+        return;
+    }
+
+    if (d->encodedStream) {
+        d->encodedStream->stop();
+        d->encodedStream.reset();
+    }
+    if (d->sourceStream) {
+        d->sourceStream->setActive(false);
+        d->sourceStream.reset();
+    }
+
+    {
+        std::lock_guard lock(d->frameQueueMutex);
+        d->frameQueue.clear();
+    }
+
+    d->activeEncodingMode = mode;
+
+    if (mode == EncodingMode::H264) {
         d->encodedStream = std::make_unique<PipeWireEncodedStream>();
         d->encodedStream->setEncodingPreference(PipeWireBaseEncodedStream::EncodingPreference::Speed);
         d->encodedStream->setColorRange(PipeWireBaseEncodedStream::ColorRange::Full);
@@ -255,6 +269,13 @@ VideoStream::VideoStream(RdpConnection *session)
             d->setSize(this, size);
         });
         connect(d->encodedStream.get(), &PipeWireEncodedStream::cursorChanged, this, &VideoStream::cursorChanged);
+        if (d->nodeId != 0 && d->pipeWireFd > 0) {
+            d->encodedStream->setNodeId(d->nodeId);
+            d->encodedStream->setFd(d->pipeWireFd);
+        }
+        if (d->streamingEnabled && d->nodeId != 0) {
+            d->encodedStream->start();
+        }
     } else {
         d->sourceStream = std::make_unique<PipeWireSourceStream>();
         d->sourceStream->setAllowDmaBuf(true);
@@ -274,6 +295,17 @@ VideoStream::VideoStream(RdpConnection *session)
                 }
             },
             Qt::QueuedConnection);
+
+        if (d->nodeId != 0 && d->pipeWireFd) {
+            d->sourceStream->setUsageHint(d->pipeWireFd ? PipeWireSourceStream::UsageHint::EncodeSoftware : PipeWireSourceStream::UsageHint::EncodeHardware);
+            if (!d->sourceStream->createStream(d->nodeId, d->pipeWireFd)) {
+                qCWarning(KRDP) << "Could not create PipeWire source stream" << d->sourceStream->error();
+                d->session->close(RdpConnection::CloseReason::VideoInitFailed);
+                return;
+            }
+            d->size = d->sourceStream->size();
+        }
+        d->sourceStream->setActive(d->streamingEnabled && d->nodeId != 0);
     }
 }
 
@@ -340,7 +372,7 @@ bool VideoStream::initialize()
         }
     });
 
-    qCDebug(KRDP) << "Video stream initialized in" << encodingModeName(d->encodingMode) << "mode";
+    qCDebug(KRDP) << "Video stream initialized with H.264" << (h264Disabled() ? "disabled" : "enabled");
 
     return true;
 }
@@ -376,6 +408,7 @@ void VideoStream::close()
         }
         d->gfxContext.reset();
     }
+    d->activeEncodingMode.reset();
     d->initialized = false;
 
     Q_EMIT closed();
@@ -388,13 +421,13 @@ void VideoStream::queueFrame(const KRdp::VideoFrame &frame)
     }
 
     std::lock_guard lock(d->frameQueueMutex);
-    if (d->encodingMode == EncodingMode::H264) {
+    if (d->activeEncodingMode == EncodingMode::H264) {
         if (frame.isKeyFrame) {
             d->frameQueue.clear();
         }
         d->frameQueue.append(frame);
         return;
-    } else if (d->encodingMode == EncodingMode::Progressive) {
+    } else if (d->activeEncodingMode == EncodingMode::Progressive) {
         // for the raster path we only need to keep the latest frame, but accumulate damage
         QRegion lastDamage;
         if (!d->frameQueue.isEmpty()) {
@@ -457,16 +490,17 @@ void VideoStream::setVideoQuality(quint8 quality)
 void VideoStream::setPipeWireSource(quint32 nodeId, int fd)
 {
     d->nodeId = nodeId;
+    d->pipeWireFd = fd;
     if (d->encodedStream) {
         d->encodedStream->setNodeId(nodeId);
-        d->encodedStream->setFd(fd);
+        d->encodedStream->setFd(d->pipeWireFd);
         if (d->streamingEnabled) {
             d->encodedStream->start();
         }
     }
     if (d->sourceStream) {
-        d->sourceStream->setUsageHint(fd >= 0 ? PipeWireSourceStream::UsageHint::EncodeSoftware : PipeWireSourceStream::UsageHint::EncodeHardware);
-        if (!d->sourceStream->createStream(nodeId, fd)) {
+        d->sourceStream->setUsageHint(d->pipeWireFd ? PipeWireSourceStream::UsageHint::EncodeSoftware : PipeWireSourceStream::UsageHint::EncodeHardware);
+        if (!d->sourceStream->createStream(nodeId, d->pipeWireFd)) {
             qCWarning(KRDP) << "Could not create PipeWire source stream" << d->sourceStream->error();
             d->session->close(RdpConnection::CloseReason::VideoInitFailed);
             return;
@@ -543,32 +577,28 @@ uint32_t VideoStream::onCapsAdvertise(const RDPGFX_CAPS_ADVERTISE_PDU *capsAdver
         capsInformation.push_back(caps);
     }
 
-    d->avcSupported = std::any_of(capsInformation.begin(), capsInformation.end(), [](const RdpCapsInformation &caps) {
-        return caps.avcSupported;
-    });
-    d->yuv420Supported = std::any_of(capsInformation.begin(), capsInformation.end(), [](const RdpCapsInformation &caps) {
-        return caps.yuv420Supported;
-    });
-    d->progressiveSupported = !capsInformation.empty();
+    const bool supportsProgresive = !capsInformation.empty();
 
-    switch (d->encodingMode) {
-    case EncodingMode::H264:
-        if (!std::any_of(capsInformation.begin(), capsInformation.end(), [](const RdpCapsInformation &caps) {
-                return caps.avcSupported && caps.yuv420Supported;
-            })) {
-            qCWarning(KRDP) << "Client does not support H.264 in YUV420 mode";
-            d->session->close(RdpConnection::CloseReason::VideoInitFailed);
-            return CHANNEL_RC_INITIALIZATION_ERROR;
-        }
-        break;
-    case EncodingMode::Progressive:
-        if (capsInformation.empty()) {
-            qCWarning(KRDP) << "Client advertised no graphics capability sets";
-            d->session->close(RdpConnection::CloseReason::VideoInitFailed);
-            return CHANNEL_RC_INITIALIZATION_ERROR;
-        }
-        break;
+    const bool supportsH264 = std::any_of(capsInformation.begin(), capsInformation.end(), [](const RdpCapsInformation &caps) {
+        return caps.avcSupported && caps.yuv420Supported;
+    });
+
+    EncodingMode negotiatedMode = EncodingMode::Progressive;
+    if (!h264Disabled() && supportsH264) {
+        negotiatedMode = EncodingMode::H264;
+    } else if (!supportsProgresive) {
+        qCWarning(KRDP) << "Client advertised no usable graphics capability sets";
+        d->session->close(RdpConnection::CloseReason::VideoInitFailed);
+        return CHANNEL_RC_INITIALIZATION_ERROR;
     }
+
+    QMetaObject::invokeMethod(
+        this,
+        [this, negotiatedMode]() {
+            setActiveEncodingMode(negotiatedMode);
+        },
+        Qt::BlockingQueuedConnection); // RDP callbacks are on the connection thread, VideoStream operates on the main thread
+    qCDebug(KRDP) << "Selected encoding mode:" << encodingModeName(negotiatedMode);
 
     auto maxVersion = std::max_element(capsInformation.begin(), capsInformation.end(), [](const auto &first, const auto &second) {
         return first.version < second.version;
@@ -738,11 +768,11 @@ void VideoStream::performReset(QSize size)
 
     d->surface = Surface{
         .id = surfaceId,
-        .codecContextId = d->progressiveSupported ? ProgressiveCodecContextId : 0,
+        .codecContextId = d->activeEncodingMode == EncodingMode::Progressive ? ProgressiveCodecContextId : 0,
         .size = size,
     };
 
-    if (d->progressiveSupported) {
+    if (d->activeEncodingMode == EncodingMode::Progressive) {
         if (progressive_create_surface_context(d->progressive.get(), surfaceId, size.width(), size.height()) < 0) {
             qCWarning(KRDP) << "Failed to create progressive surface context";
             destroySurface();
@@ -787,11 +817,10 @@ void VideoStream::sendFrame(const VideoFrame &frame)
         performReset(frame.size);
     }
 
-    if (d->encodingMode == EncodingMode::H264) {
+    if (d->activeEncodingMode == EncodingMode::H264) {
         sendFrameH264(frame);
-    } else {
+    } else if (d->activeEncodingMode == EncodingMode::Progressive) {
         sendFrameProgressive(frame);
-        return;
     }
 }
 
