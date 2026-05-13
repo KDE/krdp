@@ -57,6 +57,7 @@ public:
     bool initialize();
     void close();
     Q_SIGNAL void closed();
+    Q_SIGNAL void sizeChanged(const QSize &size);
     Q_SIGNAL void cursorChanged(const PipeWireCursor &cursor);
 
     /**

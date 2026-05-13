@@ -44,6 +44,8 @@ public:
     quint32 nodeId() const;
     int takePipeWireFd();
 
+    void setSize(QSize size);
+
     /**
      * Set the system's clipboard data.
      *
@@ -75,7 +77,6 @@ protected:
     std::optional<int> activeStream() const;
 
     void setStarted(bool started);
-    void setSize(QSize size);
     void setLogicalSize(QSize size);
     void setNodeId(quint32 nodeId);
     void setPipeWireFd(int fd);

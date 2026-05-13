@@ -160,6 +160,16 @@ public:
     std::atomic_int frameDelay = 0;
     bool initialized = false;
     quint8 quality = 100;
+
+    void setSize(VideoStream *q, const QSize &newSize)
+    {
+        if (size == newSize) {
+            return;
+        }
+
+        size = newSize;
+        Q_EMIT q->sizeChanged(newSize);
+    }
 };
 
 static QString encodingModeName(VideoStream::EncodingMode mode)
@@ -242,7 +252,7 @@ VideoStream::VideoStream(RdpConnection *session)
 
         connect(d->encodedStream.get(), &PipeWireEncodedStream::newPacket, this, &VideoStream::onPacketReceived);
         connect(d->encodedStream.get(), &PipeWireEncodedStream::sizeChanged, this, [this](const QSize &size) {
-            d->size = size;
+            d->setSize(this, size);
         });
         connect(d->encodedStream.get(), &PipeWireEncodedStream::cursorChanged, this, &VideoStream::cursorChanged);
     } else {
@@ -252,8 +262,7 @@ VideoStream::VideoStream(RdpConnection *session)
         d->sourceStream->setMaxFramerate({static_cast<quint32>(d->requestedFrameRate.load()), 1});
         connect(d->sourceStream.get(), &PipeWireSourceStream::frameReceived, this, &VideoStream::onFrameReceived, Qt::QueuedConnection);
         connect(d->sourceStream.get(), &PipeWireSourceStream::streamParametersChanged, this, [this]() {
-            const QSize size = d->sourceStream->size();
-            d->size = size;
+            d->setSize(this, d->sourceStream->size());
         });
         connect(
             d->sourceStream.get(),
@@ -462,7 +471,7 @@ void VideoStream::setPipeWireSource(quint32 nodeId, int fd)
             d->session->close(RdpConnection::CloseReason::VideoInitFailed);
             return;
         }
-        d->size = d->sourceStream->size();
+        d->setSize(this, d->sourceStream->size());
         d->sourceStream->setActive(d->streamingEnabled);
     }
 }
