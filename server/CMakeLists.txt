@@ -17,6 +17,10 @@ if (BUILD_PLASMA_SESSION)
     target_compile_definitions(krdpserver PRIVATE -DWITH_PLASMA_SESSION)
 endif()
 
+if (HAVE_SYS_PRCTL_H AND HAVE_PR_SET_NO_NEW_PRIVS)
+    target_compile_definitions(krdpserver PRIVATE -DWITH_NO_NEW_PRIVS)
+endif()
+
 configure_file(org.kde.krdpserver.desktop.cmake ${CMAKE_CURRENT_BINARY_DIR}/org.kde.krdpserver.desktop @ONLY)
 configure_file(app-org.kde.krdpserver.service.in ${CMAKE_CURRENT_BINARY_DIR}/app-org.kde.krdpserver.service @ONLY)
 

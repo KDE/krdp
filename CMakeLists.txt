@@ -33,6 +33,14 @@ include(ECMDeprecationSettings)
 include(ECMQmlModule)
 include(ECMFindQmlModule)
 
+include(CheckIncludeFile)
+include(CheckSymbolExists)
+check_include_file("sys/prctl.h" HAVE_SYS_PRCTL_H)
+check_symbol_exists(PR_SET_NO_NEW_PRIVS "sys/prctl.h" HAVE_PR_SET_NO_NEW_PRIVS)
+add_feature_info("prctl SET_NO_NEW_PRIVS"
+                 HAVE_PR_SET_NO_NEW_PRIVS
+                 "Required for not gaining additional privelges by e.g. calling a set-user-ID process")
+
 option(BUILD_EXAMPLES "Build example applications" ON)
 option(BUILD_PLASMA_SESSION "Build support for Plasma Screencasting extensions" ON)
 

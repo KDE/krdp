@@ -20,10 +20,18 @@
 #include "krdp_version.h"
 #include "krdpserversettings.h"
 
+#ifdef WITH_NO_NEW_PRIVS
+#include <sys/prctl.h>
+#endif
+
 using namespace Qt::StringLiterals;
 
 int main(int argc, char **argv)
 {
+#ifdef WITH_NO_NEW_PRIVS
+    prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0);
+#endif
+
     QApplication application{argc, argv};
     application.setApplicationName(u"krdp-server"_s);
     application.setApplicationDisplayName(u"KRDP Server"_s);
