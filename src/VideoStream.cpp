@@ -653,7 +653,7 @@ void VideoStream::onFrameReceived(const PipeWireFrame &data)
     frameData.size = data.dataFrame ? data.dataFrame->size : QSize(data.dmabuf ? data.dmabuf->width : 0, data.dmabuf ? data.dmabuf->height : 0);
     frameData.damage = data.damage.value_or(QRegion(QRect(QPoint(0, 0), frameData.size)));
     if (data.presentationTimestamp) {
-        frameData.presentationTimeStamp = clk::system_clock::time_point(*data.presentationTimestamp);
+        frameData.presentationTimeStamp = clk::system_clock::time_point(clk::duration_cast<clk::microseconds>(*data.presentationTimestamp));
     }
 
     if (data.dataFrame) {
