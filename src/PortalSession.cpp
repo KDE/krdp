@@ -105,14 +105,22 @@ PortalSession::PortalSession()
             return;
         }
 
+        qCDebug(KRDP) << "Clipboard formats:" << data->formats() << "hasText:" << data->hasText();
+
         // KSystemClipboard takes ownership of any QMimeData passed to it but
         // does not relinquish ownership over anything it returns. So manually
         // copy over the contents to a new instance of QMimeData so we can keep
         // the semantics the same.
+        //
+        // Only copy text data here. Fetching arbitrary clipboard MIME payloads
+        // can block for a long time on Wayland/XWayland targets such as
+        // SAVE_TARGETS, which freezes the server's main thread. The RDP
+        // clipboard implementation currently only exposes text anyway.
         auto newData = new QMimeData();
-        const auto formats = data->formats();
-        for (auto format : formats) {
-            newData->setData(format, data->data(format));
+        if (data->hasText()) {
+            newData->setText(data->text());
+        } else {
+            qCDebug(KRDP) << "Ignoring non-text clipboard update with formats" << data->formats();
         }
 
         Q_EMIT clipboardDataChanged(newData);
