@@ -29,7 +29,7 @@ Features:
 The example server requires a username and password to be provided on the command line, which will be used when connecting from an RDP client. They can be provided using the `-u` and `-p` command line parameters, respectively. For example:
 
 ```
-krdpserver -u user -p test
+krdpserver -u user -p pass
 ```
 
 The server will then listen on all interfaces on port 3389, and clients can connect with the username "user" and the password "pass".
