@@ -535,9 +535,11 @@ bool RdpConnection::onPostConnect()
 
     if (d->server->usePAMAuthentication()) {
         qCDebug(KRDP) << "Attempting authenticating user with PAM";
-        if (username == KUser().loginName() && pamAuthenticate(username, password) >= 0) {
-            qCDebug(KRDP) << "PAM authentication succeeded for user" << username;
-            return true;
+        if (username == KUser().loginName() || KUser().loginName() == QStringLiteral("plasmalogin")) {
+            if (pamAuthenticate(username, password) >= 0) {
+                qCDebug(KRDP) << "PAM authentication succeeded for user" << username;
+                return true;
+            }
         }
     }
 
