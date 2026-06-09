@@ -55,6 +55,14 @@ void Cursor::update(const Cursor::CursorUpdate &update)
         return;
     }
 
+    auto context = d->session->rdpPeerContext();
+    auto updatePointer = d->session->rdpPeerContext()->update->pointer;
+
+    POINTER_POSITION_UPDATE posUpd;
+    posUpd.xPos = update.position.x();
+    posUpd.yPos = update.position.y();
+    updatePointer->PointerPosition(context, &posUpd);
+
     // Ignore updates with no image
     if (update.image.isNull()) {
         return;
@@ -78,9 +86,6 @@ void Cursor::update(const Cursor::CursorUpdate &update)
         return;
     }
 
-    auto context = d->session->rdpPeerContext();
-    auto updatePointer = d->session->rdpPeerContext()->update->pointer;
-
     // Cursor images are cached. Check to see if the newly requested cursor is
     // already in the cache, and if so, mark that as the current cursor.
     auto itr = std::find_if(d->cursorCache.begin(), d->cursorCache.end(), [&update](const CursorUpdate &cached) {
@@ -98,6 +103,7 @@ void Cursor::update(const Cursor::CursorUpdate &update)
     // We have a completely new cursor, let's add the required metadata for the
     // cache.
     CursorUpdate newCursor;
+    newCursor.position = update.position;
     newCursor.hotspot = update.hotspot;
     newCursor.image = update.image;
     newCursor.cacheId = d->cursorCache.size();

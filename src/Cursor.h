@@ -33,6 +33,7 @@ class KRDP_EXPORT Cursor : public QObject
 
 public:
     struct CursorUpdate {
+        QPoint position;
         QPoint hotspot;
         QImage image;
 

@@ -59,6 +59,7 @@ public:
         }
 
         KRdp::Cursor::CursorUpdate update;
+        update.position = cursor.position;
         update.hotspot = cursor.hotspot;
         update.image = cursor.texture;
         connection->cursor()->update(update);
