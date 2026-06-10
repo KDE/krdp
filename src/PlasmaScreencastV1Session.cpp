@@ -223,7 +223,7 @@ void PlasmaScreencastV1Session::sendEvent(const std::shared_ptr<QEvent> &event)
         auto me = std::static_pointer_cast<QMouseEvent>(event);
         auto position = me->position();
         auto logicalPosition = QPointF{(position.x() / size().width()) * logicalSize().width(), (position.y() / size().height()) * logicalSize().height()};
-        d->remoteInterface->pointer_motion_absolute(logicalPosition.x(), logicalPosition.y());
+        d->remoteInterface->pointer_motion_absolute(wl_fixed_from_double(logicalPosition.x()), wl_fixed_from_double(logicalPosition.y()));
         break;
     }
     case QEvent::Wheel: {
