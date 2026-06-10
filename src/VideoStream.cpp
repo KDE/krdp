@@ -269,9 +269,11 @@ void VideoStream::setActiveEncodingMode(EncodingMode mode)
             d->setSize(this, size);
         });
         connect(d->encodedStream.get(), &PipeWireEncodedStream::cursorChanged, this, &VideoStream::cursorChanged);
-        if (d->nodeId != 0 && d->pipeWireFd > 0) {
+        if (d->nodeId != 0) {
             d->encodedStream->setNodeId(d->nodeId);
-            d->encodedStream->setFd(d->pipeWireFd);
+            if (d->pipeWireFd > 0) {
+                d->encodedStream->setFd(d->pipeWireFd);
+            }
         }
         if (d->streamingEnabled && d->nodeId != 0) {
             d->encodedStream->start();
