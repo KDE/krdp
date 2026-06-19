@@ -1,5 +1,6 @@
 {
     "KPlugin": {
+        "BugReportUrl": "https://bugs.kde.org/enter_bug.cgi?product=systemsettings&component=kcm_krdpserver",
         "Description": "Configure Remote Desktop",
         "Description[ar]": "اضبط سطح المكتب بعيد",
         "Description[az]": "İş masasına uzaqdan girişi tənzimləmək",
