@@ -240,7 +240,7 @@ RdpConnection::~RdpConnection()
     // run thread. Without this, thread.join() can deadlock when the
     // session is not in the Streaming state but the thread is still
     // blocked waiting for socket events.
-    if (d->peer) {
+    if (d->peer && d->state != State::Closed) {
         d->peer->Close(d->peer);
     }
 
@@ -271,6 +271,10 @@ void RdpConnection::setState(KRdp::RdpConnection::State newState)
 
 void RdpConnection::close(RdpConnection::CloseReason reason)
 {
+    if (d->state == State::Closed) {
+        return;
+    }
+
     switch (reason) {
     case CloseReason::VideoInitFailed:
         freerdp_set_error_info(d->peer->context->rdp, ERRINFO_GRAPHICS_SUBSYSTEM_FAILED);
