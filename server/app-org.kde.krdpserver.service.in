@@ -9,7 +9,6 @@ After=plasma-core.target
 Type=exec
 ExecStart=@CMAKE_INSTALL_PREFIX@/bin/krdpserver
 Restart=on-abnormal
-NoNewPrivileges=true
 
 [Install]
 WantedBy=plasma-workspace.target
