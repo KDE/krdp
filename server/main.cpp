@@ -29,6 +29,7 @@ int main(int argc, char **argv)
     application.setApplicationDisplayName(u"KRDP Server"_s);
 
     KAboutData about(u"krdp-server"_s, u"KRDP Server"_s, QStringLiteral(KRdp_VERSION_STRING));
+    about.setDesktopFileName(u"org.kde.krdpserver"_s);
     KAboutData::setApplicationData(about);
 
     KCrash::initialize();
