@@ -470,9 +470,13 @@ void VideoStream::setStreamingEnabled(bool enabled)
     d->streamingEnabled = enabled;
     if (d->encodedStream) {
         if (enabled && d->nodeId != 0) {
-            d->encodedStream->start();
+            if (d->encodedStream->state() == PipeWireBaseEncodedStream::Paused) {
+                d->encodedStream->resume();
+            } else {
+                d->encodedStream->start();
+            }
         } else {
-            d->encodedStream->stop();
+            d->encodedStream->pause();
         }
     }
     if (d->sourceStream) {
