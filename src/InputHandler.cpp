@@ -5,6 +5,7 @@
 #include "InputHandler.h"
 
 #include <QKeyEvent>
+#include <QMetaObject>
 
 #include <xkbcommon/xkbcommon.h>
 
@@ -15,59 +16,48 @@
 namespace KRdp
 {
 
+template<typename ReturnType, typename... MethodArgs, typename... CallArgs>
+static BOOL invokeOnInputHandlerThread(InputHandler *inputHandler, ReturnType (InputHandler::*method)(MethodArgs...), CallArgs &&...args)
+{
+    bool handled = false;
+    QMetaObject::invokeMethod(inputHandler, method, Qt::BlockingQueuedConnection, qReturnArg(handled), std::forward<CallArgs>(args)...);
+
+    return handled ? TRUE : FALSE;
+}
+
 BOOL inputSynchronizeEvent(rdpInput *input, uint32_t flags)
 {
     auto context = reinterpret_cast<PeerContext *>(input->context);
 
-    if (context->inputHandler->synchronizeEvent(flags)) {
-        return TRUE;
-    }
-
-    return FALSE;
+    return invokeOnInputHandlerThread(context->inputHandler, &InputHandler::synchronizeEvent, flags);
 }
 
 BOOL inputMouseEvent(rdpInput *input, uint16_t flags, uint16_t x, uint16_t y)
 {
     auto context = reinterpret_cast<PeerContext *>(input->context);
 
-    if (context->inputHandler->mouseEvent(x, y, flags)) {
-        return TRUE;
-    }
-
-    return FALSE;
+    return invokeOnInputHandlerThread(context->inputHandler, &InputHandler::mouseEvent, x, y, flags);
 }
 
 BOOL inputExtendedMouseEvent(rdpInput *input, uint16_t flags, uint16_t x, uint16_t y)
 {
     auto context = reinterpret_cast<PeerContext *>(input->context);
 
-    if (context->inputHandler->extendedMouseEvent(x, y, flags)) {
-        return TRUE;
-    }
-
-    return FALSE;
+    return invokeOnInputHandlerThread(context->inputHandler, &InputHandler::extendedMouseEvent, x, y, flags);
 }
 
 BOOL inputKeyboardEvent(rdpInput *input, uint16_t flags, uint8_t code)
 {
     auto context = reinterpret_cast<PeerContext *>(input->context);
 
-    if (context->inputHandler->keyboardEvent(code, flags)) {
-        return TRUE;
-    }
-
-    return FALSE;
+    return invokeOnInputHandlerThread(context->inputHandler, &InputHandler::keyboardEvent, uint16_t(code), flags);
 }
 
 BOOL inputUnicodeKeyboardEvent(rdpInput *input, uint16_t flags, uint16_t code)
 {
     auto context = reinterpret_cast<PeerContext *>(input->context);
 
-    if (context->inputHandler->unicodeKeyboardEvent(code, flags)) {
-        return TRUE;
-    }
-
-    return FALSE;
+    return invokeOnInputHandlerThread(context->inputHandler, &InputHandler::unicodeKeyboardEvent, code, flags);
 }
 
 class KRDP_NO_EXPORT InputHandler::Private
