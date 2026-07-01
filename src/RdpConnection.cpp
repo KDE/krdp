@@ -250,6 +250,9 @@ RdpConnection::~RdpConnection()
     }
 
     if (d->peer) {
+        // freerdp_peer_free() does not free the context allocated by
+        // freerdp_peer_context_new_ex().
+        freerdp_peer_context_free(d->peer);
         freerdp_peer_free(d->peer);
     }
 }
