@@ -6,6 +6,7 @@
 
 #include <QKeyEvent>
 #include <QMetaObject>
+#include <QSet>
 
 #include <xkbcommon/xkbcommon.h>
 
@@ -66,6 +67,9 @@ public:
     RdpConnection *session;
     rdpInput *input;
     QPointF lastMousePosition;
+    // Keycodes the client currently holds, so they can be released if a key-release
+    // is lost and the client re-synchronizes its keyboard state.
+    QSet<quint32> pressedKeys;
 };
 
 InputHandler::InputHandler(KRdp::RdpConnection *session)
@@ -91,7 +95,17 @@ void InputHandler::initialize(rdpInput *input)
 
 bool InputHandler::synchronizeEvent(uint32_t /*flags*/)
 {
-    // TODO: This syncs caps/num/scroll lock keys, do we actually want to?
+    // Client is resynchronizing its keyboard state; release any keys we still
+    // believe are held so a lost key-release does not leave a key stuck down.
+    const auto stuck = d->pressedKeys;
+    d->pressedKeys.clear();
+    if (!stuck.isEmpty()) {
+        qCDebug(KRDP) << "Keyboard synchronize: releasing" << stuck.size() << "held key(s)";
+    }
+    for (auto keycode : stuck) {
+        auto event = std::make_shared<QKeyEvent>(QEvent::KeyRelease, 0, Qt::KeyboardModifiers{}, keycode, 0, 0);
+        Q_EMIT inputEvent(event);
+    }
     return true;
 }
 
@@ -201,6 +215,12 @@ bool InputHandler::keyboardEvent(uint16_t code, uint16_t flags)
     quint32 keycode = GetKeycodeFromVirtualKeyCode(virtualCode, WINPR_KEYCODE_TYPE_EVDEV);
 
     auto type = flags & KBD_FLAGS_RELEASE ? QEvent::KeyRelease : QEvent::KeyPress;
+
+    if (type == QEvent::KeyRelease) {
+        d->pressedKeys.remove(keycode);
+    } else {
+        d->pressedKeys.insert(keycode);
+    }
 
     auto event = std::make_shared<QKeyEvent>(type, 0, Qt::KeyboardModifiers{}, keycode, 0, 0);
     Q_EMIT inputEvent(event);
