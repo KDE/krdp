@@ -270,6 +270,19 @@ KCM.ScrollViewKCM {
                         }
                     }
 
+                    QQC2.CheckBox {
+                        id: lockOnDisconnect
+                        text: i18nc("@option:check", "Lock the session when disconnecting, unlock on connect")
+                        checked: settings.lockOnDisconnect
+                        onToggled: {
+                            settings.lockOnDisconnect = checked;
+                        }
+                        KCM.SettingStateBinding {
+                            configObject: settings
+                            settingName: "lockOnDisconnect"
+                        }
+                    }
+
                     ColumnLayout {
                         enabled: userListView.count > 0
                         Layout.preferredWidth: certKeyLayout.width

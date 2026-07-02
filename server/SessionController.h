@@ -37,9 +37,18 @@ public:
     void setSNIStatus(const KRdp::RdpConnection::State state);
     void stopFromSNI();
 
+    /**
+     * When enabled, lock the desktop session as the last client disconnects and
+     * unlock it (via logind) when a client connects, so the physical machine is
+     * left locked while no one is using it remotely.
+     */
+    void setLockOnDisconnect(bool lock);
+
 private:
     void onNewConnection(KRdp::RdpConnection *newConnection);
     std::unique_ptr<KRdp::AbstractSession> makeSession();
+    // Lock/unlock the desktop session via logind (no-op unless setLockOnDisconnect(true)).
+    void setSessionLocked(bool locked);
 
     KRdp::Server *m_server = nullptr;
     SessionType m_sessionType;
@@ -50,6 +59,8 @@ private:
     std::unique_ptr<KRdp::AbstractSession> m_initializationSession;
 
     std::vector<std::unique_ptr<SessionWrapper>> m_wrappers;
+
+    bool m_lockOnDisconnect = false;
 
     KStatusNotifierItem *m_sni;
 };

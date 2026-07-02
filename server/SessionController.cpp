@@ -8,6 +8,7 @@
 #include <QAction>
 #include <QCoreApplication>
 #include <QDBusInterface>
+#include <QDBusReply>
 #include <QMenu>
 
 #include <KLocalizedString>
@@ -132,6 +133,37 @@ void SessionController::setQuality(const std::optional<int> &quality)
     m_quality = quality;
 }
 
+void SessionController::setLockOnDisconnect(bool lock)
+{
+    m_lockOnDisconnect = lock;
+}
+
+void SessionController::setSessionLocked(bool locked)
+{
+    if (!m_lockOnDisconnect) {
+        return;
+    }
+    // Ask logind to lock/unlock the graphical session (kscreenlocker honours its
+    // Lock/Unlock signals). krdpserver is a user-service process not in a login session,
+    // so resolve the session from $XDG_SESSION_ID, falling back to our PID.
+    auto bus = QDBusConnection::systemBus();
+    QDBusInterface manager(u"org.freedesktop.login1"_s, u"/org/freedesktop/login1"_s, u"org.freedesktop.login1.Manager"_s, bus);
+    QDBusReply<QDBusObjectPath> session;
+    const QString sessionId = qEnvironmentVariable("XDG_SESSION_ID");
+    if (!sessionId.isEmpty()) {
+        session = manager.call(u"GetSession"_s, sessionId);
+    }
+    if (!session.isValid()) {
+        session = manager.call(u"GetSessionByPID"_s, static_cast<quint32>(QCoreApplication::applicationPid()));
+    }
+    if (!session.isValid()) {
+        qWarning() << "krdp: could not resolve a logind session to" << (locked ? "lock" : "unlock") << ":" << session.error().message();
+        return;
+    }
+    QDBusInterface sessionIface(u"org.freedesktop.login1"_s, session.value().path(), u"org.freedesktop.login1.Session"_s, bus);
+    sessionIface.call(locked ? u"Lock"_s : u"Unlock"_s);
+}
+
 void SessionController::onNewConnection(KRdp::RdpConnection *newConnection)
 {
     auto wrapper = std::make_unique<SessionWrapper>(newConnection, makeSession(), m_sni);
@@ -141,9 +173,16 @@ void SessionController::onNewConnection(KRdp::RdpConnection *newConnection)
         wrapper->session->setActiveStream(*m_monitorIndex);
     }
     wrapper->connection->videoStream()->setVideoQuality(m_quality.value());
+    // A client is taking over; unlock the session so it sees the desktop.
+    setSessionLocked(false);
     wrapper->session->start();
 
     connect(wrapper.get(), &SessionWrapper::connectionDestroyed, this, [this](SessionWrapper *wrapper) {
+        // Lock the machine as the last client leaves.
+        if (m_wrappers.size() == 1 && m_wrappers.front().get() == wrapper) {
+            setSessionLocked(true);
+        }
+
         m_wrappers.erase(std::remove_if(m_wrappers.begin(),
                                         m_wrappers.end(),
                                         [wrapper](std::unique_ptr<SessionWrapper> &entry) {

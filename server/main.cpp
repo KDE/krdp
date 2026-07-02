@@ -139,6 +139,7 @@ int main(int argc, char **argv)
         controller.setMonitorIndex(parser.isSet(u"monitor"_s) ? std::optional(parser.value(u"monitor"_s).toInt()) : std::nullopt);
     }
     controller.setQuality(parserValueWithDefault(u"quality", config->quality()));
+    controller.setLockOnDisconnect(config->lockOnDisconnect());
 
     if (!server.start()) {
         return -1;

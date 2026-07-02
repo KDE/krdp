@@ -39,5 +39,9 @@ SPDX-License-Identifier: BSD-2-Clause
       <label>Autostart the server on login</label>
       <default>false</default>
     </entry>
+    <entry name="LockOnDisconnect" type="Bool">
+      <label>Lock the session when the last client disconnects and unlock it on connect</label>
+      <default>false</default>
+    </entry>
   </group>
 </kcfg>
