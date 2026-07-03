@@ -375,7 +375,3 @@ msgstr "Modifica l'usuari…"
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "Elimina l'usuari…"
-
-#~ msgctxt "@title"
-#~ msgid "Additional Users"
-#~ msgstr "Usuaris addicionals"
