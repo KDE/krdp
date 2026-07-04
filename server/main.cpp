@@ -12,6 +12,7 @@
 #include <KAboutData>
 #include <KCrash>
 #include <KSharedConfig>
+#include <KSignalHandler>
 
 #include <qt6keychain/keychain.h>
 
@@ -58,11 +59,12 @@ int main(int argc, char **argv)
     parser.process(application);
     about.processCommandLine(&parser);
 
-    signal(SIGINT, [](int) {
-        QCoreApplication::exit(0);
-    });
-
-    signal(SIGTERM, [](int) {
+    // Deliver termination signals through the event loop. A raw signal() handler that
+    // calls QCoreApplication::exit() runs the entire teardown (aboutToQuit -> server
+    // stop) in async-signal context, which is neither signal-safe nor reentrant.
+    KSignalHandler::self()->watchSignal(SIGINT);
+    KSignalHandler::self()->watchSignal(SIGTERM);
+    QObject::connect(KSignalHandler::self(), &KSignalHandler::signalReceived, &application, [](int) {
         QCoreApplication::exit(0);
     });
 
