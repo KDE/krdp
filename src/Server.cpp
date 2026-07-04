@@ -165,14 +165,29 @@ void Server::incomingConnection(qintptr handle)
 {
     auto session = std::make_unique<RdpConnection>(this, handle);
     auto sessionPtr = session.get();
-    connect(sessionPtr, &RdpConnection::stateChanged, this, [this, sessionPtr](RdpConnection::State state) {
-        if (state == RdpConnection::State::Closed) {
-            auto itr = std::find_if(d->sessions.begin(), d->sessions.end(), [sessionPtr](auto &session) {
-                return session.get() == sessionPtr;
-            });
-            d->sessions.erase(itr);
-        }
-    });
+    // Queued: the signal comes from the connection's run thread, and a queued delivery
+    // also keeps the erase below from destroying the sender mid-emission.
+    connect(
+        sessionPtr,
+        &RdpConnection::stateChanged,
+        this,
+        [this, sessionPtr](RdpConnection::State state) {
+            if (state == RdpConnection::State::Closed) {
+                auto itr = std::find_if(d->sessions.begin(), d->sessions.end(), [sessionPtr](auto &session) {
+                    return session.get() == sessionPtr;
+                });
+                // Closed can arrive after the session was already removed.
+                if (itr == d->sessions.end()) {
+                    return;
+                }
+                // Extract before erasing: ~RdpConnection can spin a nested event loop (KScreen
+                // operations run from destroyed() handlers), which may re-enter this vector.
+                // Destroy it only once the vector is consistent again.
+                auto session = std::move(*itr);
+                d->sessions.erase(itr);
+            }
+        },
+        Qt::QueuedConnection);
     d->sessions.push_back(std::move(session));
     Q_EMIT newConnectionCreated(sessionPtr);
 }
