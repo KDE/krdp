@@ -7,7 +7,12 @@
 
 #include <QAction>
 #include <QCoreApplication>
+#include <QDBusConnection>
 #include <QDBusInterface>
+#include <QDBusMessage>
+#include <QDBusObjectPath>
+#include <QDBusPendingCallWatcher>
+#include <QDBusPendingReply>
 #include <QDBusReply>
 #include <QMenu>
 
@@ -143,25 +148,67 @@ void SessionController::setSessionLocked(bool locked)
     if (!m_lockOnDisconnect) {
         return;
     }
-    // Ask logind to lock/unlock the graphical session (kscreenlocker honours its
-    // Lock/Unlock signals). krdpserver is a user-service process not in a login session,
-    // so resolve the session from $XDG_SESSION_ID, falling back to our PID.
+    // Ask logind to lock/unlock the graphical session (kscreenlocker honours its Lock/Unlock
+    // signals). krdpserver is a user-service process not in a login session, so resolve the
+    // session from $XDG_SESSION_ID, falling back to our PID.
+    //
+    // Everything is done asynchronously with QDBusMessage + QDBusConnection::asyncCall (NOT
+    // QDBusInterface, whose constructor blocks on introspection): a slow or hung logind must
+    // never stall the GUI thread, which also drives PipeWire/input/video for every other
+    // connected client (a blocking call could stall it up to the 25s D-Bus timeout).
     auto bus = QDBusConnection::systemBus();
-    QDBusInterface manager(u"org.freedesktop.login1"_s, u"/org/freedesktop/login1"_s, u"org.freedesktop.login1.Manager"_s, bus);
-    QDBusReply<QDBusObjectPath> session;
+    const QString service = u"org.freedesktop.login1"_s;
+    const QString managerPath = u"/org/freedesktop/login1"_s;
+    const QString managerIface = u"org.freedesktop.login1.Manager"_s;
+
+    // Phase two: Lock/Unlock the resolved session object.
+    auto lockSession = [this, locked, bus, service](const QDBusObjectPath &path) {
+        QDBusMessage msg =
+            QDBusMessage::createMethodCall(service, path.path(), u"org.freedesktop.login1.Session"_s, locked ? u"Lock"_s : u"Unlock"_s);
+        auto *watcher = new QDBusPendingCallWatcher(bus.asyncCall(msg), this);
+        connect(watcher, &QDBusPendingCallWatcher::finished, this, [locked](QDBusPendingCallWatcher *self) {
+            const QDBusPendingReply<> reply = *self;
+            if (reply.isError()) {
+                qWarning() << "krdp: could not" << (locked ? "lock" : "unlock") << "the logind session:" << reply.error().message();
+            }
+            self->deleteLater();
+        });
+    };
+
+    // Phase one fallback: resolve the session by our PID.
+    auto resolveByPid = [this, locked, bus, service, managerPath, managerIface, lockSession]() {
+        QDBusMessage msg = QDBusMessage::createMethodCall(service, managerPath, managerIface, u"GetSessionByPID"_s);
+        msg.setArguments({static_cast<quint32>(QCoreApplication::applicationPid())});
+        auto *watcher = new QDBusPendingCallWatcher(bus.asyncCall(msg), this);
+        connect(watcher, &QDBusPendingCallWatcher::finished, this, [locked, lockSession](QDBusPendingCallWatcher *self) {
+            const QDBusPendingReply<QDBusObjectPath> reply = *self;
+            if (reply.isError()) {
+                qWarning() << "krdp: could not resolve a logind session to" << (locked ? "lock" : "unlock") << ":" << reply.error().message();
+            } else {
+                lockSession(reply.value());
+            }
+            self->deleteLater();
+        });
+    };
+
+    // Phase one: resolve by $XDG_SESSION_ID, else fall back to PID.
     const QString sessionId = qEnvironmentVariable("XDG_SESSION_ID");
     if (!sessionId.isEmpty()) {
-        session = manager.call(u"GetSession"_s, sessionId);
+        QDBusMessage msg = QDBusMessage::createMethodCall(service, managerPath, managerIface, u"GetSession"_s);
+        msg.setArguments({sessionId});
+        auto *watcher = new QDBusPendingCallWatcher(bus.asyncCall(msg), this);
+        connect(watcher, &QDBusPendingCallWatcher::finished, this, [resolveByPid, lockSession](QDBusPendingCallWatcher *self) {
+            const QDBusPendingReply<QDBusObjectPath> reply = *self;
+            if (reply.isError()) {
+                resolveByPid();
+            } else {
+                lockSession(reply.value());
+            }
+            self->deleteLater();
+        });
+    } else {
+        resolveByPid();
     }
-    if (!session.isValid()) {
-        session = manager.call(u"GetSessionByPID"_s, static_cast<quint32>(QCoreApplication::applicationPid()));
-    }
-    if (!session.isValid()) {
-        qWarning() << "krdp: could not resolve a logind session to" << (locked ? "lock" : "unlock") << ":" << session.error().message();
-        return;
-    }
-    QDBusInterface sessionIface(u"org.freedesktop.login1"_s, session.value().path(), u"org.freedesktop.login1.Session"_s, bus);
-    sessionIface.call(locked ? u"Lock"_s : u"Unlock"_s);
 }
 
 void SessionController::onNewConnection(KRdp::RdpConnection *newConnection)
