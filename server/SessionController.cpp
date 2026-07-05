@@ -173,8 +173,14 @@ void SessionController::onNewConnection(KRdp::RdpConnection *newConnection)
         wrapper->session->setActiveStream(*m_monitorIndex);
     }
     wrapper->connection->videoStream()->setVideoQuality(m_quality.value());
-    // A client is taking over; unlock the session so it sees the desktop.
-    setSessionLocked(false);
+    // Unlock only once the connection is authenticated and activated - NOT here, which
+    // runs at TCP accept before the RDP handshake / PAM auth. Otherwise anyone who can
+    // open the port could unlock the physical seat (logind Unlock is passwordless).
+    connect(newConnection, &KRdp::RdpConnection::stateChanged, this, [this](KRdp::RdpConnection::State state) {
+        if (state == KRdp::RdpConnection::State::Activated || state == KRdp::RdpConnection::State::Streaming) {
+            setSessionLocked(false);
+        }
+    });
     wrapper->session->start();
 
     connect(wrapper.get(), &SessionWrapper::connectionDestroyed, this, [this](SessionWrapper *wrapper) {
