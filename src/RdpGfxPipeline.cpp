@@ -156,6 +156,7 @@ public:
     std::atomic_int encodedFrames = 0;
     std::atomic_int frameDelay = 0;
     QSet<uint32_t> pendingFrames;
+    std::mutex gfxMutex;
     std::mutex pendingFramesMutex;
 };
 
@@ -232,6 +233,7 @@ bool RdpGfxPipeline::openChannel()
 
 void RdpGfxPipeline::close()
 {
+    std::lock_guard lock(d->gfxMutex);
     resetSurfaceState();
     {
         std::lock_guard lock(d->pendingFramesMutex);
@@ -274,8 +276,16 @@ std::optional<RdpGfxPipeline::EncodingMode> RdpGfxPipeline::encodingMode() const
 
 void RdpGfxPipeline::setOutputs(const QList<Output> &outputs)
 {
-    d->outputs = outputs;
-    d->outputsDirty = true;
+    {
+        std::lock_guard lock(d->gfxMutex);
+        d->outputs = outputs;
+        d->outputsDirty = true;
+    }
+    qCDebug(KRDP) << "Updated RDP outputs:" << outputs.size();
+    for (int i = 0; i < outputs.size(); ++i) {
+        const auto &output = outputs.at(i);
+        qCDebug(KRDP) << " output" << i << "geometry" << output.geometry << "primary" << output.primary;
+    }
     Q_EMIT surfacesInvalidated();
 }
 
@@ -286,6 +296,7 @@ void RdpGfxPipeline::invalidateSurface(Surface &surface)
 
 void RdpGfxPipeline::destroySurface(Surface &surface)
 {
+    std::lock_guard lock(d->gfxMutex);
     if (surface.id == 0) {
         return;
     }
@@ -328,6 +339,8 @@ bool RdpGfxPipeline::resetGraphics()
         desktopGeometry |= output.geometry;
     }
 
+    qCDebug(KRDP) << "Resetting graphics for desktop geometry" << desktopGeometry << "monitorCount" << d->outputs.size();
+
     RDPGFX_RESET_GRAPHICS_PDU resetGraphicsPdu = {};
     resetGraphicsPdu.width = desktopGeometry.width();
     resetGraphicsPdu.height = desktopGeometry.height();
@@ -342,6 +355,8 @@ bool RdpGfxPipeline::resetGraphics()
         monitor.top = geometry.top();
         monitor.bottom = geometry.top() + geometry.height();
         monitor.flags = d->outputs.at(i).primary ? MONITOR_PRIMARY : 0;
+        qCDebug(KRDP) << " reset monitor" << i << QRect(QPoint(monitor.left, monitor.top), QPoint(monitor.right - 1, monitor.bottom - 1)) << "flags"
+                      << monitor.flags;
     }
     resetGraphicsPdu.monitorDefArray = monitors.data();
 
@@ -353,12 +368,12 @@ bool RdpGfxPipeline::resetGraphics()
 
     resetSurfaceState();
     d->outputsDirty = false;
-    Q_EMIT surfacesInvalidated();
     return true;
 }
 
 bool RdpGfxPipeline::ensureSurface(Surface &surface, const QSize &size, const QPoint &origin)
 {
+    std::lock_guard lock(d->gfxMutex);
     if (!d->gfxContext || !d->capsConfirmed) {
         return false;
     }
@@ -371,7 +386,33 @@ bool RdpGfxPipeline::ensureSurface(Surface &surface, const QSize &size, const QP
         return true;
     }
 
-    destroySurface(surface);
+    if (surface.id != 0) {
+        if (d->gfxContext && surface.codecContextId != 0) {
+            RDPGFX_DELETE_ENCODING_CONTEXT_PDU deleteEncodingContextPdu = {};
+            deleteEncodingContextPdu.surfaceId = surface.id;
+            deleteEncodingContextPdu.codecContextId = surface.codecContextId;
+            const UINT deleteEncodingStatus = d->gfxContext->DeleteEncodingContext(d->gfxContext.get(), &deleteEncodingContextPdu);
+            if (deleteEncodingStatus != CHANNEL_RC_OK && deleteEncodingStatus != CHANNEL_RC_NOT_INITIALIZED) {
+                qCWarning(KRDP) << "DeleteEncodingContext failed" << deleteEncodingStatus;
+            }
+        }
+
+        if (d->gfxContext) {
+            RDPGFX_DELETE_SURFACE_PDU deleteSurfacePdu = {};
+            deleteSurfacePdu.surfaceId = surface.id;
+            const UINT deleteSurfaceStatus = d->gfxContext->DeleteSurface(d->gfxContext.get(), &deleteSurfacePdu);
+            if (deleteSurfaceStatus != CHANNEL_RC_OK && deleteSurfaceStatus != CHANNEL_RC_NOT_INITIALIZED) {
+                qCWarning(KRDP) << "DeleteSurface failed" << deleteSurfaceStatus;
+            }
+        }
+
+        if (d->progressive) {
+            progressive_delete_surface_context(d->progressive.get(), surface.id);
+        }
+
+        d->knownSurfaces.remove(surface.id);
+        surface = Surface{};
+    }
 
     RDPGFX_CREATE_SURFACE_PDU createSurfacePdu = {};
     createSurfacePdu.width = size.width();
@@ -384,6 +425,8 @@ bool RdpGfxPipeline::ensureSurface(Surface &surface, const QSize &size, const QP
         return false;
     }
 
+    qCDebug(KRDP) << "Created surface" << createSurfacePdu.surfaceId << "size" << size << "origin" << origin;
+
     surface.id = createSurfacePdu.surfaceId;
     surface.codecContextId = d->activeEncodingMode == EncodingMode::Progressive ? ProgressiveCodecContextId : 0;
     surface.size = size;
@@ -393,7 +436,18 @@ bool RdpGfxPipeline::ensureSurface(Surface &surface, const QSize &size, const QP
     if (d->activeEncodingMode == EncodingMode::Progressive) {
         if (progressive_create_surface_context(d->progressive.get(), surface.id, size.width(), size.height()) < 0) {
             qCWarning(KRDP) << "Failed to create progressive surface context";
-            destroySurface(surface);
+            if (surface.id != 0) {
+                if (d->gfxContext) {
+                    RDPGFX_DELETE_SURFACE_PDU deleteSurfacePdu = {};
+                    deleteSurfacePdu.surfaceId = surface.id;
+                    const UINT deleteSurfaceStatus = d->gfxContext->DeleteSurface(d->gfxContext.get(), &deleteSurfacePdu);
+                    if (deleteSurfaceStatus != CHANNEL_RC_OK && deleteSurfaceStatus != CHANNEL_RC_NOT_INITIALIZED) {
+                        qCWarning(KRDP) << "DeleteSurface failed" << deleteSurfaceStatus;
+                    }
+                }
+                d->knownSurfaces.remove(surface.id);
+                surface = Surface{};
+            }
             return false;
         }
     }
@@ -405,9 +459,34 @@ bool RdpGfxPipeline::ensureSurface(Surface &surface, const QSize &size, const QP
     status = d->gfxContext->MapSurfaceToOutput(d->gfxContext.get(), &mapSurfaceToOutputPdu);
     if (status != CHANNEL_RC_OK) {
         qCWarning(KRDP) << "MapSurfaceToOutput failed" << status << "surface" << surface.id;
-        destroySurface(surface);
+        if (surface.id != 0) {
+            if (d->gfxContext && surface.codecContextId != 0) {
+                RDPGFX_DELETE_ENCODING_CONTEXT_PDU deleteEncodingContextPdu = {};
+                deleteEncodingContextPdu.surfaceId = surface.id;
+                deleteEncodingContextPdu.codecContextId = surface.codecContextId;
+                const UINT deleteEncodingStatus = d->gfxContext->DeleteEncodingContext(d->gfxContext.get(), &deleteEncodingContextPdu);
+                if (deleteEncodingStatus != CHANNEL_RC_OK && deleteEncodingStatus != CHANNEL_RC_NOT_INITIALIZED) {
+                    qCWarning(KRDP) << "DeleteEncodingContext failed" << deleteEncodingStatus;
+                }
+            }
+            if (d->gfxContext) {
+                RDPGFX_DELETE_SURFACE_PDU deleteSurfacePdu = {};
+                deleteSurfacePdu.surfaceId = surface.id;
+                const UINT deleteSurfaceStatus = d->gfxContext->DeleteSurface(d->gfxContext.get(), &deleteSurfacePdu);
+                if (deleteSurfaceStatus != CHANNEL_RC_OK && deleteSurfaceStatus != CHANNEL_RC_NOT_INITIALIZED) {
+                    qCWarning(KRDP) << "DeleteSurface failed" << deleteSurfaceStatus;
+                }
+            }
+            if (d->progressive) {
+                progressive_delete_surface_context(d->progressive.get(), surface.id);
+            }
+            d->knownSurfaces.remove(surface.id);
+            surface = Surface{};
+        }
         return false;
     }
+
+    qCDebug(KRDP) << "Mapped surface" << surface.id << "to output origin" << origin;
 
     return true;
 }
@@ -420,6 +499,7 @@ bool RdpGfxPipeline::hasInFlightCapacity() const
 
 void RdpGfxPipeline::submitFrame(const Surface &surface, const VideoFrame &frame)
 {
+    std::lock_guard lock(d->gfxMutex);
     auto peer = d->session->rdpPeer();
     if (peer->IsWriteBlocked && peer->IsWriteBlocked(peer)) {
         return;
@@ -449,79 +529,105 @@ bool RdpGfxPipeline::onChannelIdAssigned(uint32_t channelId)
 
 uint32_t RdpGfxPipeline::onCapsAdvertise(const RDPGFX_CAPS_ADVERTISE_PDU *capsAdvertise)
 {
-    if (d->capsConfirmed) {
-        qCDebug(KRDP) << "GFX channel reset (re-advertisement), resetting surface state";
-        d->capsConfirmed = false;
-        d->outputsDirty = true;
-        resetSurfaceState();
-        {
-            std::lock_guard lock(d->pendingFramesMutex);
-            d->pendingFrames.clear();
-        }
-        Q_EMIT surfacesInvalidated();
-    }
-
-    auto capsSets = capsAdvertise->capsSets;
-    auto count = capsAdvertise->capsSetCount;
-
-    std::vector<RdpCapsInformation> capsInformation;
-    capsInformation.reserve(count);
-
-    qCDebug(KRDP) << "Received caps:";
-    for (int i = 0; i < count; ++i) {
-        auto set = capsSets[i];
-
-        RdpCapsInformation caps;
-        caps.version = set.version;
-        caps.capSet = set;
-
-        switch (caps.version) {
-        case RDPGFX_CAPVERSION_107:
-        case RDPGFX_CAPVERSION_106:
-        case RDPGFX_CAPVERSION_105:
-        case RDPGFX_CAPVERSION_104:
-            caps.yuv420Supported = true;
-            Q_FALLTHROUGH();
-        case RDPGFX_CAPVERSION_103:
-        case RDPGFX_CAPVERSION_102:
-        case RDPGFX_CAPVERSION_101:
-        case RDPGFX_CAPVERSION_10:
-            if (!(set.flags & RDPGFX_CAPS_FLAG_AVC_DISABLED)) {
-                caps.avcSupported = true;
-            }
-            break;
-        case RDPGFX_CAPVERSION_81:
-            if (set.flags & RDPGFX_CAPS_FLAG_AVC420_ENABLED) {
-                caps.avcSupported = true;
-                caps.yuv420Supported = true;
-            }
-            break;
-        case RDPGFX_CAPVERSION_8:
-            break;
-        }
-
-        qCDebug(KRDP) << " " << capVersionToString(caps.version) << "flags:" << Qt::hex << set.flags << Qt::dec << "AVC:" << caps.avcSupported
-                      << "YUV420:" << caps.yuv420Supported;
-
-        capsInformation.push_back(caps);
-    }
-
-    const bool supportsProgressive = !capsInformation.empty();
-    const bool supportsH264 = std::any_of(capsInformation.begin(), capsInformation.end(), [](const RdpCapsInformation &caps) {
-        return caps.avcSupported && caps.yuv420Supported;
-    });
-
+    bool invalidateSurfaces = false;
     EncodingMode negotiatedMode = EncodingMode::Progressive;
-    if (!h264Disabled() && supportsH264) {
-        negotiatedMode = EncodingMode::H264;
-    } else if (!supportsProgressive) {
-        qCWarning(KRDP) << "Client advertised no usable graphics capability sets";
-        d->session->close(RdpConnection::CloseReason::VideoInitFailed);
-        return CHANNEL_RC_INITIALIZATION_ERROR;
+    std::optional<EncodingMode> previousMode;
+    {
+        std::lock_guard pipelineLock(d->gfxMutex);
+
+        if (d->capsConfirmed) {
+            qCDebug(KRDP) << "GFX channel reset (re-advertisement), resetting surface state";
+            d->capsConfirmed = false;
+            d->outputsDirty = true;
+            resetSurfaceState();
+            {
+                std::lock_guard lock(d->pendingFramesMutex);
+                d->pendingFrames.clear();
+            }
+            invalidateSurfaces = true;
+        }
+
+        auto capsSets = capsAdvertise->capsSets;
+        auto count = capsAdvertise->capsSetCount;
+
+        std::vector<RdpCapsInformation> capsInformation;
+        capsInformation.reserve(count);
+
+        qCDebug(KRDP) << "Received caps:";
+        for (int i = 0; i < count; ++i) {
+            auto set = capsSets[i];
+
+            RdpCapsInformation caps;
+            caps.version = set.version;
+            caps.capSet = set;
+
+            switch (caps.version) {
+            case RDPGFX_CAPVERSION_107:
+            case RDPGFX_CAPVERSION_106:
+            case RDPGFX_CAPVERSION_105:
+            case RDPGFX_CAPVERSION_104:
+                caps.yuv420Supported = true;
+                Q_FALLTHROUGH();
+            case RDPGFX_CAPVERSION_103:
+            case RDPGFX_CAPVERSION_102:
+            case RDPGFX_CAPVERSION_101:
+            case RDPGFX_CAPVERSION_10:
+                if (!(set.flags & RDPGFX_CAPS_FLAG_AVC_DISABLED)) {
+                    caps.avcSupported = true;
+                }
+                break;
+            case RDPGFX_CAPVERSION_81:
+                if (set.flags & RDPGFX_CAPS_FLAG_AVC420_ENABLED) {
+                    caps.avcSupported = true;
+                    caps.yuv420Supported = true;
+                }
+                break;
+            case RDPGFX_CAPVERSION_8:
+                break;
+            }
+
+            qCDebug(KRDP) << " " << capVersionToString(caps.version) << "flags:" << Qt::hex << set.flags << Qt::dec << "AVC:" << caps.avcSupported
+                          << "YUV420:" << caps.yuv420Supported;
+
+            capsInformation.push_back(caps);
+        }
+
+        const bool supportsProgressive = !capsInformation.empty();
+        const bool supportsH264 = std::any_of(capsInformation.begin(), capsInformation.end(), [](const RdpCapsInformation &caps) {
+            return caps.avcSupported && caps.yuv420Supported;
+        });
+
+        if (!h264Disabled() && supportsH264) {
+            negotiatedMode = EncodingMode::H264;
+        } else if (!supportsProgressive) {
+            qCWarning(KRDP) << "Client advertised no usable graphics capability sets";
+            d->session->close(RdpConnection::CloseReason::VideoInitFailed);
+            return CHANNEL_RC_INITIALIZATION_ERROR;
+        }
+
+        previousMode = d->activeEncodingMode;
+        d->activeEncodingMode = negotiatedMode;
+        qCDebug(KRDP) << "Selected encoding mode:" << (negotiatedMode == EncodingMode::H264 ? "h264" : "progressive");
+
+        auto maxVersion = std::max_element(capsInformation.begin(), capsInformation.end(), [](const auto &first, const auto &second) {
+            return first.version < second.version;
+        });
+
+        qCDebug(KRDP) << "Selected caps:" << capVersionToString(maxVersion->version);
+
+        RDPGFX_CAPS_CONFIRM_PDU capsConfirmPdu = {};
+        capsConfirmPdu.capsSet = &(maxVersion->capSet);
+        const UINT status = d->gfxContext->CapsConfirm(d->gfxContext.get(), &capsConfirmPdu);
+        if (status != CHANNEL_RC_OK) {
+            qCWarning(KRDP) << "CapsConfirm failed" << status;
+            return status;
+        }
+
+        d->capsConfirmed = true;
+        d->outputsDirty = true;
+        invalidateSurfaces = true;
     }
 
-    auto previousMode = d->activeEncodingMode;
-    d->activeEncodingMode = negotiatedMode;
     if (previousMode != negotiatedMode) {
         QMetaObject::invokeMethod(
             this,
@@ -530,25 +636,9 @@ uint32_t RdpGfxPipeline::onCapsAdvertise(const RDPGFX_CAPS_ADVERTISE_PDU *capsAd
             },
             Qt::BlockingQueuedConnection);
     }
-    qCDebug(KRDP) << "Selected encoding mode:" << (negotiatedMode == EncodingMode::H264 ? "h264" : "progressive");
-
-    auto maxVersion = std::max_element(capsInformation.begin(), capsInformation.end(), [](const auto &first, const auto &second) {
-        return first.version < second.version;
-    });
-
-    qCDebug(KRDP) << "Selected caps:" << capVersionToString(maxVersion->version);
-
-    RDPGFX_CAPS_CONFIRM_PDU capsConfirmPdu = {};
-    capsConfirmPdu.capsSet = &(maxVersion->capSet);
-    const UINT status = d->gfxContext->CapsConfirm(d->gfxContext.get(), &capsConfirmPdu);
-    if (status != CHANNEL_RC_OK) {
-        qCWarning(KRDP) << "CapsConfirm failed" << status;
-        return status;
+    if (invalidateSurfaces) {
+        Q_EMIT surfacesInvalidated();
     }
-
-    d->capsConfirmed = true;
-    d->outputsDirty = true;
-    Q_EMIT surfacesInvalidated();
     return CHANNEL_RC_OK;
 }
 

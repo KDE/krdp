@@ -317,6 +317,7 @@ void RdpConnection::setVideoStreams(const QList<StreamingSource> &sources)
 
     for (int i = 0; i < sources.size(); ++i) {
         const auto &source = sources.at(i);
+        qCDebug(KRDP) << "Configuring video stream" << i << "nodeId" << source.nodeId << "geometry" << source.geometry << "fd" << source.pipeWireFd;
         auto stream = std::make_unique<VideoStream>(this, d->gfxPipeline.get(), source.geometry);
         stream->setVideoQuality(d->videoQuality);
         stream->setPipeWireSource(source.nodeId, source.pipeWireFd);

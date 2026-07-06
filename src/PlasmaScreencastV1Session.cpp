@@ -188,6 +188,7 @@ void PlasmaScreencastV1Session::start()
             return;
         }
 
+        qCDebug(KRDP) << "Requesting Plasma screencast stream for geometry" << geometry;
         d->streams.push_back({request, geometry, 0});
         d->pendingStreams++;
 
@@ -207,6 +208,7 @@ void PlasmaScreencastV1Session::start()
             }
 
             it->nodeId = nodeId;
+            qCDebug(KRDP) << "Plasma screencast stream created" << "nodeId" << nodeId << "geometry" << it->geometry;
             d->pendingStreams--;
             if (d->pendingStreams == 0 && !d->failed) {
                 QList<StreamingSource> sources;
@@ -235,7 +237,7 @@ void PlasmaScreencastV1Session::start()
         const QRect geometry(QPoint(0, 0), screen->geometry().size());
         setLogicalSize(geometry.size());
         setSize(geometry.size());
-        startStream(d->m_screencasting.createOutputStream(screen, Screencasting::Metadata), geometry);
+        startStream(d->m_screencasting.createRegionStream(screen->geometry(), 1, Screencasting::Metadata), geometry);
     } else {
         QRect workspace;
         const auto screens = qApp->screens();
@@ -248,7 +250,7 @@ void PlasmaScreencastV1Session::start()
 
         for (QScreen *screen : screens) {
             const QRect geometry = screen->geometry().translated(-workspace.topLeft());
-            startStream(d->m_screencasting.createOutputStream(screen, Screencasting::Metadata), geometry);
+            startStream(d->m_screencasting.createRegionStream(screen->geometry(), 1, Screencasting::Metadata), geometry);
         }
     }
 }
