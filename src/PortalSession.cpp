@@ -282,8 +282,7 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
             d->mappingId = stream.map.value(u"mapping_id"_s).toString();
 
             auto fd = reply.value();
-            setNodeId(stream.nodeId);
-            setPipeWireFd(fd.takeFileDescriptor());
+            setStreamingSources({{stream.nodeId, fd.takeFileDescriptor(), QRect(QPoint(0, 0), logicalSize())}});
             QDBusConnection::sessionBus().connect(u"org.freedesktop.portal.Desktop"_s,
                                                   d->sessionPath.path(),
                                                   u"org.freedesktop.portal.Session"_s,

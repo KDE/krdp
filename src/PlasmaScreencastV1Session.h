@@ -34,7 +34,6 @@ public:
     ~PlasmaScreencastV1Session() override;
 
     void start() override;
-    QList<StreamingSource> takeStreamingSources() override;
 
     void sendEvent(const std::shared_ptr<QEvent> &event) override;
     void setClipboardData(std::unique_ptr<QMimeData> data) override;

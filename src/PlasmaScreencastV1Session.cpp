@@ -209,6 +209,12 @@ void PlasmaScreencastV1Session::start()
             it->nodeId = nodeId;
             d->pendingStreams--;
             if (d->pendingStreams == 0 && !d->failed) {
+                QList<StreamingSource> sources;
+                sources.reserve(d->streams.size());
+                for (const auto &stream : std::as_const(d->streams)) {
+                    sources.push_back({stream.nodeId, -1, stream.geometry});
+                }
+                setStreamingSources(std::move(sources));
                 qCDebug(KRDP) << "Started Plasma session";
                 setStarted(true);
             }
@@ -245,16 +251,6 @@ void PlasmaScreencastV1Session::start()
             startStream(d->m_screencasting.createOutputStream(screen, Screencasting::Metadata), geometry);
         }
     }
-}
-
-QList<StreamingSource> PlasmaScreencastV1Session::takeStreamingSources()
-{
-    QList<StreamingSource> sources;
-    sources.reserve(d->streams.size());
-    for (const auto &stream : std::as_const(d->streams)) {
-        sources.push_back({stream.nodeId, -1, stream.geometry});
-    }
-    return sources;
 }
 
 void PlasmaScreencastV1Session::sendEvent(const std::shared_ptr<QEvent> &event)
