@@ -8,6 +8,18 @@
 namespace KRdp
 {
 
+namespace
+{
+void closeStreamingSources(const QList<StreamingSource> &sources)
+{
+    for (const auto &source : sources) {
+        if (source.pipeWireFd >= 0) {
+            close(source.pipeWireFd);
+        }
+    }
+}
+}
+
 class KRDP_NO_EXPORT AbstractSession::Private
 {
 public:
@@ -16,8 +28,7 @@ public:
     bool started = false;
     QSize size;
     QSize logicalSize;
-    quint32 nodeId = 0;
-    int pipeWireFd = -1;
+    QList<StreamingSource> streamingSources;
 };
 
 AbstractSession::AbstractSession()
@@ -28,9 +39,7 @@ AbstractSession::AbstractSession()
 
 AbstractSession::~AbstractSession()
 {
-    if (d->pipeWireFd >= 0) {
-        close(d->pipeWireFd);
-    }
+    closeStreamingSources(d->streamingSources);
 }
 
 QSize AbstractSession::logicalSize() const
@@ -62,7 +71,7 @@ void AbstractSession::setVirtualMonitor(const VirtualMonitor &virtualMonitor)
 
 QList<StreamingSource> AbstractSession::takeStreamingSources()
 {
-    return {{d->nodeId, std::exchange(d->pipeWireFd, -1), QRect(QPoint(0, 0), d->logicalSize)}};
+    return std::exchange(d->streamingSources, {});
 }
 
 bool AbstractSession::isStarted() const
@@ -85,27 +94,15 @@ QSize AbstractSession::size() const
     return d->size;
 }
 
-quint32 AbstractSession::nodeId() const
+QList<StreamingSource> AbstractSession::streamingSources() const
 {
-    return d->nodeId;
+    return d->streamingSources;
 }
 
-int AbstractSession::takePipeWireFd()
+void AbstractSession::setStreamingSources(QList<StreamingSource> sources)
 {
-    return std::exchange(d->pipeWireFd, -1);
-}
-
-void AbstractSession::setNodeId(quint32 nodeId)
-{
-    d->nodeId = nodeId;
-}
-
-void AbstractSession::setPipeWireFd(int fd)
-{
-    if (d->pipeWireFd >= 0) {
-        close(d->pipeWireFd);
-    }
-    d->pipeWireFd = fd;
+    closeStreamingSources(d->streamingSources);
+    d->streamingSources = std::move(sources);
 }
 
 void AbstractSession::setStarted(bool s)

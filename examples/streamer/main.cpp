@@ -52,10 +52,14 @@ int main(int argc, char **argv)
     }
 
     QObject::connect(&session, &KRdp::PortalSession::started, &session, [&session, &encodedStream]() {
-        encodedStream.setNodeId(session.nodeId());
-        auto fd = session.takePipeWireFd();
-        if (fd >= 0) {
-            encodedStream.setFd(fd);
+        const auto sources = session.takeStreamingSources();
+        if (sources.isEmpty()) {
+            return;
+        }
+        const auto &source = sources.constFirst();
+        encodedStream.setNodeId(source.nodeId);
+        if (source.pipeWireFd >= 0) {
+            encodedStream.setFd(source.pipeWireFd);
         }
         encodedStream.setEncodingPreference(PipeWireBaseEncodedStream::EncodingPreference::Speed);
         encodedStream.setColorRange(PipeWireBaseEncodedStream::ColorRange::Full);

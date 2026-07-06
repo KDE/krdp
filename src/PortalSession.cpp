@@ -192,7 +192,11 @@ void PortalSession::sendEvent(const std::shared_ptr<QEvent> &event)
         auto me = std::static_pointer_cast<QMouseEvent>(event);
         auto position = me->position();
         auto logicalPosition = QPointF{(position.x() / size().width()) * logicalSize().width(), (position.y() / size().height()) * logicalSize().height()};
-        d->remoteInterface->NotifyPointerMotionAbsolute(d->sessionPath, QVariantMap{}, nodeId(), logicalPosition.x(), logicalPosition.y());
+        const auto sources = streamingSources();
+        if (sources.isEmpty()) {
+            return;
+        }
+        d->remoteInterface->NotifyPointerMotionAbsolute(d->sessionPath, QVariantMap{}, sources.constFirst().nodeId, logicalPosition.x(), logicalPosition.y());
         break;
     }
     case QEvent::Wheel: {
@@ -341,8 +345,7 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
 
             setLogicalSize(qdbus_cast<QSize>(stream.map.value(u"size"_s)));
             auto fd = reply.value();
-            setNodeId(stream.nodeId);
-            setPipeWireFd(fd.takeFileDescriptor());
+            setStreamingSources({{stream.nodeId, fd.takeFileDescriptor(), QRect(QPoint(0, 0), logicalSize())}});
             QDBusConnection::sessionBus().connect(u"org.freedesktop.portal.Desktop"_s,
                                                   d->sessionPath.path(),
                                                   u"org.freedesktop.portal.Session"_s,

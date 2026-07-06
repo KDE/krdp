@@ -50,8 +50,6 @@ public:
     void setActiveStream(int stream);
     void setVirtualMonitor(const VirtualMonitor &vm);
     virtual QList<StreamingSource> takeStreamingSources();
-    quint32 nodeId() const;
-    int takePipeWireFd();
 
     void setSize(QSize size);
 
@@ -82,13 +80,13 @@ protected:
     bool isStarted() const;
     QSize size() const;
     QSize logicalSize() const;
+    QList<StreamingSource> streamingSources() const;
     std::optional<VirtualMonitor> virtualMonitor() const;
     std::optional<int> activeStream() const;
 
     void setStarted(bool started);
     void setLogicalSize(QSize size);
-    void setNodeId(quint32 nodeId);
-    void setPipeWireFd(int fd);
+    void setStreamingSources(QList<StreamingSource> sources);
 
 private:
     class Private;
