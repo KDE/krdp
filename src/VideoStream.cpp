@@ -56,6 +56,7 @@ public:
     QQueue<FrameRateEstimate> frameRateEstimates;
     clk::system_clock::time_point lastFrameRateEstimation;
     quint8 quality = 100;
+    bool loggedFirstFrame = false;
 
     void setSize(VideoStream *q, const QSize &newSize)
     {
@@ -338,6 +339,11 @@ void VideoStream::clearSurface()
 
 void VideoStream::sendFrame(const VideoFrame &frame)
 {
+    if (!d->loggedFirstFrame) {
+        qCDebug(KRDP) << "Submitting first frame for geometry" << d->geometry << "frameSize" << frame.size << "damageEmpty" << frame.damage.isEmpty()
+                      << "encodingMode" << (d->activeEncodingMode == RdpGfxPipeline::EncodingMode::H264 ? "h264" : "progressive");
+        d->loggedFirstFrame = true;
+    }
     if (!d->pipeline->ensureSurface(d->surface, frame.size, d->geometry.topLeft())) {
         return;
     }
