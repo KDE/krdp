@@ -7,6 +7,7 @@
 #include <memory>
 #include <thread>
 
+#include <QList>
 #include <QObject>
 
 #include <freerdp/freerdp.h>
@@ -22,6 +23,8 @@ class VideoStream;
 class Cursor;
 class NetworkDetection;
 class Clipboard;
+class RdpGfxPipeline;
+struct StreamingSource;
 
 /**
  * An RDP session.
@@ -88,9 +91,13 @@ public:
      */
     InputHandler *inputHandler() const;
     /**
-     * The VideoStream instance associated with this session.
+     * The VideoStream instances associated with this session.
      */
-    VideoStream *videoStream() const;
+    QList<VideoStream *> videoStreams() const;
+    void setVideoStreams(const QList<StreamingSource> &sources);
+    void setVideoQuality(quint8 quality);
+    void setVideoStreamingEnabled(bool enabled);
+    RdpGfxPipeline *gfxPipeline() const;
     /**
      * The Cursor instance associated with this session.
      */
@@ -107,6 +114,7 @@ private:
     friend BOOL suppressOutput(rdpContext *, uint8_t, const RECTANGLE_16 *);
 
     friend class Cursor;
+    friend class RdpGfxPipeline;
     friend class VideoStream;
     friend class NetworkDetection;
     friend class Clipboard;

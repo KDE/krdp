@@ -27,6 +27,8 @@ target_sources(KRdp PRIVATE
     PeerContext_p.h
     PortalSession.cpp
     PortalSession.h
+    RdpGfxPipeline.cpp
+    RdpGfxPipeline.h
     VideoStream.cpp
     VideoStream.h
     Cursor.cpp

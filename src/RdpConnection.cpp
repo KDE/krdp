@@ -24,11 +24,13 @@
 
 #include <freerdp/channels/drdynvc.h>
 
+#include "AbstractSession.h"
 #include "Clipboard.h"
 #include "Cursor.h"
 #include "InputHandler.h"
 #include "NetworkDetection.h"
 #include "PeerContext_p.h"
+#include "RdpGfxPipeline.h"
 #include "Server.h"
 #include "VideoStream.h"
 
@@ -202,7 +204,8 @@ public:
     qintptr socketHandle;
 
     std::unique_ptr<InputHandler> inputHandler;
-    std::unique_ptr<VideoStream> videoStream;
+    std::unique_ptr<RdpGfxPipeline> gfxPipeline;
+    std::vector<std::unique_ptr<VideoStream>> videoStreams;
     std::unique_ptr<Cursor> cursor;
     std::unique_ptr<NetworkDetection> networkDetection;
     std::unique_ptr<Clipboard> clipboard;
@@ -210,6 +213,7 @@ public:
     freerdp_peer *peer = nullptr;
 
     std::jthread thread;
+    quint8 videoQuality = 100;
 };
 
 RdpConnection::RdpConnection(Server *server, qintptr socketHandle)
@@ -220,13 +224,7 @@ RdpConnection::RdpConnection(Server *server, qintptr socketHandle)
     d->socketHandle = socketHandle;
 
     d->inputHandler = std::make_unique<InputHandler>(this);
-    d->videoStream = std::make_unique<VideoStream>(this);
-    connect(d->videoStream.get(), &VideoStream::closed, this, [this]() {
-        if (d->state == State::Running || d->state == State::Streaming) {
-            qCDebug(KRDP) << "Video stream closed, closing session";
-            d->peer->Close(d->peer);
-        }
-    });
+    d->gfxPipeline = std::make_unique<RdpGfxPipeline>(this);
     d->cursor = std::make_unique<Cursor>(this);
     d->networkDetection = std::make_unique<NetworkDetection>(this);
     d->clipboard = std::make_unique<Clipboard>(this);
@@ -296,9 +294,63 @@ InputHandler *RdpConnection::inputHandler() const
     return d->inputHandler.get();
 }
 
-KRdp::VideoStream *RdpConnection::videoStream() const
+QList<KRdp::VideoStream *> RdpConnection::videoStreams() const
 {
-    return d->videoStream.get();
+    QList<VideoStream *> streams;
+    streams.reserve(d->videoStreams.size());
+    for (const auto &stream : d->videoStreams) {
+        streams.push_back(stream.get());
+    }
+    return streams;
+}
+
+void RdpConnection::setVideoStreams(const QList<StreamingSource> &sources)
+{
+    for (auto &stream : d->videoStreams) {
+        disconnect(stream.get(), nullptr, this, nullptr);
+        stream->close();
+    }
+    d->videoStreams.clear();
+
+    QList<RdpGfxPipeline::Output> outputs;
+    outputs.reserve(sources.size());
+
+    for (int i = 0; i < sources.size(); ++i) {
+        const auto &source = sources.at(i);
+        auto stream = std::make_unique<VideoStream>(this, d->gfxPipeline.get(), source.geometry);
+        stream->setVideoQuality(d->videoQuality);
+        stream->setPipeWireSource(source.nodeId, source.pipeWireFd);
+        connect(stream.get(), &VideoStream::closed, this, [this]() {
+            if (d->state == State::Running || d->state == State::Streaming) {
+                qCDebug(KRDP) << "Video stream closed, closing session";
+                d->peer->Close(d->peer);
+            }
+        });
+        d->videoStreams.push_back(std::move(stream));
+        outputs.push_back({source.geometry, i == 0});
+    }
+
+    d->gfxPipeline->setOutputs(outputs);
+}
+
+void RdpConnection::setVideoQuality(quint8 quality)
+{
+    d->videoQuality = quality;
+    for (const auto &stream : d->videoStreams) {
+        stream->setVideoQuality(quality);
+    }
+}
+
+void RdpConnection::setVideoStreamingEnabled(bool enabled)
+{
+    for (const auto &stream : d->videoStreams) {
+        stream->setStreamingEnabled(enabled);
+    }
+}
+
+RdpGfxPipeline *RdpConnection::gfxPipeline() const
+{
+    return d->gfxPipeline.get();
 }
 
 Cursor *RdpConnection::cursor() const
@@ -373,7 +425,7 @@ void RdpConnection::initialize()
     freerdp_settings_set_bool(settings, FreeRDP_SupportGraphicsPipeline, true);
     freerdp_settings_set_bool(settings, FreeRDP_GfxAVC444, false);
     freerdp_settings_set_bool(settings, FreeRDP_GfxAVC444v2, false);
-    freerdp_settings_set_bool(settings, FreeRDP_GfxH264, !VideoStream::h264Disabled());
+    freerdp_settings_set_bool(settings, FreeRDP_GfxH264, !RdpGfxPipeline::h264Disabled());
     freerdp_settings_set_bool(settings, FreeRDP_GfxProgressive, true);
 
     freerdp_settings_set_bool(settings, FreeRDP_GfxSmallCache, false);
@@ -443,8 +495,8 @@ void RdpConnection::run(std::stop_token stopToken)
         }
 
         if (d->peer->connected && d->state == State::Activated) {
-            if (d->videoStream->initialize()) {
-                d->videoStream->setEnabled(true);
+            if (d->gfxPipeline->initialize()) {
+                d->gfxPipeline->setEnabled(true);
             } else {
                 break;
             }
@@ -479,7 +531,7 @@ void RdpConnection::run(std::stop_token stopToken)
 
         if (d->peer->connected && d->state == State::Activated && drdynvcJoined) {
             if (drdynvcState == DRDYNVC_STATE_READY) {
-                if (!d->videoStream->openChannel()) {
+                if (!d->gfxPipeline->openChannel()) {
                     qCWarning(KRDP) << "Unable to open RDPGFX channel";
                 } else {
                     setState(State::Streaming);
@@ -567,19 +619,18 @@ bool RdpConnection::onPostConnect()
 bool RdpConnection::onClose()
 {
     d->clipboard->close();
-    d->videoStream->close();
+    for (auto &stream : d->videoStreams) {
+        disconnect(stream.get(), nullptr, this, nullptr);
+        stream->close();
+    }
+    d->gfxPipeline->close();
     setState(State::Closed);
     return true;
 }
 
 bool RdpConnection::onSuppressOutput(uint8_t allow)
 {
-    if (allow) {
-        d->videoStream->setEnabled(true);
-    } else {
-        d->videoStream->setEnabled(false);
-    }
-
+    d->gfxPipeline->setEnabled(allow);
     return true;
 }
 

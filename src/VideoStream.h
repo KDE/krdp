@@ -8,13 +8,15 @@
 
 #include <QObject>
 #include <QPoint>
+#include <QQueue>
 #include <QRegion>
+#include <QRect>
 #include <QSize>
 
 #include <PipeWireEncodedStream>
 #include <PipeWireSourceStream>
-#include <freerdp/server/rdpgfx.h>
 
+#include "RdpGfxPipeline.h"
 #include "VideoFrame.h"
 #include "krdp_export.h"
 
@@ -22,7 +24,6 @@ namespace KRdp
 {
 
 class RdpConnection;
-
 /**
  * A class that encapsulates an RdpGfx video stream.
  *
@@ -43,17 +44,8 @@ class KRDP_EXPORT VideoStream : public QObject
     Q_OBJECT
 
 public:
-    enum class EncodingMode {
-        H264,
-        Progressive,
-    };
-
-    explicit VideoStream(RdpConnection *session);
+    explicit VideoStream(RdpConnection *session, RdpGfxPipeline *pipeline, const QRect &geometry);
     ~VideoStream() override;
-
-    static bool h264Disabled();
-
-    bool initialize();
     void close();
     Q_SIGNAL void closed();
     Q_SIGNAL void sizeChanged(const QSize &size);
@@ -75,37 +67,16 @@ public:
      * This means the screen resolution and other information of the client
      * will be updated based on the current state of the VideoStream.
      */
-    void reset();
-
-    /**
-     */
-    bool enabled() const;
-    void setEnabled(bool enabled);
-    Q_SIGNAL void enabledChanged();
     void setStreamingEnabled(bool enabled);
     void setVideoQuality(quint8 quality);
     void setPipeWireSource(quint32 nodeId, int fd = -1);
 
-    bool openChannel();
-
 private:
-    friend BOOL gfxChannelIdAssigned(RdpgfxServerContext *, uint32_t);
-    friend uint32_t gfxCapsAdvertise(RdpgfxServerContext *, const RDPGFX_CAPS_ADVERTISE_PDU *);
-    friend uint32_t gfxFrameAcknowledge(RdpgfxServerContext *, const RDPGFX_FRAME_ACKNOWLEDGE_PDU *);
-
-    bool onChannelIdAssigned(uint32_t channelId);
-    uint32_t onCapsAdvertise(const RDPGFX_CAPS_ADVERTISE_PDU *capsAdvertise);
-    uint32_t onFrameAcknowledge(const RDPGFX_FRAME_ACKNOWLEDGE_PDU *frameAcknowledge);
-
     void onPacketReceived(const PipeWireEncodedStream::Packet &data);
     void onFrameReceived(const PipeWireFrame &frame);
-    void setActiveEncodingMode(EncodingMode mode);
-    void destroySurface();
-    void performReset(QSize size);
-    bool hasInFlightCapacity() const;
+    void setActiveEncodingMode(RdpGfxPipeline::EncodingMode mode);
+    void clearSurface();
     void sendFrame(const VideoFrame &frame);
-    void sendFrameH264(const VideoFrame &frame);
-    void sendFrameProgressive(const VideoFrame &frame);
 
     void updateRequestedFrameRate();
 

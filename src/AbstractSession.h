@@ -10,6 +10,8 @@
 #include <optional>
 
 #include <QEvent>
+#include <QList>
+#include <QRect>
 #include <QObject>
 #include <QSize>
 #include <QString>
@@ -27,6 +29,12 @@ struct VirtualMonitor {
     qreal dpr;
 };
 
+struct StreamingSource {
+    quint32 nodeId = 0;
+    int pipeWireFd = -1;
+    QRect geometry;
+};
+
 class KRDP_EXPORT AbstractSession : public QObject
 {
     Q_OBJECT
@@ -41,6 +49,7 @@ public:
 
     void setActiveStream(int stream);
     void setVirtualMonitor(const VirtualMonitor &vm);
+    virtual QList<StreamingSource> takeStreamingSources();
     quint32 nodeId() const;
     int takePipeWireFd();
 

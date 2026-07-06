@@ -7,6 +7,7 @@
 #include <QGuiApplication>
 #include <QMouseEvent>
 #include <QQueue>
+#include <QScreen>
 #include <QWaylandClientExtensionTemplate>
 #include <qpa/qplatformnativeinterface.h>
 
@@ -150,11 +151,19 @@ private:
 class KRDP_NO_EXPORT PlasmaScreencastV1Session::Private
 {
 public:
+    struct Stream {
+        ScreencastingStream *request = nullptr;
+        QRect geometry;
+        quint32 nodeId = 0;
+    };
+
     Server *server = nullptr;
 
     Screencasting m_screencasting;
-    ScreencastingStream *request = nullptr;
+    QList<Stream> streams;
     FakeInput *remoteInterface = nullptr;
+    int pendingStreams = 0;
+    bool failed = false;
 };
 
 PlasmaScreencastV1Session::PlasmaScreencastV1Session()
@@ -172,26 +181,80 @@ PlasmaScreencastV1Session::~PlasmaScreencastV1Session()
 
 void PlasmaScreencastV1Session::start()
 {
+    auto startStream = [this](ScreencastingStream *request, const QRect &geometry) {
+        if (!request) {
+            d->failed = true;
+            Q_EMIT error();
+            return;
+        }
+
+        d->streams.push_back({request, geometry, 0});
+        d->pendingStreams++;
+
+        connect(request, &ScreencastingStream::failed, this, [this](const QString &) {
+            if (d->failed) {
+                return;
+            }
+            d->failed = true;
+            Q_EMIT error();
+        });
+        connect(request, &ScreencastingStream::created, this, [this, request](uint nodeId) {
+            auto it = std::find_if(d->streams.begin(), d->streams.end(), [request](const Private::Stream &stream) {
+                return stream.request == request;
+            });
+            if (it == d->streams.end()) {
+                return;
+            }
+
+            it->nodeId = nodeId;
+            d->pendingStreams--;
+            if (d->pendingStreams == 0 && !d->failed) {
+                qCDebug(KRDP) << "Started Plasma session";
+                setStarted(true);
+            }
+        });
+    };
+
     if (auto vm = virtualMonitor()) {
-        d->request = d->m_screencasting.createVirtualMonitorStream(vm->name, vm->size, vm->dpr, Screencasting::Metadata);
+        const QRect geometry(QPoint(0, 0), vm->size);
+        setLogicalSize(vm->size);
+        setSize(vm->size);
+        startStream(d->m_screencasting.createVirtualMonitorStream(vm->name, vm->size, vm->dpr, Screencasting::Metadata), geometry);
     } else if (const auto streamIndex = activeStream()) {
         if (*streamIndex >= qApp->screens().size()) {
             qCWarning(KRDP) << "Invalid monitor index" << *streamIndex;
             return;
         }
         auto screen = qApp->screens().at(*streamIndex);
-        d->request = d->m_screencasting.createOutputStream(screen, Screencasting::Metadata);
+        const QRect geometry(QPoint(0, 0), screen->geometry().size());
+        setLogicalSize(geometry.size());
+        setSize(geometry.size());
+        startStream(d->m_screencasting.createOutputStream(screen, Screencasting::Metadata), geometry);
     } else {
-        d->request = d->m_screencasting.createWorkspaceStream(Screencasting::Metadata);
-    }
-    connect(d->request, &ScreencastingStream::failed, this, &PlasmaScreencastV1Session::error);
-    connect(d->request, &ScreencastingStream::created, this, [this](uint nodeId) {
-        qCDebug(KRDP) << "Started Plasma session";
+        QRect workspace;
+        const auto screens = qApp->screens();
+        for (QScreen *screen : screens) {
+            workspace |= screen->geometry();
+        }
 
-        setLogicalSize(d->request->size());
-        setNodeId(nodeId);
-        setStarted(true);
-    });
+        setLogicalSize(workspace.size());
+        setSize(workspace.size());
+
+        for (QScreen *screen : screens) {
+            const QRect geometry = screen->geometry().translated(-workspace.topLeft());
+            startStream(d->m_screencasting.createOutputStream(screen, Screencasting::Metadata), geometry);
+        }
+    }
+}
+
+QList<StreamingSource> PlasmaScreencastV1Session::takeStreamingSources()
+{
+    QList<StreamingSource> sources;
+    sources.reserve(d->streams.size());
+    for (const auto &stream : std::as_const(d->streams)) {
+        sources.push_back({stream.nodeId, -1, stream.geometry});
+    }
+    return sources;
 }
 
 void PlasmaScreencastV1Session::sendEvent(const std::shared_ptr<QEvent> &event)

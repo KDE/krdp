@@ -17,6 +17,7 @@
 #include <InputHandler.h>
 #include <PortalSession.h>
 #include <RdpConnection.h>
+#include <RdpGfxPipeline.h>
 #include <Server.h>
 
 #ifdef WITH_PLASMA_SESSION
@@ -41,9 +42,7 @@ public:
         connect(session.get(), &KRdp::AbstractSession::started, this, &SessionWrapper::onSessionStarted);
         connect(session.get(), &KRdp::AbstractSession::clipboardDataChanged, connection->clipboard(), &KRdp::Clipboard::setServerData);
 
-        connect(connection->videoStream(), &KRdp::VideoStream::cursorChanged, this, &SessionWrapper::onCursorUpdate);
-        connect(connection->videoStream(), &KRdp::VideoStream::sizeChanged, session.get(), &KRdp::AbstractSession::setSize);
-        connect(connection->videoStream(), &KRdp::VideoStream::enabledChanged, this, &SessionWrapper::onVideoStreamEnabledChanged);
+        connect(connection->gfxPipeline(), &KRdp::RdpGfxPipeline::enabledChanged, this, &SessionWrapper::onVideoStreamEnabledChanged);
         connect(connection->inputHandler(), &KRdp::InputHandler::inputEvent, session.get(), &KRdp::AbstractSession::sendEvent);
         connect(connection->clipboard(), &KRdp::Clipboard::clientDataChanged, session.get(), [clipboard = connection->clipboard(), this]() {
             session->setClipboardData(clipboard->getClipboard());
@@ -66,14 +65,17 @@ public:
 
     void onVideoStreamEnabledChanged()
     {
-        connection->videoStream()->setStreamingEnabled(m_sessionStarted && connection->videoStream()->enabled());
+        connection->setVideoStreamingEnabled(m_sessionStarted && connection->gfxPipeline()->enabled());
     }
 
     void onSessionStarted()
     {
         m_sessionStarted = true;
-        connection->videoStream()->setPipeWireSource(session->nodeId(), session->takePipeWireFd());
-        connection->videoStream()->setStreamingEnabled(connection->videoStream()->enabled());
+        connection->setVideoStreams(session->takeStreamingSources());
+        for (auto *stream : connection->videoStreams()) {
+            connect(stream, &KRdp::VideoStream::cursorChanged, this, &SessionWrapper::onCursorUpdate);
+        }
+        connection->setVideoStreamingEnabled(connection->gfxPipeline()->enabled());
     }
 
     void onConnectionDestroyed()
@@ -137,7 +139,9 @@ void SessionController::onNewConnection(KRdp::RdpConnection *newConnection)
     } else if (m_monitorIndex) {
         wrapper->session->setActiveStream(*m_monitorIndex);
     }
-    wrapper->connection->videoStream()->setVideoQuality(m_quality.value());
+    if (m_quality) {
+        wrapper->connection->setVideoQuality(*m_quality);
+    }
     wrapper->session->start();
 
     connect(wrapper.get(), &SessionWrapper::connectionDestroyed, this, [this](SessionWrapper *wrapper) {

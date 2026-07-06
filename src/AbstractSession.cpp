@@ -60,6 +60,11 @@ void AbstractSession::setVirtualMonitor(const VirtualMonitor &virtualMonitor)
     d->virtualMonitor = virtualMonitor;
 }
 
+QList<StreamingSource> AbstractSession::takeStreamingSources()
+{
+    return {{d->nodeId, std::exchange(d->pipeWireFd, -1), QRect(QPoint(0, 0), d->logicalSize)}};
+}
+
 bool AbstractSession::isStarted() const
 {
     return d->started;
