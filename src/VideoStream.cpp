@@ -299,7 +299,7 @@ void VideoStream::setActiveEncodingMode(EncodingMode mode)
             Qt::QueuedConnection);
 
         if (d->nodeId != 0 && d->pipeWireFd) {
-            if (!d->sourceStream->createStream(d->nodeId, d->pipeWireFd)) {
+            if (!d->sourceStream->createStream(static_cast<quint64>(d->nodeId), d->pipeWireFd)) {
                 qCWarning(KRDP) << "Could not create PipeWire source stream" << d->sourceStream->error();
                 d->session->close(RdpConnection::CloseReason::VideoInitFailed);
                 return;
@@ -504,7 +504,7 @@ void VideoStream::setPipeWireSource(quint32 nodeId, int fd)
         }
     }
     if (d->sourceStream) {
-        if (!d->sourceStream->createStream(nodeId, d->pipeWireFd)) {
+        if (!d->sourceStream->createStream(static_cast<quint64>(nodeId), d->pipeWireFd)) {
             qCWarning(KRDP) << "Could not create PipeWire source stream" << d->sourceStream->error();
             d->session->close(RdpConnection::CloseReason::VideoInitFailed);
             return;
