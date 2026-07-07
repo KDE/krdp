@@ -16,7 +16,7 @@ using namespace KRdp;
 static QByteArray createXorMask(const QImage &image)
 {
     auto converted = image.convertToFormat(QImage::Format_ARGB32);
-    converted.mirror(false, true);
+    converted.flip(Qt::Vertical);
     converted.rgbSwap();
     return QByteArray(reinterpret_cast<char *>(converted.bits()), converted.sizeInBytes());
 }
