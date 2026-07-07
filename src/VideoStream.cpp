@@ -270,7 +270,7 @@ void VideoStream::setActiveEncodingMode(EncodingMode mode)
         });
         connect(d->encodedStream.get(), &PipeWireEncodedStream::cursorChanged, this, &VideoStream::cursorChanged);
         if (d->nodeId != 0) {
-            d->encodedStream->setNodeId(d->nodeId);
+            d->encodedStream->setObjectSerial(d->nodeId);
             if (d->pipeWireFd > 0) {
                 d->encodedStream->setFd(d->pipeWireFd);
             }
@@ -497,7 +497,7 @@ void VideoStream::setPipeWireSource(quint32 nodeId, int fd)
     d->nodeId = nodeId;
     d->pipeWireFd = fd;
     if (d->encodedStream) {
-        d->encodedStream->setNodeId(nodeId);
+        d->encodedStream->setObjectSerial(nodeId);
         d->encodedStream->setFd(d->pipeWireFd);
         if (d->streamingEnabled) {
             d->encodedStream->start();

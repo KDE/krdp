@@ -52,7 +52,7 @@ int main(int argc, char **argv)
     }
 
     QObject::connect(&session, &KRdp::PortalSession::started, &session, [&session, &encodedStream]() {
-        encodedStream.setNodeId(session.nodeId());
+        encodedStream.setObjectSerial(session.nodeId());
         auto fd = session.takePipeWireFd();
         if (fd >= 0) {
             encodedStream.setFd(fd);
