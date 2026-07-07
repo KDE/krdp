@@ -255,12 +255,13 @@ uint32_t Clipboard::Private::onClientFormatDataResponse(const CLIPRDR_FORMAT_DAT
         return CHANNEL_RC_OK;
     }
 
-    const auto nCharacters = formatDataResponse->common.dataLen / 2 - 1; // Each char16_t is 2 bytes, plus null terminator
-    if (nCharacters < 0) {
+    if (formatDataResponse->common.dataLen < 2) {
         clientData.reset();
         Q_EMIT q->clientDataChanged();
         return CHANNEL_RC_OK; // empty string
     }
+
+    const auto nCharacters = formatDataResponse->common.dataLen / 2 - 1; // Each char16_t is 2 bytes, plus null terminator
 
     clientData.reset(new QMimeData());
 
