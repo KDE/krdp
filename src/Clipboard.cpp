@@ -30,6 +30,7 @@ public:
 
     Clipboard *q;
 
+    uint32_t onClientCapabilities(const CLIPRDR_CAPABILITIES *capabilities);
     uint32_t onClientFormatList(const CLIPRDR_FORMAT_LIST *formatList);
     uint32_t onClientFormatListResponse(const CLIPRDR_FORMAT_LIST_RESPONSE *formatListResponse);
     uint32_t onClientFormatDataRequest(const CLIPRDR_FORMAT_DATA_REQUEST *formatDataRequest);
@@ -40,6 +41,16 @@ public:
     CliprdrServerContextPtr clipContext = CliprdrServerContextPtr(nullptr, cliprdr_server_context_free);
 
     bool enabled = false;
+    // mstsc drops a format list sent before its capabilities response; hold until markClientReady()
+    bool clientReady = false;
+    void markClientReady()
+    {
+        if (clientReady) {
+            return;
+        }
+        clientReady = true;
+        QMetaObject::invokeMethod(q, &Clipboard::sendServerData, Qt::QueuedConnection);
+    }
     std::unique_ptr<const QMimeData> serverData;
     std::unique_ptr<QMimeData> clientData;
 
@@ -63,6 +74,11 @@ public:
             qReturnArg(channelState),
             packet);
         return channelState;
+    }
+
+    static UINT clientCapabilities(CliprdrServerContext *context, const CLIPRDR_CAPABILITIES *capabilities)
+    {
+        return processInMainThread<&Private::onClientCapabilities>(reinterpret_cast<Clipboard *>(context->custom), capabilities);
     }
 
     static UINT clientFormatList(CliprdrServerContext *context, const CLIPRDR_FORMAT_LIST *formatList)
@@ -120,6 +136,7 @@ bool Clipboard::initialize()
     d->clipContext->custom = this;
     d->clipContext->rdpcontext = d->session->rdpPeer()->context;
 
+    d->clipContext->ClientCapabilities = Private::clientCapabilities;
     d->clipContext->ClientFormatList = Private::clientFormatList;
     d->clipContext->ClientFormatListResponse = Private::clientFormatListResponse;
     d->clipContext->ClientFormatDataRequest = Private::clientFormatDataRequest;
@@ -133,6 +150,8 @@ bool Clipboard::initialize()
     };
 
     d->enabled = true;
+    // flush a copy made before the cliprdr channel finished coming up, so it isn't silently lost
+    QMetaObject::invokeMethod(this, &Clipboard::sendServerData, Qt::QueuedConnection);
 
     return true;
 }
@@ -171,6 +190,10 @@ void Clipboard::sendServerData()
     if (!d->serverData || !d->enabled) {
         return;
     }
+    // held until the client's init handshake completes; flushed from markClientReady()
+    if (!d->clientReady) {
+        return;
+    }
 
     CLIPRDR_FORMAT format = {};
     format.formatId = CF_UNICODETEXT;
@@ -184,8 +207,18 @@ void Clipboard::sendServerData()
     d->clipContext->ServerFormatList(d->clipContext.get(), &formatList);
 }
 
+uint32_t Clipboard::Private::onClientCapabilities(const CLIPRDR_CAPABILITIES *)
+{
+    // covers copy-out with no prior copy-in: mstsc sends no format list when its clipboard starts empty
+    markClientReady();
+    return CHANNEL_RC_OK;
+}
+
 uint32_t Clipboard::Private::onClientFormatList(const CLIPRDR_FORMAT_LIST *formatList)
 {
+    // fallback readiness signal for clients that reach us with a format list first
+    markClientReady();
+
     for (uint32_t i = 0; i < formatList->numFormats; ++i) {
         auto format = formatList->formats[i];
 
