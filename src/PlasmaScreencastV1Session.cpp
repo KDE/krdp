@@ -283,9 +283,4 @@ void PlasmaScreencastV1Session::sendEvent(const std::shared_ptr<QEvent> &event)
         break;
     }
 }
-
-void PlasmaScreencastV1Session::setClipboardData(std::unique_ptr<QMimeData> data)
-{
-    Q_UNUSED(data);
-}
 }

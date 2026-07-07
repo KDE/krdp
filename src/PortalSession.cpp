@@ -5,12 +5,10 @@
 #include "PortalSession.h"
 
 #include <QGuiApplication>
-#include <QMimeData>
 #include <QQueue>
 
 #include <KConfigGroup>
 #include <KSharedConfig>
-#include <KSystemClipboard>
 
 #include "EiConnection.h"
 #include "PortalSession_p.h"
@@ -76,7 +74,6 @@ public:
     std::unique_ptr<OrgFreedesktopPortalRemoteDesktopInterface> remoteInterface;
     std::unique_ptr<OrgFreedesktopPortalScreenCastInterface> screencastInterface;
 
-    bool ignoreNextSystemClipboardChange = false;
     QDBusObjectPath sessionPath;
     QString mappingId;
 
@@ -94,37 +91,6 @@ PortalSession::PortalSession()
 {
     d->remoteInterface = std::make_unique<OrgFreedesktopPortalRemoteDesktopInterface>(dbusService, dbusPath, QDBusConnection::sessionBus());
     d->screencastInterface = std::make_unique<OrgFreedesktopPortalScreenCastInterface>(dbusService, dbusPath, QDBusConnection::sessionBus());
-
-    connect(KSystemClipboard::instance(), &KSystemClipboard::changed, this, [this](auto mode) {
-        if (mode != QClipboard::Clipboard) {
-            return;
-        }
-
-        auto data = KSystemClipboard::instance()->mimeData(mode);
-        if (!data) {
-            return;
-        }
-
-        qCDebug(KRDP) << "Clipboard formats:" << data->formats() << "hasText:" << data->hasText();
-
-        // KSystemClipboard takes ownership of any QMimeData passed to it but
-        // does not relinquish ownership over anything it returns. So manually
-        // copy over the contents to a new instance of QMimeData so we can keep
-        // the semantics the same.
-        //
-        // Only copy text data here. Fetching arbitrary clipboard MIME payloads
-        // can block for a long time on Wayland/XWayland targets such as
-        // SAVE_TARGETS, which freezes the server's main thread. The RDP
-        // clipboard implementation currently only exposes text anyway.
-        auto newData = new QMimeData();
-        if (data->hasText()) {
-            newData->setText(data->text());
-        } else {
-            qCDebug(KRDP) << "Ignoring non-text clipboard update with formats" << data->formats();
-        }
-
-        Q_EMIT clipboardDataChanged(newData);
-    });
 
     if (!d->remoteInterface->isValid() || !d->screencastInterface->isValid()) {
         qCWarning(KRDP) << "Could not connect to Freedesktop Remote Desktop Portal";
@@ -160,16 +126,6 @@ void PortalSession::sendEvent(const std::shared_ptr<QEvent> &event)
 {
     if (isStarted() && d->eiConnection) {
         d->eiConnection->sendEvent(event, size(), d->mappingId);
-    }
-}
-
-void PortalSession::setClipboardData(std::unique_ptr<QMimeData> data)
-{
-    // KSystemClipboard takes ownership
-    if (data) {
-        KSystemClipboard::instance()->setMimeData(data.release(), QClipboard::Clipboard);
-    } else {
-        KSystemClipboard::instance()->clear(QClipboard::Clipboard);
     }
 }
 

@@ -53,7 +53,7 @@ public:
      *
      * The data is provided by the remote RDP client.
      */
-    virtual void setClipboardData(std::unique_ptr<QMimeData> data) = 0;
+    void setClipboardData(std::unique_ptr<QMimeData> data);
 
     /**
      * Send a new event to the portal.
@@ -61,6 +61,8 @@ public:
      * \param event The new event to send.
      */
     virtual void sendEvent(const std::shared_ptr<QEvent> &event) = 0;
+
+    void detachClipboard();
 
 Q_SIGNALS:
     void started();

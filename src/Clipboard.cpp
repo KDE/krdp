@@ -40,7 +40,7 @@ public:
     CliprdrServerContextPtr clipContext = CliprdrServerContextPtr(nullptr, cliprdr_server_context_free);
 
     bool enabled = false;
-    const QMimeData *serverData = nullptr;
+    std::unique_ptr<const QMimeData> serverData;
     std::unique_ptr<QMimeData> clientData;
 
     template<typename>
@@ -157,11 +157,7 @@ void Clipboard::close()
 
 void Clipboard::setServerData(const QMimeData *data)
 {
-    if (d->serverData) {
-        delete d->serverData;
-    }
-
-    d->serverData = data;
+    d->serverData.reset(data);
     QMetaObject::invokeMethod(this, &Clipboard::sendServerData, Qt::QueuedConnection);
 }
 
@@ -255,13 +251,13 @@ uint32_t Clipboard::Private::onClientFormatDataResponse(const CLIPRDR_FORMAT_DAT
         return CHANNEL_RC_OK;
     }
 
-    if (formatDataResponse->common.dataLen < 2) {
+    // dataLen is unsigned; guard before subtracting the null terminator or a short response underflows
+    if (formatDataResponse->common.dataLen < 2 || !formatDataResponse->requestedFormatData) {
         clientData.reset();
         Q_EMIT q->clientDataChanged();
-        return CHANNEL_RC_OK; // empty string
+        return CHANNEL_RC_OK; // empty or malformed
     }
-
-    const auto nCharacters = formatDataResponse->common.dataLen / 2 - 1; // Each char16_t is 2 bytes, plus null terminator
+    const int nCharacters = int(formatDataResponse->common.dataLen / 2 - 1); // each char16_t is 2 bytes, plus null terminator
 
     clientData.reset(new QMimeData());
 

@@ -58,6 +58,13 @@ public:
         connect(connection->displayControl(), &KRdp::DisplayControl::requestedScreenSizeChanged, connection->videoStream(), &KRdp::VideoStream::setRequestedSize);
 
         connect(connection, &QObject::destroyed, this, &SessionWrapper::onConnectionDestroyed);
+
+        // otherwise a stale session keeps forwarding the clipboard until it is torn down
+        connect(connection, &KRdp::RdpConnection::stateChanged, this, [this](KRdp::RdpConnection::State state) {
+            if (state == KRdp::RdpConnection::State::Closed && session) {
+                session->detachClipboard();
+            }
+        });
     }
 
     void onCursorUpdate(const PipeWireCursor &cursor)
