@@ -218,6 +218,7 @@ uint32_t Clipboard::Private::onClientFormatList(const CLIPRDR_FORMAT_LIST *forma
 
 uint32_t Clipboard::Private::onClientFormatListResponse(const CLIPRDR_FORMAT_LIST_RESPONSE *formatListResponse)
 {
+    Q_UNUSED(formatListResponse);
     return CHANNEL_RC_OK;
 }
 
