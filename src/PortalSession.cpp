@@ -8,7 +8,10 @@
 #include <QMimeData>
 #include <QMouseEvent>
 #include <QQueue>
+#include <QScopeGuard>
+#include <QSocketNotifier>
 
+#include <libei.h>
 #include <linux/input.h>
 
 #include <KConfigGroup>
@@ -73,14 +76,33 @@ void PortalRequest::onFinished(uint code, const QVariantMap &result)
 class KRDP_NO_EXPORT PortalSession::Private
 {
 public:
+    struct EisDeviceState {
+        bool resumed = false;
+        bool emulating = false;
+    };
+
     Server *server = nullptr;
 
     std::unique_ptr<OrgFreedesktopPortalRemoteDesktopInterface> remoteInterface;
     std::unique_ptr<OrgFreedesktopPortalScreenCastInterface> screencastInterface;
 
     bool ignoreNextSystemClipboardChange = false;
+    bool pipeWireReady = false;
+    bool eisConnected = false;
+    uint32_t eisSequence = 0;
 
     QDBusObjectPath sessionPath;
+    QString mappingId;
+
+    std::unique_ptr<QSocketNotifier> eisNotifier;
+    struct ei *ei = nullptr;
+    QHash<struct ei_device *, EisDeviceState> eisDevices;
+    struct ei_device *absolutePointerDevice = nullptr;
+    struct ei_region *absolutePointerRegion = nullptr;
+    struct ei_device *buttonDevice = nullptr;
+    struct ei_device *scrollDevice = nullptr;
+    struct ei_device *keyboardDevice = nullptr;
+    struct ei_device *textDevice = nullptr;
 };
 
 QString createHandleToken()
@@ -134,16 +156,27 @@ PortalSession::PortalSession()
 
 PortalSession::~PortalSession()
 {
+    for (auto it = d->eisDevices.begin(); it != d->eisDevices.end(); ++it) {
+        if (it->emulating) {
+            ei_device_stop_emulating(it.key());
+        }
+        ei_device_unref(it.key());
+    }
+    d->eisDevices.clear();
+
+    if (d->ei) {
+        ei_disconnect(d->ei);
+        while (auto event = ei_get_event(d->ei)) {
+            ei_event_unref(event);
+        }
+        d->ei = ei_unref(d->ei);
+    }
+    ei_region_unref(d->absolutePointerRegion);
+    d->absolutePointerRegion = nullptr;
+
     if (d->sessionPath.path().isEmpty()) {
         qCDebug(KRDP) << "No portal session to close (session was never created)";
         return;
-    }
-
-    // Make sure to clear any modifier keys that were pressed when the session closed, otherwise
-    // we risk those keys getting stuck and the original session becoming unusable.
-    for (auto keycode : {KEY_LEFTCTRL, KEY_RIGHTCTRL, KEY_LEFTSHIFT, KEY_RIGHTSHIFT, KEY_LEFTALT, KEY_RIGHTALT, KEY_LEFTMETA, KEY_RIGHTMETA}) {
-        auto call = d->remoteInterface->NotifyKeyboardKeycode(d->sessionPath, QVariantMap{}, keycode, 0);
-        call.waitForFinished();
     }
 
     auto closeMessage = QDBusMessage::createMethodCall(dbusService, d->sessionPath.path(), dbusSessionInterface, QStringLiteral("Close"));
@@ -180,40 +213,63 @@ void PortalSession::sendEvent(const std::shared_ptr<QEvent> &event)
             button = BTN_MIDDLE;
         } else if (me->button() == Qt::RightButton) {
             button = BTN_RIGHT;
+        } else if (me->button() == Qt::BackButton) {
+            button = BTN_SIDE;
+        } else if (me->button() == Qt::ForwardButton) {
+            button = BTN_EXTRA;
         } else {
             qCWarning(KRDP) << "Unsupported mouse button" << me->button();
             return;
         }
-        uint state = me->type() == QEvent::MouseButtonPress ? 1 : 0;
-        d->remoteInterface->NotifyPointerButton(d->sessionPath, QVariantMap{}, button, state);
+        if (!!d->buttonDevice) {
+            return;
+        }
+        ei_device_button_button(d->buttonDevice, button, me->type() == QEvent::MouseButtonPress);
+        ei_device_frame(d->buttonDevice, ei_now(d->ei));
         break;
     }
     case QEvent::MouseMove: {
+        if (!d->ei || !d->absolutePointerDevice || !d->absolutePointerRegion || size().isEmpty() || logicalSize().isEmpty()) {
+            return;
+        }
         auto me = std::static_pointer_cast<QMouseEvent>(event);
         auto position = me->position();
         auto logicalPosition = QPointF{(position.x() / size().width()) * logicalSize().width(), (position.y() / size().height()) * logicalSize().height()};
-        d->remoteInterface->NotifyPointerMotionAbsolute(d->sessionPath, QVariantMap{}, nodeId(), logicalPosition.x(), logicalPosition.y());
+        const auto absolutePosition = QPointF{
+            ei_region_get_x(d->absolutePointerRegion) + ((logicalPosition.x() / logicalSize().width()) * ei_region_get_width(d->absolutePointerRegion)),
+            ei_region_get_y(d->absolutePointerRegion) + ((logicalPosition.y() / logicalSize().height()) * ei_region_get_height(d->absolutePointerRegion)),
+        };
+        ei_device_pointer_motion_absolute(d->absolutePointerDevice, absolutePosition.x(), absolutePosition.y());
+        ei_device_frame(d->absolutePointerDevice, ei_now(d->ei));
         break;
     }
     case QEvent::Wheel: {
+        if (!d->ei || !d->scrollDevice) {
+            return;
+        }
         auto we = std::static_pointer_cast<QWheelEvent>(event);
-        auto delta = we->pixelDelta();
-        // pixelDelta contains the scroll value already converted to
-        // degrees by InputHandler. The vertical axis is negated to
-        // account for the sign convention in
-        // xdg-desktop-portal-kde's requestPointerAxis.
-        d->remoteInterface->NotifyPointerAxis(d->sessionPath, QVariantMap{}, delta.x(), -delta.y());
+        auto delta = we->angleDelta();
+        ei_device_scroll_discrete(d->scrollDevice, delta.x(), -delta.y());
+        ei_device_frame(d->scrollDevice, ei_now(d->ei));
         break;
     }
     case QEvent::KeyPress:
     case QEvent::KeyRelease: {
         auto ke = std::static_pointer_cast<QKeyEvent>(event);
-        auto state = ke->type() == QEvent::KeyPress ? 1 : 0;
+        const auto isPress = event->type() == QEvent::KeyPress;
 
         if (ke->nativeScanCode()) {
-            d->remoteInterface->NotifyKeyboardKeycode(d->sessionPath, QVariantMap{}, ke->nativeScanCode(), state);
-        } else {
-            d->remoteInterface->NotifyKeyboardKeysym(d->sessionPath, QVariantMap{}, ke->nativeVirtualKey(), state);
+            if (!d->ei || !d->keyboardDevice) {
+                return;
+            }
+            ei_device_keyboard_key(d->keyboardDevice, ke->nativeScanCode(), isPress);
+            ei_device_frame(d->keyboardDevice, ei_now(d->ei));
+        } else if (ke->nativeVirtualKey()) {
+            if (!d->ei || !d->textDevice) {
+                return;
+            }
+            ei_device_text_keysym(d->textDevice, ke->nativeVirtualKey(), isPress);
+            ei_device_frame(d->textDevice, ei_now(d->ei));
         }
         break;
     }
@@ -329,8 +385,6 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
     connect(watcher, &QDBusPendingCallWatcher::finished, this, [this, streams](QDBusPendingCallWatcher *watcher) {
         auto reply = QDBusReply<QDBusUnixFileDescriptor>(*watcher);
         if (reply.isValid()) {
-            qCDebug(KRDP) << "Started Freedesktop Portal session";
-
             auto streamIndex = activeStream().value_or(0);
             if (streamIndex >= streams.size()) {
                 qCWarning(KRDP) << "Requested monitor index out of range, using first monitor";
@@ -340,9 +394,11 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
             auto stream = streams.at(streamIndex);
 
             setLogicalSize(qdbus_cast<QSize>(stream.map.value(u"size"_s)));
+            d->mappingId = stream.map.value(u"mapping_id"_s).toString();
             auto fd = reply.value();
             setNodeId(stream.nodeId);
             setPipeWireFd(fd.takeFileDescriptor());
+            d->pipeWireReady = true;
             QDBusConnection::sessionBus().connect(u"org.freedesktop.portal.Desktop"_s,
                                                   d->sessionPath.path(),
                                                   u"org.freedesktop.portal.Session"_s,
@@ -357,12 +413,194 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
         }
         watcher->deleteLater();
     });
+
+    connectToEis();
 }
 
 void PortalSession::onSessionClosed()
 {
     qCWarning(KRDP) << "Portal session was closed!";
     Q_EMIT error();
+}
+
+void PortalSession::connectToEis()
+{
+    auto watcher = new QDBusPendingCallWatcher(d->remoteInterface->ConnectToEIS(d->sessionPath, QVariantMap{}), this);
+    connect(watcher, &QDBusPendingCallWatcher::finished, this, [this](QDBusPendingCallWatcher *watcher) {
+        auto cleanup = qScopeGuard([watcher] {
+            watcher->deleteLater();
+        });
+
+        const QDBusPendingReply<QDBusUnixFileDescriptor> reply = *watcher;
+        if (reply.isError()) {
+            qCWarning(KRDP) << "Could not connect portal session to EIS:" << reply.error().message();
+            Q_EMIT error();
+            return;
+        }
+
+        d->ei = ei_new_sender(this);
+        if (!d->ei) {
+            qCWarning(KRDP) << "Could not create libei sender context";
+            Q_EMIT error();
+            return;
+        }
+
+        ei_configure_name(d->ei, "krdp");
+        if (const auto rc = ei_setup_backend_fd(d->ei, reply.value().takeFileDescriptor()); rc != 0) {
+            qCWarning(KRDP) << "Could not set up libei backend:" << rc;
+            d->ei = ei_unref(d->ei);
+            Q_EMIT error();
+            return;
+        }
+
+        d->eisNotifier = std::make_unique<QSocketNotifier>(ei_get_fd(d->ei), QSocketNotifier::Read, this);
+        connect(d->eisNotifier.get(), &QSocketNotifier::activated, this, &PortalSession::onEisReadyRead);
+    });
+}
+
+void PortalSession::processEisEvents()
+{
+    auto assignAbsolutePointerDevice = [this](struct ei_device *device) {
+        struct ei_region *selectedRegion = nullptr;
+        struct ei_region *fallbackRegion = nullptr;
+        for (size_t i = 0; auto region = ei_device_get_region(device, i); ++i) {
+            if (!fallbackRegion) {
+                fallbackRegion = region;
+            }
+            const auto mappingId = ei_region_get_mapping_id(region);
+            if (!d->mappingId.isEmpty() && mappingId && QString::fromUtf8(mappingId) == d->mappingId) {
+                selectedRegion = region;
+                break;
+            }
+        }
+
+        if (!selectedRegion) {
+            selectedRegion = fallbackRegion;
+        }
+        if (!selectedRegion) {
+            return;
+        }
+
+        const auto selectedMappingId = ei_region_get_mapping_id(selectedRegion);
+        const auto currentMappingId = d->absolutePointerRegion ? ei_region_get_mapping_id(d->absolutePointerRegion) : nullptr;
+        if (d->absolutePointerDevice && currentMappingId && d->mappingId == QString::fromUtf8(currentMappingId)
+            && (!selectedMappingId || d->mappingId != QString::fromUtf8(selectedMappingId))) {
+            return;
+        }
+
+        d->absolutePointerDevice = device;
+        if (d->absolutePointerRegion) {
+            d->absolutePointerRegion = ei_region_unref(d->absolutePointerRegion);
+        }
+        d->absolutePointerRegion = ei_region_ref(selectedRegion);
+    };
+
+    while (auto event = ei_get_event(d->ei)) {
+        auto cleanup = qScopeGuard([event] {
+            ei_event_unref(event);
+        });
+
+        const auto eventType = ei_event_get_type(event);
+        auto device = ei_event_get_device(event);
+
+        switch (eventType) {
+        case EI_EVENT_CONNECT:
+            d->eisConnected = true;
+            break;
+        case EI_EVENT_DISCONNECT:
+            qCWarning(KRDP) << "Portal EIS connection disconnected";
+            d->eisConnected = false;
+            Q_EMIT error();
+            break;
+        case EI_EVENT_SEAT_ADDED: {
+            auto seat = ei_event_get_seat(event);
+            ei_seat_bind_capabilities(seat,
+                                      EI_DEVICE_CAP_POINTER_ABSOLUTE,
+                                      EI_DEVICE_CAP_BUTTON,
+                                      EI_DEVICE_CAP_SCROLL,
+                                      EI_DEVICE_CAP_KEYBOARD,
+                                      EI_DEVICE_CAP_TEXT,
+                                      nullptr);
+            ei_seat_request_device_with_capabilities(seat,
+                                                     EI_DEVICE_CAP_POINTER_ABSOLUTE,
+                                                     EI_DEVICE_CAP_BUTTON,
+                                                     EI_DEVICE_CAP_SCROLL,
+                                                     EI_DEVICE_CAP_KEYBOARD,
+                                                     EI_DEVICE_CAP_TEXT,
+                                                     nullptr);
+            break;
+        }
+        case EI_EVENT_DEVICE_ADDED:
+            d->eisDevices.insert(ei_device_ref(device), {.resumed = false, .emulating = false});
+            if (ei_device_has_capability(device, EI_DEVICE_CAP_POINTER_ABSOLUTE)) {
+                assignAbsolutePointerDevice(device);
+            }
+            if (!d->buttonDevice && ei_device_has_capability(device, EI_DEVICE_CAP_BUTTON)) {
+                d->buttonDevice = device;
+            }
+            if (!d->scrollDevice && ei_device_has_capability(device, EI_DEVICE_CAP_SCROLL)) {
+                d->scrollDevice = device;
+            }
+            if (!d->keyboardDevice && ei_device_has_capability(device, EI_DEVICE_CAP_KEYBOARD)) {
+                d->keyboardDevice = device;
+            }
+            if (!d->textDevice && ei_device_has_capability(device, EI_DEVICE_CAP_TEXT)) {
+                d->textDevice = device;
+            }
+            break;
+        case EI_EVENT_DEVICE_REMOVED:
+            if (d->absolutePointerDevice == device) {
+                d->absolutePointerDevice = nullptr;
+                if (d->absolutePointerRegion) {
+                    d->absolutePointerRegion = ei_region_unref(d->absolutePointerRegion);
+                }
+            }
+            if (d->buttonDevice == device) {
+                d->buttonDevice = nullptr;
+            }
+            if (d->scrollDevice == device) {
+                d->scrollDevice = nullptr;
+            }
+            if (d->keyboardDevice == device) {
+                d->keyboardDevice = nullptr;
+            }
+            if (d->textDevice == device) {
+                d->textDevice = nullptr;
+            }
+            if (auto it = d->eisDevices.find(device); it != d->eisDevices.end()) {
+                ei_device_unref(it.key());
+                d->eisDevices.erase(it);
+            }
+            break;
+        case EI_EVENT_DEVICE_PAUSED:
+            if (auto it = d->eisDevices.find(device); it != d->eisDevices.end()) {
+                it->resumed = false;
+                it->emulating = false;
+            }
+            break;
+        case EI_EVENT_DEVICE_RESUMED:
+            if (auto it = d->eisDevices.find(device); it != d->eisDevices.end()) {
+                it->resumed = true;
+                if (!it->emulating) {
+                    ei_device_start_emulating(device, ++d->eisSequence);
+                    it->emulating = true;
+                }
+            }
+            break;
+        default:
+            break;
+        }
+    }
+}
+
+void PortalSession::onEisReadyRead()
+{
+    if (!d->ei) {
+        return;
+    }
+
+    ei_dispatch(d->ei);
+    processEisEvents();
 }
 }
 

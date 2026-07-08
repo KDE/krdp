@@ -48,11 +48,16 @@ public:
     void setClipboardData(std::unique_ptr<QMimeData> data) override;
 
 private:
+    void connectToEis();
+    void processEisEvents();
+    void maybeSetStarted();
+
     void onCreateSession(uint code, const QVariantMap &result);
     void onDevicesSelected(uint code, const QVariantMap &result);
     void onSourcesSelected(uint code, const QVariantMap &result);
     void onSessionStarted(uint code, const QVariantMap &result);
     Q_SLOT void onSessionClosed();
+    Q_SLOT void onEisReadyRead();
 
     class Private;
     const std::unique_ptr<Private> d;

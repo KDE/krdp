@@ -1,6 +1,8 @@
 # SPDX-FileCopyrightText: 2023 Arjen Hiemstra <ahiemstra@heimr.nl>
 # SPDX-License-Identifier: BSD-2-Clause
 
+pkg_check_modules(Libei REQUIRED IMPORTED_TARGET libei-1.0)
+
 add_library(KRdp)
 
 if (BUILD_PLASMA_SESSION)
@@ -75,6 +77,7 @@ target_link_libraries(KRdp PUBLIC
     K::KPipeWire
     K::KPipeWireRecord
     K::KPipeWireDmaBuf
+    PkgConfig::Libei
     XKB::XKB
 )
 

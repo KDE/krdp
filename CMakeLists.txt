@@ -36,6 +36,8 @@ include(ECMFindQmlModule)
 option(BUILD_EXAMPLES "Build example applications" ON)
 option(BUILD_PLASMA_SESSION "Build support for Plasma Screencasting extensions" ON)
 
+find_package(PkgConfig REQUIRED)
+
 find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED Core Quick Gui Network DBus WaylandClient Qml)
 
 find_package(Qt6GuiPrivate ${QT_MIN_VERSION} REQUIRED NO_MODULE)
