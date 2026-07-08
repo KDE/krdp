@@ -130,6 +130,7 @@ public:
     uint32_t channelId = 0;
     quint32 nodeId = 0;
     int pipeWireFd = -1;
+    quint64 objectSerial = quint64(-1);
 
     uint16_t nextSurfaceId = 1;
     Surface surface;
@@ -270,7 +271,8 @@ void VideoStream::setActiveEncodingMode(EncodingMode mode)
         });
         connect(d->encodedStream.get(), &PipeWireEncodedStream::cursorChanged, this, &VideoStream::cursorChanged);
         if (d->nodeId != 0) {
-            d->encodedStream->setObjectSerial(d->nodeId);
+            d->encodedStream->setObjectSerial(d->objectSerial);
+            d->encodedStream->setNodeId(d->nodeId);
             if (d->pipeWireFd > 0) {
                 d->encodedStream->setFd(d->pipeWireFd);
             }
@@ -492,26 +494,41 @@ void VideoStream::setVideoQuality(quint8 quality)
     }
 }
 
-void VideoStream::setPipeWireSource(quint32 nodeId, int fd)
+void VideoStream::setPipeWireSource(quint32 nodeId, quint64 objectSerial, int fd)
 {
     d->nodeId = nodeId;
+    d->objectSerial = objectSerial;
+
     d->pipeWireFd = fd;
+
     if (d->encodedStream) {
-        d->encodedStream->setObjectSerial(nodeId);
+        d->encodedStream->setObjectSerial(objectSerial);
+        d->encodedStream->setNodeId(nodeId);
+
         d->encodedStream->setFd(d->pipeWireFd);
         if (d->streamingEnabled) {
             d->encodedStream->start();
         }
     }
-    if (d->sourceStream) {
-        if (!d->sourceStream->createStream(static_cast<quint64>(nodeId), d->pipeWireFd)) {
-            qCWarning(KRDP) << "Could not create PipeWire source stream" << d->sourceStream->error();
-            d->session->close(RdpConnection::CloseReason::VideoInitFailed);
-            return;
-        }
-        d->setSize(this, d->sourceStream->size());
-        d->sourceStream->setActive(d->streamingEnabled);
+
+    if (!d->sourceStream)
+        return;
+
+    bool created = false;
+    if (objectSerial != quint64(-1)) {
+        created = d->sourceStream->createStream(objectSerial, fd);
+    } else {
+        created = d->sourceStream->createStream(nodeId, fd);
     }
+
+    if (!created) {
+        qCWarning(KRDP) << "Could not create PipeWire source stream" << d->sourceStream->error();
+        d->session->close(RdpConnection::CloseReason::VideoInitFailed);
+        return;
+    }
+
+    d->setSize(this, d->sourceStream->size());
+    d->sourceStream->setActive(d->streamingEnabled);
 }
 
 bool VideoStream::onChannelIdAssigned(uint32_t channelId)

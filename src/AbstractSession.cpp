@@ -18,6 +18,7 @@ public:
     QSize logicalSize;
     quint32 nodeId = 0;
     int pipeWireFd = -1;
+    quint64 objectSerial = quint64(-1);
 };
 
 AbstractSession::AbstractSession()
@@ -90,6 +91,11 @@ int AbstractSession::takePipeWireFd()
     return std::exchange(d->pipeWireFd, -1);
 }
 
+quint64 AbstractSession::objectSerial() const
+{
+    return d->objectSerial;
+}
+
 void AbstractSession::setNodeId(quint32 nodeId)
 {
     d->nodeId = nodeId;
@@ -111,6 +117,10 @@ void AbstractSession::setStarted(bool s)
     }
 }
 
+void AbstractSession::setObjectSerial(quint64 objectSerial)
+{
+    d->objectSerial = objectSerial;
+}
 }
 
 #include "AbstractSession.moc"

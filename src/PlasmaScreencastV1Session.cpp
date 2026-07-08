@@ -192,6 +192,10 @@ void PlasmaScreencastV1Session::start()
         setNodeId(nodeId);
         setStarted(true);
     });
+
+    connect(d->request, &ScreencastingStream::serial, this, [this](quint64 serial) {
+        setObjectSerial(serial);
+    });
 }
 
 void PlasmaScreencastV1Session::sendEvent(const std::shared_ptr<QEvent> &event)

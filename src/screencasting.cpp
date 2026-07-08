@@ -43,8 +43,15 @@ public:
         Q_EMIT q->failed(error);
     }
 
+    void zkde_screencast_stream_unstable_v1_serial(uint32_t object_serial_hi, uint32_t object_serial_low) override
+    {
+        m_objectSerial = ((quint64)object_serial_hi << 32) | object_serial_low;
+        Q_EMIT q->serial(m_objectSerial);
+    }
+
     uint m_nodeId = 0;
     QSize m_size;
+    quint64 m_objectSerial = quint64(-1);
     QPointer<ScreencastingStream> q;
 };
 
@@ -66,11 +73,16 @@ QSize ScreencastingStream::size() const
     return d->m_size;
 }
 
+quint64 ScreencastingStream::objectSerial() const
+{
+    return d->m_objectSerial;
+}
+
 class ScreencastingPrivate : public QWaylandClientExtensionTemplate<ScreencastingPrivate>, public QtWayland::zkde_screencast_unstable_v1
 {
 public:
     ScreencastingPrivate(Screencasting *q)
-        : QWaylandClientExtensionTemplate<ScreencastingPrivate>(ZKDE_SCREENCAST_UNSTABLE_V1_STREAM_REGION_SINCE_VERSION)
+        : QWaylandClientExtensionTemplate<ScreencastingPrivate>(ZKDE_SCREENCAST_STREAM_UNSTABLE_V1_SERIAL_SINCE_VERSION)
         , q(q)
     {
         initialize();

@@ -72,7 +72,7 @@ public:
     void onSessionStarted()
     {
         m_sessionStarted = true;
-        connection->videoStream()->setPipeWireSource(session->nodeId(), session->takePipeWireFd());
+        connection->videoStream()->setPipeWireSource(session->nodeId(), session->objectSerial(), session->takePipeWireFd());
         connection->videoStream()->setStreamingEnabled(connection->videoStream()->enabled());
     }
 

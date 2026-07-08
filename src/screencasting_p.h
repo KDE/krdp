@@ -9,6 +9,8 @@
 #include <QScreen>
 #include <memory>
 
+#include "krdp_export.h"
+
 class ScreencastingPrivate;
 class ScreencastingStreamPrivate;
 class ScreencastingStream : public QObject
@@ -21,10 +23,13 @@ public:
     quint32 nodeId() const;
     QSize size() const;
 
+    quint64 objectSerial() const;
+
 Q_SIGNALS:
     void created(quint32 nodeid);
     void failed(const QString &error);
     void closed();
+    void serial(quint64 serial);
 
 private:
     friend class Screencasting;

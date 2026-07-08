@@ -46,6 +46,8 @@ public:
 
     void setSize(QSize size);
 
+    quint64 objectSerial() const;
+
     /**
      * Set the system's clipboard data.
      *
@@ -80,6 +82,7 @@ protected:
     void setLogicalSize(QSize size);
     void setNodeId(quint32 nodeId);
     void setPipeWireFd(int fd);
+    void setObjectSerial(quint64 objectSerial);
 
 private:
     class Private;

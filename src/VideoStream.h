@@ -84,7 +84,7 @@ public:
     Q_SIGNAL void enabledChanged();
     void setStreamingEnabled(bool enabled);
     void setVideoQuality(quint8 quality);
-    void setPipeWireSource(quint32 nodeId, int fd = -1);
+    void setPipeWireSource(quint32 nodeId, quint64 objectSerial, int fd = -1);
 
     bool openChannel();
 
