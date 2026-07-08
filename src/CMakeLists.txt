@@ -20,6 +20,8 @@ target_sources(KRdp PRIVATE
     Clipboard.h
     DisplayControl.cpp
     DisplayControl.h
+    EiConnection.cpp
+    EiConnection.h
     RdpConnection.cpp
     Server.cpp
     Server.h
@@ -77,6 +79,7 @@ target_link_libraries(KRdp PUBLIC
     K::KPipeWire
     K::KPipeWireRecord
     K::KPipeWireDmaBuf
+    PkgConfig::Libei
     XKB::XKB
 )
 

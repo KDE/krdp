@@ -6,15 +6,13 @@
 
 #include <QGuiApplication>
 #include <QMimeData>
-#include <QMouseEvent>
 #include <QQueue>
-
-#include <linux/input.h>
 
 #include <KConfigGroup>
 #include <KSharedConfig>
 #include <KSystemClipboard>
 
+#include "EiConnection.h"
 #include "PortalSession_p.h"
 #include "krdp_logging.h"
 #include "xdp_dbus_remotedesktop_interface.h"
@@ -79,8 +77,10 @@ public:
     std::unique_ptr<OrgFreedesktopPortalScreenCastInterface> screencastInterface;
 
     bool ignoreNextSystemClipboardChange = false;
-
     QDBusObjectPath sessionPath;
+    QString mappingId;
+
+    std::unique_ptr<EiConnection> eiConnection;
 };
 
 QString createHandleToken()
@@ -139,13 +139,6 @@ PortalSession::~PortalSession()
         return;
     }
 
-    // Make sure to clear any modifier keys that were pressed when the session closed, otherwise
-    // we risk those keys getting stuck and the original session becoming unusable.
-    for (auto keycode : {KEY_LEFTCTRL, KEY_RIGHTCTRL, KEY_LEFTSHIFT, KEY_RIGHTSHIFT, KEY_LEFTALT, KEY_RIGHTALT, KEY_LEFTMETA, KEY_RIGHTMETA}) {
-        auto call = d->remoteInterface->NotifyKeyboardKeycode(d->sessionPath, QVariantMap{}, keycode, 0);
-        call.waitForFinished();
-    }
-
     auto closeMessage = QDBusMessage::createMethodCall(dbusService, d->sessionPath.path(), dbusSessionInterface, QStringLiteral("Close"));
     QDBusConnection::sessionBus().asyncCall(closeMessage);
 
@@ -165,60 +158,8 @@ void PortalSession::start()
 
 void PortalSession::sendEvent(const std::shared_ptr<QEvent> &event)
 {
-    if (!isStarted()) {
-        return;
-    }
-
-    switch (event->type()) {
-    case QEvent::MouseButtonPress:
-    case QEvent::MouseButtonRelease: {
-        auto me = std::static_pointer_cast<QMouseEvent>(event);
-        int button = 0;
-        if (me->button() == Qt::LeftButton) {
-            button = BTN_LEFT;
-        } else if (me->button() == Qt::MiddleButton) {
-            button = BTN_MIDDLE;
-        } else if (me->button() == Qt::RightButton) {
-            button = BTN_RIGHT;
-        } else {
-            qCWarning(KRDP) << "Unsupported mouse button" << me->button();
-            return;
-        }
-        uint state = me->type() == QEvent::MouseButtonPress ? 1 : 0;
-        d->remoteInterface->NotifyPointerButton(d->sessionPath, QVariantMap{}, button, state);
-        break;
-    }
-    case QEvent::MouseMove: {
-        auto me = std::static_pointer_cast<QMouseEvent>(event);
-        auto position = me->position();
-        auto logicalPosition = QPointF{(position.x() / size().width()) * logicalSize().width(), (position.y() / size().height()) * logicalSize().height()};
-        d->remoteInterface->NotifyPointerMotionAbsolute(d->sessionPath, QVariantMap{}, nodeId(), logicalPosition.x(), logicalPosition.y());
-        break;
-    }
-    case QEvent::Wheel: {
-        auto we = std::static_pointer_cast<QWheelEvent>(event);
-        auto delta = we->pixelDelta();
-        // pixelDelta contains the scroll value already converted to
-        // degrees by InputHandler. The vertical axis is negated to
-        // account for the sign convention in
-        // xdg-desktop-portal-kde's requestPointerAxis.
-        d->remoteInterface->NotifyPointerAxis(d->sessionPath, QVariantMap{}, delta.x(), -delta.y());
-        break;
-    }
-    case QEvent::KeyPress:
-    case QEvent::KeyRelease: {
-        auto ke = std::static_pointer_cast<QKeyEvent>(event);
-        auto state = ke->type() == QEvent::KeyPress ? 1 : 0;
-
-        if (ke->nativeScanCode()) {
-            d->remoteInterface->NotifyKeyboardKeycode(d->sessionPath, QVariantMap{}, ke->nativeScanCode(), state);
-        } else {
-            d->remoteInterface->NotifyKeyboardKeysym(d->sessionPath, QVariantMap{}, ke->nativeVirtualKey(), state);
-        }
-        break;
-    }
-    default:
-        break;
+    if (isStarted() && d->eiConnection) {
+        d->eiConnection->sendEvent(event, size(), d->mappingId);
     }
 }
 
@@ -329,8 +270,6 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
     connect(watcher, &QDBusPendingCallWatcher::finished, this, [this, streams](QDBusPendingCallWatcher *watcher) {
         auto reply = QDBusReply<QDBusUnixFileDescriptor>(*watcher);
         if (reply.isValid()) {
-            qCDebug(KRDP) << "Started Freedesktop Portal session";
-
             auto streamIndex = activeStream().value_or(0);
             if (streamIndex < 0 || streamIndex >= streams.size()) {
                 qCWarning(KRDP) << "Requested monitor index out of range, using first monitor";
@@ -340,6 +279,8 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
             auto stream = streams.at(streamIndex);
 
             setLogicalSize(qdbus_cast<QSize>(stream.map.value(u"size"_s)));
+            d->mappingId = stream.map.value(u"mapping_id"_s).toString();
+
             auto fd = reply.value();
             setNodeId(stream.nodeId);
             setPipeWireFd(fd.takeFileDescriptor());
@@ -349,7 +290,7 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
                                                   u"Closed"_s,
                                                   this,
                                                   SLOT(onSessionClosed()));
-
+            qCDebug(KRDP) << "Started Freedesktop Portal session";
             setStarted(true);
         } else {
             qCWarning(KRDP) << "Could not open pipewire remote";
@@ -357,12 +298,36 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
         }
         watcher->deleteLater();
     });
+
+    connectToEis();
 }
 
 void PortalSession::onSessionClosed()
 {
     qCWarning(KRDP) << "Portal session was closed!";
     Q_EMIT error();
+}
+
+void PortalSession::connectToEis()
+{
+    auto watcher = new QDBusPendingCallWatcher(d->remoteInterface->ConnectToEIS(d->sessionPath, QVariantMap{}), this);
+    connect(watcher, &QDBusPendingCallWatcher::finished, this, [this](QDBusPendingCallWatcher *watcher) {
+        watcher->deleteLater();
+
+        const QDBusPendingReply<QDBusUnixFileDescriptor> reply = *watcher;
+        if (reply.isError()) {
+            qCWarning(KRDP) << "Could not connect portal session to EIS:" << reply.error().message();
+            Q_EMIT error();
+            return;
+        }
+
+        d->eiConnection = std::make_unique<EiConnection>(reply.value().takeFileDescriptor(), this);
+        if (!d->eiConnection->isValid()) {
+            Q_EMIT error();
+            return;
+        }
+        connect(d->eiConnection.get(), &EiConnection::error, this, &PortalSession::error);
+    });
 }
 }
 
