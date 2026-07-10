@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-14 00:45+0000\n"
+"POT-Creation-Date: 2026-07-10 00:46+0000\n"
 "PO-Revision-Date: 2025-09-05 17:12+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -75,12 +75,12 @@ msgstr "目前使用者是否能夠透過 PAM 登入"
 msgid "Autostart the server on login"
 msgstr "登入時自動啟動伺服器"
 
-#: SessionController.cpp:103
+#: SessionController.cpp:106
 #, kde-format
 msgid "RDP Server"
 msgstr "RDP 伺服器"
 
-#: SessionController.cpp:106
+#: SessionController.cpp:109
 #, kde-format
 msgid "Quit"
 msgstr "離開"

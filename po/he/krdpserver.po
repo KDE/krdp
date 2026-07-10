@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-14 00:45+0000\n"
+"POT-Creation-Date: 2026-07-10 00:46+0000\n"
 "PO-Revision-Date: 2025-09-05 13:27+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -76,12 +76,12 @@ msgstr "האם המשתמש הנוכחי יכול להיכנס דרך PAM"
 msgid "Autostart the server on login"
 msgstr "להתחיל את השרת אוטומטית עם הכניסה"
 
-#: SessionController.cpp:103
+#: SessionController.cpp:106
 #, kde-format
 msgid "RDP Server"
 msgstr "שרת RDP"
 
-#: SessionController.cpp:106
+#: SessionController.cpp:109
 #, kde-format
 msgid "Quit"
 msgstr "יציאה"

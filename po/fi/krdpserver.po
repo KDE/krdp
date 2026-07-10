@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-14 00:45+0000\n"
+"POT-Creation-Date: 2026-07-10 00:46+0000\n"
 "PO-Revision-Date: 2025-09-12 16:43+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -75,12 +75,12 @@ msgstr "Voiko nykyinen käyttäjä kirjautua PAMilla"
 msgid "Autostart the server on login"
 msgstr "Käynnistä palvelin automaattisesti kirjauduttaessa"
 
-#: SessionController.cpp:103
+#: SessionController.cpp:106
 #, kde-format
 msgid "RDP Server"
 msgstr "RDP-palvelin"
 
-#: SessionController.cpp:106
+#: SessionController.cpp:109
 #, kde-format
 msgid "Quit"
 msgstr "Lopeta"
