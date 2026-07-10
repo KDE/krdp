@@ -51,7 +51,7 @@ private:
     friend BOOL bwMeasureResults(rdpAutoDetect *, RDP_TRANSPORT_TYPE, uint16_t, uint16_t, uint32_t, uint32_t);
 
     bool onRttMeasureResponse(uint16_t sequence);
-    bool onBandwidthMeasureResults();
+    bool onBandwidthMeasureResults(uint32_t timeDelta, uint32_t byteCount);
 
     void updateAverageRtt();
 

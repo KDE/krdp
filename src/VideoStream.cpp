@@ -874,8 +874,6 @@ void VideoStream::sendFrameH264(const VideoFrame &frame)
         return;
     }
 
-    d->session->networkDetection()->startBandwidthMeasure();
-
     auto frameId = d->frameId++;
 
     d->encodedFrames++;
@@ -930,7 +928,6 @@ void VideoStream::sendFrameH264(const VideoFrame &frame)
     const UINT startStatus = d->gfxContext->StartFrame(d->gfxContext.get(), &startFramePdu);
     if (startStatus != CHANNEL_RC_OK) {
         qCWarning(KRDP) << "StartFrame failed" << startStatus << "frameId" << frameId;
-        d->session->networkDetection()->stopBandwidthMeasure();
         return;
     }
 
@@ -944,8 +941,6 @@ void VideoStream::sendFrameH264(const VideoFrame &frame)
     if (endStatus != CHANNEL_RC_OK) {
         qCWarning(KRDP) << "EndFrame failed" << endStatus << "frameId" << frameId;
     }
-
-    d->session->networkDetection()->stopBandwidthMeasure();
 }
 
 void VideoStream::sendFrameProgressive(const VideoFrame &frame)
