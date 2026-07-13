@@ -96,6 +96,7 @@ public:
     QPointer<KRdp::RdpConnection> connection;
     KStatusNotifierItem *m_sni;
     bool m_sessionStarted = false;
+    bool m_authenticated = false;
 };
 
 SessionController::SessionController(KRdp::Server *server, SessionType sessionType)
@@ -177,14 +178,18 @@ void SessionController::onNewConnection(KRdp::RdpConnection *newConnection)
     // Unlock only once the connection is authenticated and activated - NOT here, which
     // runs at TCP accept before the RDP handshake / PAM auth. Otherwise anyone who can
     // open the port could unlock the physical seat (logind Unlock is passwordless).
-    connect(newConnection, &KRdp::RdpConnection::stateChanged, this, [this](KRdp::RdpConnection::State state) {
+    auto *wrapperPtr = wrapper.get();
+    connect(newConnection, &KRdp::RdpConnection::stateChanged, this, [this, wrapperPtr](KRdp::RdpConnection::State state) {
         if (state == KRdp::RdpConnection::State::Activated || state == KRdp::RdpConnection::State::Streaming) {
+            wrapperPtr->m_authenticated = true;
             setSessionLocked(false);
         }
     });
     wrapper->session->start();
 
     connect(wrapper.get(), &SessionWrapper::connectionDestroyed, this, [this](SessionWrapper *wrapper) {
+        const bool wasAuthenticated = wrapper->m_authenticated;
+
         m_wrappers.erase(std::remove_if(m_wrappers.begin(),
                                         m_wrappers.end(),
                                         [wrapper](std::unique_ptr<SessionWrapper> &entry) {
@@ -192,7 +197,7 @@ void SessionController::onNewConnection(KRdp::RdpConnection *newConnection)
                                         }),
                          m_wrappers.end());
 
-        if (m_wrappers.empty()) {
+        if (wasAuthenticated && m_wrappers.empty()) {
             setSessionLocked(true);
         }
     });
