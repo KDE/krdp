@@ -10,7 +10,6 @@
 #include <QDBusConnection>
 #include <QDBusInterface>
 #include <QDBusMessage>
-#include <QDBusObjectPath>
 #include <QDBusPendingCallWatcher>
 #include <QDBusPendingReply>
 #include <QDBusReply>
@@ -149,34 +148,20 @@ void SessionController::setSessionLocked(bool locked)
         return;
     }
 
-    const QString sessionId = qEnvironmentVariable("XDG_SESSION_ID");
-    if (sessionId.isEmpty()) {
-        qWarning() << "krdp: XDG_SESSION_ID is not set, cannot" << (locked ? "lock" : "unlock") << "the session";
-        return;
-    }
-
     auto bus = QDBusConnection::systemBus();
     const QString service = u"org.freedesktop.login1"_s;
-    QDBusMessage msg = QDBusMessage::createMethodCall(service, u"/org/freedesktop/login1"_s, u"org.freedesktop.login1.Manager"_s, u"GetSession"_s);
-    msg.setArguments({sessionId});
-    auto *watcher = new QDBusPendingCallWatcher(bus.asyncCall(msg), this);
-    connect(watcher, &QDBusPendingCallWatcher::finished, this, [this, locked, bus, service](QDBusPendingCallWatcher *self) {
-        const QDBusPendingReply<QDBusObjectPath> reply = *self;
-        self->deleteLater();
+
+    QDBusMessage lockMsg = QDBusMessage::createMethodCall(service,
+                                                          u"/org/freedesktop/login1/session/auto"_s,
+                                                          u"org.freedesktop.login1.Session"_s,
+                                                          locked ? u"Lock"_s : u"Unlock"_s);
+    auto *lockWatcher = new QDBusPendingCallWatcher(bus.asyncCall(lockMsg), this);
+    connect(lockWatcher, &QDBusPendingCallWatcher::finished, this, [locked](QDBusPendingCallWatcher *self) {
+        const QDBusPendingReply<> reply = *self;
         if (reply.isError()) {
-            qWarning() << "krdp: could not resolve the logind session to" << (locked ? "lock" : "unlock") << ":" << reply.error().message();
-            return;
+            qWarning() << "krdp: could not" << (locked ? "lock" : "unlock") << "the logind session:" << reply.error().message();
         }
-        QDBusMessage lockMsg =
-            QDBusMessage::createMethodCall(service, reply.value().path(), u"org.freedesktop.login1.Session"_s, locked ? u"Lock"_s : u"Unlock"_s);
-        auto *lockWatcher = new QDBusPendingCallWatcher(bus.asyncCall(lockMsg), this);
-        connect(lockWatcher, &QDBusPendingCallWatcher::finished, this, [locked](QDBusPendingCallWatcher *self) {
-            const QDBusPendingReply<> reply = *self;
-            if (reply.isError()) {
-                qWarning() << "krdp: could not" << (locked ? "lock" : "unlock") << "the logind session:" << reply.error().message();
-            }
-            self->deleteLater();
-        });
+        self->deleteLater();
     });
 }
 
