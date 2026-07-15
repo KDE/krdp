@@ -255,6 +255,22 @@ public:
     freerdp_peer *peer = nullptr;
 
     std::jthread thread;
+
+    // Manual-reset event the run thread waits on alongside the peer transport
+    // handles. Signalling it wakes the thread for teardown without any protocol
+    // I/O on the peer from the calling thread.
+    HANDLE stopEvent = nullptr;
+
+    // Ask the run thread to finish, from any thread. It owns the peer and closes
+    // it as it exits, so callers never touch the peer themselves.
+    void requestStop()
+    {
+        thread.request_stop();
+        if (stopEvent) {
+            SetEvent(stopEvent);
+        }
+    }
+
     QTemporaryFile samFile;
 };
 
@@ -270,7 +286,7 @@ RdpConnection::RdpConnection(Server *server, qintptr socketHandle)
     connect(d->videoStream.get(), &VideoStream::closed, this, [this]() {
         if (d->state == State::Running || d->state == State::Streaming) {
             qCDebug(KRDP) << "Video stream closed, closing session";
-            d->peer->Close(d->peer);
+            d->requestStop();
         }
     });
     d->cursor = std::make_unique<Cursor>(this);
@@ -283,17 +299,17 @@ RdpConnection::RdpConnection(Server *server, qintptr socketHandle)
 
 RdpConnection::~RdpConnection()
 {
-    // Close the peer first to unblock WaitForMultipleObjects in the
-    // run thread. Without this, thread.join() can deadlock when the
-    // session is not in the Streaming state but the thread is still
-    // blocked waiting for socket events.
-    if (d->peer && d->state != State::Closed) {
-        d->peer->Close(d->peer);
-    }
-
+    // The run thread owns the peer transport and closes it as it exits, so just
+    // wake it (stopEvent) and join before we free. Closing the peer here, while
+    // the run thread still reads the same transport, races inside FreeRDP and
+    // crashes on shutdown.
     if (d->thread.joinable()) {
-        d->thread.request_stop();
+        d->requestStop();
         d->thread.join();
+    } else if (d->peer && d->state != State::Closed) {
+        // The run thread was never started (peer set up but initialize failed):
+        // nothing else touches the peer, so close it here before freeing.
+        d->peer->Close(d->peer);
     }
 
     if (d->peer) {
@@ -301,6 +317,10 @@ RdpConnection::~RdpConnection()
         // freerdp_peer_context_new_ex().
         freerdp_peer_context_free(d->peer);
         freerdp_peer_free(d->peer);
+    }
+
+    if (d->stopEvent) {
+        CloseHandle(d->stopEvent);
     }
 }
 
@@ -333,9 +353,11 @@ void RdpConnection::close(RdpConnection::CloseReason reason)
         break;
     }
 
-    if (d->peer) { // may be null if creating the peer failed
-        d->peer->Close(d->peer);
-    }
+    // Hand teardown to the run thread; it owns the peer transport and closes it
+    // as it exits. This is called from the main thread (SessionController) and
+    // from video-encoding threads (VideoStream), so it must not drive the peer
+    // directly - that would race with the run thread reading the same transport.
+    d->requestStop();
 }
 
 InputHandler *RdpConnection::inputHandler() const
@@ -484,6 +506,10 @@ void RdpConnection::initialize()
 
     qCDebug(KRDP) << "Session setup completed, start processing...";
 
+    // Manual-reset event the run thread waits on, so teardown can wake it
+    // without protocol I/O on the peer. Created before the thread starts.
+    d->stopEvent = CreateEvent(nullptr, TRUE, FALSE, nullptr);
+
     // Perform actual communication on a separate thread.
     d->thread = std::jthread(std::bind(&RdpConnection::run, this, std::placeholders::_1));
     pthread_setname_np(d->thread.native_handle(), "krdp_session");
@@ -498,14 +524,22 @@ void RdpConnection::run(std::stop_token stopToken)
     setState(State::Running);
 
     while (!stopToken.stop_requested()) {
-        std::array<HANDLE, 32> events{channelEvent};
-        auto handleCount = d->peer->GetEventHandles(d->peer, events.data() + 1, 31);
+        // events[0] = virtual channel manager, events[1] = stopEvent (signalled
+        // for teardown), the rest = peer transport handles.
+        std::array<HANDLE, 33> events{channelEvent, d->stopEvent};
+        auto handleCount = d->peer->GetEventHandles(d->peer, events.data() + 2, 31);
         if (handleCount <= 0) {
             qCDebug(KRDP) << "Unable to get transport event handles";
             break;
         }
         // Wait for something to happen on the connection.
-        WaitForMultipleObjects(1 + handleCount, events.data(), FALSE, INFINITE);
+        WaitForMultipleObjects(2 + handleCount, events.data(), FALSE, INFINITE);
+
+        // Bail out before touching the peer transport if we were asked to stop,
+        // so teardown stays race-free.
+        if (stopToken.stop_requested()) {
+            break;
+        }
 
         // Read data from the socket and have FreeRDP process it.
         if (d->peer->CheckFileDescriptor(d->peer) != TRUE) {
@@ -564,6 +598,14 @@ void RdpConnection::run(std::stop_token stopToken)
     }
 
     qCDebug(KRDP) << "Closing session";
+
+    // Close the peer here, on the thread that owns it. Every other close path
+    // just asks this thread to stop, so once a run thread exists this is the
+    // only place the transport is driven - keeping teardown single-threaded.
+    if (d->peer) {
+        d->peer->Close(d->peer);
+    }
+
     onClose();
 }
 
