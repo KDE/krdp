@@ -446,7 +446,7 @@ void VideoStream::queueFrame(const KRdp::VideoFrame &frame)
         }
         KRdp::VideoFrame nextFrame = frame;
         nextFrame.damage += lastDamage;
-        d->frameQueue.append(std::move(frame));
+        d->frameQueue.append(std::move(nextFrame));
     }
 }
 
