@@ -308,7 +308,13 @@ void VideoStream::setActiveEncodingMode(EncodingMode mode)
             Qt::QueuedConnection);
 
         if (d->nodeId != 0 && d->pipeWireFd) {
-            if (!d->sourceStream->createStream(static_cast<quint64>(d->nodeId), d->pipeWireFd)) {
+            bool created = false;
+            if (d->objectSerial != quint64(-1)) {
+                created = d->sourceStream->createStream(d->objectSerial, d->pipeWireFd);
+            } else {
+                created = d->sourceStream->createStream(d->nodeId, d->pipeWireFd);
+            }
+            if (!created) {
                 qCWarning(KRDP) << "Could not create PipeWire source stream" << d->sourceStream->error();
                 d->session->close(RdpConnection::CloseReason::VideoInitFailed);
                 return;
