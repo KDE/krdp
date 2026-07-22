@@ -28,8 +28,6 @@ public:
     quint64 objectSerial = quint64(-1);
 
     QMetaObject::Connection clipboardConnection;
-    // set before our own setMimeData(), so the resulting changed() signal isn't bounced back out
-    bool ignoreNextSystemClipboardChange = false;
 };
 
 AbstractSession::AbstractSession()
@@ -40,8 +38,7 @@ AbstractSession::AbstractSession()
         if (mode != QClipboard::Clipboard) {
             return;
         }
-        if (d->ignoreNextSystemClipboardChange) {
-            d->ignoreNextSystemClipboardChange = false;
+        if (KSystemClipboard::instance()->ownsClipboard()) {
             return;
         }
 
@@ -80,7 +77,6 @@ void AbstractSession::detachClipboard()
 
 void AbstractSession::setClipboardData(std::unique_ptr<QMimeData> data)
 {
-    d->ignoreNextSystemClipboardChange = true;
     if (data) {
         KSystemClipboard::instance()->setMimeData(data.release(), QClipboard::Clipboard);
     } else {
