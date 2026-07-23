@@ -69,3 +69,5 @@ if (Systemd_FOUND)
 endif()
 
 ecm_qt_install_logging_categories(EXPORT kcm_krdpserver DESTINATION ${KDE_INSTALL_LOGGINGCATEGORIESDIR})
+
+install(FILES krdpserversettings.kcfg DESTINATION ${KDE_INSTALL_KCFGDIR})
