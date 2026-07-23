@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-10 00:46+0000\n"
+"POT-Creation-Date: 2026-07-23 00:45+0000\n"
 "PO-Revision-Date: 2025-05-22 16:52+0400\n"
 "Last-Translator: linux <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -75,12 +75,19 @@ msgstr ""
 msgid "Autostart the server on login"
 msgstr "Girişdə serveri avtomatik başlatmaq"
 
-#: SessionController.cpp:106
+#. i18n: ectx: label, entry (LockOnDisconnect), group (General)
+#: krdpserversettings.kcfg:43
+#, kde-format
+msgid ""
+"Lock the session when the last client disconnects and unlock it on connect"
+msgstr ""
+
+#: SessionController.cpp:112
 #, kde-format
 msgid "RDP Server"
 msgstr "RDP Serveri"
 
-#: SessionController.cpp:109
+#: SessionController.cpp:115
 #, kde-format
 msgid "Quit"
 msgstr "Çıxış"

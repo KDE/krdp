@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_krdpserver\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-10 00:46+0000\n"
+"POT-Creation-Date: 2026-07-23 00:45+0000\n"
 "PO-Revision-Date: 2026-01-06 12:59+0100\n"
 "Last-Translator: Alois Spitzbart <spitz234@hotmail.com>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -67,6 +67,13 @@ msgstr "Ob sich der aktuelle Benutzer mittels PAM einloggen kann"
 #, kde-format
 msgid "Autostart the server on login"
 msgstr "Server bei Anmeldung automatisch starten"
+
+#. i18n: ectx: label, entry (LockOnDisconnect), group (General)
+#: krdpserversettings.kcfg:43
+#, kde-format
+msgid ""
+"Lock the session when the last client disconnects and unlock it on connect"
+msgstr ""
 
 #: ui/CertError.qml:14
 #, kde-format
@@ -217,55 +224,61 @@ msgctxt "@label:textbox"
 msgid "Listening Port:"
 msgstr "Dienst-Port:"
 
-#: ui/main.qml:277
+#: ui/main.qml:275
+#, kde-format
+msgctxt "@option:check"
+msgid "Lock the session when disconnecting, unlock on connect"
+msgstr ""
+
+#: ui/main.qml:290
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Video quality:"
 msgstr "Video-Qualität:"
 
-#: ui/main.qml:297
+#: ui/main.qml:310
 #, kde-format
 msgctxt "@label:slider"
 msgid "Responsiveness"
 msgstr "Reaktionsgeschwindigkeit"
 
-#: ui/main.qml:303
+#: ui/main.qml:316
 #, kde-format
 msgctxt "@label:slider"
 msgid "Quality"
 msgstr "Qualität"
 
-#: ui/main.qml:310
+#: ui/main.qml:323
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Security Certificates"
 msgstr "Sicherheitszertifikate"
 
-#: ui/main.qml:315
+#: ui/main.qml:328
 #, kde-format
 msgctxt "@label:check generate security certificates automatically"
 msgid "Generate automatically"
 msgstr "Automatisch erstellen"
 
-#: ui/main.qml:333
+#: ui/main.qml:346
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate path:"
 msgstr "Pfad zum Zertifikat:"
 
-#: ui/main.qml:348
+#: ui/main.qml:361
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate File…"
 msgstr "Zertifikatsdatei auswählen …"
 
-#: ui/main.qml:360
+#: ui/main.qml:373
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate key path:"
 msgstr "Pfad zum Schlüssel des Zertifikats:"
 
-#: ui/main.qml:376
+#: ui/main.qml:389
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate Key File…"

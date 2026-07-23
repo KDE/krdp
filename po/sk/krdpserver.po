@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdpserver\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-10 00:46+0000\n"
+"POT-Creation-Date: 2026-07-23 00:45+0000\n"
 "PO-Revision-Date: 2024-11-11 17:49+0100\n"
 "Last-Translator: Roman Paholík <wizzardsk@gmail.com>\n"
 "Language-Team: Slovak <kde-sk@linux.sk>\n"
@@ -73,12 +73,19 @@ msgstr "Či sa aktuálny používateľ môže prihlásiť cez PAM"
 msgid "Autostart the server on login"
 msgstr "Automaticky spustiť server pri prihlásení"
 
-#: SessionController.cpp:106
+#. i18n: ectx: label, entry (LockOnDisconnect), group (General)
+#: krdpserversettings.kcfg:43
+#, kde-format
+msgid ""
+"Lock the session when the last client disconnects and unlock it on connect"
+msgstr ""
+
+#: SessionController.cpp:112
 #, kde-format
 msgid "RDP Server"
 msgstr "Server RDP"
 
-#: SessionController.cpp:109
+#: SessionController.cpp:115
 #, kde-format
 msgid "Quit"
 msgstr "Ukončiť"

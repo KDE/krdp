@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-10 00:46+0000\n"
+"POT-Creation-Date: 2026-07-23 00:45+0000\n"
 "PO-Revision-Date: 2026-04-21 19:22+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@nuug.no>\n"
@@ -65,6 +65,13 @@ msgstr "Om gjeldande brukar kan logga inn via PAM"
 #, kde-format
 msgid "Autostart the server on login"
 msgstr "Start automatisk tenaren ved innlogging"
+
+#. i18n: ectx: label, entry (LockOnDisconnect), group (General)
+#: krdpserversettings.kcfg:43
+#, kde-format
+msgid ""
+"Lock the session when the last client disconnects and unlock it on connect"
+msgstr ""
 
 #: ui/CertError.qml:14
 #, kde-format
@@ -212,55 +219,61 @@ msgctxt "@label:textbox"
 msgid "Listening Port:"
 msgstr "Lytteport:"
 
-#: ui/main.qml:277
+#: ui/main.qml:275
+#, kde-format
+msgctxt "@option:check"
+msgid "Lock the session when disconnecting, unlock on connect"
+msgstr ""
+
+#: ui/main.qml:290
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Video quality:"
 msgstr "Videokvalitet:"
 
-#: ui/main.qml:297
+#: ui/main.qml:310
 #, kde-format
 msgctxt "@label:slider"
 msgid "Responsiveness"
 msgstr "Reaksjonsevne"
 
-#: ui/main.qml:303
+#: ui/main.qml:316
 #, kde-format
 msgctxt "@label:slider"
 msgid "Quality"
 msgstr "Kvalitet"
 
-#: ui/main.qml:310
+#: ui/main.qml:323
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Security Certificates"
 msgstr "Tryggleikssertifikat"
 
-#: ui/main.qml:315
+#: ui/main.qml:328
 #, kde-format
 msgctxt "@label:check generate security certificates automatically"
 msgid "Generate automatically"
 msgstr "Generer automatisk"
 
-#: ui/main.qml:333
+#: ui/main.qml:346
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate path:"
 msgstr "Sertifikatadresse:"
 
-#: ui/main.qml:348
+#: ui/main.qml:361
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate File…"
 msgstr "Vel sertifikatfil …"
 
-#: ui/main.qml:360
+#: ui/main.qml:373
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate key path:"
 msgstr "Adresse til sertifikatnøkkel:"
 
-#: ui/main.qml:376
+#: ui/main.qml:389
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate Key File…"

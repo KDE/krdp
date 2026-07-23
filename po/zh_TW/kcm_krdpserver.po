@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-10 00:46+0000\n"
+"POT-Creation-Date: 2026-07-23 00:45+0000\n"
 "PO-Revision-Date: 2025-11-13 23:01+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -64,6 +64,13 @@ msgstr "目前使用者是否能夠透過 PAM 登入"
 #, kde-format
 msgid "Autostart the server on login"
 msgstr "登入時自動啟動伺服器"
+
+#. i18n: ectx: label, entry (LockOnDisconnect), group (General)
+#: krdpserversettings.kcfg:43
+#, kde-format
+msgid ""
+"Lock the session when the last client disconnects and unlock it on connect"
+msgstr ""
 
 #: ui/CertError.qml:14
 #, kde-format
@@ -208,55 +215,61 @@ msgctxt "@label:textbox"
 msgid "Listening Port:"
 msgstr "監聽連接埠："
 
-#: ui/main.qml:277
+#: ui/main.qml:275
+#, kde-format
+msgctxt "@option:check"
+msgid "Lock the session when disconnecting, unlock on connect"
+msgstr ""
+
+#: ui/main.qml:290
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Video quality:"
 msgstr "視訊品質："
 
-#: ui/main.qml:297
+#: ui/main.qml:310
 #, kde-format
 msgctxt "@label:slider"
 msgid "Responsiveness"
 msgstr "靈敏度"
 
-#: ui/main.qml:303
+#: ui/main.qml:316
 #, kde-format
 msgctxt "@label:slider"
 msgid "Quality"
 msgstr "品質"
 
-#: ui/main.qml:310
+#: ui/main.qml:323
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Security Certificates"
 msgstr "安全性憑證"
 
-#: ui/main.qml:315
+#: ui/main.qml:328
 #, kde-format
 msgctxt "@label:check generate security certificates automatically"
 msgid "Generate automatically"
 msgstr "自動產生"
 
-#: ui/main.qml:333
+#: ui/main.qml:346
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate path:"
 msgstr "憑證路徑："
 
-#: ui/main.qml:348
+#: ui/main.qml:361
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate File…"
 msgstr "選擇憑證檔案…"
 
-#: ui/main.qml:360
+#: ui/main.qml:373
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate key path:"
 msgstr "憑證金鑰路徑："
 
-#: ui/main.qml:376
+#: ui/main.qml:389
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate Key File…"

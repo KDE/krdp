@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-10 00:46+0000\n"
+"POT-Creation-Date: 2026-07-23 00:45+0000\n"
 "PO-Revision-Date: 2024-12-15 17:35+0530\n"
 "Last-Translator: Kali <EMAIL@ADDRESS>\n"
 "Language-Team: Hindi <fedora-trans-hi@redhat.com>\n"
@@ -64,6 +64,13 @@ msgstr ""
 #, kde-format
 msgid "Autostart the server on login"
 msgstr "लॉगिन पर सर्वर को स्वचालित रूप से प्रारंभ करें"
+
+#. i18n: ectx: label, entry (LockOnDisconnect), group (General)
+#: krdpserversettings.kcfg:43
+#, kde-format
+msgid ""
+"Lock the session when the last client disconnects and unlock it on connect"
+msgstr ""
 
 #: ui/CertError.qml:14
 #, kde-format
@@ -210,55 +217,61 @@ msgctxt "@label:textbox"
 msgid "Listening Port:"
 msgstr "श्रवण पोर्ट:"
 
-#: ui/main.qml:277
+#: ui/main.qml:275
+#, kde-format
+msgctxt "@option:check"
+msgid "Lock the session when disconnecting, unlock on connect"
+msgstr ""
+
+#: ui/main.qml:290
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Video quality:"
 msgstr "विडियो की गुणवत्ता:"
 
-#: ui/main.qml:297
+#: ui/main.qml:310
 #, kde-format
 msgctxt "@label:slider"
 msgid "Responsiveness"
 msgstr "जवाबदेही"
 
-#: ui/main.qml:303
+#: ui/main.qml:316
 #, kde-format
 msgctxt "@label:slider"
 msgid "Quality"
 msgstr "गुणवत्ता"
 
-#: ui/main.qml:310
+#: ui/main.qml:323
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Security Certificates"
 msgstr "सुरक्षा प्रमाणपत्र"
 
-#: ui/main.qml:315
+#: ui/main.qml:328
 #, kde-format
 msgctxt "@label:check generate security certificates automatically"
 msgid "Generate automatically"
 msgstr "स्वचालित रूप से उत्पन्न करें"
 
-#: ui/main.qml:333
+#: ui/main.qml:346
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate path:"
 msgstr "प्रमाणपत्र पथ:"
 
-#: ui/main.qml:348
+#: ui/main.qml:361
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate File…"
 msgstr "प्रमाणपत्र फ़ाइल चुनें…"
 
-#: ui/main.qml:360
+#: ui/main.qml:373
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate key path:"
 msgstr "प्रमाणपत्र कुंजी पथ:"
 
-#: ui/main.qml:376
+#: ui/main.qml:389
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate Key File…"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdpserver\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-10 00:46+0000\n"
+"POT-Creation-Date: 2026-07-23 00:45+0000\n"
 "PO-Revision-Date: 2026-01-06 12:59+0100\n"
 "Last-Translator: Alois Spitzbart <spitz234@hotmail.com>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -77,12 +77,19 @@ msgstr "Ob sich der aktuelle Benutzer mittels PAM einloggen kann"
 msgid "Autostart the server on login"
 msgstr "Server bei Anmeldung automatisch starten"
 
-#: SessionController.cpp:106
+#. i18n: ectx: label, entry (LockOnDisconnect), group (General)
+#: krdpserversettings.kcfg:43
+#, kde-format
+msgid ""
+"Lock the session when the last client disconnects and unlock it on connect"
+msgstr ""
+
+#: SessionController.cpp:112
 #, kde-format
 msgid "RDP Server"
 msgstr "RDP-Server"
 
-#: SessionController.cpp:109
+#: SessionController.cpp:115
 #, kde-format
 msgid "Quit"
 msgstr "Beenden"
