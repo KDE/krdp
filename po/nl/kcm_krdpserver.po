@@ -1,13 +1,13 @@
 # Copyright (C) 2024 This file is copyright:
 # This file is distributed under the same license as the krdp package.
 #
-# SPDX-FileCopyrightText: 2024, 2025 Freek de Kruijf <freekdekruijf@kde.nl>
+# SPDX-FileCopyrightText: 2024-2026 Freek de Kruijf <freekdekruijf@kde.nl>
 msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-23 00:45+0000\n"
-"PO-Revision-Date: 2025-11-08 11:14+0100\n"
+"PO-Revision-Date: 2026-07-23 18:05+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 25.08.2\n"
+"X-Generator: Lokalize 26.04.3\n"
 
 #. i18n: ectx: label, entry (ListenPort), group (General)
 #: krdpserversettings.kcfg:14
@@ -74,6 +74,8 @@ msgstr "De server automatisch starten bij aanmelden"
 msgid ""
 "Lock the session when the last client disconnects and unlock it on connect"
 msgstr ""
+"Vergrendel de sessie wanneer de laatste client de verbinding verbreekt en "
+"ontgrendel deze bij het maken van verbinding."
 
 #: ui/CertError.qml:14
 #, kde-format
@@ -227,6 +229,8 @@ msgstr "Luisterpoort:"
 msgctxt "@option:check"
 msgid "Lock the session when disconnecting, unlock on connect"
 msgstr ""
+"Vergrendel de sessie bij het verbreken van de verbinding en ontgrendel deze "
+"bij verbinden"
 
 #: ui/main.qml:290
 #, kde-format

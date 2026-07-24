@@ -1,15 +1,15 @@
 # Spanish translations for kcm_krdpserver.po package.
-# Copyright (C) 2024-2025 This file is copyright:
+# Copyright (C) 2024-2026 This file is copyright:
 # This file is distributed under the same license as the krdp package.
 # Automatically generated, 2024.
 #
-# SPDX-FileCopyrightText: 2024, 2025 Eloy Cuadra <ecuadra@eloihr.net>
+# SPDX-FileCopyrightText: 2024-2026 Eloy Cuadra <ecuadra@eloihr.net>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_krdpserver\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-23 00:45+0000\n"
-"PO-Revision-Date: 2025-11-07 00:55+0100\n"
+"PO-Revision-Date: 2026-07-23 11:52+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 25.08.2\n"
+"X-Generator: Lokalize 26.04.3\n"
 
 #. i18n: ectx: label, entry (ListenPort), group (General)
 #: krdpserversettings.kcfg:14
@@ -75,6 +75,8 @@ msgstr "Lanzar automáticamente el servidor al iniciar sesión"
 msgid ""
 "Lock the session when the last client disconnects and unlock it on connect"
 msgstr ""
+"Bloquear la sesión cuando se desconecte el último cliente y desbloquearla al "
+"conectarse"
 
 #: ui/CertError.qml:14
 #, kde-format
@@ -229,7 +231,7 @@ msgstr "Puerto de escucha:"
 #, kde-format
 msgctxt "@option:check"
 msgid "Lock the session when disconnecting, unlock on connect"
-msgstr ""
+msgstr "Bloquear la sesión al desconectarse, desbloquearla al conectarse"
 
 #: ui/main.qml:290
 #, kde-format

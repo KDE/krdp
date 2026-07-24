@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-23 00:45+0000\n"
-"PO-Revision-Date: 2025-11-06 20:40+0100\n"
+"PO-Revision-Date: 2026-07-23 05:57+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.8\n"
+"X-Generator: Poedit 3.9\n"
 
 #. i18n: ectx: label, entry (ListenPort), group (General)
 #: krdpserversettings.kcfg:14
@@ -72,6 +72,7 @@ msgstr "სერვერის ავტომატური გაშვვ�
 msgid ""
 "Lock the session when the last client disconnects and unlock it on connect"
 msgstr ""
+"სესიის დაბლოკვა, როცა ბოლო კლიენტი გაითიშება და განბლოკვა დაკავშირებისას"
 
 #: ui/CertError.qml:14
 #, kde-format
@@ -224,7 +225,7 @@ msgstr "მოსასმენი პორტი:"
 #, kde-format
 msgctxt "@option:check"
 msgid "Lock the session when disconnecting, unlock on connect"
-msgstr ""
+msgstr "სესიის დაბლოკვა გათიშვისას და განბლოკვა დაკავშირებისას"
 
 #: ui/main.qml:290
 #, kde-format
