@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-23 00:45+0000\n"
-"PO-Revision-Date: 2025-09-26 01:05+0300\n"
+"PO-Revision-Date: 2026-07-24 21:28+0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: lt\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n%10>=2 && (n%100<10 || n"
 "%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3);\n"
-"X-Generator: Poedit 3.6\n"
+"X-Generator: Poedit 3.9\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -84,6 +84,8 @@ msgstr "Automatiškai paleisti serverį prisijungimo metu"
 msgid ""
 "Lock the session when the last client disconnects and unlock it on connect"
 msgstr ""
+"Užrakinti seansą, kai paskutinis klientas atsijungia, ir atrakinti jį, kai "
+"prisijungiama"
 
 #: SessionController.cpp:112
 #, kde-format

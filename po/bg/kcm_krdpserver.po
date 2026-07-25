@@ -1,13 +1,13 @@
 # Copyright (C) 2024 This file is copyright:
 # This file is distributed under the same license as the krdp package.
 #
-# SPDX-FileCopyrightText: 2024, 2025 Mincho Kondarev <mkondarev@yahoo.de>
+# SPDX-FileCopyrightText: 2024-2026 Mincho Kondarev <mkondarev@yahoo.de>
 msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-23 00:45+0000\n"
-"PO-Revision-Date: 2025-11-07 23:14+0100\n"
+"PO-Revision-Date: 2026-07-24 09:38+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Poedit 3.8\n"
+"X-Generator: Lokalize 26.04.3\n"
 
 #. i18n: ectx: label, entry (ListenPort), group (General)
 #: krdpserversettings.kcfg:14
@@ -72,6 +72,8 @@ msgstr "Автоматично стартиране на сървъра при �
 msgid ""
 "Lock the session when the last client disconnects and unlock it on connect"
 msgstr ""
+"Заключване на сесията при прекъсване на връзката на последния клиент и "
+"отключване при свързване"
 
 #: ui/CertError.qml:14
 #, kde-format
@@ -224,6 +226,7 @@ msgstr "Порт за следене:"
 msgctxt "@option:check"
 msgid "Lock the session when disconnecting, unlock on connect"
 msgstr ""
+"Заключване на сесията при прекъсване на връзката, отключване при свързване"
 
 #: ui/main.qml:290
 #, kde-format

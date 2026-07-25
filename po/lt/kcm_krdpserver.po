@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-23 00:45+0000\n"
-"PO-Revision-Date: 2025-11-19 19:40+0200\n"
+"PO-Revision-Date: 2026-07-24 21:28+0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: lt\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n%10>=2 && (n%100<10 || n"
 "%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3);\n"
-"X-Generator: Poedit 3.8\n"
+"X-Generator: Poedit 3.9\n"
 
 #. i18n: ectx: label, entry (ListenPort), group (General)
 #: krdpserversettings.kcfg:14
@@ -74,6 +74,8 @@ msgstr "Automatiškai paleisti serverį prisijungimo metu"
 msgid ""
 "Lock the session when the last client disconnects and unlock it on connect"
 msgstr ""
+"Užrakinti seansą, kai paskutinis klientas atsijungia, ir atrakinti jį, kai "
+"prisijungiama"
 
 #: ui/CertError.qml:14
 #, kde-format
@@ -226,7 +228,7 @@ msgstr "Klausomas prievadas:"
 #, kde-format
 msgctxt "@option:check"
 msgid "Lock the session when disconnecting, unlock on connect"
-msgstr ""
+msgstr "Užrakinti seansą atsijungiant ir atrakinti, kai prisijungiama"
 
 #: ui/main.qml:290
 #, kde-format
