@@ -4,13 +4,13 @@
 Dependencies:
   - 'on': ['@all']
     'require':
-      'frameworks/extra-cmake-modules': '@latest-kf6'
-      'frameworks/kconfig': '@latest-kf6'
-      'frameworks/kdbusaddons': '@latest-kf6'
-      'frameworks/kstatusnotifieritem': '@latest-kf6'
-      'frameworks/kcmutils': '@latest-kf6'
-      'frameworks/kcrash': '@latest-kf6'
-      'plasma/kpipewire': '@latest-kf6'
+      'frameworks/extra-cmake-modules': 'Frameworks/6.24'
+      'frameworks/kconfig': 'Frameworks/6.24'
+      'frameworks/kdbusaddons': 'Frameworks/6.24'
+      'frameworks/kstatusnotifieritem': 'Frameworks/6.24'
+      'frameworks/kcmutils': 'Frameworks/6.24'
+      'frameworks/kcrash': 'Frameworks/6.24'
+      'plasma/kpipewire': '@same'
       'third-party/qtkeychain': '@latest'
 
 Options:
