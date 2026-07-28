@@ -80,7 +80,7 @@ msgstr "登录时自动启动服务器"
 #, kde-format
 msgid ""
 "Lock the session when the last client disconnects and unlock it on connect"
-msgstr ""
+msgstr "当最后一个客户断开连接时锁定会话并在连接时解锁"
 
 #: SessionController.cpp:112
 #, kde-format
