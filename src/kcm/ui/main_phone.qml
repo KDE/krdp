@@ -98,7 +98,8 @@ FormCard.FormCardPage {
             padding: Math.round(Kirigami.Units.gridUnit / 2)
 
             FormCard.FormTextDelegate {
-                description: i18n("Set up remote login to connect using apps supporting the “RDP” remote desktop protocol.")
+                description: i18n("Users listed below can log into this device remotely using apps that support the “RDP” protocol.")
+                visible: !enableServer.checked
             }
             FormCard.FormSwitchDelegate {
                 id: enableServer
@@ -131,7 +132,7 @@ FormCard.FormCardPage {
             }
 
             FormCard.FormTextDelegate {
-                description: i18n("Use any of the following addresses to connect to this device:")
+                description: i18n("Connect to this device at any of the following addresses:")
                 visible: settings.autostart
             }
 

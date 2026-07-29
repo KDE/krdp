@@ -139,16 +139,17 @@ KCM.ScrollViewKCM {
             Layout.margins: headerLayout.spacings
 
             QQC2.Label {
-                text: i18n("Set up remote login to connect using apps supporting the “RDP” remote desktop protocol.")
+                text: i18n("Users listed below can log into this device remotely using apps that support the “RDP” protocol.")
                 Layout.fillWidth: true
                 wrapMode: Text.WordWrap
                 verticalAlignment: Text.AlignVCenter
                 Layout.alignment: Qt.AlignHCenter
+                visible: !toggleServerSwitch.checked
             }
 
             QQC2.Label {
                 visible: toggleServerSwitch.checked
-                text: i18nc("@info:usagetip", "Use any of the following addresses to connect to this device:")
+                text: i18nc("@info:usagetip", "Connect to this device at any of the following addresses:")
                 Layout.fillWidth: true
                 wrapMode: Text.WordWrap
                 verticalAlignment: Text.AlignVCenter
