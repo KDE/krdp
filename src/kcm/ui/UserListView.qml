@@ -64,7 +64,7 @@ ListView {
                 icon.width: 0
 
                 text: model.userName
-                subtitle: i18nc("@info:usagetip used as a subtitle for a title+subtitle list item", "Login with your system password")
+                subtitle: i18nc("@info:usagetip used as a subtitle for a title+subtitle list item", "Log in with your system password")
 
                 // Help line up text and actions
                 Kirigami.Theme.useAlternateBackgroundColor: true
