@@ -150,7 +150,7 @@ static int pamAuthenticate(const QString &user, const QString &password)
  */
 BOOL peerCapabilities(freerdp_peer *peer)
 {
-    auto context = reinterpret_cast<PeerContext *>(peer->context);
+    auto context = contextForPeer(peer);
     if (context->connection->onCapabilities()) {
         return TRUE;
     }
@@ -163,7 +163,7 @@ BOOL peerCapabilities(freerdp_peer *peer)
  */
 BOOL peerPostConnect(freerdp_peer *peer)
 {
-    auto context = reinterpret_cast<PeerContext *>(peer->context);
+    auto context = contextForPeer(peer);
     if (context->connection->onPostConnect()) {
         return TRUE;
     }
