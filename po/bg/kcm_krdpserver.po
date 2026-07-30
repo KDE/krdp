@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-23 00:45+0000\n"
+"POT-Creation-Date: 2026-07-30 00:46+0000\n"
 "PO-Revision-Date: 2026-07-24 09:38+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
@@ -370,9 +370,11 @@ msgid "Other Users"
 msgstr "Други потребители"
 
 #: ui/UserListView.qml:67
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
+#| msgid "Login with your system password"
 msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
-msgid "Login with your system password"
+msgid "Log in with your system password"
 msgstr "Влезте с вашата системна парола"
 
 #: ui/UserListView.qml:99

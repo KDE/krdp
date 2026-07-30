@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-23 00:45+0000\n"
+"POT-Creation-Date: 2026-07-30 00:46+0000\n"
 "PO-Revision-Date: 2026-01-25 13:53+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -368,9 +368,11 @@ msgid "Other Users"
 msgstr "Beste erabiltzaile batzuk"
 
 #: ui/UserListView.qml:67
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
+#| msgid "Login with your system password"
 msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
-msgid "Login with your system password"
+msgid "Log in with your system password"
 msgstr "Hasi saioa sistemako zure pasahitzarekin"
 
 #: ui/UserListView.qml:99

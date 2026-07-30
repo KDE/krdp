@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_krdpserver\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-23 00:45+0000\n"
+"POT-Creation-Date: 2026-07-30 00:46+0000\n"
 "PO-Revision-Date: 2024-11-11 17:49+0100\n"
 "Last-Translator: Roman Paholík <wizzardsk@gmail.com>\n"
 "Language-Team: Slovak <kde-sk@linux.sk>\n"
@@ -365,9 +365,11 @@ msgid "Other Users"
 msgstr "Ostatní používatelia"
 
 #: ui/UserListView.qml:67
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
+#| msgid "Login with your system password"
 msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
-msgid "Login with your system password"
+msgid "Log in with your system password"
 msgstr "Prihláste sa svojím systémovým heslom"
 
 #: ui/UserListView.qml:99
