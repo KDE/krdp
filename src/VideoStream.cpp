@@ -10,6 +10,8 @@
 #include "VideoStream.h"
 
 #include <algorithm>
+#include <atomic>
+#include <cmath>
 #include <condition_variable>
 
 #include <QDateTime>
@@ -35,8 +37,9 @@ namespace KRdp
 
 namespace clk = std::chrono;
 
-// Maximum number of frames to contain in the queue.
-constexpr qsizetype MaximumInFlightFrames = 2;
+constexpr qsizetype MaximumInFlightFrames = 2; // in-flight window floor
+constexpr double InFlightGain = 1.0; // window spans this many round trips of frames
+constexpr double LatencyBudgetSec = 1.0; // never buffer more than this many seconds of video
 constexpr uint32_t ProgressiveCodecContextId = 1;
 struct RdpCapsInformation {
     uint32_t version;
@@ -146,6 +149,7 @@ public:
     std::mutex pendingFramesMutex;
 
     std::atomic_int requestedFrameRate = 60;
+    std::atomic<qsizetype> maxInFlight{MaximumInFlightFrames}; // recomputed from RTT on rttChanged
     bool initialized = false;
     quint8 quality = 100;
 
@@ -351,6 +355,8 @@ bool VideoStream::initialize()
     }
 
     d->initialized = true;
+
+    connect(d->session->networkDetection(), &NetworkDetection::rttChanged, this, &VideoStream::updateInFlightWindow);
 
     d->frameSubmissionThread = std::jthread([this](std::stop_token token) {
         while (!token.stop_requested()) {
@@ -822,10 +828,28 @@ void VideoStream::performReset(QSize size)
     }
 }
 
+void VideoStream::updateInFlightWindow()
+{
+    // Size the in-flight window from the bandwidth-delay product: at the current source
+    // rate, how many frames fit within one base round trip. NetworkDetection publishes the
+    // RTT via atomics, so averageRTT() is safe to read here; hasInFlightCapacity() then
+    // just reads the cached maxInFlight. Falls back to the fixed floor until an RTT is known.
+    const auto rttMs = clk::duration_cast<clk::milliseconds>(d->session->networkDetection()->averageRTT()).count();
+    qsizetype window = MaximumInFlightFrames;
+    if (rttMs > 0 && rttMs < 60000) {
+        const double rttSec = rttMs / 1000.0;
+        const int fps = d->requestedFrameRate.load();
+        const qsizetype bdp = qsizetype(std::ceil(fps * rttSec * InFlightGain));
+        const qsizetype cap = std::max<qsizetype>(MaximumInFlightFrames, qsizetype(std::ceil(fps * LatencyBudgetSec)));
+        window = std::clamp(bdp, qsizetype(MaximumInFlightFrames), cap);
+    }
+    d->maxInFlight.store(window);
+}
+
 bool VideoStream::hasInFlightCapacity() const
 {
     std::lock_guard lock(d->pendingFramesMutex);
-    return d->pendingFrames.size() < MaximumInFlightFrames;
+    return d->pendingFrames.size() < d->maxInFlight.load();
 }
 
 void VideoStream::sendFrame(const VideoFrame &frame)

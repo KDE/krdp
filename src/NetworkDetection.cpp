@@ -11,6 +11,8 @@
 
 #include <ranges>
 
+#include <atomic>
+
 #include <QQueue>
 #include <QTimer>
 
@@ -73,8 +75,9 @@ public:
     QHash<uint32_t, clk::system_clock::time_point> rttRequests;
     std::vector<RTTMeasurement> rttMeasurements;
 
-    clk::system_clock::duration minimumRtt;
-    clk::system_clock::duration averageRtt;
+    // Published as atomic tick counts so the getters are safe to read from any thread.
+    std::atomic<clk::system_clock::rep> minimumRttTicks{0};
+    std::atomic<clk::system_clock::rep> averageRttTicks{0};
 
     clk::system_clock::time_point lastNetworkResult;
 
@@ -93,12 +96,12 @@ NetworkDetection::~NetworkDetection() = default;
 
 std::chrono::system_clock::duration NetworkDetection::minimumRTT() const
 {
-    return d->minimumRtt;
+    return clk::system_clock::duration(d->minimumRttTicks.load());
 }
 
 std::chrono::system_clock::duration NetworkDetection::averageRTT() const
 {
-    return d->averageRtt;
+    return clk::system_clock::duration(d->averageRttTicks.load());
 }
 
 void NetworkDetection::initialize()
@@ -208,13 +211,15 @@ void NetworkDetection::updateAverageRtt()
         return;
     }
 
-    d->minimumRtt = std::numeric_limits<clk::system_clock::duration>::max();
+    auto minimum = std::numeric_limits<clk::system_clock::duration>::max();
     auto sum = clk::system_clock::duration(0);
-    std::for_each(d->rttMeasurements.begin(), d->rttMeasurements.end(), [this, &sum](const auto &measurement) {
-        d->minimumRtt = std::min(d->minimumRtt, measurement.roundTripTime);
+    std::for_each(d->rttMeasurements.begin(), d->rttMeasurements.end(), [&minimum, &sum](const auto &measurement) {
+        minimum = std::min(minimum, measurement.roundTripTime);
         sum = sum + measurement.roundTripTime;
     });
-    d->averageRtt = sum / d->rttMeasurements.size();
+    const auto average = sum / d->rttMeasurements.size();
+    d->minimumRttTicks.store(minimum.count());
+    d->averageRttTicks.store(average.count());
 
     Q_EMIT rttChanged();
 
@@ -230,8 +235,8 @@ void NetworkDetection::updateAverageRtt()
 
     rdpNetworkCharacteristicsResult result;
     result.type = RDP_NETCHAR_RESULT_TYPE_BASE_RTT_BW_AVG_RTT;
-    result.baseRTT = clk::duration_cast<clk::milliseconds>(d->minimumRtt).count();
-    result.averageRTT = clk::duration_cast<clk::milliseconds>(d->averageRtt).count();
+    result.baseRTT = clk::duration_cast<clk::milliseconds>(minimum).count();
+    result.averageRTT = clk::duration_cast<clk::milliseconds>(average).count();
     result.bandwidth = d->lastBandwithMeasurement;
     d->rdpAutodetect->NetworkCharacteristicsResult(d->rdpAutodetect, RDP_TRANSPORT_TCP, d->nextSequenceNumber(), &result);
 }
