@@ -16,6 +16,7 @@
 #include <QHostAddress>
 #include <QStandardPaths>
 #include <QTcpSocket>
+#include <QTemporaryFile>
 #include <QThread>
 
 #include <freerdp/channels/wtsvc.h>
@@ -42,6 +43,47 @@ namespace fs = std::filesystem;
 
 namespace KRdp
 {
+
+/**
+ * Create the "sam" file used by FreeRDP for reading username and password
+ * information. It hashes the password in the appropriate format and writes that
+ * along with the username to the provided temporary file.
+ */
+static bool createSamFile(QTemporaryFile &file, const QList<User> &users)
+{
+    auto runtimePath = fs::path(QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation).toStdString());
+
+    auto path = runtimePath / "krdp";
+    fs::create_directories(path);
+
+    file.setFileTemplate(QString::fromStdString(path / "rdp-sam-XXXXXX"));
+    if (!file.open()) {
+        qCWarning(KRDP) << "Could not open SAM file";
+        return false;
+    }
+
+    QString data;
+
+    for (const auto &user : users) {
+        auto username = user.name;
+        auto password = user.password.toUtf8();
+
+        std::array<uint8_t, 16> hash;
+        NTOWFv1A((LPSTR)password.data(), password.size(), hash.data());
+
+        auto entry = QStringLiteral("%1:::").arg(username);
+        for (int i = 0; i < 16; ++i) {
+            entry.append(QStringLiteral("%1").arg(hash[i], 2, 16, QLatin1Char('0')));
+        }
+        entry.append(QStringLiteral(":::\n"));
+        data.append(entry);
+    }
+
+    file.write(data.toUtf8());
+    file.close();
+
+    return true;
+}
 
 #include <security/pam_appl.h>
 
@@ -213,6 +255,7 @@ public:
     freerdp_peer *peer = nullptr;
 
     std::jthread thread;
+    QTemporaryFile samFile;
 };
 
 RdpConnection::RdpConnection(Server *server, qintptr socketHandle)
@@ -352,6 +395,19 @@ void RdpConnection::initialize()
 
     auto settings = d->peer->context->settings;
 
+    const bool usePamAuthentication = d->server->usePAMAuthentication();
+
+    if (!usePamAuthentication) {
+        if (!createSamFile(d->samFile, d->server->users())) {
+            return;
+        }
+
+        if (!freerdp_settings_set_string(settings, FreeRDP_NtlmSamFile, d->samFile.fileName().toUtf8().constData())) {
+            qCWarning(KRDP) << "Failed to set SAM database";
+            return;
+        }
+    }
+
     auto certificate = freerdp_certificate_new_from_file(d->server->tlsCertificate().string().data());
     if (!certificate) {
         qCWarning(KRDP) << "Could not read certificate file" << d->server->tlsCertificate().string();
@@ -367,8 +423,8 @@ void RdpConnection::initialize()
     freerdp_settings_set_pointer_len(settings, FreeRDP_RdpServerRsaKey, key, 1);
 
     freerdp_settings_set_bool(settings, FreeRDP_RdpSecurity, false);
-    freerdp_settings_set_bool(settings, FreeRDP_TlsSecurity, true);
-    freerdp_settings_set_bool(settings, FreeRDP_NlaSecurity, false);
+    freerdp_settings_set_bool(settings, FreeRDP_TlsSecurity, usePamAuthentication);
+    freerdp_settings_set_bool(settings, FreeRDP_NlaSecurity, !usePamAuthentication);
 
     freerdp_settings_set_uint32(settings, FreeRDP_OsMajorType, OSMAJORTYPE_UNIX);
     // PSEUDO_XSERVER is apparently required for things to work properly.
@@ -541,6 +597,8 @@ bool RdpConnection::onActivate()
 bool RdpConnection::onPostConnect()
 {
     qCInfo(KRDP) << "New client connected:" << d->peer->hostname << freerdp_peer_os_major_type_string(d->peer) << freerdp_peer_os_minor_type_string(d->peer);
+
+    d->samFile.remove();
 
     rdpSettings *settings = d->peer->context->settings;
 
