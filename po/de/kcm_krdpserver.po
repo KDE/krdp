@@ -23,7 +23,7 @@ msgstr ""
 #: krdpserversettings.kcfg:14
 #, kde-format
 msgid "The port the server listens on"
-msgstr "Der Port, den dieser Server benutzt"
+msgstr "Der Port, den dieser Server verwendet"
 
 #. i18n: ectx: label, entry (AutogenerateCertificates), group (General)
 #: krdpserversettings.kcfg:18
