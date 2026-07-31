@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-30 00:46+0000\n"
+"POT-Creation-Date: 2026-07-31 00:47+0000\n"
 "PO-Revision-Date: 2026-07-24 13:45+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -182,100 +182,102 @@ msgid "Error message from the RDP server:<nl/>%1"
 msgstr "Messaggio di errore dal server RDP:<nl/>%1"
 
 #: ui/main.qml:142 ui/main_phone.qml:101
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "Set up remote login to connect using apps supporting the “RDP” remote "
+#| "desktop protocol."
 msgid ""
-"Set up remote login to connect using apps supporting the “RDP” remote "
-"desktop protocol."
+"Users listed below can log into this device remotely using apps that support "
+"the “RDP” protocol."
 msgstr ""
 "Configura l'accesso remoto per connetterti utilizzando le applicazioni che "
 "supportano il protocollo di desktop remoto «RDP»."
 
-#: ui/main.qml:151
+#: ui/main.qml:152
 #, kde-format
 msgctxt "@info:usagetip"
-msgid "Use any of the following addresses to connect to this device:"
+msgid "Connect to this device at any of the following addresses:"
 msgstr ""
-"Utilizza uno dei seguenti indirizzi per connetterti a questo dispositivo:"
 
-#: ui/main.qml:186 ui/main_phone.qml:157
+#: ui/main.qml:187 ui/main_phone.qml:158
 #, kde-format
 msgctxt "@action:button"
 msgid "Copy Address to Clipboard"
 msgstr "Copia indirizzo negli appunti"
 
-#: ui/main.qml:240
+#: ui/main.qml:241
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Server Settings"
 msgstr "Impostazioni del server"
 
-#: ui/main.qml:246
+#: ui/main.qml:247
 #, kde-format
 msgctxt "@option:check"
 msgid "Autostart on login"
 msgstr "Avvio automatico all'accesso"
 
-#: ui/main.qml:262
+#: ui/main.qml:263
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Listening Port:"
 msgstr "Porta di ascolto:"
 
-#: ui/main.qml:275
+#: ui/main.qml:276
 #, kde-format
 msgctxt "@option:check"
 msgid "Lock the session when disconnecting, unlock on connect"
 msgstr "Blocca la sessione alla disconnessione, sbloccala alla connessione"
 
-#: ui/main.qml:290
+#: ui/main.qml:291
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Video quality:"
 msgstr "Qualità video:"
 
-#: ui/main.qml:310
+#: ui/main.qml:311
 #, kde-format
 msgctxt "@label:slider"
 msgid "Responsiveness"
 msgstr "Reattività"
 
-#: ui/main.qml:316
+#: ui/main.qml:317
 #, kde-format
 msgctxt "@label:slider"
 msgid "Quality"
 msgstr "Qualità"
 
-#: ui/main.qml:323
+#: ui/main.qml:324
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Security Certificates"
 msgstr "Certificati di sicurezza"
 
-#: ui/main.qml:328
+#: ui/main.qml:329
 #, kde-format
 msgctxt "@label:check generate security certificates automatically"
 msgid "Generate automatically"
 msgstr "Genera automaticamente"
 
-#: ui/main.qml:346
+#: ui/main.qml:347
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate path:"
 msgstr "Percorso del certificato:"
 
-#: ui/main.qml:361
+#: ui/main.qml:362
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate File…"
 msgstr "Scegli il file del certificato..."
 
-#: ui/main.qml:373
+#: ui/main.qml:374
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate key path:"
 msgstr "Percorso della chiave del certificato:"
 
-#: ui/main.qml:389
+#: ui/main.qml:390
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate Key File…"
@@ -287,24 +289,23 @@ msgctxt "@title:group"
 msgid "Remote Desktop Access"
 msgstr "Accesso al desktop remoto"
 
-#: ui/main_phone.qml:105
+#: ui/main_phone.qml:106
 #, kde-format
 msgctxt "@option:check"
 msgid "Enable RDP Server"
 msgstr "Abilita il server RDP"
 
-#: ui/main_phone.qml:128
+#: ui/main_phone.qml:129
 #, kde-format
 msgid "Hostname:"
 msgstr "Nome host:"
 
-#: ui/main_phone.qml:134
+#: ui/main_phone.qml:135
 #, kde-format
-msgid "Use any of the following addresses to connect to this device:"
+msgid "Connect to this device at any of the following addresses:"
 msgstr ""
-"Utilizza uno dei seguenti indirizzi per connetterti a questo dispositivo:"
 
-#: ui/main_phone.qml:172
+#: ui/main_phone.qml:173
 #, kde-format
 msgctxt "@title:group"
 msgid "Server Settings"
@@ -328,8 +329,8 @@ msgstr "Riavvia il server"
 #: ui/UserListView.qml:21
 #, kde-format
 msgctxt "@title"
-msgid "Usernames"
-msgstr "Nomi utente"
+msgid "Allowed users"
+msgstr ""
 
 #: ui/UserListView.qml:25
 #, kde-format
@@ -387,6 +388,19 @@ msgstr "Modifica utente…"
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "Rimuovi utente…"
+
+#~ msgctxt "@info:usagetip"
+#~ msgid "Use any of the following addresses to connect to this device:"
+#~ msgstr ""
+#~ "Utilizza uno dei seguenti indirizzi per connetterti a questo dispositivo:"
+
+#~ msgid "Use any of the following addresses to connect to this device:"
+#~ msgstr ""
+#~ "Utilizza uno dei seguenti indirizzi per connetterti a questo dispositivo:"
+
+#~ msgctxt "@title"
+#~ msgid "Usernames"
+#~ msgstr "Nomi utente"
 
 #~ msgctxt "@title"
 #~ msgid "Additional Users"

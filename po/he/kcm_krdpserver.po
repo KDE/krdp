@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-30 00:46+0000\n"
-"PO-Revision-Date: 2026-07-23 08:53+0300\n"
+"POT-Creation-Date: 2026-07-31 00:47+0000\n"
+"PO-Revision-Date: 2026-07-30 09:03+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
-"X-Generator: Lokalize 26.04.1\n"
+"X-Generator: Lokalize 26.04.3\n"
 
 #. i18n: ectx: label, entry (ListenPort), group (General)
 #: krdpserversettings.kcfg:14
@@ -180,99 +180,102 @@ msgid "Error message from the RDP server:<nl/>%1"
 msgstr "הודעת שגיאה משרת ה־RDP:<nl/>%1"
 
 #: ui/main.qml:142 ui/main_phone.qml:101
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "Set up remote login to connect using apps supporting the “RDP” remote "
+#| "desktop protocol."
 msgid ""
-"Set up remote login to connect using apps supporting the “RDP” remote "
-"desktop protocol."
+"Users listed below can log into this device remotely using apps that support "
+"the “RDP” protocol."
 msgstr ""
 "הקמת כניסה מרחוק כדי להתחבר באמצעות יישומים שתומכים בפרוטקול שולחן העבודה "
 "המרוחק „RDP”."
 
-#: ui/main.qml:151
+#: ui/main.qml:152
 #, kde-format
 msgctxt "@info:usagetip"
-msgid "Use any of the following addresses to connect to this device:"
-msgstr "אפשר להשתמש בכל אחת מהכתובות הבאות כדי להתחבר למכשיר הזה:"
+msgid "Connect to this device at any of the following addresses:"
+msgstr ""
 
-#: ui/main.qml:186 ui/main_phone.qml:157
+#: ui/main.qml:187 ui/main_phone.qml:158
 #, kde-format
 msgctxt "@action:button"
 msgid "Copy Address to Clipboard"
 msgstr "העתקת הכתובת ללוח הגזירים"
 
-#: ui/main.qml:240
+#: ui/main.qml:241
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Server Settings"
 msgstr "הגדרות שרת"
 
-#: ui/main.qml:246
+#: ui/main.qml:247
 #, kde-format
 msgctxt "@option:check"
 msgid "Autostart on login"
 msgstr "הפעלה אוטומטית עם הכניסה"
 
-#: ui/main.qml:262
+#: ui/main.qml:263
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Listening Port:"
 msgstr "פתחה להאזנה:"
 
-#: ui/main.qml:275
+#: ui/main.qml:276
 #, kde-format
 msgctxt "@option:check"
 msgid "Lock the session when disconnecting, unlock on connect"
 msgstr "לנעול את ההפעלה בעת התנתקות, לשחרר אותה בעת התחברות"
 
-#: ui/main.qml:290
+#: ui/main.qml:291
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Video quality:"
 msgstr "איכות וידאו:"
 
-#: ui/main.qml:310
+#: ui/main.qml:311
 #, kde-format
 msgctxt "@label:slider"
 msgid "Responsiveness"
 msgstr "תגובתיות"
 
-#: ui/main.qml:316
+#: ui/main.qml:317
 #, kde-format
 msgctxt "@label:slider"
 msgid "Quality"
 msgstr "איכות"
 
-#: ui/main.qml:323
+#: ui/main.qml:324
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Security Certificates"
 msgstr "אישורי אבטחה"
 
-#: ui/main.qml:328
+#: ui/main.qml:329
 #, kde-format
 msgctxt "@label:check generate security certificates automatically"
 msgid "Generate automatically"
 msgstr "יצירה אוטומטית"
 
-#: ui/main.qml:346
+#: ui/main.qml:347
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate path:"
 msgstr "נתיב אישורים:"
 
-#: ui/main.qml:361
+#: ui/main.qml:362
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate File…"
 msgstr "בחירת קובץ אישור…"
 
-#: ui/main.qml:373
+#: ui/main.qml:374
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate key path:"
 msgstr "נתיב מפתח אישור:"
 
-#: ui/main.qml:389
+#: ui/main.qml:390
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate Key File…"
@@ -284,23 +287,23 @@ msgctxt "@title:group"
 msgid "Remote Desktop Access"
 msgstr "גישה לשולחן העבודה מרחוק"
 
-#: ui/main_phone.qml:105
+#: ui/main_phone.qml:106
 #, kde-format
 msgctxt "@option:check"
 msgid "Enable RDP Server"
 msgstr "הפעלת שרת RDP"
 
-#: ui/main_phone.qml:128
+#: ui/main_phone.qml:129
 #, kde-format
 msgid "Hostname:"
 msgstr "שם מארח:"
 
-#: ui/main_phone.qml:134
+#: ui/main_phone.qml:135
 #, kde-format
-msgid "Use any of the following addresses to connect to this device:"
-msgstr "אפשר להשתמש בכל אחת מהכתובות הבאות כדי להתחבר למכשיר הזה:"
+msgid "Connect to this device at any of the following addresses:"
+msgstr ""
 
-#: ui/main_phone.qml:172
+#: ui/main_phone.qml:173
 #, kde-format
 msgctxt "@title:group"
 msgid "Server Settings"
@@ -324,8 +327,8 @@ msgstr "הפעלת השרת מחדש"
 #: ui/UserListView.qml:21
 #, kde-format
 msgctxt "@title"
-msgid "Usernames"
-msgstr "שמות משתמשים"
+msgid "Allowed users"
+msgstr ""
 
 #: ui/UserListView.qml:25
 #, kde-format
@@ -364,9 +367,7 @@ msgid "Other Users"
 msgstr "משתמשים אחרים"
 
 #: ui/UserListView.qml:67
-#, fuzzy, kde-format
-#| msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
-#| msgid "Login with your system password"
+#, kde-format
 msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
 msgid "Log in with your system password"
 msgstr "כניסה עם סיסמת המערכת שלך"
@@ -382,6 +383,17 @@ msgstr "שינוי משתמש…"
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "הסרת משתמש…"
+
+#~ msgctxt "@info:usagetip"
+#~ msgid "Use any of the following addresses to connect to this device:"
+#~ msgstr "אפשר להשתמש בכל אחת מהכתובות הבאות כדי להתחבר למכשיר הזה:"
+
+#~ msgid "Use any of the following addresses to connect to this device:"
+#~ msgstr "אפשר להשתמש בכל אחת מהכתובות הבאות כדי להתחבר למכשיר הזה:"
+
+#~ msgctxt "@title"
+#~ msgid "Usernames"
+#~ msgstr "שמות משתמשים"
 
 #~ msgctxt "@title"
 #~ msgid "Additional Users"

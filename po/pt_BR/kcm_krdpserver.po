@@ -8,15 +8,15 @@
 # SPDX-FileCopyrightText: 2024 Rafael Sant 'Anna
 # SPDX-FileCopyrightText: 2024 Rafael Sant 'Anna
 # SPDX-FileCopyrightText: 2024 Rafael Sant'Anna <rafaelstn@outlook.com>
-# SPDX-FileCopyrightText: 2025 Guilherme Marçal Silva <guimarcalsilva@gmail.com>
+# SPDX-FileCopyrightText: 2025-2026 Guilherme Marçal Silva <guimarcalsilva@gmail.com>
 # SPDX-FileCopyrightText: 2025-2026 Marcus Gama <marcus.gama@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-30 00:46+0000\n"
-"PO-Revision-Date: 2026-07-23 10:47-0300\n"
-"Last-Translator: Marcus Gama <marcus.gama@gmail.com>\n"
+"POT-Creation-Date: 2026-07-31 00:47+0000\n"
+"PO-Revision-Date: 2026-07-30 03:26-0300\n"
+"Last-Translator: Guilherme Marçal Silva <guimarcalsilva@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
@@ -194,100 +194,102 @@ msgid "Error message from the RDP server:<nl/>%1"
 msgstr "Mensagem de erro do servidor RDP:<nl/>%1"
 
 #: ui/main.qml:142 ui/main_phone.qml:101
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "Set up remote login to connect using apps supporting the “RDP” remote "
+#| "desktop protocol."
 msgid ""
-"Set up remote login to connect using apps supporting the “RDP” remote "
-"desktop protocol."
+"Users listed below can log into this device remotely using apps that support "
+"the “RDP” protocol."
 msgstr ""
 "Configure o login remoto para se conectar usando aplicativos que suportam o "
 "protocolo “RDP” de área de trabalho remota."
 
-#: ui/main.qml:151
+#: ui/main.qml:152
 #, kde-format
 msgctxt "@info:usagetip"
-msgid "Use any of the following addresses to connect to this device:"
+msgid "Connect to this device at any of the following addresses:"
 msgstr ""
-"Use qualquer um dos seguintes endereços para se conectar a este dispositivo:"
 
-#: ui/main.qml:186 ui/main_phone.qml:157
+#: ui/main.qml:187 ui/main_phone.qml:158
 #, kde-format
 msgctxt "@action:button"
 msgid "Copy Address to Clipboard"
 msgstr "Copiar endereço para a área de transferência"
 
-#: ui/main.qml:240
+#: ui/main.qml:241
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Server Settings"
 msgstr "Configurações do servidor"
 
-#: ui/main.qml:246
+#: ui/main.qml:247
 #, kde-format
 msgctxt "@option:check"
 msgid "Autostart on login"
 msgstr "Iniciar automaticamente com o início da sessão"
 
-#: ui/main.qml:262
+#: ui/main.qml:263
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Listening Port:"
 msgstr "Porta de escuta:"
 
-#: ui/main.qml:275
+#: ui/main.qml:276
 #, kde-format
 msgctxt "@option:check"
 msgid "Lock the session when disconnecting, unlock on connect"
 msgstr "Bloquear a sessão ao desconectar, desbloquear ao conectar"
 
-#: ui/main.qml:290
+#: ui/main.qml:291
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Video quality:"
 msgstr "Qualidade de vídeo:"
 
-#: ui/main.qml:310
+#: ui/main.qml:311
 #, kde-format
 msgctxt "@label:slider"
 msgid "Responsiveness"
 msgstr "Responsividade"
 
-#: ui/main.qml:316
+#: ui/main.qml:317
 #, kde-format
 msgctxt "@label:slider"
 msgid "Quality"
 msgstr "Qualidade"
 
-#: ui/main.qml:323
+#: ui/main.qml:324
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Security Certificates"
 msgstr "Certificados de segurança"
 
-#: ui/main.qml:328
+#: ui/main.qml:329
 #, kde-format
 msgctxt "@label:check generate security certificates automatically"
 msgid "Generate automatically"
 msgstr "Gerar automaticamente"
 
-#: ui/main.qml:346
+#: ui/main.qml:347
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate path:"
 msgstr "Caminho do certificado:"
 
-#: ui/main.qml:361
+#: ui/main.qml:362
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate File…"
 msgstr "Escolher arquivo do certificado…"
 
-#: ui/main.qml:373
+#: ui/main.qml:374
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate key path:"
 msgstr "Caminho da chave do certificado:"
 
-#: ui/main.qml:389
+#: ui/main.qml:390
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate Key File…"
@@ -299,24 +301,23 @@ msgctxt "@title:group"
 msgid "Remote Desktop Access"
 msgstr "Acesso à área de trabalho remota"
 
-#: ui/main_phone.qml:105
+#: ui/main_phone.qml:106
 #, kde-format
 msgctxt "@option:check"
 msgid "Enable RDP Server"
 msgstr "Habilitar servidor RDP"
 
-#: ui/main_phone.qml:128
+#: ui/main_phone.qml:129
 #, kde-format
 msgid "Hostname:"
 msgstr "Nome da máquina:"
 
-#: ui/main_phone.qml:134
+#: ui/main_phone.qml:135
 #, kde-format
-msgid "Use any of the following addresses to connect to this device:"
+msgid "Connect to this device at any of the following addresses:"
 msgstr ""
-"Use qualquer um dos seguintes endereços para se conectar a este dispositivo:"
 
-#: ui/main_phone.qml:172
+#: ui/main_phone.qml:173
 #, kde-format
 msgctxt "@title:group"
 msgid "Server Settings"
@@ -340,8 +341,8 @@ msgstr "Reiniciar o servidor"
 #: ui/UserListView.qml:21
 #, kde-format
 msgctxt "@title"
-msgid "Usernames"
-msgstr "Nomes de usuário"
+msgid "Allowed users"
+msgstr ""
 
 #: ui/UserListView.qml:25
 #, kde-format
@@ -380,9 +381,7 @@ msgid "Other Users"
 msgstr "Outros usuários"
 
 #: ui/UserListView.qml:67
-#, fuzzy, kde-format
-#| msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
-#| msgid "Login with your system password"
+#, kde-format
 msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
 msgid "Log in with your system password"
 msgstr "Login com sua senha do sistema"
@@ -398,6 +397,21 @@ msgstr "Modificar usuário"
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "Remover usuário…"
+
+#~ msgctxt "@info:usagetip"
+#~ msgid "Use any of the following addresses to connect to this device:"
+#~ msgstr ""
+#~ "Use qualquer um dos seguintes endereços para se conectar a este "
+#~ "dispositivo:"
+
+#~ msgid "Use any of the following addresses to connect to this device:"
+#~ msgstr ""
+#~ "Use qualquer um dos seguintes endereços para se conectar a este "
+#~ "dispositivo:"
+
+#~ msgctxt "@title"
+#~ msgid "Usernames"
+#~ msgstr "Nomes de usuário"
 
 #~ msgctxt "@title"
 #~ msgid "Additional Users"

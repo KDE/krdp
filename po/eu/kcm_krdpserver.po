@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-30 00:46+0000\n"
+"POT-Creation-Date: 2026-07-31 00:47+0000\n"
 "PO-Revision-Date: 2026-01-25 13:53+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -184,99 +184,102 @@ msgid "Error message from the RDP server:<nl/>%1"
 msgstr "RDP zerbitzariaren errore-mezua:<nl/>%1"
 
 #: ui/main.qml:142 ui/main_phone.qml:101
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "Set up remote login to connect using apps supporting the “RDP” remote "
+#| "desktop protocol."
 msgid ""
-"Set up remote login to connect using apps supporting the “RDP” remote "
-"desktop protocol."
+"Users listed below can log into this device remotely using apps that support "
+"the “RDP” protocol."
 msgstr ""
 "Ezar ezazu urrunetik saio-hastea, “RDP”, urruneko mahaigain protokoloa "
 "onartzen duten aplikazioak erabiliz konektatzeko."
 
-#: ui/main.qml:151
+#: ui/main.qml:152
 #, kde-format
 msgctxt "@info:usagetip"
-msgid "Use any of the following addresses to connect to this device:"
-msgstr "Erabili ondoko helbideetako edozein gailu honetara konektatzeko:"
+msgid "Connect to this device at any of the following addresses:"
+msgstr ""
 
-#: ui/main.qml:186 ui/main_phone.qml:157
+#: ui/main.qml:187 ui/main_phone.qml:158
 #, kde-format
 msgctxt "@action:button"
 msgid "Copy Address to Clipboard"
 msgstr "Kopiatu helbidea arbelera"
 
-#: ui/main.qml:240
+#: ui/main.qml:241
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Server Settings"
 msgstr "Zerbitzariaren ezarpenak"
 
-#: ui/main.qml:246
+#: ui/main.qml:247
 #, kde-format
 msgctxt "@option:check"
 msgid "Autostart on login"
 msgstr "Automatikoki abiarazi saioa hastean"
 
-#: ui/main.qml:262
+#: ui/main.qml:263
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Listening Port:"
 msgstr "Entzuteko ataka:"
 
-#: ui/main.qml:275
+#: ui/main.qml:276
 #, kde-format
 msgctxt "@option:check"
 msgid "Lock the session when disconnecting, unlock on connect"
 msgstr ""
 
-#: ui/main.qml:290
+#: ui/main.qml:291
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Video quality:"
 msgstr "Bideo-kalitatea:"
 
-#: ui/main.qml:310
+#: ui/main.qml:311
 #, kde-format
 msgctxt "@label:slider"
 msgid "Responsiveness"
 msgstr "Erantzuteko gaitasuna"
 
-#: ui/main.qml:316
+#: ui/main.qml:317
 #, kde-format
 msgctxt "@label:slider"
 msgid "Quality"
 msgstr "Kalitatea"
 
-#: ui/main.qml:323
+#: ui/main.qml:324
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Security Certificates"
 msgstr "Segurtasun ziurtagiriak"
 
-#: ui/main.qml:328
+#: ui/main.qml:329
 #, kde-format
 msgctxt "@label:check generate security certificates automatically"
 msgid "Generate automatically"
 msgstr "Automatikoki sortu"
 
-#: ui/main.qml:346
+#: ui/main.qml:347
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate path:"
 msgstr "Ziurtagiriaren bide-izena:"
 
-#: ui/main.qml:361
+#: ui/main.qml:362
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate File…"
 msgstr "Hautatu ziurtagiriaren fitxategia…"
 
-#: ui/main.qml:373
+#: ui/main.qml:374
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate key path:"
 msgstr "Ziurtagiri-gakoaren bide-izena:"
 
-#: ui/main.qml:389
+#: ui/main.qml:390
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate Key File…"
@@ -288,23 +291,23 @@ msgctxt "@title:group"
 msgid "Remote Desktop Access"
 msgstr "Urruneko mahaigainera sarbidea"
 
-#: ui/main_phone.qml:105
+#: ui/main_phone.qml:106
 #, kde-format
 msgctxt "@option:check"
 msgid "Enable RDP Server"
 msgstr "Gaitu RDP zerbitzaria"
 
-#: ui/main_phone.qml:128
+#: ui/main_phone.qml:129
 #, kde-format
 msgid "Hostname:"
 msgstr "Ostalari-izena:"
 
-#: ui/main_phone.qml:134
+#: ui/main_phone.qml:135
 #, kde-format
-msgid "Use any of the following addresses to connect to this device:"
-msgstr "Erabili ondoko helbideetako edozein gailu honetara konektatzeko:"
+msgid "Connect to this device at any of the following addresses:"
+msgstr ""
 
-#: ui/main_phone.qml:172
+#: ui/main_phone.qml:173
 #, kde-format
 msgctxt "@title:group"
 msgid "Server Settings"
@@ -328,8 +331,8 @@ msgstr "Zerbitzaria berrabiarazi"
 #: ui/UserListView.qml:21
 #, kde-format
 msgctxt "@title"
-msgid "Usernames"
-msgstr "Erabiltzaile-izenak"
+msgid "Allowed users"
+msgstr ""
 
 #: ui/UserListView.qml:25
 #, kde-format
@@ -386,6 +389,17 @@ msgstr "Aldatu …erabiltzailea"
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "Kendu …erabiltzailea"
+
+#~ msgctxt "@info:usagetip"
+#~ msgid "Use any of the following addresses to connect to this device:"
+#~ msgstr "Erabili ondoko helbideetako edozein gailu honetara konektatzeko:"
+
+#~ msgid "Use any of the following addresses to connect to this device:"
+#~ msgstr "Erabili ondoko helbideetako edozein gailu honetara konektatzeko:"
+
+#~ msgctxt "@title"
+#~ msgid "Usernames"
+#~ msgstr "Erabiltzaile-izenak"
 
 #~ msgctxt "@title"
 #~ msgid "Additional Users"

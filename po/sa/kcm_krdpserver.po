@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-30 00:46+0000\n"
+"POT-Creation-Date: 2026-07-31 00:47+0000\n"
 "PO-Revision-Date: 2024-12-20 21:52+0530\n"
 "Last-Translator: kali <skkalwar999@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -181,98 +181,101 @@ msgid "Error message from the RDP server:<nl/>%1"
 msgstr ""
 
 #: ui/main.qml:142 ui/main_phone.qml:101
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "Set up remote login to connect using apps supporting the “RDP” remote "
+#| "desktop protocol."
 msgid ""
-"Set up remote login to connect using apps supporting the “RDP” remote "
-"desktop protocol."
+"Users listed below can log into this device remotely using apps that support "
+"the “RDP” protocol."
 msgstr ""
 "“RDP” दूरस्थं डेस्कटॉप् प्रोटोकॉलं समर्थयन्तः एप्स् उपयुज्य संयोजयितुं दूरस्थप्रवेशं सेट् कुर्वन्तु ।"
 
-#: ui/main.qml:151
+#: ui/main.qml:152
 #, kde-format
 msgctxt "@info:usagetip"
-msgid "Use any of the following addresses to connect to this device:"
-msgstr "अस्मिन् यन्त्रे सम्बद्धं कर्तुं निम्नलिखितपतेः कस्यापि उपयोगं कुर्वन्तु:"
+msgid "Connect to this device at any of the following addresses:"
+msgstr ""
 
-#: ui/main.qml:186 ui/main_phone.qml:157
+#: ui/main.qml:187 ui/main_phone.qml:158
 #, kde-format
 msgctxt "@action:button"
 msgid "Copy Address to Clipboard"
 msgstr "Address इत्यस्य प्रतिलिपिं Clipboard इत्यत्र कुर्वन्तु"
 
-#: ui/main.qml:240
+#: ui/main.qml:241
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Server Settings"
 msgstr "सर्वर सेटिंग्स्"
 
-#: ui/main.qml:246
+#: ui/main.qml:247
 #, kde-format
 msgctxt "@option:check"
 msgid "Autostart on login"
 msgstr "स्वतःप्रारम्भः प्रवेशः अस्ति"
 
-#: ui/main.qml:262
+#: ui/main.qml:263
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Listening Port:"
 msgstr "श्रवण पोर्ट् :"
 
-#: ui/main.qml:275
+#: ui/main.qml:276
 #, kde-format
 msgctxt "@option:check"
 msgid "Lock the session when disconnecting, unlock on connect"
 msgstr ""
 
-#: ui/main.qml:290
+#: ui/main.qml:291
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Video quality:"
 msgstr "विडियो गुणवत्ता :"
 
-#: ui/main.qml:310
+#: ui/main.qml:311
 #, kde-format
 msgctxt "@label:slider"
 msgid "Responsiveness"
 msgstr "प्रतिक्रियाशीलता"
 
-#: ui/main.qml:316
+#: ui/main.qml:317
 #, kde-format
 msgctxt "@label:slider"
 msgid "Quality"
 msgstr "गुणवत्ता"
 
-#: ui/main.qml:323
+#: ui/main.qml:324
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Security Certificates"
 msgstr "सुरक्षा प्रमाणपत्र"
 
-#: ui/main.qml:328
+#: ui/main.qml:329
 #, kde-format
 msgctxt "@label:check generate security certificates automatically"
 msgid "Generate automatically"
 msgstr "स्वयमेव जनयति"
 
-#: ui/main.qml:346
+#: ui/main.qml:347
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate path:"
 msgstr "प्रमाणपत्रमार्गः :"
 
-#: ui/main.qml:361
+#: ui/main.qml:362
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate File…"
 msgstr "प्रमाणपत्रसञ्चिकां चिनोतु..."
 
-#: ui/main.qml:373
+#: ui/main.qml:374
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate key path:"
 msgstr "प्रमाणपत्रकुंजीमार्गः :"
 
-#: ui/main.qml:389
+#: ui/main.qml:390
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate Key File…"
@@ -284,7 +287,7 @@ msgctxt "@title:group"
 msgid "Remote Desktop Access"
 msgstr ""
 
-#: ui/main_phone.qml:105
+#: ui/main_phone.qml:106
 #, fuzzy, kde-format
 #| msgctxt "@option:check Enable RDP server"
 #| msgid "Enable RDP server"
@@ -292,21 +295,19 @@ msgctxt "@option:check"
 msgid "Enable RDP Server"
 msgstr "RDP सर्वरं सक्षमं कुर्वन्तु"
 
-#: ui/main_phone.qml:128
+#: ui/main_phone.qml:129
 #, fuzzy, kde-format
 #| msgctxt "@label:textbox"
 #| msgid "Username:"
 msgid "Hostname:"
 msgstr "उपयोक्तृनाम :"
 
-#: ui/main_phone.qml:134
-#, fuzzy, kde-format
-#| msgctxt "@info:usagetip"
-#| msgid "Use any of the following addresses to connect to this device:"
-msgid "Use any of the following addresses to connect to this device:"
-msgstr "अस्मिन् यन्त्रे सम्बद्धं कर्तुं निम्नलिखितपतेः कस्यापि उपयोगं कुर्वन्तु:"
+#: ui/main_phone.qml:135
+#, kde-format
+msgid "Connect to this device at any of the following addresses:"
+msgstr ""
 
-#: ui/main_phone.qml:172
+#: ui/main_phone.qml:173
 #, fuzzy, kde-format
 #| msgctxt "title:group Group of RDP server settings"
 #| msgid "Server Settings"
@@ -331,8 +332,8 @@ msgstr "सर्वरं पुनः आरभत"
 #: ui/UserListView.qml:21
 #, kde-format
 msgctxt "@title"
-msgid "Usernames"
-msgstr "उपयोक्तृनाम"
+msgid "Allowed users"
+msgstr ""
 
 #: ui/UserListView.qml:25
 #, kde-format
@@ -387,3 +388,17 @@ msgstr "उपयोक्तृं परिवर्तयतु..."
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "उपयोक्तारं निष्कासयन्तु..."
+
+#~ msgctxt "@info:usagetip"
+#~ msgid "Use any of the following addresses to connect to this device:"
+#~ msgstr "अस्मिन् यन्त्रे सम्बद्धं कर्तुं निम्नलिखितपतेः कस्यापि उपयोगं कुर्वन्तु:"
+
+#, fuzzy
+#~| msgctxt "@info:usagetip"
+#~| msgid "Use any of the following addresses to connect to this device:"
+#~ msgid "Use any of the following addresses to connect to this device:"
+#~ msgstr "अस्मिन् यन्त्रे सम्बद्धं कर्तुं निम्नलिखितपतेः कस्यापि उपयोगं कुर्वन्तु:"
+
+#~ msgctxt "@title"
+#~ msgid "Usernames"
+#~ msgstr "उपयोक्तृनाम"
