@@ -109,6 +109,7 @@ private:
     void sendFrameProgressive(const VideoFrame &frame);
 
     void updateInFlightWindow();
+    double effectiveProducerFps();
 
     class Private;
     const std::unique_ptr<Private> d;

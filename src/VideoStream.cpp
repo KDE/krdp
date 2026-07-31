@@ -13,6 +13,7 @@
 #include <atomic>
 #include <cmath>
 #include <condition_variable>
+#include <cstdint>
 
 #include <QDateTime>
 #include <QQueue>
@@ -40,6 +41,8 @@ namespace clk = std::chrono;
 constexpr qsizetype MaximumInFlightFrames = 2; // in-flight window floor
 constexpr double InFlightGain = 1.0; // window spans this many round trips of frames
 constexpr double LatencyBudgetSec = 1.0; // never buffer more than this many seconds of video
+constexpr double MinimumWindowFrameRate = 5.0; // floor for producer-rate window sizing (avoids stop-and-wait)
+constexpr double ProducerFpsEwmaAlpha = 0.25; // smoothing for the producer-rate estimate
 constexpr uint32_t ProgressiveCodecContextId = 1;
 struct RdpCapsInformation {
     uint32_t version;
@@ -150,6 +153,12 @@ public:
 
     std::atomic_int requestedFrameRate = 60;
     std::atomic<qsizetype> maxInFlight{MaximumInFlightFrames}; // recomputed from RTT on rttChanged
+    // Producer-rate estimate for window sizing (see VideoStream::effectiveProducerFps()).
+    std::atomic<uint64_t> producedFrames = 0; // frames entering krdp; written from frame callbacks
+    uint64_t lastProducedFrames = 0; // touched only by updateInFlightWindow()
+    clk::steady_clock::time_point lastProducerRateUpdate{}; // touched only by updateInFlightWindow()
+    double smoothedProducerFps = MinimumWindowFrameRate; // touched only by updateInFlightWindow()
+
     bool initialized = false;
     quint8 quality = 100;
 
@@ -427,6 +436,7 @@ void VideoStream::queueFrame(const KRdp::VideoFrame &frame)
     if (d->session->state() != RdpConnection::State::Streaming || !d->enabled) {
         return;
     }
+    d->producedFrames.fetch_add(1, std::memory_order_relaxed); // count only accepted frames
 
     std::lock_guard lock(d->frameQueueMutex);
     if (d->activeEncodingMode == EncodingMode::H264) {
@@ -828,17 +838,56 @@ void VideoStream::performReset(QSize size)
     }
 }
 
+double VideoStream::effectiveProducerFps()
+{
+    // Producer rate = frames entering krdp from the source/encoder callbacks. It is measured
+    // upstream of the send window, so sizing the window from it cannot feed back into itself
+    // (unlike client-decoded FPS). Invariant: producedFrames is written from frame callbacks;
+    // the smoothing state is touched only here (updateInFlightWindow() is the sole caller, one
+    // rttChanged connection, so no lock is needed). All returns are clamped to a bootstrap/
+    // stop-and-wait floor (MinimumWindowFrameRate), and to the requested rate when it is above
+    // that floor (so a very low requested rate yields the floor, not less).
+    const double requested = d->requestedFrameRate.load();
+    const double ceiling = std::max(MinimumWindowFrameRate, requested);
+    const auto clampFps = [&](double f) {
+        return std::clamp(f, MinimumWindowFrameRate, ceiling);
+    };
+
+    const auto now = clk::steady_clock::now();
+    const uint64_t total = d->producedFrames.load(std::memory_order_relaxed);
+    if (d->lastProducerRateUpdate == clk::steady_clock::time_point{}) {
+        d->lastProducerRateUpdate = now;
+        d->lastProducedFrames = total;
+        // Optimistic bootstrap: seed from the requested rate so the initial full-screen
+        // burst gets a usable window immediately; the EWMA converges down to the measured
+        // producer rate as frames arrive.
+        d->smoothedProducerFps = clampFps(requested);
+        return d->smoothedProducerFps;
+    }
+    const double elapsedSec = clk::duration<double>(now - d->lastProducerRateUpdate).count();
+    const uint64_t delta = total - d->lastProducedFrames;
+    d->lastProducerRateUpdate = now;
+    d->lastProducedFrames = total;
+    if (elapsedSec <= 0.0 || delta == 0) {
+        return clampFps(d->smoothedProducerFps); // idle: hold last active rate, do not shrink
+    }
+    const double instantFps = double(delta) / elapsedSec;
+    d->smoothedProducerFps = d->smoothedProducerFps * (1.0 - ProducerFpsEwmaAlpha) + instantFps * ProducerFpsEwmaAlpha;
+    return clampFps(d->smoothedProducerFps);
+}
+
 void VideoStream::updateInFlightWindow()
 {
-    // Size the in-flight window from the bandwidth-delay product: at the current source
-    // rate, how many frames fit within one base round trip. NetworkDetection publishes the
-    // RTT via atomics, so averageRTT() is safe to read here; hasInFlightCapacity() then
-    // just reads the cached maxInFlight. Falls back to the fixed floor until an RTT is known.
+    // Size the in-flight window from the bandwidth-delay product: how many produced frames
+    // fit within the current average round-trip time. Producer FPS is measured from frames
+    // entering krdp (not client-decoded frames); averageRTT() is published via atomics; both
+    // are safe to read here. hasInFlightCapacity() then reads the cached maxInFlight. Falls
+    // back to the fixed floor until an RTT is known.
+    const double fps = effectiveProducerFps();
     const auto rttMs = clk::duration_cast<clk::milliseconds>(d->session->networkDetection()->averageRTT()).count();
     qsizetype window = MaximumInFlightFrames;
     if (rttMs > 0 && rttMs < 60000) {
         const double rttSec = rttMs / 1000.0;
-        const int fps = d->requestedFrameRate.load();
         const qsizetype bdp = qsizetype(std::ceil(fps * rttSec * InFlightGain));
         const qsizetype cap = std::max<qsizetype>(MaximumInFlightFrames, qsizetype(std::ceil(fps * LatencyBudgetSec)));
         window = std::clamp(bdp, qsizetype(MaximumInFlightFrames), cap);
