@@ -43,6 +43,9 @@ constexpr double InFlightGain = 1.0; // window spans this many round trips of fr
 constexpr double LatencyBudgetSec = 1.0; // never buffer more than this many seconds of video
 constexpr double MinimumWindowFrameRate = 5.0; // floor for producer-rate window sizing (avoids stop-and-wait)
 constexpr double ProducerFpsEwmaAlpha = 0.25; // smoothing for the producer-rate estimate
+constexpr double RttEwmaAlpha = 0.125; // second-stage smoothing of the (already windowed) averageRTT
+constexpr double MinimumValidRttMs = 5.0; // ignore implausibly-low RTT samples
+constexpr double MaximumValidRttMs = 60000.0; // ignore garbage RTT samples
 constexpr uint32_t ProgressiveCodecContextId = 1;
 struct RdpCapsInformation {
     uint32_t version;
@@ -158,6 +161,11 @@ public:
     uint64_t lastProducedFrames = 0; // touched only by updateInFlightWindow()
     clk::steady_clock::time_point lastProducerRateUpdate{}; // touched only by updateInFlightWindow()
     double smoothedProducerFps = MinimumWindowFrameRate; // touched only by updateInFlightWindow()
+    // RTT smoothing for window sizing (see updateInFlightWindow()); touched only there.
+    double smoothedRttMs = 0.0; // EWMA of valid averageRTT samples
+    bool hasSmoothedRtt = false;
+    double baseRttMs = 0.0; // session-minimum valid RTT (path BDP floor)
+    bool hasBaseRtt = false;
 
     bool initialized = false;
     quint8 quality = 100;
@@ -878,16 +886,30 @@ double VideoStream::effectiveProducerFps()
 
 void VideoStream::updateInFlightWindow()
 {
-    // Size the in-flight window from the bandwidth-delay product: how many produced frames
-    // fit within the current average round-trip time. Producer FPS is measured from frames
-    // entering krdp (not client-decoded frames); averageRTT() is published via atomics; both
-    // are safe to read here. hasInFlightCapacity() then reads the cached maxInFlight. Falls
-    // back to the fixed floor until an RTT is known.
+    // Size the in-flight window from the bandwidth-delay product: how many produced frames fit
+    // within the round-trip time. averageRTT() is already windowed; we smooth it a second time
+    // (EWMA) so transient RTT spikes do not immediately inflate the submission window, and floor
+    // the smoothed value at the session-minimum RTT so the window never drops below the path's
+    // BDP (which would collapse high-RTT throughput). Producer FPS is measured from frames
+    // entering krdp; averageRTT() is published via atomics; both are safe to read here. The RTT
+    // smoothing state is updated only from here, which the rttChanged connection invokes serially,
+    // so no lock is needed. Falls back to the fixed floor until a valid RTT is known.
     const double fps = effectiveProducerFps();
-    const auto rttMs = clk::duration_cast<clk::milliseconds>(d->session->networkDetection()->averageRTT()).count();
+    const double rttMs = clk::duration<double, std::milli>(d->session->networkDetection()->averageRTT()).count();
     qsizetype window = MaximumInFlightFrames;
-    if (rttMs > 0 && rttMs < 60000) {
-        const double rttSec = rttMs / 1000.0;
+    if (rttMs >= MinimumValidRttMs && rttMs < MaximumValidRttMs) {
+        if (!d->hasBaseRtt || rttMs < d->baseRttMs) {
+            d->baseRttMs = rttMs;
+            d->hasBaseRtt = true;
+        }
+        if (!d->hasSmoothedRtt) {
+            d->smoothedRttMs = rttMs;
+            d->hasSmoothedRtt = true;
+        } else {
+            d->smoothedRttMs = (1.0 - RttEwmaAlpha) * d->smoothedRttMs + RttEwmaAlpha * rttMs;
+        }
+        const double effectiveRttMs = std::max(d->baseRttMs, d->smoothedRttMs);
+        const double rttSec = effectiveRttMs / 1000.0;
         const qsizetype bdp = qsizetype(std::ceil(fps * rttSec * InFlightGain));
         const qsizetype cap = std::max<qsizetype>(MaximumInFlightFrames, qsizetype(std::ceil(fps * LatencyBudgetSec)));
         window = std::clamp(bdp, qsizetype(MaximumInFlightFrames), cap);
