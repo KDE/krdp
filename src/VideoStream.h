@@ -108,8 +108,6 @@ private:
     void sendFrameH264(const VideoFrame &frame);
     void sendFrameProgressive(const VideoFrame &frame);
 
-    void updateRequestedFrameRate();
-
     class Private;
     const std::unique_ptr<Private> d;
 };

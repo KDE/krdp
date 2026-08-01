@@ -36,7 +36,6 @@ namespace KRdp
 namespace clk = std::chrono;
 
 // Maximum number of frames to contain in the queue.
-constexpr clk::system_clock::duration FrameRateEstimateAveragePeriod = clk::seconds(1);
 constexpr qsizetype MaximumInFlightFrames = 2;
 constexpr uint32_t ProgressiveCodecContextId = 1;
 struct RdpCapsInformation {
@@ -106,11 +105,6 @@ struct Surface {
     QSize size;
 };
 
-struct FrameRateEstimate {
-    clk::system_clock::time_point timeStamp;
-    int estimate = 0;
-};
-
 class KRDP_NO_EXPORT VideoStream::Private
 {
 public:
@@ -151,13 +145,7 @@ public:
 
     std::mutex pendingFramesMutex;
 
-    int maximumFrameRate = 120;
     std::atomic_int requestedFrameRate = 60;
-    QQueue<FrameRateEstimate> frameRateEstimates;
-    clk::system_clock::time_point lastFrameRateEstimation;
-
-    std::atomic_int encodedFrames = 0;
-    std::atomic_int frameDelay = 0;
     bool initialized = false;
     quint8 quality = 100;
 
@@ -363,8 +351,6 @@ bool VideoStream::initialize()
     }
 
     d->initialized = true;
-
-    connect(d->session->networkDetection(), &NetworkDetection::rttChanged, this, &VideoStream::updateRequestedFrameRate);
 
     d->frameSubmissionThread = std::jthread([this](std::stop_token token) {
         while (!token.stop_requested()) {
@@ -676,7 +662,6 @@ uint32_t VideoStream::onFrameAcknowledge(const RDPGFX_FRAME_ACKNOWLEDGE_PDU *fra
         return CHANNEL_RC_OK;
     }
 
-    d->frameDelay = d->encodedFrames - frameAcknowledge->totalFramesDecoded;
     d->pendingFrames.erase(itr);
 
     return CHANNEL_RC_OK;
@@ -882,8 +867,6 @@ void VideoStream::sendFrameH264(const VideoFrame &frame)
 
     auto frameId = d->frameId++;
 
-    d->encodedFrames++;
-
     {
         std::lock_guard lock(d->pendingFramesMutex);
         d->pendingFrames.insert(frameId);
@@ -992,8 +975,6 @@ void VideoStream::sendFrameProgressive(const VideoFrame &frame)
 
     auto frameId = d->frameId++;
 
-    d->encodedFrames++;
-
     {
         std::lock_guard lock(d->pendingFramesMutex);
         d->pendingFrames.insert(frameId);
@@ -1033,51 +1014,6 @@ void VideoStream::sendFrameProgressive(const VideoFrame &frame)
 
     d->session->networkDetection()->stopBandwidthMeasure();
     region16_uninit(&*invalidRegion);
-}
-
-void VideoStream::updateRequestedFrameRate()
-{
-    auto rtt = std::max(clk::duration_cast<clk::milliseconds>(d->session->networkDetection()->averageRTT()), clk::milliseconds(1));
-    auto now = clk::system_clock::now();
-
-    FrameRateEstimate estimate;
-    estimate.timeStamp = now;
-    estimate.estimate = std::min(int(clk::milliseconds(1000) / (rtt * std::max(d->frameDelay.load(), 1))), d->maximumFrameRate);
-    d->frameRateEstimates.append(estimate);
-
-    if (now - d->lastFrameRateEstimation < FrameRateEstimateAveragePeriod) {
-        return;
-    }
-
-    d->lastFrameRateEstimation = now;
-
-    d->frameRateEstimates.erase(std::remove_if(d->frameRateEstimates.begin(),
-                                               d->frameRateEstimates.end(),
-                                               [now](const auto &estimate) {
-                                                   return (estimate.timeStamp - now) > FrameRateEstimateAveragePeriod;
-                                               }),
-                                d->frameRateEstimates.cend());
-
-    auto sum = std::accumulate(d->frameRateEstimates.cbegin(), d->frameRateEstimates.cend(), 0, [](int acc, const auto &estimate) {
-        return acc + estimate.estimate;
-    });
-    auto average = sum / d->frameRateEstimates.size();
-
-    // we want some headroom so we can always clear our current load
-    // and handle any other latency
-    constexpr qreal targetFrameRateSaturation = 0.5;
-    auto frameRate = std::max(1.0, average * targetFrameRateSaturation);
-
-    if (frameRate != d->requestedFrameRate) {
-        d->requestedFrameRate = frameRate;
-        if (d->encodedStream) {
-            d->encodedStream->setMaxFramerate(frameRate, 1);
-            d->encodedStream->setMaxPendingFrames(frameRate);
-        }
-        if (d->sourceStream) {
-            d->sourceStream->setMaxFramerate({static_cast<quint32>(frameRate), 1});
-        }
-    }
 }
 }
 
