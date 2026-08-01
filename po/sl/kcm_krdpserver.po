@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-31 00:47+0000\n"
-"PO-Revision-Date: 2026-07-30 07:26+0200\n"
+"PO-Revision-Date: 2026-07-31 07:15+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -182,22 +182,19 @@ msgid "Error message from the RDP server:<nl/>%1"
 msgstr "Sporočilo o napaki strežnika RDP:<nl/>%1"
 
 #: ui/main.qml:142 ui/main_phone.qml:101
-#, fuzzy, kde-format
-#| msgid ""
-#| "Set up remote login to connect using apps supporting the “RDP” remote "
-#| "desktop protocol."
+#, kde-format
 msgid ""
 "Users listed below can log into this device remotely using apps that support "
 "the “RDP” protocol."
 msgstr ""
-"Nastavite oddaljeno prijavo za povezavo za aplikacijami, ki podpirajo "
-"oddaljeni protokol namizja \"RDP\"."
+"Spodaj navedeni uporabniki se lahko v to napravo prijavijo na daljavo z "
+"aplikacijami, ki podpirajo protokol “RDP”."
 
 #: ui/main.qml:152
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Connect to this device at any of the following addresses:"
-msgstr ""
+msgstr "Poveži se s to napravo na katerem koli od naslednjih naslovov:"
 
 #: ui/main.qml:187 ui/main_phone.qml:158
 #, kde-format
@@ -303,7 +300,7 @@ msgstr "Ime gostitelja:"
 #: ui/main_phone.qml:135
 #, kde-format
 msgid "Connect to this device at any of the following addresses:"
-msgstr ""
+msgstr "Poveži se s to napravo na katerem koli od naslednjih naslovov:"
 
 #: ui/main_phone.qml:173
 #, kde-format
@@ -330,7 +327,7 @@ msgstr "Ponovno zaženi strežnik"
 #, kde-format
 msgctxt "@title"
 msgid "Allowed users"
-msgstr ""
+msgstr "Dovoljeni uporabniki"
 
 #: ui/UserListView.qml:25
 #, kde-format

@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-31 00:47+0000\n"
-"PO-Revision-Date: 2026-07-30 06:33+0200\n"
+"PO-Revision-Date: 2026-07-31 08:39+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
 "Language: sv\n"
@@ -181,22 +181,19 @@ msgid "Error message from the RDP server:<nl/>%1"
 msgstr "Felmeddelande från RDP-servern:<nl/>%1"
 
 #: ui/main.qml:142 ui/main_phone.qml:101
-#, fuzzy, kde-format
-#| msgid ""
-#| "Set up remote login to connect using apps supporting the “RDP” remote "
-#| "desktop protocol."
+#, kde-format
 msgid ""
 "Users listed below can log into this device remotely using apps that support "
 "the “RDP” protocol."
 msgstr ""
-"Ställ in fjärrinloggning för att ansluta med program som stöder "
-"fjärrskrivbordsprotokollet \"RDP\"."
+"Användare listade nedan kan logga in på fjärrdatorn med program som stöder "
+"protokollet \"RDP\"."
 
 #: ui/main.qml:152
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Connect to this device at any of the following addresses:"
-msgstr ""
+msgstr "Anslut till datorn med någon av följande adresser:"
 
 #: ui/main.qml:187 ui/main_phone.qml:158
 #, kde-format
@@ -302,7 +299,7 @@ msgstr "Värddatornamn:"
 #: ui/main_phone.qml:135
 #, kde-format
 msgid "Connect to this device at any of the following addresses:"
-msgstr ""
+msgstr "Anslut till datorn med någon av följande adresser:"
 
 #: ui/main_phone.qml:173
 #, kde-format
@@ -329,7 +326,7 @@ msgstr "Starta om server"
 #, kde-format
 msgctxt "@title"
 msgid "Allowed users"
-msgstr ""
+msgstr "Tillåtna användare"
 
 #: ui/UserListView.qml:25
 #, kde-format

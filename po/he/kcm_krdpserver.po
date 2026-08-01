@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-31 00:47+0000\n"
-"PO-Revision-Date: 2026-07-30 09:03+0300\n"
+"PO-Revision-Date: 2026-07-31 13:07+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -180,22 +180,19 @@ msgid "Error message from the RDP server:<nl/>%1"
 msgstr "הודעת שגיאה משרת ה־RDP:<nl/>%1"
 
 #: ui/main.qml:142 ui/main_phone.qml:101
-#, fuzzy, kde-format
-#| msgid ""
-#| "Set up remote login to connect using apps supporting the “RDP” remote "
-#| "desktop protocol."
+#, kde-format
 msgid ""
 "Users listed below can log into this device remotely using apps that support "
 "the “RDP” protocol."
 msgstr ""
-"הקמת כניסה מרחוק כדי להתחבר באמצעות יישומים שתומכים בפרוטקול שולחן העבודה "
-"המרוחק „RDP”."
+"המשתמשים שמופיעים להלן יכולים להיכנס למכשיר הזה מרחוק באמצעות יישומים "
+"שתומכים בפרוטוקול „RDP”."
 
 #: ui/main.qml:152
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Connect to this device at any of the following addresses:"
-msgstr ""
+msgstr "לחבר את ההתקן הזה באחת מהכתובות הבאות:"
 
 #: ui/main.qml:187 ui/main_phone.qml:158
 #, kde-format
@@ -301,7 +298,7 @@ msgstr "שם מארח:"
 #: ui/main_phone.qml:135
 #, kde-format
 msgid "Connect to this device at any of the following addresses:"
-msgstr ""
+msgstr "לחבר את ההתקן הזה באחת מהכתובות הבאות:"
 
 #: ui/main_phone.qml:173
 #, kde-format
@@ -328,7 +325,7 @@ msgstr "הפעלת השרת מחדש"
 #, kde-format
 msgctxt "@title"
 msgid "Allowed users"
-msgstr ""
+msgstr "משתמשים מורשים"
 
 #: ui/UserListView.qml:25
 #, kde-format

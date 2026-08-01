@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-31 00:47+0000\n"
-"PO-Revision-Date: 2026-07-30 05:12+0200\n"
+"PO-Revision-Date: 2026-07-31 05:24+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -182,22 +182,19 @@ msgid "Error message from the RDP server:<nl/>%1"
 msgstr "შეცდომის შეტყობინება RDP სერვერიდან:<nl/>%1"
 
 #: ui/main.qml:142 ui/main_phone.qml:101
-#, fuzzy, kde-format
-#| msgid ""
-#| "Set up remote login to connect using apps supporting the “RDP” remote "
-#| "desktop protocol."
+#, kde-format
 msgid ""
 "Users listed below can log into this device remotely using apps that support "
 "the “RDP” protocol."
 msgstr ""
-"დაშორებული შესვლა პროგრამებით, რომელსაც დაშორებული სამუშაო მაგიდის \"RDP\" "
-"მხარდაჭერა გააჩნიათ."
+"ქვემოთ ჩამოთვლილ მომხმარებლებს შეუძლიათ ამ მოწყობილობაზე დაშორებულად "
+"შემოსვლა პროგრამებით, რომლებსაც აქვთ \"RDP\" პროტოკოლის მხარდაჭერა."
 
 #: ui/main.qml:152
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Connect to this device at any of the following addresses:"
-msgstr ""
+msgstr "ამ მოწყობილობასთან დაკავშირება ნებისმიერთან ან მისამართებიდან:"
 
 #: ui/main.qml:187 ui/main_phone.qml:158
 #, kde-format
@@ -303,7 +300,7 @@ msgstr "ჰოსტის სახელი:"
 #: ui/main_phone.qml:135
 #, kde-format
 msgid "Connect to this device at any of the following addresses:"
-msgstr ""
+msgstr "ამ მოწყობილობასთან დაკავშირება ნებისმიერთან ან მისამართებიდან:"
 
 #: ui/main_phone.qml:173
 #, kde-format
@@ -330,7 +327,7 @@ msgstr "სერვერის გადატვირთვა"
 #, kde-format
 msgctxt "@title"
 msgid "Allowed users"
-msgstr ""
+msgstr "დაშვებული მომხმარებლები"
 
 #: ui/UserListView.qml:25
 #, kde-format

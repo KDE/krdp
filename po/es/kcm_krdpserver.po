@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcm_krdpserver\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-31 00:47+0000\n"
-"PO-Revision-Date: 2026-07-31 01:06+0200\n"
+"PO-Revision-Date: 2026-08-01 00:23+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -188,22 +188,20 @@ msgid "Error message from the RDP server:<nl/>%1"
 msgstr "Mensaje de error del servidor RDP:<nl/>%1"
 
 #: ui/main.qml:142 ui/main_phone.qml:101
-#, fuzzy, kde-format
-#| msgid ""
-#| "Set up remote login to connect using apps supporting the “RDP” remote "
-#| "desktop protocol."
+#, kde-format
 msgid ""
 "Users listed below can log into this device remotely using apps that support "
 "the “RDP” protocol."
 msgstr ""
-"Configurar el inicio de sesión remoto para conectar usando aplicaciones "
-"compatibles con el protocolo de escritorio remoto «RDP»."
+"Los usuarios que se listan a continuación pueden iniciar sesión remota en "
+"este dispositivo usando aplicaciones compatibles con el protocolo «RDP»."
 
 #: ui/main.qml:152
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Connect to this device at any of the following addresses:"
 msgstr ""
+"Conéctese a este dispositivo en cualquiera de las siguientes direcciones:"
 
 #: ui/main.qml:187 ui/main_phone.qml:158
 #, kde-format
@@ -310,6 +308,7 @@ msgstr "Nombre de la máquina:"
 #, kde-format
 msgid "Connect to this device at any of the following addresses:"
 msgstr ""
+"Conéctese a este dispositivo en cualquiera de las siguientes direcciones:"
 
 #: ui/main_phone.qml:173
 #, kde-format
@@ -336,7 +335,7 @@ msgstr "Reiniciar el servidor"
 #, kde-format
 msgctxt "@title"
 msgid "Allowed users"
-msgstr ""
+msgstr "Usuarios permitidos"
 
 #: ui/UserListView.qml:25
 #, kde-format
@@ -392,16 +391,3 @@ msgstr "Modificar usuario…"
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "Eliminar usuario…"
-
-#~ msgctxt "@info:usagetip"
-#~ msgid "Use any of the following addresses to connect to this device:"
-#~ msgstr ""
-#~ "Use una de las siguientes direcciones para conectarse a este dispositivo:"
-
-#~ msgid "Use any of the following addresses to connect to this device:"
-#~ msgstr ""
-#~ "Use una de las siguientes direcciones para conectarse a este dispositivo:"
-
-#~ msgctxt "@title"
-#~ msgid "Usernames"
-#~ msgstr "Nombres de usuario"

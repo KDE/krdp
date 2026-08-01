@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-31 00:47+0000\n"
-"PO-Revision-Date: 2026-07-30 09:21+0200\n"
+"PO-Revision-Date: 2026-07-31 13:34+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
@@ -187,22 +187,19 @@ msgid "Error message from the RDP server:<nl/>%1"
 msgstr "Missatge d'error del servidor RDP: <nl/>%1"
 
 #: ui/main.qml:142 ui/main_phone.qml:101
-#, fuzzy, kde-format
-#| msgid ""
-#| "Set up remote login to connect using apps supporting the “RDP” remote "
-#| "desktop protocol."
+#, kde-format
 msgid ""
 "Users listed below can log into this device remotely using apps that support "
 "the “RDP” protocol."
 msgstr ""
-"Configureu l'inici de sessió remot per a connectar-vos utilitzant les "
-"aplicacions que admeten el protocol d'escriptori remot «RDP»."
+"Els usuaris llistats a sota poden iniciar la sessió remotament utilitzant "
+"les aplicacions que admeten el protocol «RDP»."
 
 #: ui/main.qml:152
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Connect to this device at any of the following addresses:"
-msgstr ""
+msgstr "Connecta a aquest dispositiu a qualsevol de les adreces següents:"
 
 #: ui/main.qml:187 ui/main_phone.qml:158
 #, kde-format
@@ -308,7 +305,7 @@ msgstr "Nom de l'ordinador:"
 #: ui/main_phone.qml:135
 #, kde-format
 msgid "Connect to this device at any of the following addresses:"
-msgstr ""
+msgstr "Connecta a aquest dispositiu a qualsevol de les adreces següents:"
 
 #: ui/main_phone.qml:173
 #, kde-format
@@ -335,7 +332,7 @@ msgstr "Reinicia el servidor"
 #, kde-format
 msgctxt "@title"
 msgid "Allowed users"
-msgstr ""
+msgstr "Usuaris permesos"
 
 #: ui/UserListView.qml:25
 #, kde-format

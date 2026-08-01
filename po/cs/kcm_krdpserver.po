@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-31 00:47+0000\n"
-"PO-Revision-Date: 2026-07-30 19:20+0200\n"
+"PO-Revision-Date: 2026-07-31 23:57+0200\n"
 "Last-Translator: Libor Filípek <libor.filipek@gmail.com>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
@@ -184,22 +184,19 @@ msgid "Error message from the RDP server:<nl/>%1"
 msgstr "Chybová zpráva ze serveru RDP:<nl/>%1"
 
 #: ui/main.qml:142 ui/main_phone.qml:101
-#, fuzzy, kde-format
-#| msgid ""
-#| "Set up remote login to connect using apps supporting the “RDP” remote "
-#| "desktop protocol."
+#, kde-format
 msgid ""
 "Users listed below can log into this device remotely using apps that support "
 "the “RDP” protocol."
 msgstr ""
-"Nastavte vzdálené přihlášení pro připojení pomocí aplikací podporujících "
-"protokol vzdálené plochy „RDP“."
+"Níže uvedení uživatelé se mohou do tohoto zařízení přihlásit na dálku pomocí "
+"aplikací, které podporují protokol RDP."
 
 #: ui/main.qml:152
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Connect to this device at any of the following addresses:"
-msgstr ""
+msgstr "Připojte se k tomuto zařízení na kterékoli z následujících adres:"
 
 #: ui/main.qml:187 ui/main_phone.qml:158
 #, kde-format
@@ -305,7 +302,7 @@ msgstr "Název počítače:"
 #: ui/main_phone.qml:135
 #, kde-format
 msgid "Connect to this device at any of the following addresses:"
-msgstr ""
+msgstr "Připojte se k tomuto zařízení na kterékoli z následujících adres:"
 
 #: ui/main_phone.qml:173
 #, kde-format
@@ -332,7 +329,7 @@ msgstr "Restartovat server"
 #, kde-format
 msgctxt "@title"
 msgid "Allowed users"
-msgstr ""
+msgstr "Povolení uživatelé"
 
 #: ui/UserListView.qml:25
 #, kde-format

@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-31 00:47+0000\n"
-"PO-Revision-Date: 2026-07-30 12:39+0200\n"
+"PO-Revision-Date: 2026-07-31 12:27+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -183,22 +183,19 @@ msgid "Error message from the RDP server:<nl/>%1"
 msgstr "Message de error ex le servitor de RDP:<nl/>%1"
 
 #: ui/main.qml:142 ui/main_phone.qml:101
-#, fuzzy, kde-format
-#| msgid ""
-#| "Set up remote login to connect using apps supporting the “RDP” remote "
-#| "desktop protocol."
+#, kde-format
 msgid ""
 "Users listed below can log into this device remotely using apps that support "
 "the “RDP” protocol."
 msgstr ""
-"Configura accesso remote per connecter usante apps que supporta le "
-"protocollo de scriptorio remote \"RDP\"."
+"Usatores listate infra pote acceder (login) a iste dispositivo remotemente  "
+"usante apps que supporta le protocollo \"RDP\"."
 
 #: ui/main.qml:152
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Connect to this device at any of the following addresses:"
-msgstr ""
+msgstr "Connecte te a iste dispositivo a qualcunque del sequente adresses:"
 
 #: ui/main.qml:187 ui/main_phone.qml:158
 #, kde-format
@@ -304,7 +301,7 @@ msgstr "Nomine de Hospite:"
 #: ui/main_phone.qml:135
 #, kde-format
 msgid "Connect to this device at any of the following addresses:"
-msgstr ""
+msgstr "Connecte te a iste dispositivo a qualcunque del sequente adresses:"
 
 #: ui/main_phone.qml:173
 #, kde-format
@@ -331,7 +328,7 @@ msgstr "Restarta Servitor"
 #, kde-format
 msgctxt "@title"
 msgid "Allowed users"
-msgstr ""
+msgstr "Usatores permittite"
 
 #: ui/UserListView.qml:25
 #, kde-format

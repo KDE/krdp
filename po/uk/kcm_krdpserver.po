@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-31 00:47+0000\n"
-"PO-Revision-Date: 2026-07-30 09:03+0300\n"
+"PO-Revision-Date: 2026-07-31 08:45+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -184,22 +184,19 @@ msgid "Error message from the RDP server:<nl/>%1"
 msgstr "Повідомлення про помилку від сервера RDP:<nl/>%1"
 
 #: ui/main.qml:142 ui/main_phone.qml:101
-#, fuzzy, kde-format
-#| msgid ""
-#| "Set up remote login to connect using apps supporting the “RDP” remote "
-#| "desktop protocol."
+#, kde-format
 msgid ""
 "Users listed below can log into this device remotely using apps that support "
 "the “RDP” protocol."
 msgstr ""
-"Налаштовування віддаленого входу до системи для встановлення з'єднання за "
-"допомогою програм із підтримкою протоколу віддаленої стільниці «RDP»."
+"Наведені нижче користувачі можуть входити на цей пристрій віддалено за "
+"допомогою програм, у яких передбачено підтримку протоколу «RDP»."
 
 #: ui/main.qml:152
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Connect to this device at any of the following addresses:"
-msgstr ""
+msgstr "З'єднатися із цим пристроєм можна за одною з таких адрес:"
 
 #: ui/main.qml:187 ui/main_phone.qml:158
 #, kde-format
@@ -305,7 +302,7 @@ msgstr "Назва вузла:"
 #: ui/main_phone.qml:135
 #, kde-format
 msgid "Connect to this device at any of the following addresses:"
-msgstr ""
+msgstr "З'єднатися із цим пристроєм можна за одною з таких адрес:"
 
 #: ui/main_phone.qml:173
 #, kde-format
@@ -332,7 +329,7 @@ msgstr "Перезапустити сервер"
 #, kde-format
 msgctxt "@title"
 msgid "Allowed users"
-msgstr ""
+msgstr "Дозволені користувачі"
 
 #: ui/UserListView.qml:25
 #, kde-format
