@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-31 00:47+0000\n"
-"PO-Revision-Date: 2026-07-24 21:28+0300\n"
+"PO-Revision-Date: 2026-08-01 16:50+0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: lt\n"
@@ -185,22 +185,19 @@ msgid "Error message from the RDP server:<nl/>%1"
 msgstr "Klaidos pranešimas iš RDP serverio:<nl/>%1"
 
 #: ui/main.qml:142 ui/main_phone.qml:101
-#, fuzzy, kde-format
-#| msgid ""
-#| "Set up remote login to connect using apps supporting the “RDP” remote "
-#| "desktop protocol."
+#, kde-format
 msgid ""
 "Users listed below can log into this device remotely using apps that support "
 "the “RDP” protocol."
 msgstr ""
-"Nustatyti nuotolinį prisijungimą, kuris bus naudojamas jungiantis per "
-"programas, palaikančias „RDP“ nuotolinio darbalaukio protokolą."
+"Žemiau išvardyti naudotojai gali nuotoliniu būdu prisijungti prie šio "
+"įrenginio naudodami programas, palaikančias „RDP“ protokolą."
 
 #: ui/main.qml:152
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Connect to this device at any of the following addresses:"
-msgstr ""
+msgstr "Prisijunkite prie šio įrenginio naudodami bet kurį iš šių adresų:"
 
 #: ui/main.qml:187 ui/main_phone.qml:158
 #, kde-format
@@ -306,7 +303,7 @@ msgstr "Mazgo pavadinimas:"
 #: ui/main_phone.qml:135
 #, kde-format
 msgid "Connect to this device at any of the following addresses:"
-msgstr ""
+msgstr "Prisijunkite prie šio įrenginio naudodami bet kurį iš šių adresų:"
 
 #: ui/main_phone.qml:173
 #, kde-format
@@ -333,7 +330,7 @@ msgstr "Paleisti serverį iš naujo"
 #, kde-format
 msgctxt "@title"
 msgid "Allowed users"
-msgstr ""
+msgstr "Leidžiami naudotojai"
 
 #: ui/UserListView.qml:25
 #, kde-format
@@ -374,9 +371,7 @@ msgid "Other Users"
 msgstr "Kiti naudotojai"
 
 #: ui/UserListView.qml:67
-#, fuzzy, kde-format
-#| msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
-#| msgid "Login with your system password"
+#, kde-format
 msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
 msgid "Log in with your system password"
 msgstr "Prisijungti naudojant savo sistemos slaptažodį"

@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-31 00:47+0000\n"
-"PO-Revision-Date: 2026-07-24 12:09+0200\n"
+"PO-Revision-Date: 2026-08-01 09:51+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: fr\n"
 "Language: fr\n"
@@ -184,22 +184,20 @@ msgid "Error message from the RDP server:<nl/>%1"
 msgstr "Message d'erreur du serveur « RDP » :<nl/>%1"
 
 #: ui/main.qml:142 ui/main_phone.qml:101
-#, fuzzy, kde-format
-#| msgid ""
-#| "Set up remote login to connect using apps supporting the “RDP” remote "
-#| "desktop protocol."
+#, kde-format
 msgid ""
 "Users listed below can log into this device remotely using apps that support "
 "the “RDP” protocol."
 msgstr ""
-"Configurez la connexion à distance pour vous connecter à l'aide "
-"d'applications prenant en charge le protocole de bureau à distance « RDP »."
+"Les utilisateurs listés ci-dessous peuvent se connecter à ce périphérique en "
+"utilisant ce périphérique à distance à l'aide d'applications prenant en "
+"charge le protocole de bureau à distance « RDP »."
 
 #: ui/main.qml:152
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Connect to this device at any of the following addresses:"
-msgstr ""
+msgstr "Connectez-vous à ce périphérique à l'une des adresses suivantes :"
 
 #: ui/main.qml:187 ui/main_phone.qml:158
 #, kde-format
@@ -307,7 +305,7 @@ msgstr "Nom d'hôte :"
 #: ui/main_phone.qml:135
 #, kde-format
 msgid "Connect to this device at any of the following addresses:"
-msgstr ""
+msgstr "Connectez-vous à ce périphérique à l'une des adresses suivantes :"
 
 #: ui/main_phone.qml:173
 #, kde-format
@@ -334,7 +332,7 @@ msgstr "Redémarrer le serveur"
 #, kde-format
 msgctxt "@title"
 msgid "Allowed users"
-msgstr ""
+msgstr "Utilisateurs autorisés"
 
 #: ui/UserListView.qml:25
 #, kde-format
@@ -375,12 +373,10 @@ msgid "Other Users"
 msgstr "Autres utilisateurs"
 
 #: ui/UserListView.qml:67
-#, fuzzy, kde-format
-#| msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
-#| msgid "Login with your system password"
+#, kde-format
 msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
 msgid "Log in with your system password"
-msgstr "Connectez-vous avec votre mot de passe système"
+msgstr "Se connecter avec votre mot de passe système"
 
 #: ui/UserListView.qml:99
 #, kde-format

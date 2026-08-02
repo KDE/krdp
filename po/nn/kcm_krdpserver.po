@@ -1,5 +1,6 @@
 # Translation of kcm_krdpserver to Norwegian Nynorsk
 #
+# Karl Ove Hufthammer <karl@huftis.org>, 2024, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
@@ -388,14 +389,3 @@ msgstr "Endra brukar …"
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "Fjern brukar …"
-
-#~ msgctxt "@info:usagetip"
-#~ msgid "Use any of the following addresses to connect to this device:"
-#~ msgstr "Bruk ei av desse adressene til å kopla til eininga:"
-
-#~ msgid "Use any of the following addresses to connect to this device:"
-#~ msgstr "Bruk ei av desse adressene til å kopla til eininga:"
-
-#~ msgctxt "@title"
-#~ msgid "Usernames"
-#~ msgstr "Brukarnamn"
