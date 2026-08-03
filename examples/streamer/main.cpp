@@ -25,14 +25,16 @@ int main(int argc, char **argv)
     parser.addHelpOption();
     parser.addOptions({
         {u"quit-after"_s, u"Quit after running for this amount of seconds"_s, u"seconds"_s},
-        {u"monitor"_s, u"Index of the monitor to display."_s, u"monitor"_s, u"-1"_s},
+        {u"monitor"_s, u"Index of the monitor to display."_s, u"monitor"_s},
         {u"quality"_s, u"Encoding quality of the stream, from 0 (lowest) to 100 (highest)"_s, u"quality"_s},
     });
     parser.process(application);
 
     KRdp::PortalSession session;
     PipeWireEncodedStream encodedStream;
-    session.setActiveStream(parser.value(u"monitor"_s).toInt());
+    if (parser.isSet(u"monitor"_s)) {
+        session.setActiveStream(parser.value(u"monitor"_s).toInt());
+    }
     if (parser.isSet(u"quality"_s)) {
         encodedStream.setQuality(parser.value(u"quality"_s).toUShort());
     }

@@ -332,7 +332,7 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
             qCDebug(KRDP) << "Started Freedesktop Portal session";
 
             auto streamIndex = activeStream().value_or(0);
-            if (streamIndex >= streams.size()) {
+            if (streamIndex < 0 || streamIndex >= streams.size()) {
                 qCWarning(KRDP) << "Requested monitor index out of range, using first monitor";
                 setActiveStream(0);
                 streamIndex = 0;
