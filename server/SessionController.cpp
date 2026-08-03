@@ -168,45 +168,47 @@ void SessionController::setSessionLocked(bool locked)
 
 void SessionController::onNewConnection(KRdp::RdpConnection *newConnection)
 {
-    auto wrapper = std::make_unique<SessionWrapper>(newConnection, makeSession(), m_sni);
-    if (m_virtualMonitor) {
-        wrapper->session->setVirtualMonitor(*m_virtualMonitor);
-    } else if (m_monitorIndex) {
-        wrapper->session->setActiveStream(*m_monitorIndex);
-    }
-    wrapper->connection->videoStream()->setVideoQuality(m_quality.value());
-    // Unlock only once the connection is authenticated and activated - NOT here, which
-    // runs at TCP accept before the RDP handshake / PAM auth. Otherwise anyone who can
-    // open the port could unlock the physical seat (logind Unlock is passwordless).
-    auto *wrapperPtr = wrapper.get();
-    connect(newConnection, &KRdp::RdpConnection::stateChanged, this, [this, wrapperPtr](KRdp::RdpConnection::State state) {
-        if (state == KRdp::RdpConnection::State::Activated || state == KRdp::RdpConnection::State::Streaming) {
-            wrapperPtr->m_authenticated = true;
-            setSessionLocked(false);
+    connect(newConnection, &KRdp::RdpConnection::stateChanged, this, [this, newConnection](KRdp::RdpConnection::State state) {
+        // RDP authentication has completed by the time the connection is activated.
+        // Do not request a screencast session for clients that fail authentication.
+        if (state != KRdp::RdpConnection::State::Activated) {
+            return;
         }
-    });
-    wrapper->session->start();
 
-    connect(wrapper.get(), &SessionWrapper::connectionDestroyed, this, [this](SessionWrapper *wrapper) {
-        const bool wasAuthenticated = wrapper->m_authenticated;
-
-        m_wrappers.erase(std::remove_if(m_wrappers.begin(),
-                                        m_wrappers.end(),
-                                        [wrapper](std::unique_ptr<SessionWrapper> &entry) {
-                                            return entry.get() == wrapper;
-                                        }),
-                         m_wrappers.end());
-
-        if (wasAuthenticated && m_wrappers.empty()) {
-            setSessionLocked(true);
+        auto wrapper = std::make_unique<SessionWrapper>(newConnection, makeSession(), m_sni);
+        if (m_virtualMonitor) {
+            wrapper->session->setVirtualMonitor(*m_virtualMonitor);
+        } else if (m_monitorIndex) {
+            wrapper->session->setActiveStream(*m_monitorIndex);
         }
-    });
+        wrapper->connection->videoStream()->setVideoQuality(m_quality.value());
 
-    connect(wrapper.get(), &SessionWrapper::sessionError, this, [newConnection] {
-        newConnection->close(KRdp::RdpConnection::CloseReason::None);
-    });
+        // Only unlock once authentication has completed. logind's Unlock is passwordless.
+        wrapper->m_authenticated = true;
+        setSessionLocked(false);
 
-    m_wrappers.push_back(std::move(wrapper));
+        connect(wrapper.get(), &SessionWrapper::connectionDestroyed, this, [this](SessionWrapper *wrapper) {
+            const bool wasAuthenticated = wrapper->m_authenticated;
+
+            m_wrappers.erase(std::remove_if(m_wrappers.begin(),
+                                            m_wrappers.end(),
+                                            [wrapper](std::unique_ptr<SessionWrapper> &entry) {
+                                                return entry.get() == wrapper;
+                                            }),
+                             m_wrappers.end());
+
+            if (wasAuthenticated && m_wrappers.empty()) {
+                setSessionLocked(true);
+            }
+        });
+
+        connect(wrapper.get(), &SessionWrapper::sessionError, this, [newConnection] {
+            newConnection->close(KRdp::RdpConnection::CloseReason::None);
+        });
+
+        wrapper->session->start();
+        m_wrappers.push_back(std::move(wrapper));
+    });
 }
 
 void SessionController::stopFromSNI()
