@@ -179,14 +179,11 @@ msgid "Error message from the RDP server:<nl/>%1"
 msgstr "来自 RDP 服务器的错误消息：<nl/>%1"
 
 #: ui/main.qml:142 ui/main_phone.qml:101
-#, fuzzy, kde-format
-#| msgid ""
-#| "Set up remote login to connect using apps supporting the “RDP” remote "
-#| "desktop protocol."
+#, kde-format
 msgid ""
 "Users listed below can log into this device remotely using apps that support "
 "the “RDP” protocol."
-msgstr "设置远程登录以使用支持 RDP 远程桌面协议的应用。"
+msgstr ""
 
 #: ui/main.qml:152
 #, kde-format
@@ -362,12 +359,10 @@ msgid "Other Users"
 msgstr "其他用户"
 
 #: ui/UserListView.qml:67
-#, fuzzy, kde-format
-#| msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
-#| msgid "Login with your system password"
+#, kde-format
 msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
 msgid "Log in with your system password"
-msgstr "使用您的系统密码登录"
+msgstr ""
 
 #: ui/UserListView.qml:99
 #, kde-format
@@ -380,14 +375,3 @@ msgstr "修改用户…"
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "移除用户…"
-
-#~ msgctxt "@info:usagetip"
-#~ msgid "Use any of the following addresses to connect to this device:"
-#~ msgstr "使用以下任何地址以连接到此设备："
-
-#~ msgid "Use any of the following addresses to connect to this device:"
-#~ msgstr "使用以下任意地址以连接到此设备："
-
-#~ msgctxt "@title"
-#~ msgid "Usernames"
-#~ msgstr "用户名"

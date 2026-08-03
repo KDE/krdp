@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-31 00:47+0000\n"
-"PO-Revision-Date: 2026-07-26 12:41+0200\n"
+"PO-Revision-Date: 2026-08-02 11:01+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@nuug.no>\n"
 "Language: nn\n"
@@ -184,22 +184,19 @@ msgid "Error message from the RDP server:<nl/>%1"
 msgstr "Feilmelding frå RDP-tenaren:<nl/>%1"
 
 #: ui/main.qml:142 ui/main_phone.qml:101
-#, fuzzy, kde-format
-#| msgid ""
-#| "Set up remote login to connect using apps supporting the “RDP” remote "
-#| "desktop protocol."
+#, kde-format
 msgid ""
 "Users listed below can log into this device remotely using apps that support "
 "the “RDP” protocol."
 msgstr ""
-"Set opp ekstern innlogging for å kopla til med appar som støttar «eksternt "
-"skrivebord»-protokollen RDP."
+"Brukarane nedanfor kan logga på eininga utanfrå via program som støttar "
+"protokollen RDP."
 
 #: ui/main.qml:152
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Connect to this device at any of the following addresses:"
-msgstr ""
+msgstr "Bruk ei av desse adressene til å kopla til eininga:"
 
 #: ui/main.qml:187 ui/main_phone.qml:158
 #, kde-format
@@ -305,7 +302,7 @@ msgstr "Vertsnamn:"
 #: ui/main_phone.qml:135
 #, kde-format
 msgid "Connect to this device at any of the following addresses:"
-msgstr ""
+msgstr "Bruk ei av desse adressene til å kopla til eininga:"
 
 #: ui/main_phone.qml:173
 #, kde-format
@@ -332,7 +329,7 @@ msgstr "Start tenaren på nytt"
 #, kde-format
 msgctxt "@title"
 msgid "Allowed users"
-msgstr ""
+msgstr "Brukarar med tilgang"
 
 #: ui/UserListView.qml:25
 #, kde-format
@@ -371,9 +368,7 @@ msgid "Other Users"
 msgstr "Andre brukarar"
 
 #: ui/UserListView.qml:67
-#, fuzzy, kde-format
-#| msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
-#| msgid "Login with your system password"
+#, kde-format
 msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
 msgid "Log in with your system password"
 msgstr "Logg inn med systempassord"
