@@ -166,6 +166,40 @@ void SessionController::setSessionLocked(bool locked)
     });
 }
 
+void SessionController::switchToGreeter()
+{
+    QDBusMessage message = QDBusMessage::createMethodCall(
+        QStringLiteral("org.freedesktop.DisplayManager"),
+        QStringLiteral("/org/freedesktop/DisplayManager/Seat0"),
+        QStringLiteral("org.freedesktop.DisplayManager.Seat"),
+        QStringLiteral("SwitchToGreeter")
+        );
+
+    QDBusPendingCall pendingCall =
+        QDBusConnection::systemBus().asyncCall(message);
+
+    auto *watcher = new QDBusPendingCallWatcher(pendingCall);
+
+    QObject::connect(
+        watcher,
+        &QDBusPendingCallWatcher::finished,
+        watcher,
+        [watcher]() {
+            QDBusPendingReply<> reply = *watcher;
+
+            if (reply.isError()) {
+                qWarning() << "Failed to switch to greeter:"
+                           << reply.error().name()
+                           << reply.error().message();
+            } else {
+                qDebug() << "Switched to greeter successfully.";
+            }
+
+            watcher->deleteLater();
+        }
+    );
+}
+
 void SessionController::onNewConnection(KRdp::RdpConnection *newConnection)
 {
     connect(newConnection, &KRdp::RdpConnection::stateChanged, this, [this, newConnection](KRdp::RdpConnection::State state) {
@@ -183,9 +217,10 @@ void SessionController::onNewConnection(KRdp::RdpConnection *newConnection)
         }
         wrapper->connection->videoStream()->setVideoQuality(m_quality.value());
 
-        // Only unlock once authentication has completed. logind's Unlock is passwordless.
         wrapper->m_authenticated = true;
-        setSessionLocked(false);
+        switchToGreeter();
+
+
 
         connect(wrapper.get(), &SessionWrapper::connectionDestroyed, this, [this](SessionWrapper *wrapper) {
             const bool wasAuthenticated = wrapper->m_authenticated;

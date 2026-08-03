@@ -49,6 +49,7 @@ private:
     std::unique_ptr<KRdp::AbstractSession> makeSession();
     // Lock/unlock the desktop session via logind (no-op unless setLockOnDisconnect(true)).
     void setSessionLocked(bool locked);
+    void switchToGreeter();
 
     KRdp::Server *m_server = nullptr;
     SessionType m_sessionType;
