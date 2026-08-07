@@ -352,9 +352,8 @@ KCM.ScrollViewKCM {
                             onTextChanged: {
                                 settings.certificate = text;
                             }
-                            KCM.SettingStateBinding {
-                                configObject: settings
-                                settingName: "certificate"
+                            KCM.SettingHighlighter {
+                                highlight: settings.certificate !== kcm.defaultCertificatePath
                             }
                         }
                         QQC2.Button {
@@ -380,9 +379,8 @@ KCM.ScrollViewKCM {
                             onTextChanged: {
                                 settings.certificateKey = text;
                             }
-                            KCM.SettingStateBinding {
-                                configObject: settings
-                                settingName: "certificateKey"
+                            KCM.SettingHighlighter {
+                                highlight: settings.certificateKey !== kcm.defaultCertificateKeyPath
                             }
                         }
                         QQC2.Button {

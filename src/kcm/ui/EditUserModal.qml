@@ -78,10 +78,6 @@ Kirigami.Dialog {
             Kirigami.FormData.label: i18nc("@label:textbox", "Username:")
             Layout.fillWidth: true
             text: editUserModal.oldUsername
-            KCM.SettingStateBinding {
-                configObject: root.settings
-                settingName: "users"
-            }
             onTextEdited: {
                 editUserModal.usernameChanged = usernameField.text !== editUserModal.oldUsername;
                 editUserModal.usernameAlreadyExistsError = kcm.userExists(usernameField.text) && usernameField.text !== editUserModal.oldUsername;

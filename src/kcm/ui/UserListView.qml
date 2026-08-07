@@ -71,6 +71,11 @@ ListView {
 
                 checked: model.systemUserEnabled
                 onToggled: model.systemUserEnabled = checked
+
+                KCM.SettingStateBinding {
+                    configObject: settings
+                    settingName: "systemUserEnabled"
+                }
             }
         }
 

@@ -285,14 +285,24 @@ void KRDPServerConfig::restartServer()
     });
 }
 
+QString KRDPServerConfig::defaultCertificatePath() const
+{
+    return QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + u"/krdpserver/krdp.crt"_s;
+}
+
+QString KRDPServerConfig::defaultCertificateKeyPath() const
+{
+    return QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + u"/krdpserver/krdp.key"_s;
+}
+
 void KRDPServerConfig::generateCertificate()
 {
     if (!m_serverSettings->certificate().isEmpty() || !m_serverSettings->certificateKey().isEmpty()) {
         return;
     }
     QDir(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)).mkpath(u"krdpserver"_s);
-    QString certificatePath(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + u"/krdpserver/krdp.crt"_s);
-    QString certificateKeyPath(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + u"/krdpserver/krdp.key"_s);
+    QString certificatePath(defaultCertificatePath());
+    QString certificateKeyPath(defaultCertificateKeyPath());
     qDebug(KRDPKCM) << "Generating certificate files to: " << certificatePath << " and " << certificateKeyPath;
     QProcess sslProcess;
     sslProcess.start(u"openssl"_s,
