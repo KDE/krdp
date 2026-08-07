@@ -26,7 +26,7 @@
 
 using namespace Qt::StringLiterals;
 
-K_PLUGIN_CLASS_WITH_JSON(KRDPServerConfig, "kcm_krdpserver.json")
+K_PLUGIN_FACTORY_WITH_JSON(KRDPServerConfigFactory, "kcm_krdpserver.json", registerPlugin<KRDPServerConfig>(); registerPlugin<KRDPServerData>();)
 
 static const QString passwordServiceName = QLatin1StringView("KRDP");
 static const QString dbusSystemdDestination = u"org.freedesktop.systemd1"_s;
