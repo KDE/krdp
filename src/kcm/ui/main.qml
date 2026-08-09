@@ -271,16 +271,42 @@ KCM.ScrollViewKCM {
                         }
                     }
 
-                    QQC2.CheckBox {
-                        id: lockOnDisconnect
-                        text: i18nc("@option:check", "Lock the session when disconnecting, unlock on connect")
-                        checked: settings.lockOnDisconnect
-                        onToggled: {
-                            settings.lockOnDisconnect = checked;
-                        }
+                    ColumnLayout {
+                        Kirigami.FormData.label: i18nc("@label", "Mode:")
+
                         KCM.SettingStateBinding {
                             configObject: settings
-                            settingName: "lockOnDisconnect"
+                            settingName: "operationMode"
+                        }
+
+                        QQC2.RadioButton {
+                            text: i18nc("@option:radio", "Remote access - host monitors will be disabled. The client's monitor size will be used.")
+                            checked: settings.operationMode === KRDPServerSettings.RemoteAccess
+                            onToggled: {
+                                if (checked) {
+                                    settings.operationMode = KRDPServerSettings.RemoteAccess;
+                                }
+                            }
+                        }
+
+                        QQC2.RadioButton {
+                            text: i18nc("@option:radio", "Shared access - host and client see the same thing. The monitor layout of the host is used.")
+                            checked: settings.operationMode === KRDPServerSettings.SharedAccess
+                            onToggled: {
+                                if (checked) {
+                                    settings.operationMode = KRDPServerSettings.SharedAccess;
+                                }
+                            }
+                        }
+
+                        QQC2.RadioButton {
+                            text: i18nc("@option:radio", "Additional display - host monitors are left alone. An additional monitor controlled by the client will be added. ")
+                            checked: settings.operationMode === KRDPServerSettings.AdditionalDisplay
+                            onToggled: {
+                                if (checked) {
+                                    settings.operationMode = KRDPServerSettings.AdditionalDisplay;
+                                }
+                            }
                         }
                     }
 

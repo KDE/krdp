@@ -23,6 +23,36 @@
 
 using namespace Qt::StringLiterals;
 
+static std::optional<ServerConfig::OperationMode> parseOperationMode(QAnyStringView value)
+{
+    if (value == u"RemoteAccess"_s) {
+        return ServerConfig::RemoteAccess;
+    }
+    if (value == u"SharedAccess"_s) {
+        return ServerConfig::SharedAccess;
+    }
+    if (value == u"AdditionalDisplay"_s) {
+        return ServerConfig::AdditionalDisplay;
+    }
+
+    return std::nullopt;
+}
+
+static ServerConfig::OperationMode configOperationMode(int mode)
+{
+    switch (static_cast<ServerConfig::OperationMode>(mode)) {
+    case ServerConfig::RemoteAccess:
+        return ServerConfig::RemoteAccess;
+    case ServerConfig::SharedAccess:
+        return ServerConfig::SharedAccess;
+    case ServerConfig::AdditionalDisplay:
+        return ServerConfig::AdditionalDisplay;
+    default:
+        qWarning() << "invalid configured operation mode" << mode << "- falling back to SharedAccess";
+        return ServerConfig::SharedAccess;
+    }
+}
+
 int main(int argc, char **argv)
 {
     QApplication application{argc, argv};
@@ -50,6 +80,7 @@ int main(int argc, char **argv)
          u"Creates a new virtual output to connect to (WIDTHxHEIGHT@SCALE, e.g. 1920x1080@1). Incompatible with --monitor."_s,
          u"data"_s,
          u"1920x1080@1"_s},
+        {u"mode"_s, u"The operation mode to use: RemoteAccess, SharedAccess, or AdditionalDisplay."_s, u"mode"_s},
         {u"quality"_s, u"Encoding quality of the stream, from 0 (lowest) to 100 (highest)"_s, u"quality"_s},
 #ifdef WITH_PLASMA_SESSION
         {u"plasma"_s, u"Use Plasma protocols instead of XDP"_s},
@@ -139,7 +170,16 @@ int main(int argc, char **argv)
         controller.setMonitorIndex(parser.isSet(u"monitor"_s) ? std::optional(parser.value(u"monitor"_s).toInt()) : std::nullopt);
     }
     controller.setQuality(parserValueWithDefault(u"quality", config->quality()));
-    controller.setLockOnDisconnect(config->lockOnDisconnect());
+    if (parser.isSet(u"mode"_s)) {
+        const auto mode = parseOperationMode(parser.value(u"mode"_s));
+        if (!mode) {
+            qWarning() << "failed to parse operation mode" << parser.value(u"mode"_s) << ". Expected RemoteAccess, SharedAccess, or AdditionalDisplay";
+            return 1;
+        }
+        controller.setOperationMode(*mode);
+    } else {
+        controller.setOperationMode(configOperationMode(config->operationMode()));
+    }
 
     if (!server.start()) {
         return -1;
