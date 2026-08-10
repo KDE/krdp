@@ -62,8 +62,6 @@ public:
      */
     virtual void sendEvent(const std::shared_ptr<QEvent> &event) = 0;
 
-    void detachClipboard();
-
 Q_SIGNALS:
     void started();
     void error();

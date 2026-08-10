@@ -70,11 +70,6 @@ AbstractSession::~AbstractSession()
     }
 }
 
-void AbstractSession::detachClipboard()
-{
-    QObject::disconnect(d->clipboardConnection);
-}
-
 void AbstractSession::setClipboardData(std::unique_ptr<QMimeData> data)
 {
     if (data) {
