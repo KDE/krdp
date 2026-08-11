@@ -38,7 +38,7 @@ option(BUILD_PLASMA_SESSION "Build support for Plasma Screencasting extensions" 
 
 find_package(PkgConfig REQUIRED)
 
-find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED Core Quick Gui Network DBus WaylandClient Qml)
+find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED Core Concurrent Quick Gui Network DBus WaylandClient Qml)
 
 find_package(Qt6GuiPrivate ${QT_MIN_VERSION} REQUIRED NO_MODULE)
 
