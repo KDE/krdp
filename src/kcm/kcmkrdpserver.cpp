@@ -16,10 +16,13 @@
 #include <QDBusReply>
 #include <QDir>
 #include <QFileInfo>
+#include <QFutureWatcher>
 #include <QGuiApplication>
 #include <QHostInfo>
 #include <QNetworkInterface>
 #include <QProcess>
+#include <QQmlEngine>
+#include <QtConcurrentRun>
 #include <qt6keychain/keychain.h>
 
 #include "org.freedesktop.impl.portal.PermissionStore.h"
@@ -28,6 +31,7 @@ using namespace Qt::StringLiterals;
 
 K_PLUGIN_FACTORY_WITH_JSON(KRDPServerConfigFactory, "kcm_krdpserver.json", registerPlugin<KRDPServerConfig>(); registerPlugin<KRDPServerData>();)
 
+static const char *const qmlUri = "org.kde.private.kcms.krdpserver";
 static const QString passwordServiceName = QLatin1StringView("KRDP");
 static const QString dbusSystemdDestination = u"org.freedesktop.systemd1"_s;
 static const QString dbusSystemdPath = u"/org/freedesktop/systemd1"_s;
@@ -43,8 +47,9 @@ KRDPServerConfig::KRDPServerConfig(QObject *parent, const KPluginMetaData &data)
 {
     setButtons(Help | Apply | Default);
 
-    auto recorder = PipeWireRecord();
-    m_isH264Supported = recorder.suggestedEncoders().contains(PipeWireRecord::H264Baseline);
+    qmlRegisterUncreatableMetaObject(H264::staticMetaObject, qmlUri, 1, 0, "H264Support", u"Error: only enums"_s);
+
+    probeH264Support();
 
     if (m_serverSettings->autogenerateCertificates()) {
         generateCertificate();
@@ -203,9 +208,29 @@ void KRDPServerConfig::createRestoreToken()
     });
 }
 
-bool KRDPServerConfig::isH264Supported()
+H264::Support KRDPServerConfig::h264Support() const
 {
-    return m_isH264Supported;
+    return m_h264Support;
+}
+
+// Enumerating the available encoders initialises VA-API, which on some drivers
+// opens the render node and builds a GPU context. That takes long enough to be
+// noticeable, so keep it off the thread that is trying to show the UI.
+void KRDPServerConfig::probeH264Support()
+{
+    auto watcher = new QFutureWatcher<bool>(this);
+    connect(watcher, &QFutureWatcher<bool>::finished, this, [this, watcher] {
+        watcher->deleteLater();
+        const auto support = watcher->result() ? H264::Supported : H264::Unsupported;
+        if (m_h264Support == support) {
+            return;
+        }
+        m_h264Support = support;
+        Q_EMIT h264SupportChanged();
+    });
+    watcher->setFuture(QtConcurrent::run([] {
+        return PipeWireRecord().suggestedEncoders().contains(PipeWireRecord::H264Baseline);
+    }));
 }
 
 QStringList KRDPServerConfig::listenAddressList()

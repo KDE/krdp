@@ -52,6 +52,7 @@ ecm_qt_declare_logging_category(kcm_krdpserver
 )
 
 target_link_libraries(kcm_krdpserver PRIVATE
+    Qt::Concurrent
     Qt::Quick
     Qt::DBus
     qt6keychain
