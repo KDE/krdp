@@ -27,6 +27,18 @@ enum Status {
 Q_ENUM_NS(Status);
 }
 
+namespace H264
+{
+Q_NAMESPACE
+
+enum Support {
+    Unknown,
+    Supported,
+    Unsupported
+};
+Q_ENUM_NS(Support);
+}
+
 class KRDPServerConfig : public KQuickManagedConfigModule
 {
     Q_OBJECT
@@ -39,6 +51,7 @@ public:
 
     Q_PROPERTY(QString hostName READ hostName CONSTANT)
     Q_PROPERTY(bool managementAvailable READ managementAvailable CONSTANT)
+    Q_PROPERTY(H264::Support h264Support READ h264Support NOTIFY h264SupportChanged)
 
     Q_PROPERTY(QAbstractItemModel *users READ usersModel CONSTANT)
 
@@ -53,7 +66,6 @@ public:
     void writePasswordToWallet(const QString &user, const QString &password);
     void deletePasswordFromWallet(const QString &user);
 
-    Q_INVOKABLE bool isH264Supported();
     Q_INVOKABLE QStringList listenAddressList();
     Q_INVOKABLE void toggleAutoconnect(const bool enabled);
     Q_INVOKABLE void toggleServer(const bool enabled);
@@ -74,6 +86,7 @@ public:
 
     QString hostName() const;
     bool managementAvailable() const;
+    H264::Support h264Support() const;
     QAbstractItemModel *usersModel() const
     {
         return m_usersModel;
@@ -92,8 +105,10 @@ Q_SIGNALS:
     void serverStatusChanged();
     void errorMessageChanged();
     void isServerRunningChanged();
+    void h264SupportChanged();
 
 private:
+    void probeH264Support();
     void setServerStatus(SystemdService::Status status);
     void setErrorMessage(const QString &errorMessage);
     void createRestoreToken();
@@ -105,7 +120,7 @@ private:
     KRDPServerSettings *m_serverSettings;
     UsersModel *m_usersModel;
     Q_SLOT void servicePropertiesChanged();
-    bool m_isH264Supported { false };
+    H264::Support m_h264Support{H264::Unknown};
     SystemdService::Status m_currentServerStatus;
     QString m_lastErrorMessage;
 
