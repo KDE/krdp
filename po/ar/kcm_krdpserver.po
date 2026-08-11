@@ -1,13 +1,13 @@
 # Copyright (C) 2024 This file is copyright:
 # This file is distributed under the same license as the krdp package.
-# SPDX-FileCopyrightText: 2024, 2025 Zayed Al-Saidi <zayed.alsaidi@gmail.com>
+# SPDX-FileCopyrightText: 2024, 2025, 2026 Zayed Al-Saidi <zayed.alsaidi@gmail.com>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-31 00:47+0000\n"
-"PO-Revision-Date: 2025-11-12 18:52+0400\n"
+"PO-Revision-Date: 2026-08-10 14:58+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Lokalize 23.08.5\n"
+"X-Generator: Lokalize 25.12.3\n"
 
 #. i18n: ectx: label, entry (ListenPort), group (General)
 #: krdpserversettings.kcfg:14
@@ -71,7 +71,7 @@ msgstr "تشغيل الخادم آليًّا عند الولوج"
 #, kde-format
 msgid ""
 "Lock the session when the last client disconnects and unlock it on connect"
-msgstr ""
+msgstr "أقفل الجلسة عند انقطاع اتصال آخر عميل، وافتحها عند الاتصال"
 
 #: ui/CertError.qml:14
 #, kde-format
@@ -180,22 +180,19 @@ msgid "Error message from the RDP server:<nl/>%1"
 msgstr "رسالة خطأ من خادم RDP:<nl/>%1"
 
 #: ui/main.qml:142 ui/main_phone.qml:101
-#, fuzzy, kde-format
-#| msgid ""
-#| "Set up remote login to connect using apps supporting the “RDP” remote "
-#| "desktop protocol."
+#, kde-format
 msgid ""
 "Users listed below can log into this device remotely using apps that support "
 "the “RDP” protocol."
 msgstr ""
-"أعدّ الولوج عن بعد للاتصال باستخدام التطبيقات التي تتيح ميفاق سطح المكتب "
-"البعيد \"RDP\"."
+"يمكن للمستخدمين المذكورين أدناه الولوج إلى هذا الجهاز عن بُعد باستخدام "
+"التطبيقات التي تدعم ميفاق «RDP»."
 
 #: ui/main.qml:152
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Connect to this device at any of the following addresses:"
-msgstr ""
+msgstr "يمكنك الاتصال بهذا الجهاز عبر أي من العناوين التالية:"
 
 #: ui/main.qml:187 ui/main_phone.qml:158
 #, kde-format
@@ -225,7 +222,7 @@ msgstr "منفذ الاستماع:"
 #, kde-format
 msgctxt "@option:check"
 msgid "Lock the session when disconnecting, unlock on connect"
-msgstr ""
+msgstr "اقفل الجلسة عند قطع الاتصال، وافتحها عند الاتصال"
 
 #: ui/main.qml:291
 #, kde-format
@@ -301,7 +298,7 @@ msgstr "اسم المضيف:"
 #: ui/main_phone.qml:135
 #, kde-format
 msgid "Connect to this device at any of the following addresses:"
-msgstr ""
+msgstr "يمكنك الاتصال بهذا الجهاز عبر أي من العناوين التالية:"
 
 #: ui/main_phone.qml:173
 #, kde-format
@@ -328,7 +325,7 @@ msgstr "أعد تشغيل الخادم"
 #, kde-format
 msgctxt "@title"
 msgid "Allowed users"
-msgstr ""
+msgstr "المستخدمون المسموح لهم"
 
 #: ui/UserListView.qml:25
 #, kde-format
@@ -367,12 +364,10 @@ msgid "Other Users"
 msgstr "مستخدمون أخرين"
 
 #: ui/UserListView.qml:67
-#, fuzzy, kde-format
-#| msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
-#| msgid "Login with your system password"
+#, kde-format
 msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
 msgid "Log in with your system password"
-msgstr "الولوج بكلمة سر نظامك"
+msgstr "لجِ بكلمة سر نظامك"
 
 #: ui/UserListView.qml:99
 #, kde-format
