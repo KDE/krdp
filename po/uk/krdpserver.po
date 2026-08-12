@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-23 00:45+0000\n"
+"POT-Creation-Date: 2026-08-12 00:48+0000\n"
 "PO-Revision-Date: 2026-07-23 10:58+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
@@ -86,12 +86,12 @@ msgstr ""
 "Блокувати сеанс, коли від'єднується останній клієнт, і розблоковувати його "
 "при з'єднанні клієнта"
 
-#: SessionController.cpp:112
+#: SessionController.cpp:111
 #, kde-format
 msgid "RDP Server"
 msgstr "Сервер RDP"
 
-#: SessionController.cpp:115
+#: SessionController.cpp:114
 #, kde-format
 msgid "Quit"
 msgstr "Вийти"

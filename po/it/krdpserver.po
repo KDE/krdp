@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-23 00:45+0000\n"
+"POT-Creation-Date: 2026-08-12 00:48+0000\n"
 "PO-Revision-Date: 2026-07-24 13:45+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -84,12 +84,12 @@ msgstr ""
 "Blocca la sessione quando l'ultimo client si disconnette e sbloccala alla "
 "connessione"
 
-#: SessionController.cpp:112
+#: SessionController.cpp:111
 #, kde-format
 msgid "RDP Server"
 msgstr "Server RDP"
 
-#: SessionController.cpp:115
+#: SessionController.cpp:114
 #, kde-format
 msgid "Quit"
 msgstr "Esci"
