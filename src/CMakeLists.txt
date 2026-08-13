@@ -33,6 +33,8 @@ target_sources(KRdp PRIVATE
     PortalSession.h
     VideoStream.cpp
     VideoStream.h
+    VideoStreamSurface.cpp
+    VideoStreamSurface.h
     Cursor.cpp
     Cursor.h
     NetworkDetection.cpp

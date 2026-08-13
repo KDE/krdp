@@ -19,6 +19,7 @@ namespace KRdp
 class InputHandler;
 class Server;
 class VideoStream;
+class VideoStreamSurface;
 class Cursor;
 class NetworkDetection;
 class Clipboard;
@@ -111,6 +112,7 @@ private:
 
     friend class Cursor;
     friend class VideoStream;
+    friend class VideoStreamSurface;
     friend class NetworkDetection;
     friend class Clipboard;
     friend class DisplayControl;
