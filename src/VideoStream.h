@@ -22,6 +22,7 @@ namespace KRdp
 {
 
 class RdpConnection;
+class VideoStreamSurface;
 
 /**
  * A class that encapsulates an RdpGfx video stream.
@@ -90,6 +91,7 @@ public:
     bool openChannel();
 
 private:
+    friend class VideoStreamSurface;
     friend BOOL gfxChannelIdAssigned(RdpgfxServerContext *, uint32_t);
     friend uint32_t gfxCapsAdvertise(RdpgfxServerContext *, const RDPGFX_CAPS_ADVERTISE_PDU *);
     friend uint32_t gfxFrameAcknowledge(RdpgfxServerContext *, const RDPGFX_FRAME_ACKNOWLEDGE_PDU *);
