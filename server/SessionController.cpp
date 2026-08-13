@@ -5,7 +5,11 @@
 
 #include <QAction>
 #include <QCoreApplication>
+#include <QDBusConnection>
 #include <QDBusInterface>
+#include <QDBusMessage>
+#include <QDBusPendingCallWatcher>
+#include <QDBusPendingReply>
 #include <QMenu>
 
 #include <KLocalizedString>
@@ -131,33 +135,71 @@ void SessionController::setQuality(const std::optional<int> &quality)
     m_quality = quality;
 }
 
+void SessionController::setLockOnDisconnect(bool lock)
+{
+    m_lockOnDisconnect = lock;
+}
+
+void SessionController::setSessionLocked(bool locked)
+{
+    if (!m_lockOnDisconnect) {
+        return;
+    }
+
+    auto bus = QDBusConnection::systemBus();
+    const QString service = u"org.freedesktop.login1"_s;
+    const QDBusMessage lockMsg = QDBusMessage::createMethodCall(service,
+                                                                u"/org/freedesktop/login1/session/auto"_s,
+                                                                u"org.freedesktop.login1.Session"_s,
+                                                                locked ? u"Lock"_s : u"Unlock"_s);
+    auto *lockWatcher = new QDBusPendingCallWatcher(bus.asyncCall(lockMsg), this);
+    connect(lockWatcher, &QDBusPendingCallWatcher::finished, this, [locked](QDBusPendingCallWatcher *self) {
+        const QDBusPendingReply<> reply = *self;
+        if (reply.isError()) {
+            qWarning() << "krdp: could not" << (locked ? "lock" : "unlock") << "the logind session:" << reply.error().message();
+        }
+        self->deleteLater();
+    });
+}
+
 void SessionController::onNewConnection(KRdp::RdpConnection *newConnection)
 {
-    auto wrapper = std::make_unique<SessionWrapper>(newConnection, makeSession(), m_sni);
-    if (m_virtualMonitor) {
-        wrapper->session->setVirtualMonitor(*m_virtualMonitor);
-    } else if (m_monitorIndex) {
-        wrapper->session->setActiveStream(*m_monitorIndex);
-    }
-    if (m_quality) {
-        wrapper->connection->setVideoQuality(*m_quality);
-    }
-    wrapper->session->start();
+    connect(newConnection, &KRdp::RdpConnection::stateChanged, this, [this, newConnection](KRdp::RdpConnection::State state) {
+        if (state != KRdp::RdpConnection::State::Activated) {
+            return;
+        }
 
-    connect(wrapper.get(), &SessionWrapper::connectionDestroyed, this, [this](SessionWrapper *wrapper) {
-        m_wrappers.erase(std::remove_if(m_wrappers.begin(),
-                                        m_wrappers.end(),
-                                        [wrapper](std::unique_ptr<SessionWrapper> &entry) {
-                                            return entry.get() == wrapper;
-                                        }),
-                         m_wrappers.end());
+        auto wrapper = std::make_unique<SessionWrapper>(newConnection, makeSession(), m_sni);
+        if (m_virtualMonitor) {
+            wrapper->session->setVirtualMonitor(*m_virtualMonitor);
+        } else if (m_monitorIndex) {
+            wrapper->session->setActiveStream(*m_monitorIndex);
+        }
+        if (m_quality) {
+            wrapper->connection->setVideoQuality(*m_quality);
+        }
+
+        setSessionLocked(false);
+
+        connect(wrapper.get(), &SessionWrapper::connectionDestroyed, this, [this](SessionWrapper *wrapper) {
+            m_wrappers.erase(std::remove_if(m_wrappers.begin(),
+                                            m_wrappers.end(),
+                                            [wrapper](std::unique_ptr<SessionWrapper> &entry) {
+                                                return entry.get() == wrapper;
+                                            }),
+                             m_wrappers.end());
+            if (m_wrappers.empty()) {
+                setSessionLocked(true);
+            }
+        });
+
+        connect(wrapper.get(), &SessionWrapper::sessionError, this, [newConnection] {
+            newConnection->close(KRdp::RdpConnection::CloseReason::None);
+        });
+
+        wrapper->session->start();
+        m_wrappers.push_back(std::move(wrapper));
     });
-
-    connect(wrapper.get(), &SessionWrapper::sessionError, this, [newConnection] {
-        newConnection->close(KRdp::RdpConnection::CloseReason::None);
-    });
-
-    m_wrappers.push_back(std::move(wrapper));
 }
 
 void SessionController::stopFromSNI()

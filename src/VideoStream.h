@@ -69,8 +69,7 @@ public:
      */
     void setStreamingEnabled(bool enabled);
     void setVideoQuality(quint8 quality);
-    void setRequestedSize(const QSize &size);
-    void setPipeWireSource(quint32 nodeId, quint64 objectSerial, int fd = -1);
+    void setPipeWireSource(quint32 nodeId, int fd = -1);
 
 private:
     void onPacketReceived(const PipeWireEncodedStream::Packet &data);
@@ -79,8 +78,7 @@ private:
     void clearSurface();
     void sendFrame(const VideoFrame &frame);
 
-    void updateInFlightWindow();
-    double effectiveProducerFps();
+    void updateRequestedFrameRate();
 
     class Private;
     const std::unique_ptr<Private> d;

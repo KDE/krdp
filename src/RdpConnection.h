@@ -23,6 +23,7 @@ class VideoStream;
 class Cursor;
 class NetworkDetection;
 class Clipboard;
+class DisplayControl;
 class RdpGfxPipeline;
 struct StreamingSource;
 
@@ -118,6 +119,7 @@ private:
     friend class VideoStream;
     friend class NetworkDetection;
     friend class Clipboard;
+    friend class DisplayControl;
 
     void setState(State newState);
     void initialize();
