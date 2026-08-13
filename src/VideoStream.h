@@ -86,7 +86,7 @@ public:
     void setStreamingEnabled(bool enabled);
     void setVideoQuality(quint8 quality);
     void setRequestedSize(const QSize &size);
-    void addPipeWireSource(quint32 nodeId, quint64 objectSerial, int fd = -1);
+    void addPipeWireSource(quint32 nodeId, quint64 objectSerial, const QPoint &position, int fd = -1);
     void setPipeWireSource(quint32 nodeId, quint64 objectSerial, int fd = -1);
 
     bool openChannel();
@@ -101,15 +101,13 @@ private:
     uint32_t onCapsAdvertise(const RDPGFX_CAPS_ADVERTISE_PDU *capsAdvertise);
     uint32_t onFrameAcknowledge(const RDPGFX_FRAME_ACKNOWLEDGE_PDU *frameAcknowledge);
 
-    void onPacketReceived(const PipeWireEncodedStream::Packet &data);
-    void onFrameReceived(const PipeWireFrame &frame);
     void setActiveEncodingMode(EncodingMode mode);
-    void destroySurface();
-    void performReset(QSize size);
+    void performReset();
     bool hasInFlightCapacity() const;
-    void sendFrame(const VideoFrame &frame);
-    void sendFrameH264(const VideoFrame &frame);
-    void sendFrameProgressive(const VideoFrame &frame);
+    void queueFrame(VideoStreamSurface *surface, const VideoFrame &frame);
+    void sendFrame(VideoStreamSurface *surface, const VideoFrame &frame);
+    void sendFrameH264(VideoStreamSurface *surface, const VideoFrame &frame);
+    void sendFrameProgressive(VideoStreamSurface *surface, const VideoFrame &frame);
 
     void updateInFlightWindow();
     double effectiveProducerFps();

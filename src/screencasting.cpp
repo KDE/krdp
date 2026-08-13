@@ -125,6 +125,7 @@ ScreencastingStream *Screencasting::createOutputStream(QScreen *screen, Screenca
 
     auto stream = new ScreencastingStream(this);
     stream->setObjectName(screen->name());
+    stream->setProperty("position", screen->geometry().topLeft());
     stream->d->init(d->stream_output(output, mode));
     stream->d->m_size = screen->virtualSize();
     return stream;

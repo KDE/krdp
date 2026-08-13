@@ -153,10 +153,10 @@ public:
     Server *server = nullptr;
 
     Screencasting m_screencasting;
-    ScreencastingStream *request = nullptr;
+    QList<ScreencastingStream *> requests;
     FakeInput *remoteInterface = nullptr;
-    AbstractSession::Stream *screen = nullptr;
-    quint64 objectSerial = quint64(-1);
+    int pendingStreams = 0;
+    bool streamFailed = false;
 };
 
 PlasmaScreencastV1Session::PlasmaScreencastV1Session()
@@ -175,37 +175,52 @@ PlasmaScreencastV1Session::~PlasmaScreencastV1Session()
 void PlasmaScreencastV1Session::start()
 {
     if (auto vm = virtualMonitor()) {
-        d->request = d->m_screencasting.createVirtualMonitorStream(vm->name, vm->size, vm->dpr, Screencasting::Metadata);
+        d->requests.append(d->m_screencasting.createVirtualMonitorStream(vm->name, vm->size, vm->dpr, Screencasting::Metadata));
     } else if (const auto streamIndex = activeStream()) {
         if (*streamIndex >= qApp->screens().size()) {
             qCWarning(KRDP) << "Invalid monitor index" << *streamIndex;
             return;
         }
         auto screen = qApp->screens().at(*streamIndex);
-        d->request = d->m_screencasting.createOutputStream(screen, Screencasting::Metadata);
+        d->requests.append(d->m_screencasting.createOutputStream(screen, Screencasting::Metadata));
     } else {
-        d->request = d->m_screencasting.createWorkspaceStream(Screencasting::Metadata);
-    }
-    connect(d->request, &ScreencastingStream::failed, this, &PlasmaScreencastV1Session::error);
-    connect(d->request, &ScreencastingStream::created, this, [this](uint nodeId) {
-        qCDebug(KRDP) << "Started Plasma session";
-
-        auto screen = std::make_unique<Stream>();
-        screen->nodeId = nodeId;
-        screen->objectSerial = d->objectSerial;
-        screen->size = d->request->size();
-        d->screen = screen.get();
-        addScreen(std::move(screen));
-        setLogicalSize(d->screen->size);
-        setStarted(true);
-    });
-
-    connect(d->request, &ScreencastingStream::serial, this, [this](quint64 serial) {
-        d->objectSerial = serial;
-        if (d->screen) {
-            d->screen->objectSerial = serial;
+        for (auto *screen : qApp->screens()) {
+            d->requests.append(d->m_screencasting.createOutputStream(screen, Screencasting::Metadata));
         }
-    });
+    }
+    d->requests.removeAll(nullptr);
+    d->pendingStreams = d->requests.size();
+    if (d->pendingStreams == 0) {
+        qCWarning(KRDP) << "Could not create Plasma screencast streams";
+        Q_EMIT error();
+        return;
+    }
+    for (auto *request : d->requests) {
+        connect(request, &ScreencastingStream::failed, this, [this](const QString &) {
+            d->streamFailed = true;
+            Q_EMIT error();
+        });
+        connect(request, &ScreencastingStream::created, this, [this, request](uint nodeId) {
+            if (d->streamFailed) {
+                return;
+            }
+            auto screen = std::make_unique<Stream>();
+            screen->nodeId = nodeId;
+            screen->objectSerial = request->objectSerial();
+            screen->size = request->size();
+            screen->position = request->property("position").toPoint();
+            addScreen(std::move(screen));
+            if (--d->pendingStreams == 0) {
+                QRect bounds;
+                for (const auto &screen : screens()) {
+                    bounds = bounds.united(QRect(screen->position, screen->size));
+                }
+                setLogicalSize(bounds.size());
+                qCDebug(KRDP) << "Started Plasma session";
+                setStarted(true);
+            }
+        });
+    }
 }
 
 void PlasmaScreencastV1Session::sendEvent(const std::shared_ptr<QEvent> &event)
