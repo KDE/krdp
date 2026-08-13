@@ -595,6 +595,11 @@ void VideoStream::setPipeWireSource(quint32 nodeId, quint64 objectSerial, int fd
     d->surface->setPipeWireSource(nodeId, objectSerial, fd);
 }
 
+void VideoStream::addPipeWireSource(quint32 nodeId, quint64 objectSerial, int fd)
+{
+    setPipeWireSource(nodeId, objectSerial, fd);
+}
+
 void VideoStreamSurface::setPipeWireSource(quint32 newNodeId, quint64 newObjectSerial, int fd)
 {
     auto d = m_stream->d.get();

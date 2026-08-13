@@ -8,9 +8,11 @@
 
 #include <memory>
 #include <optional>
+#include <vector>
 
 #include <QEvent>
 #include <QObject>
+#include <QPoint>
 #include <QSize>
 #include <QString>
 
@@ -31,6 +33,17 @@ class KRDP_EXPORT AbstractSession : public QObject
 {
     Q_OBJECT
 public:
+    struct Stream {
+        quint32 nodeId = 0;
+        quint64 objectSerial = quint64(-1);
+        QSize size;
+        QPoint position;
+        int pipeWireFd = -1;
+
+        ~Stream();
+        int takePipeWireFd();
+    };
+
     AbstractSession();
     ~AbstractSession() override;
 
@@ -41,12 +54,8 @@ public:
 
     void setActiveStream(int stream);
     void setVirtualMonitor(const VirtualMonitor &vm);
-    quint32 nodeId() const;
-    int takePipeWireFd();
-
     void setSize(QSize size);
-
-    quint64 objectSerial() const;
+    const std::vector<std::unique_ptr<Stream>> &screens() const;
 
     /**
      * Set the system's clipboard data.
@@ -80,9 +89,7 @@ protected:
 
     void setStarted(bool started);
     void setLogicalSize(QSize size);
-    void setNodeId(quint32 nodeId);
-    void setPipeWireFd(int fd);
-    void setObjectSerial(quint64 objectSerial);
+    void addScreen(std::unique_ptr<Stream> screen);
 
 private:
     class Private;

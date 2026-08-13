@@ -23,9 +23,7 @@ public:
     bool started = false;
     QSize size;
     QSize logicalSize;
-    quint32 nodeId = 0;
-    int pipeWireFd = -1;
-    quint64 objectSerial = quint64(-1);
+    std::vector<std::unique_ptr<Stream>> screens;
 
     QMetaObject::Connection clipboardConnection;
 };
@@ -63,12 +61,19 @@ AbstractSession::AbstractSession()
     });
 }
 
-AbstractSession::~AbstractSession()
+AbstractSession::Stream::~Stream()
 {
-    if (d->pipeWireFd >= 0) {
-        close(d->pipeWireFd);
+    if (pipeWireFd >= 0) {
+        close(pipeWireFd);
     }
 }
+
+int AbstractSession::Stream::takePipeWireFd()
+{
+    return std::exchange(pipeWireFd, -1);
+}
+
+AbstractSession::~AbstractSession() = default;
 
 void AbstractSession::setClipboardData(std::unique_ptr<QMimeData> data)
 {
@@ -126,32 +131,9 @@ QSize AbstractSession::size() const
     return d->size;
 }
 
-quint32 AbstractSession::nodeId() const
+const std::vector<std::unique_ptr<AbstractSession::Stream>> &AbstractSession::screens() const
 {
-    return d->nodeId;
-}
-
-int AbstractSession::takePipeWireFd()
-{
-    return std::exchange(d->pipeWireFd, -1);
-}
-
-quint64 AbstractSession::objectSerial() const
-{
-    return d->objectSerial;
-}
-
-void AbstractSession::setNodeId(quint32 nodeId)
-{
-    d->nodeId = nodeId;
-}
-
-void AbstractSession::setPipeWireFd(int fd)
-{
-    if (d->pipeWireFd >= 0) {
-        close(d->pipeWireFd);
-    }
-    d->pipeWireFd = fd;
+    return d->screens;
 }
 
 void AbstractSession::setStarted(bool s)
@@ -162,9 +144,9 @@ void AbstractSession::setStarted(bool s)
     }
 }
 
-void AbstractSession::setObjectSerial(quint64 objectSerial)
+void AbstractSession::addScreen(std::unique_ptr<Stream> screen)
 {
-    d->objectSerial = objectSerial;
+    d->screens.push_back(std::move(screen));
 }
 }
 

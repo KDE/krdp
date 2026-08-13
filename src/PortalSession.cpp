@@ -7,6 +7,8 @@
 #include <QGuiApplication>
 #include <QQueue>
 
+#include <unistd.h>
+
 #include <KConfigGroup>
 #include <KSharedConfig>
 
@@ -232,14 +234,31 @@ void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
                 setActiveStream(0);
                 streamIndex = 0;
             }
-            auto stream = streams.at(streamIndex);
-
-            setLogicalSize(qdbus_cast<QSize>(stream.map.value(u"size"_s)));
-            d->mappingId = stream.map.value(u"mapping_id"_s).toString();
-
             auto fd = reply.value();
-            setNodeId(stream.nodeId);
-            setPipeWireFd(fd.takeFileDescriptor());
+            const int pipeWireFd = fd.takeFileDescriptor();
+            QRect logicalBounds;
+            bool firstScreen = true;
+            for (int i = activeStream() ? streamIndex : 0; i < (activeStream() ? streamIndex + 1 : streams.size()); ++i) {
+                const auto &portalStream = streams.at(i);
+                auto screen = std::make_unique<Stream>();
+                screen->nodeId = portalStream.nodeId;
+                screen->size = qdbus_cast<QSize>(portalStream.map.value(u"size"_s));
+                screen->position = qdbus_cast<QPoint>(portalStream.map.value(u"position"_s));
+                screen->pipeWireFd = firstScreen ? pipeWireFd : dup(pipeWireFd);
+                if (screen->pipeWireFd < 0) {
+                    qCWarning(KRDP) << "Could not duplicate PipeWire remote fd";
+                    Q_EMIT error();
+                    return;
+                }
+
+                if (d->mappingId.isEmpty()) {
+                    d->mappingId = portalStream.map.value(u"mapping_id"_s).toString();
+                }
+                logicalBounds = logicalBounds.united(QRect(screen->position, screen->size));
+                addScreen(std::move(screen));
+                firstScreen = false;
+            }
+            setLogicalSize(logicalBounds.size());
             QDBusConnection::sessionBus().connect(u"org.freedesktop.portal.Desktop"_s,
                                                   d->sessionPath.path(),
                                                   u"org.freedesktop.portal.Session"_s,

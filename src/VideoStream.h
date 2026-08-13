@@ -86,6 +86,7 @@ public:
     void setStreamingEnabled(bool enabled);
     void setVideoQuality(quint8 quality);
     void setRequestedSize(const QSize &size);
+    void addPipeWireSource(quint32 nodeId, quint64 objectSerial, int fd = -1);
     void setPipeWireSource(quint32 nodeId, quint64 objectSerial, int fd = -1);
 
     bool openChannel();

@@ -155,6 +155,8 @@ public:
     Screencasting m_screencasting;
     ScreencastingStream *request = nullptr;
     FakeInput *remoteInterface = nullptr;
+    AbstractSession::Stream *screen = nullptr;
+    quint64 objectSerial = quint64(-1);
 };
 
 PlasmaScreencastV1Session::PlasmaScreencastV1Session()
@@ -188,13 +190,21 @@ void PlasmaScreencastV1Session::start()
     connect(d->request, &ScreencastingStream::created, this, [this](uint nodeId) {
         qCDebug(KRDP) << "Started Plasma session";
 
-        setLogicalSize(d->request->size());
-        setNodeId(nodeId);
+        auto screen = std::make_unique<Stream>();
+        screen->nodeId = nodeId;
+        screen->objectSerial = d->objectSerial;
+        screen->size = d->request->size();
+        d->screen = screen.get();
+        addScreen(std::move(screen));
+        setLogicalSize(d->screen->size);
         setStarted(true);
     });
 
     connect(d->request, &ScreencastingStream::serial, this, [this](quint64 serial) {
-        setObjectSerial(serial);
+        d->objectSerial = serial;
+        if (d->screen) {
+            d->screen->objectSerial = serial;
+        }
     });
 }
 

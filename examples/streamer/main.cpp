@@ -54,9 +54,14 @@ int main(int argc, char **argv)
     }
 
     QObject::connect(&session, &KRdp::PortalSession::started, &session, [&session, &encodedStream]() {
-        encodedStream.setObjectSerial(session.objectSerial());
-        encodedStream.setNodeId(session.nodeId());
-        auto fd = session.takePipeWireFd();
+        if (session.screens().empty()) {
+            qWarning() << "Portal session did not provide a screencast stream";
+            return;
+        }
+        auto &screen = *session.screens().front();
+        encodedStream.setObjectSerial(screen.objectSerial);
+        encodedStream.setNodeId(screen.nodeId);
+        auto fd = screen.takePipeWireFd();
         if (fd >= 0) {
             encodedStream.setFd(fd);
         }

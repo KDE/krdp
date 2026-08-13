@@ -80,7 +80,9 @@ public:
     void onSessionStarted()
     {
         m_sessionStarted = true;
-        connection->videoStream()->setPipeWireSource(session->nodeId(), session->objectSerial(), session->takePipeWireFd());
+        for (const auto &screen : session->screens()) {
+            connection->videoStream()->addPipeWireSource(screen->nodeId, screen->objectSerial, screen->takePipeWireFd());
+        }
         connection->videoStream()->setStreamingEnabled(connection->videoStream()->enabled());
     }
 
