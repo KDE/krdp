@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-31 00:47+0000\n"
-"PO-Revision-Date: 2026-07-24 09:38+0200\n"
+"PO-Revision-Date: 2026-08-13 08:47+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
@@ -183,22 +183,19 @@ msgid "Error message from the RDP server:<nl/>%1"
 msgstr "Съобщение за грешка от сървъра RDP:<nl></nl>%1"
 
 #: ui/main.qml:142 ui/main_phone.qml:101
-#, fuzzy, kde-format
-#| msgid ""
-#| "Set up remote login to connect using apps supporting the “RDP” remote "
-#| "desktop protocol."
+#, kde-format
 msgid ""
 "Users listed below can log into this device remotely using apps that support "
 "the “RDP” protocol."
 msgstr ""
-"Настройте дистанционно влизане, за да се свържете с помощта на приложения, "
-"поддържащи протокола за отдалечен работен плот „RDP“."
+"Потребителите, изброени по-долу, могат да влязат отдалечено в това "
+"устройство, използвайки приложения, които поддържат протокола „RDP“."
 
 #: ui/main.qml:152
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Connect to this device at any of the following addresses:"
-msgstr ""
+msgstr "Свързване с това устройство на някой от следните адреси:"
 
 #: ui/main.qml:187 ui/main_phone.qml:158
 #, kde-format
@@ -305,7 +302,7 @@ msgstr "Име на хост:"
 #: ui/main_phone.qml:135
 #, kde-format
 msgid "Connect to this device at any of the following addresses:"
-msgstr ""
+msgstr "Свързване с това устройство на който и да е от следните адреси:"
 
 #: ui/main_phone.qml:173
 #, kde-format
@@ -332,7 +329,7 @@ msgstr "Рестартиране на сървъра"
 #, kde-format
 msgctxt "@title"
 msgid "Allowed users"
-msgstr ""
+msgstr "Разрешени потребители"
 
 #: ui/UserListView.qml:25
 #, kde-format
@@ -373,12 +370,10 @@ msgid "Other Users"
 msgstr "Други потребители"
 
 #: ui/UserListView.qml:67
-#, fuzzy, kde-format
-#| msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
-#| msgid "Login with your system password"
+#, kde-format
 msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
 msgid "Log in with your system password"
-msgstr "Влезте с вашата системна парола"
+msgstr "Влезте с паролата си за системата"
 
 #: ui/UserListView.qml:99
 #, kde-format
@@ -391,16 +386,3 @@ msgstr "Промяна на потребителя..."
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "Премахване на потребител..."
-
-#~ msgctxt "@info:usagetip"
-#~ msgid "Use any of the following addresses to connect to this device:"
-#~ msgstr ""
-#~ "Използване на някой от следните адреси, за връзка с това устройство:"
-
-#~ msgid "Use any of the following addresses to connect to this device:"
-#~ msgstr ""
-#~ "Използване на някой от следните адреси, за връзка с това устройство:"
-
-#~ msgctxt "@title"
-#~ msgid "Usernames"
-#~ msgstr "Потребителски имена"
