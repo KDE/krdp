@@ -69,6 +69,7 @@ msgstr "Automaticky spustiť server pri prihlásení"
 msgid ""
 "Lock the session when the last client disconnects and unlock it on connect"
 msgstr ""
+"Uzamknúť sedenie, keď sa odpojí posledný klient, a odomknúť ho pri pripojení"
 
 #: ui/CertError.qml:14
 #, kde-format
@@ -178,22 +179,19 @@ msgid "Error message from the RDP server:<nl/>%1"
 msgstr "Chybová správa zo servera RDP:<nl/>%1"
 
 #: ui/main.qml:142 ui/main_phone.qml:101
-#, fuzzy, kde-format
-#| msgid ""
-#| "Set up remote login to connect using apps supporting the “RDP” remote "
-#| "desktop protocol."
+#, kde-format
 msgid ""
 "Users listed below can log into this device remotely using apps that support "
 "the “RDP” protocol."
 msgstr ""
-"Nastavte vzdialené prihlásenie na pripojenie pomocou aplikácií podporujúcich "
-"protokol vzdialenej pracovnej plochy “RDP”."
+"Používatelia uvedení nižšie sa môžu do tohto zariadenia prihlásiť na diaľku "
+"aplikáciami, ktoré podporujú protokol „RDP“."
 
 #: ui/main.qml:152
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Connect to this device at any of the following addresses:"
-msgstr ""
+msgstr "K tomuto zariadeniu sa pripojíte na ktorejkoľvek z týchto adries:"
 
 #: ui/main.qml:187 ui/main_phone.qml:158
 #, kde-format
@@ -223,7 +221,7 @@ msgstr "Počúvať na porte:"
 #, kde-format
 msgctxt "@option:check"
 msgid "Lock the session when disconnecting, unlock on connect"
-msgstr ""
+msgstr "Uzamknúť sedenie pri odpojení, odomknúť pri pripojení"
 
 #: ui/main.qml:291
 #, kde-format
@@ -299,7 +297,7 @@ msgstr "Užívateľské meno:"
 #: ui/main_phone.qml:135
 #, kde-format
 msgid "Connect to this device at any of the following addresses:"
-msgstr ""
+msgstr "K tomuto zariadeniu sa pripojíte na ktorejkoľvek z týchto adries:"
 
 #: ui/main_phone.qml:173
 #, kde-format
@@ -326,7 +324,7 @@ msgstr "Reštartovať server"
 #, kde-format
 msgctxt "@title"
 msgid "Allowed users"
-msgstr ""
+msgstr "Povolení používatelia"
 
 #: ui/UserListView.qml:25
 #, kde-format
@@ -366,9 +364,7 @@ msgid "Other Users"
 msgstr "Ostatní používatelia"
 
 #: ui/UserListView.qml:67
-#, fuzzy, kde-format
-#| msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
-#| msgid "Login with your system password"
+#, kde-format
 msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
 msgid "Log in with your system password"
 msgstr "Prihláste sa svojím systémovým heslom"

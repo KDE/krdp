@@ -79,6 +79,7 @@ msgstr "Automaticky spustiť server pri prihlásení"
 msgid ""
 "Lock the session when the last client disconnects and unlock it on connect"
 msgstr ""
+"Uzamknúť sedenie, keď sa odpojí posledný klient, a odomknúť ho pri pripojení"
 
 #: SessionController.cpp:111
 #, kde-format
