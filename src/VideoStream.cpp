@@ -14,10 +14,11 @@
 #include <cmath>
 #include <condition_variable>
 #include <cstdint>
+#include <utility>
 
 #include <QDateTime>
+#include <QHash>
 #include <QQueue>
-#include <QSet>
 
 #include <DmaBufHandler>
 #include <PipeWireEncodedStream>
@@ -31,6 +32,7 @@
 #include "PeerContext_p.h"
 #include "RdpConnection.h"
 
+#include "krdp_frame_tracking_logging.h"
 #include "krdp_logging.h"
 
 namespace KRdp
@@ -47,6 +49,27 @@ constexpr double RttEwmaAlpha = 0.125; // second-stage smoothing of the (already
 constexpr double MinimumValidRttMs = 5.0; // ignore implausibly-low RTT samples
 constexpr double MaximumValidRttMs = 60000.0; // ignore garbage RTT samples
 constexpr uint32_t ProgressiveCodecContextId = 1;
+
+qint64 framePts(const VideoFrame &frame)
+{
+    return clk::duration_cast<clk::milliseconds>(frame.presentationTimeStamp).count();
+}
+
+qint64 currentTimeMs()
+{
+    return clk::duration_cast<clk::milliseconds>(clk::steady_clock::now().time_since_epoch()).count();
+}
+
+void logFrame(const VideoFrame &frame, const char *action)
+{
+    qCInfo(KRDP_FRAME_TRACKING).nospace() << "LOG FRAME " << framePts(frame) << ',' << action << ',' << currentTimeMs();
+}
+
+void logSquashedFrame(const VideoFrame &frame)
+{
+    qCInfo(KRDP_FRAME_TRACKING).nospace() << "LOG FRAME " << framePts(frame) << ",frame_squashed";
+}
+
 struct RdpCapsInformation {
     uint32_t version;
     RDPGFX_CAPSET capSet;
@@ -150,7 +173,7 @@ public:
     std::mutex frameQueueMutex;
 
     QQueue<VideoFrame> frameQueue;
-    QSet<uint32_t> pendingFrames;
+    QHash<uint32_t, qint64> pendingFrames;
 
     std::mutex pendingFramesMutex;
 
@@ -449,9 +472,13 @@ void VideoStream::queueFrame(const KRdp::VideoFrame &frame)
     std::lock_guard lock(d->frameQueueMutex);
     if (d->activeEncodingMode == EncodingMode::H264) {
         if (frame.isKeyFrame) {
+            for (const auto &queuedFrame : std::as_const(d->frameQueue)) {
+                logSquashedFrame(queuedFrame);
+            }
             d->frameQueue.clear();
         }
         d->frameQueue.append(frame);
+        logFrame(frame, "queued");
         return;
     } else if (d->activeEncodingMode == EncodingMode::Progressive) {
         // for the raster path we only need to keep the latest frame, but accumulate damage
@@ -463,6 +490,7 @@ void VideoStream::queueFrame(const KRdp::VideoFrame &frame)
         KRdp::VideoFrame nextFrame = frame;
         nextFrame.damage += lastDamage;
         d->frameQueue.append(std::move(nextFrame));
+        logFrame(frame, "queued");
     }
 }
 
@@ -686,7 +714,9 @@ uint32_t VideoStream::onFrameAcknowledge(const RDPGFX_FRAME_ACKNOWLEDGE_PDU *fra
         return CHANNEL_RC_OK;
     }
 
+    const auto pts = *itr;
     d->pendingFrames.erase(itr);
+    qCInfo(KRDP_FRAME_TRACKING).nospace() << "LOG FRAME " << pts << ",acknowledged," << currentTimeMs();
 
     return CHANNEL_RC_OK;
 }
@@ -697,6 +727,7 @@ void VideoStream::onPacketReceived(const PipeWireEncodedStream::Packet &data)
     frameData.size = d->size;
     frameData.data = data.data();
     frameData.isKeyFrame = data.isKeyFrame();
+    frameData.presentationTimeStamp = data.presentationTimeStamp();
     queueFrame(frameData);
 }
 
@@ -707,7 +738,7 @@ void VideoStream::onFrameReceived(const PipeWireFrame &data)
     frameData.size = data.dataFrame ? data.dataFrame->size : QSize(data.dmabuf ? data.dmabuf->width : 0, data.dmabuf ? data.dmabuf->height : 0);
     frameData.damage = data.damage.value_or(QRegion(QRect(QPoint(0, 0), frameData.size)));
     if (data.presentationTimestamp) {
-        frameData.presentationTimeStamp = clk::system_clock::time_point(clk::duration_cast<clk::microseconds>(*data.presentationTimestamp));
+        frameData.presentationTimeStamp = *data.presentationTimestamp;
     }
 
     if (data.dataFrame) {
@@ -964,8 +995,10 @@ void VideoStream::sendFrameH264(const VideoFrame &frame)
 
     {
         std::lock_guard lock(d->pendingFramesMutex);
-        d->pendingFrames.insert(frameId);
+        d->pendingFrames.insert(frameId, framePts(frame));
     }
+
+    logFrame(frame, "sent");
 
     RDPGFX_START_FRAME_PDU startFramePdu;
     RDPGFX_END_FRAME_PDU endFramePdu;
@@ -1072,7 +1105,7 @@ void VideoStream::sendFrameProgressive(const VideoFrame &frame)
 
     {
         std::lock_guard lock(d->pendingFramesMutex);
-        d->pendingFrames.insert(frameId);
+        d->pendingFrames.insert(frameId, framePts(frame));
     }
 
     RDPGFX_START_FRAME_PDU startFramePdu;

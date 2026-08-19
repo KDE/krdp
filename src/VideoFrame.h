@@ -47,6 +47,6 @@ struct VideoFrame {
     /**
      * When was this frame presented.
      */
-    std::chrono::system_clock::time_point presentationTimeStamp;
+    std::chrono::nanoseconds presentationTimeStamp;
 };
 }

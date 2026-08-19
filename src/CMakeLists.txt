@@ -47,6 +47,14 @@ ecm_qt_declare_logging_category(KRdp
     EXPORT KRdp
 )
 
+ecm_qt_declare_logging_category(KRdp
+    HEADER krdp_frame_tracking_logging.h
+    IDENTIFIER KRDP_FRAME_TRACKING
+    CATEGORY_NAME org.kde.krdp.frame_tracking
+    DESCRIPTION "KRdp frame tracking"
+    EXPORT KRdp
+)
+
 ecm_generate_export_header(KRdp
     BASE_NAME KRdp
     VERSION ${CMAKE_PROJECT_VERSION}
