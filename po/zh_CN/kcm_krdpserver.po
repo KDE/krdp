@@ -183,13 +183,13 @@ msgstr "来自 RDP 服务器的错误消息：<nl/>%1"
 msgid ""
 "Users listed below can log into this device remotely using apps that support "
 "the “RDP” protocol."
-msgstr ""
+msgstr "以下用户可使用支持“RDP”协议的应用程序远程登录此设备。"
 
 #: ui/main.qml:152
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Connect to this device at any of the following addresses:"
-msgstr ""
+msgstr "通过以下任意地址连接此设备："
 
 #: ui/main.qml:187 ui/main_phone.qml:158
 #, kde-format
@@ -295,7 +295,7 @@ msgstr "主机名："
 #: ui/main_phone.qml:135
 #, kde-format
 msgid "Connect to this device at any of the following addresses:"
-msgstr ""
+msgstr "通过以下任意地址连接此设备："
 
 #: ui/main_phone.qml:173
 #, kde-format
@@ -320,7 +320,7 @@ msgstr "重启服务器"
 #, kde-format
 msgctxt "@title"
 msgid "Allowed users"
-msgstr ""
+msgstr "允许的用户"
 
 #: ui/UserListView.qml:25
 #, kde-format
@@ -362,7 +362,7 @@ msgstr "其他用户"
 #, kde-format
 msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
 msgid "Log in with your system password"
-msgstr ""
+msgstr "使用您的系统密码登录"
 
 #: ui/UserListView.qml:104
 #, kde-format
