@@ -47,6 +47,10 @@ constexpr double ProducerFpsEwmaAlpha = 0.25; // smoothing for the producer-rate
 constexpr double RttEwmaAlpha = 0.125; // second-stage smoothing of the (already windowed) averageRTT
 constexpr double MinimumValidRttMs = 5.0; // ignore implausibly-low RTT samples
 constexpr double MaximumValidRttMs = 60000.0; // ignore garbage RTT samples
+
+constexpr qsizetype HighQueueCount = 3; // Level of frames in the pending-send queue that pauses frames pre-encoder
+constexpr qsizetype LowQueueCount = 1; // Level of frames in the pending-send queue that resumes the encoder
+
 constexpr uint32_t ProgressiveCodecContextId = 1;
 
 constexpr clk::system_clock::duration QualityUpdateInterval = clk::milliseconds(1500);
@@ -478,14 +482,14 @@ void VideoStream::queueFrame(const KRdp::VideoFrame &frame)
     }
     d->producedFrames.fetch_add(1, std::memory_order_relaxed); // count only accepted frames
 
-    std::lock_guard lock(d->frameQueueMutex);
     if (d->activeEncodingMode == EncodingMode::H264) {
+        std::lock_guard lock(d->frameQueueMutex);
         if (frame.isKeyFrame) {
             d->frameQueue.clear();
         }
         d->frameQueue.append(frame);
-        return;
     } else if (d->activeEncodingMode == EncodingMode::Progressive) {
+        std::lock_guard lock(d->frameQueueMutex);
         // for the raster path we only need to keep the latest frame, but accumulate damage
         QRegion lastDamage;
         if (!d->frameQueue.isEmpty()) {
@@ -496,6 +500,7 @@ void VideoStream::queueFrame(const KRdp::VideoFrame &frame)
         nextFrame.damage += lastDamage;
         d->frameQueue.append(std::move(nextFrame));
     }
+    updateBackpressure();
 }
 
 void VideoStream::reset()
@@ -1058,6 +1063,8 @@ void VideoStream::sendFrame(const VideoFrame &frame)
     } else if (d->activeEncodingMode == EncodingMode::Progressive) {
         sendFrameProgressive(frame);
     }
+
+    QMetaObject::invokeMethod(this, &VideoStream::updateBackpressure, Qt::QueuedConnection);
 }
 
 void VideoStream::sendFrameH264(const VideoFrame &frame)
@@ -1217,6 +1224,29 @@ void VideoStream::sendFrameProgressive(const VideoFrame &frame)
     }
 
     region16_uninit(&*invalidRegion);
+}
+
+void VideoStream::updateBackpressure()
+{
+    if (!d->encodedStream) {
+        return;
+    }
+
+    qsizetype pendingSendQueueCount = 0;
+    {
+        std::lock_guard lock(d->frameQueueMutex);
+        pendingSendQueueCount = d->frameQueue.count();
+    }
+
+    const bool encodingPaused = d->encodedStream->encoderPaused();
+
+    if (!encodingPaused && pendingSendQueueCount > HighQueueCount) {
+        qCDebug(KRDP) << "Encoder backpressure activated" << pendingSendQueueCount;
+        d->encodedStream->setEncoderPaused(true);
+    } else if (encodingPaused && pendingSendQueueCount < LowQueueCount) {
+        qCDebug(KRDP) << "Encoder backpressure released" << pendingSendQueueCount;
+        d->encodedStream->setEncoderPaused(false);
+    }
 }
 }
 
