@@ -464,6 +464,7 @@ void VideoStream::queueFrame(const KRdp::VideoFrame &frame)
         nextFrame.damage += lastDamage;
         d->frameQueue.append(std::move(nextFrame));
     }
+    updateBackpressure();
 }
 
 void VideoStream::reset()
@@ -947,6 +948,8 @@ void VideoStream::sendFrame(const VideoFrame &frame)
     } else if (d->activeEncodingMode == EncodingMode::Progressive) {
         sendFrameProgressive(frame);
     }
+
+    QMetaObject::invokeMethod(this, &VideoStream::updateBackpressure, Qt::QueuedConnection);
 }
 
 void VideoStream::sendFrameH264(const VideoFrame &frame)
@@ -1109,6 +1112,20 @@ void VideoStream::sendFrameProgressive(const VideoFrame &frame)
 
     d->session->networkDetection()->stopBandwidthMeasure();
     region16_uninit(&*invalidRegion);
+}
+
+void VideoStream::updateBackpressure()
+{
+    if (!d->encodedStream) {
+        return;
+    }
+
+    bool hasBackpressure = false;
+    {
+        std::lock_guard lock(d->frameQueueMutex);
+        hasBackpressure = d->frameQueue.count() > 2;
+    }
+    d->encodedStream->setEncoderPaused(hasBackpressure);
 }
 }
 
