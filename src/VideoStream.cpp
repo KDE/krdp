@@ -1066,8 +1066,6 @@ void VideoStream::sendFrameProgressive(const VideoFrame &frame)
         return;
     }
 
-    d->session->networkDetection()->startBandwidthMeasure();
-
     auto frameId = d->frameId++;
 
     {
@@ -1107,7 +1105,6 @@ void VideoStream::sendFrameProgressive(const VideoFrame &frame)
                         << "damageRects" << rectCount;
     }
 
-    d->session->networkDetection()->stopBandwidthMeasure();
     region16_uninit(&*invalidRegion);
 }
 }

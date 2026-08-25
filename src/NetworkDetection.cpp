@@ -29,9 +29,11 @@ namespace clk = std::chrono;
 constexpr auto rttUpdateInterval = clk::milliseconds(70);
 constexpr auto rttAverageInterval = clk::milliseconds(500);
 constexpr auto networkResultInterval = clk::seconds(1);
+constexpr auto rttRequestMaxAge = clk::seconds(30);
 
 constexpr auto bandwidthMeasureDuration = clk::milliseconds(500);
 constexpr auto bandwidthMeasureInterval = clk::seconds(2);
+constexpr double bandwidthSmoothingWeight = 0.5;
 
 BOOL rttMeasureResponse(rdpAutoDetect *rdpAutodetect, RDP_TRANSPORT_TYPE, uint16_t sequence)
 {
@@ -59,25 +61,26 @@ struct RTTMeasurement {
 class NetworkDetection::Private
 {
 public:
-    uint32_t nextSequenceNumber();
+    uint16_t nextSequenceNumber();
 
     RdpConnection *session = nullptr;
     rdpAutoDetect *rdpAutodetect = nullptr;
 
     State state = State::None;
 
-    uint32_t sequenceNumber = 0;
+    uint16_t sequenceNumber = 0;
 
-    uint32_t lastBandwithMeasurement = 0;
+    double smoothedBandwidthBps = 0.0;
+    bool hasSmoothedBandwidth = false;
 
     bool rttEnabled = false;
     clk::system_clock::time_point lastRttUpdate;
-    QHash<uint32_t, clk::system_clock::time_point> rttRequests;
+    QHash<uint16_t, clk::system_clock::time_point> rttRequests;
     std::vector<RTTMeasurement> rttMeasurements;
 
-    // Published as atomic tick counts so the getters are safe to read from any thread.
     std::atomic<clk::system_clock::rep> minimumRttTicks{0};
     std::atomic<clk::system_clock::rep> averageRttTicks{0};
+    std::atomic<uint32_t> averageBandwidthBps{0};
 
     clk::system_clock::time_point lastNetworkResult;
 
@@ -102,6 +105,11 @@ std::chrono::system_clock::duration NetworkDetection::minimumRTT() const
 std::chrono::system_clock::duration NetworkDetection::averageRTT() const
 {
     return clk::system_clock::duration(d->averageRttTicks.load());
+}
+
+quint32 NetworkDetection::bandwidth() const
+{
+    return d->averageBandwidthBps.load() * 8 / 1000;
 }
 
 void NetworkDetection::initialize()
@@ -153,6 +161,10 @@ void NetworkDetection::update()
 
     d->lastRttUpdate = now;
 
+    d->rttRequests.removeIf([now](const auto &it) {
+        return (now - it.value()) > rttRequestMaxAge;
+    });
+
     auto sequence = d->nextSequenceNumber();
     d->rttRequests.insert(sequence, now);
     d->rdpAutodetect->RTTMeasureRequest(d->rdpAutodetect, RDP_TRANSPORT_TCP, sequence);
@@ -191,7 +203,15 @@ bool NetworkDetection::onBandwidthMeasureResults(uint32_t timeDelta, uint32_t by
         return true;
     }
 
-    d->lastBandwithMeasurement = static_cast<uint32_t>((static_cast<uint64_t>(byteCount) * 1000ULL) / static_cast<uint64_t>(timeDelta));
+    const auto bytesPerSecond = static_cast<uint32_t>((static_cast<uint64_t>(byteCount) * 1000ULL) / static_cast<uint64_t>(timeDelta));
+    if (!d->hasSmoothedBandwidth) {
+        d->hasSmoothedBandwidth = true;
+        d->smoothedBandwidthBps = bytesPerSecond;
+    } else {
+        d->smoothedBandwidthBps = (1.0 - bandwidthSmoothingWeight) * d->smoothedBandwidthBps + bandwidthSmoothingWeight * bytesPerSecond;
+    }
+    d->averageBandwidthBps.store(static_cast<uint32_t>(d->smoothedBandwidthBps));
+    Q_EMIT bandwidthChanged();
 
     updateAverageRtt();
 
@@ -223,7 +243,8 @@ void NetworkDetection::updateAverageRtt()
 
     Q_EMIT rttChanged();
 
-    if (d->lastBandwithMeasurement == 0) {
+    const auto bandwidthBps = d->averageBandwidthBps.load();
+    if (bandwidthBps == 0) {
         return;
     }
 
@@ -237,17 +258,17 @@ void NetworkDetection::updateAverageRtt()
     result.type = RDP_NETCHAR_RESULT_TYPE_BASE_RTT_BW_AVG_RTT;
     result.baseRTT = clk::duration_cast<clk::milliseconds>(minimum).count();
     result.averageRTT = clk::duration_cast<clk::milliseconds>(average).count();
-    result.bandwidth = d->lastBandwithMeasurement;
+    result.bandwidth = bandwidthBps;
     d->rdpAutodetect->NetworkCharacteristicsResult(d->rdpAutodetect, RDP_TRANSPORT_TCP, d->nextSequenceNumber(), &result);
 }
 
-uint32_t NetworkDetection::Private::nextSequenceNumber()
+uint16_t NetworkDetection::Private::nextSequenceNumber()
 {
     auto sequence = sequenceNumber;
     while (sequence == 0 || rttRequests.contains(sequence)) {
         ++sequence;
     }
-    sequenceNumber = sequence + 1;
+    sequenceNumber = static_cast<uint16_t>(sequence + 1);
     return sequence;
 }
 

@@ -39,6 +39,11 @@ public:
 
     Q_SIGNAL void rttChanged();
 
+    Q_PROPERTY(quint32 bandwidth READ bandwidth NOTIFY bandwidthChanged)
+    quint32 bandwidth() const;
+
+    Q_SIGNAL void bandwidthChanged();
+
     void initialize();
 
     void startBandwidthMeasure();
