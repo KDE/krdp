@@ -102,6 +102,7 @@ public:
     DisplayControl *displayControl() const;
 
     NetworkDetection *networkDetection() const;
+    freerdp_peer *rdpPeer() const;
 
 private:
     friend BOOL peerCapabilities(freerdp_peer *);
@@ -119,7 +120,6 @@ private:
     void initialize();
     void run(std::stop_token stopToken);
 
-    freerdp_peer *rdpPeer() const;
     rdpContext *rdpPeerContext() const;
 
     bool onCapabilities();

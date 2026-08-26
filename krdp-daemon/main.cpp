@@ -15,6 +15,7 @@
 #include <KSharedConfig>
 #include <KSignalHandler>
 
+#include <freerdp/peer.h>
 #include <qt6keychain/keychain.h>
 
 #include "RdpConnection.h"
@@ -154,6 +155,12 @@ int main(int argc, char **argv)
                 QProcess::startDetached(QStringLiteral("krdpserver"),
                                         QStringList() << QStringLiteral("--port") << QStringLiteral("3390")); // NOTE: presume run from build folder's bin
             }
+
+            auto redir = redirection_new();
+            redirection_set_byte_option(redir, LB_LOAD_BALANCE_INFO, (BYTE *)"DAVE", strlen("DAVE"));
+
+            redirection_set_flags(redir, LB_TARGET_FQDN);
+            connection->rdpPeer()->SendServerRedirection(connection->rdpPeer(), redir);
         });
     });
 
