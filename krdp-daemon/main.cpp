@@ -153,7 +153,7 @@ int main(int argc, char **argv)
                 // We've authenticated, start krdpserver
                 qDebug() << "activated, starting krdpserver";
 
-                QProcess::startDetached(QStringLiteral("krdpserver"), QStringList()); // NOTE: presume run from build folder's bin
+                // QProcess::startDetached(QStringLiteral("krdpserver"), QStringList()); // NOTE: presume run from build folder's bin
 
                 QByteArray routingToken = QByteArrayLiteral("dave");
 

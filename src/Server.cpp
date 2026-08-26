@@ -317,15 +317,9 @@ void Server::incomingConnection(qintptr handle)
         if (!info)
         {
             qWarning() << "Failed to parse initial RDP packet";
-            return;
-        }
-
-        if (info->token.isEmpty())
-        {
+        } else if (info->token.isEmpty()) {
             qDebug() << "Normal RDP connection";
-        }
-        else
-        {
+        } else {
             qDebug() << "RDP routing token:" << info->token;
         }
     }
