@@ -151,7 +151,8 @@ int main(int argc, char **argv)
             if (newState == KRdp::RdpConnection::State::Activated) {
                 // We've authenticated, start krdpserver
                 qDebug() << "activated, starting krdpserver";
-                QProcess::startDetached(QStringLiteral("krdpserver"), QStringList()); // NOTE: presume run from build folder's bin
+                QProcess::startDetached(QStringLiteral("krdpserver"),
+                                        QStringList() << QStringLiteral("--port") << QStringLiteral("3390")); // NOTE: presume run from build folder's bin
             }
         });
     });
