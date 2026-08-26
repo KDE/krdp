@@ -7,6 +7,7 @@
 
 #include <QApplication>
 #include <QCommandLineParser>
+#include <QProcess>
 #include <QRegularExpression>
 
 #include <KAboutData>
@@ -127,10 +128,12 @@ int main(int argc, char **argv)
 
     QObject::connect(&server, &KRdp::Server::newConnectionCreated, qApp, [](KRdp::RdpConnection *connection) {
         qDebug() << connection;
+
         QObject::connect(connection, &KRdp::RdpConnection::stateChanged, [connection](KRdp::RdpConnection::State newState) {
             if (newState == KRdp::RdpConnection::State::Activated) {
-                qDebug() << "activated";
-                connection->close(KRdp::RdpConnection::CloseReason::None);
+                // We've authenticated, start krdpserver
+                qDebug() << "activated, starting krdpserver";
+                QProcess::startDetached(QStringLiteral("krdpserver"), QStringList()); // NOTE: presume run from build folder's bin
             }
         });
     });
