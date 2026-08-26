@@ -86,6 +86,7 @@ ecm_set_disabled_deprecation_versions(QT 6.11.0
 
 add_subdirectory(src)
 add_subdirectory(server)
+add_subdirectory(krdp-daemon)
 
 if(BUILD_EXAMPLES)
     add_subdirectory(examples)
