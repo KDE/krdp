@@ -84,6 +84,8 @@ public:
     Q_SIGNAL void enabledChanged();
     void setStreamingEnabled(bool enabled);
     void setVideoQuality(quint8 quality);
+    void setAdaptiveQuality(bool enabled);
+    void seedQuality(quint8 quality);
     void setRequestedSize(const QSize &size);
     void setPipeWireSource(quint32 nodeId, quint64 objectSerial, int fd = -1);
 
@@ -110,6 +112,8 @@ private:
 
     void updateInFlightWindow();
     double effectiveProducerFps();
+    void updateAdaptiveQuality();
+    void applyQuality();
 
     class Private;
     const std::unique_ptr<Private> d;

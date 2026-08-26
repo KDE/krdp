@@ -10,6 +10,7 @@
 #include "VideoStream.h"
 
 #include <algorithm>
+#include <array>
 #include <atomic>
 #include <cmath>
 #include <condition_variable>
@@ -47,6 +48,33 @@ constexpr double RttEwmaAlpha = 0.125; // second-stage smoothing of the (already
 constexpr double MinimumValidRttMs = 5.0; // ignore implausibly-low RTT samples
 constexpr double MaximumValidRttMs = 60000.0; // ignore garbage RTT samples
 constexpr uint32_t ProgressiveCodecContextId = 1;
+
+constexpr clk::system_clock::duration QualityUpdateInterval = clk::milliseconds(1500);
+constexpr int MinAdaptiveQuality = 10;
+constexpr int QualityStepUp = 5;
+constexpr int QualityStepDown = 10;
+
+struct BitrateAnchor {
+    double pixels;
+    double kbit;
+};
+
+// "Quality 100" targets by resolution, no fps term - matches RustDesk's base_bitrate().
+constexpr std::array<BitrateAnchor, 4> FullQualityBitrateAnchors = {{
+    {921'600.0, 1500.0}, // 1280x720
+    {2'073'600.0, 3110.0}, // 1920x1080
+    {3'686'400.0, 4500.0}, // 2560x1440
+    {8'294'400.0, 7500.0}, // 3840x2160
+}};
+
+static double fullQualityKbit(double pixels)
+{
+    const auto *nearest = std::min_element(FullQualityBitrateAnchors.begin(), FullQualityBitrateAnchors.end(), [pixels](const auto &a, const auto &b) {
+        return std::abs(a.pixels - pixels) < std::abs(b.pixels - pixels);
+    });
+    return nearest->kbit * (pixels / nearest->pixels);
+}
+
 struct RdpCapsInformation {
     uint32_t version;
     RDPGFX_CAPSET capSet;
@@ -169,6 +197,9 @@ public:
 
     bool initialized = false;
     quint8 quality = 100;
+    quint8 qualityCap = 100;
+    bool adaptiveQuality = false;
+    clk::system_clock::time_point lastQualityUpdate;
 
     void setSize(VideoStream *q, const QSize &newSize)
     {
@@ -374,6 +405,7 @@ bool VideoStream::initialize()
     d->initialized = true;
 
     connect(d->session->networkDetection(), &NetworkDetection::rttChanged, this, &VideoStream::updateInFlightWindow);
+    connect(d->session->networkDetection(), &NetworkDetection::bandwidthChanged, this, &VideoStream::updateAdaptiveQuality);
 
     d->frameSubmissionThread = std::jthread([this](std::stop_token token) {
         while (!token.stop_requested()) {
@@ -509,12 +541,40 @@ void VideoStream::setStreamingEnabled(bool enabled)
     }
 }
 
+void VideoStream::applyQuality()
+{
+    if (d->encodedStream) {
+        d->encodedStream->setQuality(d->quality);
+    }
+}
+
 void VideoStream::setVideoQuality(quint8 quality)
 {
-    d->quality = quality;
-    if (d->encodedStream) {
-        d->encodedStream->setQuality(quality);
+    d->qualityCap = quality;
+    d->quality = d->adaptiveQuality ? std::min(d->quality, d->qualityCap) : d->qualityCap;
+    applyQuality();
+}
+
+void VideoStream::setAdaptiveQuality(bool enabled)
+{
+    if (d->adaptiveQuality == enabled) {
+        return;
     }
+    d->adaptiveQuality = enabled;
+    if (!enabled) {
+        d->quality = d->qualityCap;
+        applyQuality();
+    }
+}
+
+void VideoStream::seedQuality(quint8 quality)
+{
+    if (!d->adaptiveQuality || d->activeEncodingMode != EncodingMode::H264) {
+        return;
+    }
+    const quint8 hi = std::max<quint8>(d->qualityCap, quint8(MinAdaptiveQuality));
+    d->quality = std::clamp<quint8>(quality, quint8(MinAdaptiveQuality), hi);
+    applyQuality();
 }
 
 void VideoStream::setRequestedSize(const QSize &size)
@@ -915,6 +975,57 @@ void VideoStream::updateInFlightWindow()
         window = std::clamp(bdp, qsizetype(MaximumInFlightFrames), cap);
     }
     d->maxInFlight.store(window);
+}
+
+void VideoStream::updateAdaptiveQuality()
+{
+    if (!d->adaptiveQuality || d->activeEncodingMode != EncodingMode::H264) {
+        return;
+    }
+
+    const quint32 goodputKbit = d->session->networkDetection()->bandwidth();
+    if (goodputKbit == 0) {
+        return;
+    }
+
+    const auto now = clk::system_clock::now();
+    if (now - d->lastQualityUpdate < QualityUpdateInterval) {
+        return;
+    }
+
+    const int fps = std::max(1, d->requestedFrameRate.load());
+    const double pixels = double(d->size.width()) * double(d->size.height());
+    if (pixels <= 0.0) {
+        return;
+    }
+    const double fullKbit = fullQualityKbit(pixels);
+
+    const int hi = std::max(int(d->qualityCap), MinAdaptiveQuality);
+    int target = std::clamp(int(std::lround(goodputKbit / fullKbit * 100.0)), MinAdaptiveQuality, hi);
+
+    const auto avg = clk::duration_cast<clk::milliseconds>(d->session->networkDetection()->averageRTT());
+    const auto min = clk::duration_cast<clk::milliseconds>(d->session->networkDetection()->minimumRTT());
+    const bool congested = min.count() > 0 && avg.count() > min.count() * 3 / 2;
+    if (congested) {
+        target = std::clamp(int(d->quality) - QualityStepDown, MinAdaptiveQuality, target);
+    }
+
+    int next = d->quality;
+    if (target < next) {
+        next = std::max(target, next - QualityStepDown);
+    } else if (target > next && !congested) {
+        next = std::min(target, next + QualityStepUp);
+    }
+
+    if (next == int(d->quality)) {
+        return;
+    }
+
+    d->lastQualityUpdate = now;
+    d->quality = quint8(next);
+    applyQuality();
+    qCDebug(KRDP) << "Adaptive quality ->" << d->quality << "(target" << target << "cap" << d->qualityCap << "goodput" << goodputKbit << "kbit/s, fps" << fps
+                  << (congested ? ", congested" : "") << ")";
 }
 
 bool VideoStream::hasInFlightCapacity() const
