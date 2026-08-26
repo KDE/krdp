@@ -239,7 +239,7 @@ BOOL suppressOutput(rdpContext *context, uint8_t allow, const RECTANGLE_16 *)
 class KRDP_NO_EXPORT RdpConnection::Private
 {
 public:
-    Server *server = nullptr;
+    // Server *server = nullptr;
 
     State state = State::Initial;
 
@@ -278,7 +278,6 @@ RdpConnection::RdpConnection(Server *server, qintptr socketHandle)
     : QObject(nullptr)
     , d(std::make_unique<Private>())
 {
-    d->server = server;
     d->socketHandle = socketHandle;
 
     d->inputHandler = std::make_unique<InputHandler>(this);
@@ -406,48 +405,48 @@ void RdpConnection::initialize()
     d->peer->ContextNew = (psPeerContextNew)newPeerContext;
     d->peer->ContextFree = (psPeerContextFree)freePeerContext;
 
-    auto result = freerdp_peer_context_new_ex(d->peer, d->server->rdpSettings());
-    if (!result) {
-        qCWarning(KRDP) << "Failed to create peer context";
-        return;
-    }
+    // auto result = freerdp_peer_context_new_ex(d->peer, d->server->rdpSettings());
+    // if (!result) {
+    //     qCWarning(KRDP) << "Failed to create peer context";
+    //     return;
+    // }
 
     auto context = reinterpret_cast<PeerContext *>(d->peer->context);
     context->connection = this;
 
     auto settings = d->peer->context->settings;
 
-    const bool usePamAuthentication = d->server->usePAMAuthentication();
+    // const bool usePamAuthentication = d->server->usePAMAuthentication();
 
-    if (!usePamAuthentication) {
-        if (!createSamFile(d->samFile, d->server->users())) {
-            qFatal("Failed to create SAM database");
-            return;
-        }
+    // if (!usePamAuthentication) {
+    //     if (!createSamFile(d->samFile, d->server->users())) {
+    //         qFatal("Failed to create SAM database");
+    //         return;
+    //     }
 
-        if (!freerdp_settings_set_string(settings, FreeRDP_NtlmSamFile, d->samFile.fileName().toUtf8().constData())) {
-            qFatal("Failed to set SAM database");
-            return;
-        }
-    }
+    //     if (!freerdp_settings_set_string(settings, FreeRDP_NtlmSamFile, d->samFile.fileName().toUtf8().constData())) {
+    //         qFatal("Failed to set SAM database");
+    //         return;
+    //     }
+    // }
 
-    auto certificate = freerdp_certificate_new_from_file(d->server->tlsCertificate().string().data());
-    if (!certificate) {
-        qCWarning(KRDP) << "Could not read certificate file" << d->server->tlsCertificate().string();
-        return;
-    }
-    freerdp_settings_set_pointer_len(settings, FreeRDP_RdpServerCertificate, certificate, 1);
+    // auto certificate = freerdp_certificate_new_from_file(d->server->tlsCertificate().string().data());
+    // if (!certificate) {
+    //     qCWarning(KRDP) << "Could not read certificate file" << d->server->tlsCertificate().string();
+    //     return;
+    // }
+    // freerdp_settings_set_pointer_len(settings, FreeRDP_RdpServerCertificate, certificate, 1);
 
-    auto key = freerdp_key_new_from_file(d->server->tlsCertificateKey().string().data());
-    if (!key) {
-        qCWarning(KRDP) << "Could not read certificate file" << d->server->tlsCertificate().string();
-        return;
-    }
-    freerdp_settings_set_pointer_len(settings, FreeRDP_RdpServerRsaKey, key, 1);
+    // auto key = freerdp_key_new_from_file(d->server->tlsCertificateKey().string().data());
+    // if (!key) {
+    //     qCWarning(KRDP) << "Could not read certificate file" << d->server->tlsCertificate().string();
+    //     return;
+    // }
+    // freerdp_settings_set_pointer_len(settings, FreeRDP_RdpServerRsaKey, key, 1);
 
     freerdp_settings_set_bool(settings, FreeRDP_RdpSecurity, false);
-    freerdp_settings_set_bool(settings, FreeRDP_TlsSecurity, usePamAuthentication);
-    freerdp_settings_set_bool(settings, FreeRDP_NlaSecurity, !usePamAuthentication);
+    // freerdp_settings_set_bool(settings, FreeRDP_TlsSecurity, usePamAuthentication);
+    // freerdp_settings_set_bool(settings, FreeRDP_NlaSecurity, !usePamAuthentication);
 
     freerdp_settings_set_uint32(settings, FreeRDP_OsMajorType, OSMAJORTYPE_UNIX);
     // PSEUDO_XSERVER is apparently required for things to work properly.
@@ -639,41 +638,8 @@ bool RdpConnection::onActivate()
 
 bool RdpConnection::onPostConnect()
 {
-    qCInfo(KRDP) << "New client connected:" << d->peer->hostname << freerdp_peer_os_major_type_string(d->peer) << freerdp_peer_os_minor_type_string(d->peer);
-
-    d->samFile.remove();
-
-    rdpSettings *settings = d->peer->context->settings;
-    const QString username = QString::fromLatin1(freerdp_settings_get_string(settings, FreeRDP_Username));
-
-    if (d->server->usePAMAuthentication()) {
-        if (!freerdp_settings_set_bool(settings, FreeRDP_AutoLogonEnabled, true)) {
-            return false;
-        }
-
-        const QString password = QString::fromLatin1(freerdp_settings_get_string(settings, FreeRDP_Password));
-        qCDebug(KRDP) << "Attempting authenticating user with PAM";
-        if (username == KUser().loginName() || KUser().loginName() == QStringLiteral("plasmalogin")) {
-            if (pamAuthenticate(username, password) >= 0) {
-                qCDebug(KRDP) << "PAM authentication succeeded for user" << username;
-                return true;
-            }
-        }
-        const auto users = d->server->users();
-        for (auto user : users) {
-            if (user.password.isEmpty()) {
-                return false;
-            }
-            if (user.name == username && user.password == password) {
-                qCDebug(KRDP) << "User" << username << "authenticated successfully";
-                return true;
-            }
-        }
-        return false;
-    } else {
-        // In the NLA case the user has been authorised against the SAM database
-        return true;
-    }
+    // should have already been done
+    return true;
 }
 
 bool RdpConnection::onClose()

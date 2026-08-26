@@ -125,24 +125,6 @@ int main(int argc, char **argv)
         }
     }
 
-    /*
-    SessionController controller(&server, parser.isSet(u"plasma"_s) ? SessionController::SessionType::Plasma : SessionController::SessionType::Portal);
-    if (parser.isSet(u"virtual-monitor"_s)) {
-        const QString vmData = parser.value(u"virtual-monitor"_s);
-        const QRegularExpression rx(uR"((\d+)x(\d+)@([\d.]+))"_s);
-        const auto match = rx.match(vmData);
-        if (!match.hasMatch()) {
-            qWarning() << "failed to parse" << vmData << ".  Should be WIDTHxHEIGHT@SCALE";
-            return 1;
-        }
-        controller.setVirtualMonitor({vmData, {match.capturedView(1).toInt(), match.capturedView(2).toInt()}, match.capturedView(3).toDouble()});
-    } else {
-        controller.setMonitorIndex(parser.isSet(u"monitor"_s) ? std::optional(parser.value(u"monitor"_s).toInt()) : std::nullopt);
-    }
-    controller.setQuality(parserValueWithDefault(u"quality", config->quality()));
-    controller.setLockOnDisconnect(config->lockOnDisconnect());
-    */
-
     QObject::connect(&server, &KRdp::Server::newConnectionCreated, qApp, [](KRdp::RdpConnection *connection) {
         qDebug() << connection;
         QObject::connect(connection, &KRdp::RdpConnection::stateChanged, [connection](KRdp::RdpConnection::State newState) {
