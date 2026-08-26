@@ -137,6 +137,11 @@ void SessionController::setQuality(const std::optional<int> &quality)
     m_quality = quality;
 }
 
+void SessionController::setAdaptiveQuality(bool adaptive)
+{
+    m_adaptiveQuality = adaptive;
+}
+
 void SessionController::setLockOnDisconnect(bool lock)
 {
     m_lockOnDisconnect = lock;
@@ -180,6 +185,7 @@ void SessionController::onNewConnection(KRdp::RdpConnection *newConnection)
         } else if (m_monitorIndex) {
             wrapper->session->setActiveStream(*m_monitorIndex);
         }
+        wrapper->connection->videoStream()->setAdaptiveQuality(m_adaptiveQuality);
         wrapper->connection->videoStream()->setVideoQuality(m_quality.value());
 
         setSessionLocked(false);

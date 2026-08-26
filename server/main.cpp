@@ -50,7 +50,11 @@ int main(int argc, char **argv)
          u"Creates a new virtual output to connect to (WIDTHxHEIGHT@SCALE, e.g. 1920x1080@1). Incompatible with --monitor."_s,
          u"data"_s,
          u"1920x1080@1"_s},
-        {u"quality"_s, u"Encoding quality of the stream, from 0 (lowest) to 100 (highest)"_s, u"quality"_s},
+        {u"quality"_s,
+         u"Encoding quality of the stream, from 0 (lowest) to 100 (highest). With --adaptive-quality this is the upper bound; otherwise it is the fixed quality."_s,
+         u"quality"_s},
+        {u"adaptive-quality"_s, u"Adjust the encoding quality at runtime based on the client's network conditions, up to --quality."_s},
+        {u"static"_s, u"Pin the encoding quality at --quality even if adaptive quality is enabled in the configuration."_s},
 #ifdef WITH_PLASMA_SESSION
         {u"plasma"_s, u"Use Plasma protocols instead of XDP"_s},
 #endif
@@ -139,6 +143,7 @@ int main(int argc, char **argv)
         controller.setMonitorIndex(parser.isSet(u"monitor"_s) ? std::optional(parser.value(u"monitor"_s).toInt()) : std::nullopt);
     }
     controller.setQuality(parserValueWithDefault(u"quality", config->quality()));
+    controller.setAdaptiveQuality((parser.isSet(u"adaptive-quality"_s) || config->adaptiveQuality()) && !parser.isSet(u"static"_s));
     controller.setLockOnDisconnect(config->lockOnDisconnect());
 
     if (!server.start()) {

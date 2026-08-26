@@ -10,6 +10,7 @@
 #include "RdpConnection.h"
 
 #include <filesystem>
+#include <optional>
 
 #include <fcntl.h>
 
@@ -242,6 +243,7 @@ public:
     Server *server = nullptr;
 
     State state = State::Initial;
+    bool qualitySeeded = false;
 
     qintptr socketHandle;
 
@@ -631,9 +633,43 @@ bool RdpConnection::onCapabilities()
     return true;
 }
 
+static std::optional<quint8> qualitySeedForConnectionType(uint32_t connectionType)
+{
+    switch (connectionType) {
+    case CONNECTION_TYPE_MODEM:
+        return 30;
+    case CONNECTION_TYPE_BROADBAND_LOW:
+        return 50;
+    case CONNECTION_TYPE_SATELLITE:
+        return 45;
+    case CONNECTION_TYPE_WAN:
+        return 70;
+    case CONNECTION_TYPE_BROADBAND_HIGH:
+        return 80;
+    case CONNECTION_TYPE_LAN:
+        return 95;
+    default:
+        return std::nullopt;
+    }
+}
+
 bool RdpConnection::onActivate()
 {
     setState(State::Activated);
+
+    if (!d->qualitySeeded) {
+        d->qualitySeeded = true;
+        const uint32_t connectionType = freerdp_settings_get_uint32(d->peer->context->settings, FreeRDP_ConnectionType);
+        if (const auto seed = qualitySeedForConnectionType(connectionType)) {
+            QMetaObject::invokeMethod(
+                d->videoStream.get(),
+                [videoStream = d->videoStream.get(), seed = *seed]() {
+                    videoStream->seedQuality(seed);
+                },
+                Qt::QueuedConnection);
+        }
+    }
+
     return true;
 }
 

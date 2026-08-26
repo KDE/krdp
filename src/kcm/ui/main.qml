@@ -284,11 +284,24 @@ KCM.ScrollViewKCM {
                         }
                     }
 
+                    QQC2.CheckBox {
+                        id: adaptiveQuality
+                        text: i18nc("@option:check", "Adjust quality for network conditions")
+                        checked: settings.adaptiveQuality
+                        onToggled: {
+                            settings.adaptiveQuality = checked;
+                        }
+                        KCM.SettingStateBinding {
+                            configObject: settings
+                            settingName: "adaptiveQuality"
+                        }
+                    }
+
                     ColumnLayout {
                         enabled: userListView.count > 0
                         Layout.preferredWidth: certKeyLayout.width
 
-                        Kirigami.FormData.label: i18nc("@label:textbox", "Video quality:")
+                        Kirigami.FormData.label: adaptiveQuality.checked ? i18nc("@label:textbox", "Maximum video quality:") : i18nc("@label:textbox", "Video quality:")
                         Kirigami.FormData.buddyFor: qualitySlider
                         QQC2.Slider {
                             id: qualitySlider

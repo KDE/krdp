@@ -25,8 +25,12 @@ SPDX-License-Identifier: BSD-2-Clause
       <label>The key that matches the TLS certificate</label>
     </entry>
     <entry name="quality" key="Quality" type="Int">
-      <label>The quality of the video stream</label>
+      <label>The quality of the video stream. The maximum quality when AdaptiveQuality is enabled.</label>
       <default>75</default>
+    </entry>
+    <entry name="adaptiveQuality" key="AdaptiveQuality" type="Bool">
+      <label>Adjust the video quality at runtime based on the client's network conditions, up to Quality.</label>
+      <default>false</default>
     </entry>
     <entry name="Users" type="StringList">
       <label>Users allowed to login, passwords are stored in KWallet</label>
