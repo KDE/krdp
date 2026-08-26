@@ -30,7 +30,7 @@ SPDX-License-Identifier: BSD-2-Clause
     </entry>
     <entry name="adaptiveQuality" key="AdaptiveQuality" type="Bool">
       <label>Adjust the video quality at runtime based on the client's network conditions, up to Quality.</label>
-      <default>false</default>
+      <default>true</default>
     </entry>
     <entry name="Users" type="StringList">
       <label>Users allowed to login, passwords are stored in KWallet</label>

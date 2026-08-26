@@ -198,7 +198,7 @@ public:
     bool initialized = false;
     quint8 quality = 100;
     quint8 qualityCap = 100;
-    bool adaptiveQuality = false;
+    bool adaptiveQuality = true;
     clk::system_clock::time_point lastQualityUpdate;
 
     void setSize(VideoStream *q, const QSize &newSize)
