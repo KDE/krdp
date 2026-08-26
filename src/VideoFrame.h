@@ -37,7 +37,6 @@ struct VideoFrame {
     QImage image;
     /**
      * Area of the frame that was actually damaged.
-     * TODO: Actually use this information.
      */
     QRegion damage;
     /**

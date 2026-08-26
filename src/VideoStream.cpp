@@ -698,6 +698,7 @@ void VideoStream::onPacketReceived(const PipeWireEncodedStream::Packet &data)
     frameData.size = d->size;
     frameData.data = data.data();
     frameData.isKeyFrame = data.isKeyFrame();
+    frameData.damage = data.damage().value_or(QRegion(QRect(QPoint(0, 0), frameData.size)));
     queueFrame(frameData);
 }
 
@@ -999,14 +1000,16 @@ void VideoStream::sendFrameH264(const VideoFrame &frame)
     avcStream.data = (BYTE *)frame.data.data();
     avcStream.length = frame.data.length();
 
-    avcStream.meta.numRegionRects = 1;
-    auto rects = std::make_unique<RECTANGLE_16[]>(1);
-    rects[0].left = 0;
-    rects[0].top = 0;
-    rects[0].right = frame.size.width();
-    rects[0].bottom = frame.size.height();
+    const QRegion damage = frame.damage;
+    avcStream.meta.numRegionRects = damage.rectCount();
+    auto rects = std::make_unique<RECTANGLE_16[]>(damage.rectCount());
+    qsizetype rectIndex = 0;
+    for (const QRect &rect : damage) {
+        rects[rectIndex++] = toRectangle16(rect);
+    }
+    qDebug() << damage;
     avcStream.meta.regionRects = rects.get();
-    auto qualities = std::make_unique<RDPGFX_H264_QUANT_QUALITY[]>(1);
+    auto qualities = std::make_unique<RDPGFX_H264_QUANT_QUALITY[]>(damage.rectCount());
     avcStream.meta.quantQualityVals = qualities.get();
     qualities[0].qp = 22;
     qualities[0].p = 0;
@@ -1125,7 +1128,7 @@ void VideoStream::updateBackpressure()
         std::lock_guard lock(d->frameQueueMutex);
         hasBackpressure = d->frameQueue.count() > 2;
     }
-    d->encodedStream->setEncoderPaused(hasBackpressure);
+    // d->encodedStream->setEncoderPaused(hasBackpressure);
 }
 }
 
