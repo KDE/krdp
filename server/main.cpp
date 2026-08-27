@@ -51,11 +51,11 @@ int main(int argc, char **argv)
          u"data"_s,
          u"1920x1080@1"_s},
         {u"quality"_s,
-         u"Encoding quality of the stream, from 0 (lowest) to 100 (highest). With adaptive quality (the default) this is the upper bound; with --static it is the fixed quality."_s,
+         u"Encoding quality of the stream, from 0 (lowest) to 100 (highest). With adaptive quality (the default) this is the upper bound; with --static-quality it is the fixed quality."_s,
          u"quality"_s},
         {u"adaptive-quality"_s,
          u"Adjust the encoding quality at runtime based on the client's network conditions, up to --quality. On by default; only matters if disabled in the configuration."_s},
-        {u"static"_s, u"Pin the encoding quality at --quality instead of adapting it to the client's network conditions."_s},
+        {u"static-quality"_s, u"Pin the encoding quality at --quality instead of adapting it to the client's network conditions."_s},
 #ifdef WITH_PLASMA_SESSION
         {u"plasma"_s, u"Use Plasma protocols instead of XDP"_s},
 #endif
@@ -144,7 +144,7 @@ int main(int argc, char **argv)
         controller.setMonitorIndex(parser.isSet(u"monitor"_s) ? std::optional(parser.value(u"monitor"_s).toInt()) : std::nullopt);
     }
     controller.setQuality(parserValueWithDefault(u"quality", config->quality()));
-    controller.setAdaptiveQuality((parser.isSet(u"adaptive-quality"_s) || config->adaptiveQuality()) && !parser.isSet(u"static"_s));
+    controller.setAdaptiveQuality((parser.isSet(u"adaptive-quality"_s) || config->adaptiveQuality()) && !parser.isSet(u"static-quality"_s));
     controller.setLockOnDisconnect(config->lockOnDisconnect());
 
     if (!server.start()) {
