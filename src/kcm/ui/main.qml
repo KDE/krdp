@@ -3,9 +3,10 @@
 // SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 
 import QtQuick
-import QtQuick.Controls as QQC2
 import QtQuick.Layouts
-import QtQuick.Dialogs as QtDialogs
+
+import QtQuick.Controls as QQC2
+
 import org.kde.kirigami as Kirigami
 import org.kde.kcmutils as KCM
 
@@ -206,86 +207,85 @@ KCM.ScrollViewKCM {
     view: UserListView {
         id: userListView
 
+        footerPositioning: ListView.InlineFooter
         footer: Item {
-            id: footerWrapper
+            height: settingsFooter.height
+        }
+
+        // Due to strange behaviour with PullBackFooter, ListView's positioning and originY with the header,
+        // we have ListView reserve scrolling room for the footer and position it manually with the following
+        // horribly-derived expression for bottomMargin
+        QQC2.ToolBar {
+            id: settingsFooter
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: userListView.contentY - userListView.originY + Math.min(0, userListView.height - userListView.contentHeight)
+
             width: userListView.width
-            height: settingsFooter.implicitHeight
 
-            function stretchToFillViewport() {
-                const rowsOnlyHeight = userListView.contentHeight - footerWrapper.height;
-                footerWrapper.height = Math.max(settingsFooter.implicitHeight, userListView.height - rowsOnlyHeight);
-            }
+            position: QQC2.ToolBar.Footer
 
-            Connections {
-                target: userListView
-                function onContentHeightChanged() { footerWrapper.stretchToFillViewport(); }
-                function onHeightChanged() { footerWrapper.stretchToFillViewport(); }
-            }
+            contentItem: Kirigami.Form {
+                id: settingsLayout
 
-            QQC2.ToolBar {
-                id: settingsFooter
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                    bottom: parent.bottom
-                }
-                position: QQC2.ToolBar.Footer
+                readonly property bool showAdvancedCertUI: !autoGenCertSwitch.checked
 
-                contentItem: Kirigami.FormLayout {
-                    id: settingsLayout
+                Kirigami.FormGroup {
+                    title: i18nc("@title:group", "Server Settings")
 
-                    readonly property bool showAdvancedCertUI: !autoGenCertSwitch.checked
-
-                    Item {
-                        Kirigami.FormData.isSection: true
-                        Kirigami.FormData.label: i18nc("title:group Group of RDP server settings", "Server Settings")
-                    }
-
-                    QQC2.CheckBox {
-                        id: autostartOnLogin
+                    Kirigami.FormEntry {
+                        title: i18nc("part of a sentence: 'Start server [automatically on login]'", "Start server:")
                         visible: kcm.managementAvailable
-                        text: i18nc("@option:check", "Autostart on login")
-                        checked: settings.autostart
-                        onToggled: {
-                            settings.autostart = checked;
-                        }
-                        KCM.SettingStateBinding {
-                            configObject: settings
-                            settingName: "autostart"
-                        }
-                    }
 
-                    QQC2.TextField {
-                        id: portField
-                        inputMask: "99999999"
-                        Layout.maximumWidth: Kirigami.Units.gridUnit * 5
-                        inputMethodHints: Qt.ImhDigitsOnly
-                        Kirigami.FormData.label: i18nc("@label:textbox", "Listening Port:")
-                        text: settings.listenPort
-                        onTextEdited: {
-                            settings.listenPort = text;
-                        }
-                        KCM.SettingStateBinding {
-                            configObject: settings
-                            settingName: "listenPort"
+                        contentItem: QQC2.CheckBox {
+                            text: i18nc("part of a sentence: 'Start server automatically on login'", "Automatically on login")
+                            checked: settings.autostart
+                            onToggled: settings.autostart = checked
+
+                            KCM.SettingStateBinding {
+                                configObject: settings
+                                settingName: "autostart"
+                            }
                         }
                     }
 
-                    Item {
-                        Kirigami.FormData.isSection: true
+                    Kirigami.FormEntry {
+                        title: i18n("Listening port:")
+
+                        contentItem: QQC2.SpinBox {
+                            id: portField
+
+                            from: 1024
+                            to: 65535
+                            stepSize: 1
+                            validator: IntValidator {
+                                bottom: portField.from
+                                top: portField.to
+                            }
+
+                            value: settings.listenPort
+                            onValueModified: settings.listenPort = value
+
+                            textFromValue: (value, locale) => {
+                                // Commas should not appear in port numbers
+                                locale.numberOptions = Locale.OmitGroupSeparator;
+                                return Number(value).toLocaleString(locale, 'f', 0);
+                            }
+
+                            KCM.SettingStateBinding {
+                                configObject: settings
+                                settingName: "listenPort"
+                            }
+                        }
                     }
 
-                    ColumnLayout {
-                        Layout.fillWidth: true
-                        Kirigami.FormData.label: i18nc("@label", "Operating mode:")
-                        Kirigami.FormData.buddyFor: exclusiveMode
+                    Kirigami.FormSeparator {}
 
-                        spacing: 0
+                    Kirigami.FormEntry {
+                        title: i18n("Operating mode:")
+                        subtitle: i18nc("@info:usagetip", "Displays will be locked, and the remote user will see a virtual screen.")
 
-
-                        QQC2.CheckBox {
-                            id: exclusiveMode
-                            text: i18nc("@option:check", "Enable exclusive mode")
+                        contentItem: QQC2.CheckBox {
+                            text: i18n("Enable exclusive mode")
                             checked: settings.exclusiveMode
                             onToggled: settings.exclusiveMode = checked
 
@@ -294,144 +294,198 @@ KCM.ScrollViewKCM {
                                 settingName: "exclusiveMode"
                             }
                         }
-
-                        QQC2.Label {
-                            Layout.fillWidth: true
-                            leftPadding: Application.layoutDirection === Qt.LeftToRight ?
-                                exclusiveMode.indicator.width + exclusiveMode.spacing : padding
-                            rightPadding: Application.layoutDirection === Qt.RightToLeft ?
-                                exclusiveMode.indicator.width + exclusiveMode.spacing : padding
-                            text: i18nc("@info:usagetip", "Displays will be locked, and the remote user will see a virtual screen.")
-                            textFormat: Text.PlainText
-                            wrapMode: Text.Wrap
-                            font: Kirigami.Theme.smallFont
-                        }
                     }
 
+                    Kirigami.FormSeparator {}
 
-                    Item {
-                        Kirigami.FormData.isSection: true
-                    }
+                    Kirigami.FormEntry {
+                        title: i18n("Quality:")
 
-                    QQC2.CheckBox {
-                        id: adaptiveQuality
-                        text: i18nc("@option:check", "Adjust quality for network conditions")
-                        checked: settings.adaptiveQuality
-                        onToggled: {
-                            settings.adaptiveQuality = checked;
-                        }
-                        KCM.SettingStateBinding {
-                            configObject: settings
-                            settingName: "adaptiveQuality"
-                        }
-                    }
+                        contentItem: ColumnLayout {
+                            Kirigami.FormData.buddyFor: qualitySlider
 
-                    ColumnLayout {
-                        enabled: userListView.count > 0
-                        Layout.preferredWidth: certKeyLayout.width
+                            spacing: Kirigami.Units.smallSpacing
 
-                        Kirigami.FormData.label: adaptiveQuality.checked ? i18nc("@label:textbox", "Maximum video quality:") : i18nc("@label:textbox", "Video quality:")
-                        Kirigami.FormData.buddyFor: qualitySlider
-                        QQC2.Slider {
-                            id: qualitySlider
-                            Layout.fillWidth: true
-                            from: 50
-                            to: 100
-                            stepSize: 5
-                            Kirigami.StyleHints.tickMarkStepSize: stepSize
-                            value: settings.quality
-                            onMoved: {
-                                settings.quality = value;
+                            QQC2.Slider {
+                                id: qualitySlider
+                                Layout.fillWidth: true
+
+                                from: 50
+                                to: 100
+                                stepSize: 5
+
+                                Kirigami.StyleHints.tickMarkStepSize: stepSize
+                                snapMode: QQC2.Slider.SnapAlways
+
+                                value: settings.quality
+                                onMoved: settings.quality = value
+
+                                KCM.SettingStateBinding {
+                                    configObject: settings
+                                    settingName: "quality"
+                                }
                             }
+
+                            RowLayout {
+                                Layout.maximumWidth: qualitySlider.width
+                                Layout.fillWidth: true
+                                Layout.bottomMargin: qualitySlider.Layout.topMargin
+
+                                spacing: 0
+
+                                QQC2.Label {
+                                    Layout.fillWidth: true
+                                    text: i18nc("Animation speed", "Responsiveness")
+                                    textFormat: Text.PlainText
+                                    horizontalAlignment: Text.AlignLeft
+                                }
+
+                                QQC2.Label {
+                                    Layout.fillWidth: true
+                                    text: i18nc("Animation speed", "Quality")
+                                    textFormat: Text.PlainText
+                                    horizontalAlignment: Text.AlignRight
+                                }
+                            }
+                        }
+                    }
+
+                    Kirigami.FormEntry {
+                        contentItem: QQC2.CheckBox {
+                            text: i18n("Automatically adjust quality for network conditions")
+                            checked: settings.adaptiveQuality
+                            onToggled: settings.adaptiveQuality = checked
+
                             KCM.SettingStateBinding {
                                 configObject: settings
-                                settingName: "quality"
+                                settingName: "adaptiveQuality"
                             }
                         }
-                        RowLayout {
-                            QQC2.Label {
-                                text: i18nc("@label:slider", "Responsiveness")
+                    }
+                }
+
+                Kirigami.FormGroup {
+                    title: i18nc("@title:group", "Security Certificates")
+
+                    Kirigami.FormEntry {
+                        title: i18nc("part of a sentence: 'Generate certificates [automatically]'", "Generate certificates:")
+
+                        contentItem: QQC2.CheckBox {
+                            id: autoGenCertSwitch
+
+                            text: i18nc("part of a sentence: '[Generate certificates] automatically'", "Automatically")
+                            checked: settings.autogenerateCertificates
+                            onCheckedChanged: {
+                                settings.autogenerateCertificates = checked;
+                                if (checked) {
+                                    kcm.generateCertificate();
+
+                                    certPathField.text = kcm.defaultCertificatePath;
+                                    certKeyPathField.text = kcm.defaultCertificateKeyPath;
+                                }
                             }
-                            Item {
-                                Layout.fillWidth: true
-                            }
-                            QQC2.Label {
-                                text: i18nc("@label:slider", "Quality")
+
+                            KCM.SettingStateBinding {
+                                configObject: settings
+                                settingName: "autogenerateCertificates"
                             }
                         }
                     }
 
-                    Item {
-                        Kirigami.FormData.isSection: true
-                        Kirigami.FormData.label: i18nc("title:group Group of RDP server settings", "Security Certificates")
-                    }
-
-                    QQC2.CheckBox {
-                        id: autoGenCertSwitch
-                        text: i18nc("@label:check generate security certificates automatically", "Generate automatically")
-                        checked: settings.autogenerateCertificates
-                        onToggled: {
-                            settings.autogenerateCertificates = checked;
-                            if (checked) {
-                                kcm.generateCertificate();
-                            }
-                        }
-                        KCM.SettingStateBinding {
-                            configObject: settings
-                            settingName: "autogenerateCertificates"
-                        }
-                    }
-
-                    RowLayout {
-                        id: certLayout
+                    Kirigami.FormEntry {
+                        title: i18n("Certificate path:")
                         visible: settingsLayout.showAdvancedCertUI
-                        spacing: Kirigami.Units.smallSpacing
-                        Kirigami.FormData.label: i18nc("@label:textbox", "Certificate path:")
-                        QQC2.TextField {
-                            id: certPathField
-                            implicitWidth: Kirigami.Units.gridUnit * 14
-                            text: settings.certificate
-                            onTextChanged: {
-                                settings.certificate = text;
+
+                        contentItem: RowLayout {
+                            Kirigami.FormData.buddyFor: certPathField
+
+                            spacing: Kirigami.Units.smallSpacing
+
+                            Kirigami.ActionTextField {
+                                id: certPathField
+                                placeholderText: i18nc("@info:placeholder", "Enter certificate path…")
+
+                                rightActions: Kirigami.Action {
+                                    icon.name: "edit-clear-symbolic"
+                                    visible: certPathField.text !== ""
+                                    onTriggered: {
+                                        certPathField.text = ""
+                                    }
+                                }
+
+                                text: settings.certificate
+                                onAccepted: settings.certificate = text
+
+                                KCM.SettingHighlighter {
+                                    highlight: certPathField.text !== kcm.defaultCertificatePath
+                                }
                             }
-                            KCM.SettingHighlighter {
-                                highlight: settings.certificate !== kcm.defaultCertificatePath
-                            }
-                        }
-                        QQC2.Button {
-                            icon.name: "folder-open-symbolic"
-                            text: i18nc("@action:button", "Choose Certificate File…")
-                            display: QQC2.AbstractButton.IconOnly
-                            onClicked: {
-                                certLoader.selectKey = false;
-                                certLoader.active = true;
+
+                            QQC2.Button {
+                                icon.name: "folder-open-symbolic"
+                                text: i18nc("@action:button", "Choose certificate file…")
+                                display: QQC2.AbstractButton.IconOnly
+
+                                onClicked: {
+                                    certLoader.selectKey = false;
+                                    certLoader.active = true;
+                                }
+
+                                QQC2.ToolTip.visible: hovered || activeFocus
+                                QQC2.ToolTip.text: text
+                                QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
+
+                                Accessible.description: i18n("Opens a file picker for the certificate file")
+                                Accessible.onPressAction: onClicked()
                             }
                         }
                     }
 
-                    RowLayout {
-                        id: certKeyLayout
-                        spacing: Kirigami.Units.smallSpacing
-                        Kirigami.FormData.label: i18nc("@label:textbox", "Certificate key path:")
+                    Kirigami.FormEntry {
+                        title: i18n("Certificate key path:")
                         visible: settingsLayout.showAdvancedCertUI
-                        QQC2.TextField {
-                            id: certKeyPathField
-                            implicitWidth: Kirigami.Units.gridUnit * 14
-                            text: settings.certificateKey
-                            onTextChanged: {
-                                settings.certificateKey = text;
+
+                        contentItem: RowLayout {
+                            Kirigami.FormData.buddyFor: certKeyPathField
+
+                            spacing: Kirigami.Units.smallSpacing
+
+                            Kirigami.ActionTextField {
+                                id: certKeyPathField
+                                placeholderText: i18nc("@info:placeholder", "Enter certificate key path…")
+
+                                rightActions: Kirigami.Action {
+                                    icon.name: "edit-clear-symbolic"
+                                    visible: certKeyPathField.text !== ""
+                                    onTriggered: {
+                                        certKeyPathField.text = ""
+                                    }
+                                }
+
+                                text: settings.certificateKey
+                                onAccepted: settings.certificateKey = text
+
+                                KCM.SettingHighlighter {
+                                    highlight: certKeyPathField.text !== kcm.defaultCertificateKeyPath
+                                }
                             }
-                            KCM.SettingHighlighter {
-                                highlight: settings.certificateKey !== kcm.defaultCertificateKeyPath
-                            }
-                        }
-                        QQC2.Button {
-                            icon.name: "folder-open-symbolic"
-                            text: i18nc("@action:button", "Choose Certificate Key File…")
-                            display: QQC2.AbstractButton.IconOnly
-                            onClicked: {
-                                certLoader.selectKey = true;
-                                certLoader.active = true;
+
+                            QQC2.Button {
+                                icon.name: "folder-open-symbolic"
+                                text: i18nc("@action:button", "Choose certificate key file…")
+                                display: QQC2.AbstractButton.IconOnly
+
+                                onClicked: {
+                                    certLoader.selectKey = true;
+                                    certLoader.active = true;
+                                }
+
+                                QQC2.ToolTip.visible: hovered || activeFocus
+                                QQC2.ToolTip.text: text
+                                QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
+
+                                Accessible.description: i18n("Opens a file picker for the certificate key file")
+                                Accessible.onPressAction: onClicked()
                             }
                         }
                     }

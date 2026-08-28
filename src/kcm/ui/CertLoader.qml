@@ -2,19 +2,26 @@
 //
 // SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 
+import QtCore
 import QtQuick
-import QtQuick.Controls as QQC2
-import QtQuick.Layouts
+
 import QtQuick.Dialogs as QtDialogs
 
 Loader {
     id: certLoader
+
     property bool selectKey
+
     active: false
     sourceComponent: QtDialogs.FileDialog {
         id: fileDialog
-        title: selectKey ? i18nc("@title:window", "Select Certificate Key file") : i18nc("@title:window", "Select Certificate file")
+
+        title: selectKey ? i18nc("@title:window", "Select certificate key file") : i18nc("@title:window", "Select certificate file")
         Component.onCompleted: open()
+
+        currentFolder: StandardPaths.standardLocations(StandardPaths.HomeLocation)[0]
+        nameFilters: selectKey ? ["Certificate keys (*.key)"] : ["Certificates (*.crt)"]
+
         onAccepted: {
             var file = kcm.toLocalFile(selectedFile);
             if (selectKey) {
@@ -24,6 +31,7 @@ Loader {
             }
             certLoader.active = false;
         }
+
         onRejected: {
             certLoader.active = false;
         }
