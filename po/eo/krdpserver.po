@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-19 00:48+0000\n"
+"POT-Creation-Date: 2026-08-28 00:47+0000\n"
 "PO-Revision-Date: 2024-12-28 17:41+0100\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: Esperanto <kde-i18n-doc@kde.org>\n"
@@ -55,29 +55,39 @@ msgstr "La ŝlosilo kiu kongruas kun la TLS-atestilo"
 #. i18n: ectx: label, entry (quality), group (General)
 #: krdpserversettings.kcfg:28
 #, kde-format
-msgid "The quality of the video stream"
-msgstr "La kvalito de la filmetfluo"
+msgid ""
+"The quality of the video stream. The maximum quality when AdaptiveQuality is "
+"enabled."
+msgstr ""
+
+#. i18n: ectx: label, entry (adaptiveQuality), group (General)
+#: krdpserversettings.kcfg:32
+#, kde-format
+msgid ""
+"Adjust the video quality at runtime based on the client's network "
+"conditions, up to Quality."
+msgstr ""
 
 #. i18n: ectx: label, entry (Users), group (General)
-#: krdpserversettings.kcfg:32
+#: krdpserversettings.kcfg:36
 #, kde-format
 msgid "Users allowed to login, passwords are stored in KWallet"
 msgstr "Uzantoj rajtigitaj ensaluti (pasvortoj estas konservitaj en KWallet)"
 
 #. i18n: ectx: label, entry (systemUserEnabled), group (General)
-#: krdpserversettings.kcfg:35
+#: krdpserversettings.kcfg:39
 #, kde-format
 msgid "Whether the current user can log in via PAM"
 msgstr ""
 
 #. i18n: ectx: label, entry (autostart), group (General)
-#: krdpserversettings.kcfg:39
+#: krdpserversettings.kcfg:43
 #, kde-format
 msgid "Autostart the server on login"
 msgstr "Ĉu aŭtomate lanĉi la servilon je ensaluto"
 
 #. i18n: ectx: label, entry (lockOnDisconnect), group (General)
-#: krdpserversettings.kcfg:43
+#: krdpserversettings.kcfg:47
 #, kde-format
 msgid ""
 "Lock the session when the last client disconnects and unlock it on connect"
@@ -92,3 +102,6 @@ msgstr "RDP-Servilo"
 #, kde-format
 msgid "Quit"
 msgstr "Forlasi"
+
+#~ msgid "The quality of the video stream"
+#~ msgstr "La kvalito de la filmetfluo"

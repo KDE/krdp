@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-19 00:48+0000\n"
+"POT-Creation-Date: 2026-08-28 00:47+0000\n"
 "PO-Revision-Date: 2025-05-22 16:52+0400\n"
 "Last-Translator: linux <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -54,29 +54,39 @@ msgstr "TLS sertifikatına uyğun gələn açar"
 #. i18n: ectx: label, entry (quality), group (General)
 #: krdpserversettings.kcfg:28
 #, kde-format
-msgid "The quality of the video stream"
-msgstr "Video axının keyfiyyəti"
+msgid ""
+"The quality of the video stream. The maximum quality when AdaptiveQuality is "
+"enabled."
+msgstr ""
+
+#. i18n: ectx: label, entry (adaptiveQuality), group (General)
+#: krdpserversettings.kcfg:32
+#, kde-format
+msgid ""
+"Adjust the video quality at runtime based on the client's network "
+"conditions, up to Quality."
+msgstr ""
 
 #. i18n: ectx: label, entry (Users), group (General)
-#: krdpserversettings.kcfg:32
+#: krdpserversettings.kcfg:36
 #, kde-format
 msgid "Users allowed to login, passwords are stored in KWallet"
 msgstr "Girişə icazə verilən istifadəçilərin şifrələri KWallet-də saxlanılır"
 
 #. i18n: ectx: label, entry (systemUserEnabled), group (General)
-#: krdpserversettings.kcfg:35
+#: krdpserversettings.kcfg:39
 #, kde-format
 msgid "Whether the current user can log in via PAM"
 msgstr ""
 
 #. i18n: ectx: label, entry (autostart), group (General)
-#: krdpserversettings.kcfg:39
+#: krdpserversettings.kcfg:43
 #, kde-format
 msgid "Autostart the server on login"
 msgstr "Girişdə serveri avtomatik başlatmaq"
 
 #. i18n: ectx: label, entry (lockOnDisconnect), group (General)
-#: krdpserversettings.kcfg:43
+#: krdpserversettings.kcfg:47
 #, kde-format
 msgid ""
 "Lock the session when the last client disconnects and unlock it on connect"
@@ -91,3 +101,6 @@ msgstr "RDP Serveri"
 #, kde-format
 msgid "Quit"
 msgstr "Çıxış"
+
+#~ msgid "The quality of the video stream"
+#~ msgstr "Video axının keyfiyyəti"

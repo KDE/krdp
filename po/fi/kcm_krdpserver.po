@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-19 00:48+0000\n"
+"POT-Creation-Date: 2026-08-28 00:47+0000\n"
 "PO-Revision-Date: 2025-11-13 18:10+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -44,29 +44,39 @@ msgstr "TLS-varmennetta vastaava avain"
 #. i18n: ectx: label, entry (quality), group (General)
 #: krdpserversettings.kcfg:28
 #, kde-format
-msgid "The quality of the video stream"
-msgstr "Videovirran laatu"
+msgid ""
+"The quality of the video stream. The maximum quality when AdaptiveQuality is "
+"enabled."
+msgstr ""
+
+#. i18n: ectx: label, entry (adaptiveQuality), group (General)
+#: krdpserversettings.kcfg:32
+#, kde-format
+msgid ""
+"Adjust the video quality at runtime based on the client's network "
+"conditions, up to Quality."
+msgstr ""
 
 #. i18n: ectx: label, entry (Users), group (General)
-#: krdpserversettings.kcfg:32
+#: krdpserversettings.kcfg:36
 #, kde-format
 msgid "Users allowed to login, passwords are stored in KWallet"
 msgstr "Käyttäjät, jotka saavat kirjautua; salasanat talletetaan lompakkoon"
 
 #. i18n: ectx: label, entry (systemUserEnabled), group (General)
-#: krdpserversettings.kcfg:35
+#: krdpserversettings.kcfg:39
 #, kde-format
 msgid "Whether the current user can log in via PAM"
 msgstr "Voiko nykyinen käyttäjä kirjautua PAMilla"
 
 #. i18n: ectx: label, entry (autostart), group (General)
-#: krdpserversettings.kcfg:39
+#: krdpserversettings.kcfg:43
 #, kde-format
 msgid "Autostart the server on login"
 msgstr "Käynnistä palvelin automaattisesti kirjauduttaessa"
 
 #. i18n: ectx: label, entry (lockOnDisconnect), group (General)
-#: krdpserversettings.kcfg:43
+#: krdpserversettings.kcfg:47
 #, kde-format
 msgid ""
 "Lock the session when the last client disconnects and unlock it on connect"
@@ -226,55 +236,69 @@ msgctxt "@option:check"
 msgid "Lock the session when disconnecting, unlock on connect"
 msgstr ""
 
-#: ui/main.qml:291
+#: ui/main.qml:289
+#, kde-format
+msgctxt "@option:check"
+msgid "Adjust quality for network conditions"
+msgstr ""
+
+#: ui/main.qml:304
+#, fuzzy, kde-format
+#| msgctxt "@label:textbox"
+#| msgid "Video quality:"
+msgctxt "@label:textbox"
+msgid "Maximum video quality:"
+msgstr "Videon laatu:"
+
+#: ui/main.qml:304
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Video quality:"
 msgstr "Videon laatu:"
 
-#: ui/main.qml:311
+#: ui/main.qml:324
 #, kde-format
 msgctxt "@label:slider"
 msgid "Responsiveness"
 msgstr "Herkkyys"
 
-#: ui/main.qml:317
+#: ui/main.qml:330
 #, kde-format
 msgctxt "@label:slider"
 msgid "Quality"
 msgstr "Laatu"
 
-#: ui/main.qml:324
+#: ui/main.qml:337
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Security Certificates"
 msgstr "Tietoturvavarmenteet"
 
-#: ui/main.qml:329
+#: ui/main.qml:342
 #, kde-format
 msgctxt "@label:check generate security certificates automatically"
 msgid "Generate automatically"
 msgstr "Luo automaattisesti"
 
-#: ui/main.qml:347
+#: ui/main.qml:360
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate path:"
 msgstr "Varmenteiden sijainti:"
 
-#: ui/main.qml:361
+#: ui/main.qml:374
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate File…"
 msgstr "Valitse varmennetiedosto…"
 
-#: ui/main.qml:373
+#: ui/main.qml:386
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate key path:"
 msgstr "Varmenneavaimen sijainti:"
 
-#: ui/main.qml:388
+#: ui/main.qml:401
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate Key File…"
@@ -385,6 +409,9 @@ msgstr "Muuta käyttäjää…"
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "Poista käyttäjä…"
+
+#~ msgid "The quality of the video stream"
+#~ msgstr "Videovirran laatu"
 
 #~ msgctxt "@info:usagetip"
 #~ msgid "Use any of the following addresses to connect to this device:"

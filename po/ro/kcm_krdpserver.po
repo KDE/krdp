@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-19 00:48+0000\n"
+"POT-Creation-Date: 2026-08-28 00:47+0000\n"
 "PO-Revision-Date: 2026-02-09 12:37+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -46,30 +46,40 @@ msgstr "Cheia care corespunde certificatului TLS"
 #. i18n: ectx: label, entry (quality), group (General)
 #: krdpserversettings.kcfg:28
 #, kde-format
-msgid "The quality of the video stream"
-msgstr "Calitatea fluxului video"
+msgid ""
+"The quality of the video stream. The maximum quality when AdaptiveQuality is "
+"enabled."
+msgstr ""
+
+#. i18n: ectx: label, entry (adaptiveQuality), group (General)
+#: krdpserversettings.kcfg:32
+#, kde-format
+msgid ""
+"Adjust the video quality at runtime based on the client's network "
+"conditions, up to Quality."
+msgstr ""
 
 #. i18n: ectx: label, entry (Users), group (General)
-#: krdpserversettings.kcfg:32
+#: krdpserversettings.kcfg:36
 #, kde-format
 msgid "Users allowed to login, passwords are stored in KWallet"
 msgstr ""
 "Utilizatori cu drept de autentificare, parolele sunt stocate în KWallet"
 
 #. i18n: ectx: label, entry (systemUserEnabled), group (General)
-#: krdpserversettings.kcfg:35
+#: krdpserversettings.kcfg:39
 #, kde-format
 msgid "Whether the current user can log in via PAM"
 msgstr "Dacă utilizatorul actual se poate autentifica prin PAM"
 
 #. i18n: ectx: label, entry (autostart), group (General)
-#: krdpserversettings.kcfg:39
+#: krdpserversettings.kcfg:43
 #, kde-format
 msgid "Autostart the server on login"
 msgstr "Pornește serverul automat la autentificare"
 
 #. i18n: ectx: label, entry (lockOnDisconnect), group (General)
-#: krdpserversettings.kcfg:43
+#: krdpserversettings.kcfg:47
 #, kde-format
 msgid ""
 "Lock the session when the last client disconnects and unlock it on connect"
@@ -230,55 +240,69 @@ msgctxt "@option:check"
 msgid "Lock the session when disconnecting, unlock on connect"
 msgstr ""
 
-#: ui/main.qml:291
+#: ui/main.qml:289
+#, kde-format
+msgctxt "@option:check"
+msgid "Adjust quality for network conditions"
+msgstr ""
+
+#: ui/main.qml:304
+#, fuzzy, kde-format
+#| msgctxt "@label:textbox"
+#| msgid "Video quality:"
+msgctxt "@label:textbox"
+msgid "Maximum video quality:"
+msgstr "Calitate video:"
+
+#: ui/main.qml:304
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Video quality:"
 msgstr "Calitate video:"
 
-#: ui/main.qml:311
+#: ui/main.qml:324
 #, kde-format
 msgctxt "@label:slider"
 msgid "Responsiveness"
 msgstr "Viteză de reacție"
 
-#: ui/main.qml:317
+#: ui/main.qml:330
 #, kde-format
 msgctxt "@label:slider"
 msgid "Quality"
 msgstr "Calitate"
 
-#: ui/main.qml:324
+#: ui/main.qml:337
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Security Certificates"
 msgstr "Certificate de securitate"
 
-#: ui/main.qml:329
+#: ui/main.qml:342
 #, kde-format
 msgctxt "@label:check generate security certificates automatically"
 msgid "Generate automatically"
 msgstr "Generează automat"
 
-#: ui/main.qml:347
+#: ui/main.qml:360
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate path:"
 msgstr "Calea certificatului:"
 
-#: ui/main.qml:361
+#: ui/main.qml:374
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate File…"
 msgstr "Alege fișierul certificatului…"
 
-#: ui/main.qml:373
+#: ui/main.qml:386
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate key path:"
 msgstr "Cale spre cheia certificatului:"
 
-#: ui/main.qml:388
+#: ui/main.qml:401
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate Key File…"
@@ -390,6 +414,9 @@ msgstr "Modifică utilizatorul…"
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "Elimină utilizatorul…"
+
+#~ msgid "The quality of the video stream"
+#~ msgstr "Calitatea fluxului video"
 
 #~ msgctxt "@info:usagetip"
 #~ msgid "Use any of the following addresses to connect to this device:"

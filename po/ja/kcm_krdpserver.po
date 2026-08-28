@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-19 00:48+0000\n"
+"POT-Creation-Date: 2026-08-28 00:47+0000\n"
 "PO-Revision-Date: 2026-05-10 18:28+0900\n"
 "Last-Translator: Mint <5602mint@gmail.com>\n"
 "Language-Team: Japanese <kde-i18n-doc@kde.org>\n"
@@ -43,29 +43,39 @@ msgstr "TLS 証明書にマッチする鍵"
 #. i18n: ectx: label, entry (quality), group (General)
 #: krdpserversettings.kcfg:28
 #, kde-format
-msgid "The quality of the video stream"
-msgstr "映像ストリームの品質"
+msgid ""
+"The quality of the video stream. The maximum quality when AdaptiveQuality is "
+"enabled."
+msgstr ""
+
+#. i18n: ectx: label, entry (adaptiveQuality), group (General)
+#: krdpserversettings.kcfg:32
+#, kde-format
+msgid ""
+"Adjust the video quality at runtime based on the client's network "
+"conditions, up to Quality."
+msgstr ""
 
 #. i18n: ectx: label, entry (Users), group (General)
-#: krdpserversettings.kcfg:32
+#: krdpserversettings.kcfg:36
 #, kde-format
 msgid "Users allowed to login, passwords are stored in KWallet"
 msgstr "ログインが許可されたユーザー (パスワードは KWallet に保存されています)"
 
 #. i18n: ectx: label, entry (systemUserEnabled), group (General)
-#: krdpserversettings.kcfg:35
+#: krdpserversettings.kcfg:39
 #, kde-format
 msgid "Whether the current user can log in via PAM"
 msgstr "現在のユーザーが PAM を通じてログインできるかどうか"
 
 #. i18n: ectx: label, entry (autostart), group (General)
-#: krdpserversettings.kcfg:39
+#: krdpserversettings.kcfg:43
 #, kde-format
 msgid "Autostart the server on login"
 msgstr "ログイン時にサーバーを自動開始"
 
 #. i18n: ectx: label, entry (lockOnDisconnect), group (General)
-#: krdpserversettings.kcfg:43
+#: krdpserversettings.kcfg:47
 #, kde-format
 msgid ""
 "Lock the session when the last client disconnects and unlock it on connect"
@@ -227,55 +237,69 @@ msgctxt "@option:check"
 msgid "Lock the session when disconnecting, unlock on connect"
 msgstr ""
 
-#: ui/main.qml:291
+#: ui/main.qml:289
+#, kde-format
+msgctxt "@option:check"
+msgid "Adjust quality for network conditions"
+msgstr ""
+
+#: ui/main.qml:304
+#, fuzzy, kde-format
+#| msgctxt "@label:textbox"
+#| msgid "Video quality:"
+msgctxt "@label:textbox"
+msgid "Maximum video quality:"
+msgstr "映像品質:"
+
+#: ui/main.qml:304
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Video quality:"
 msgstr "映像品質:"
 
-#: ui/main.qml:311
+#: ui/main.qml:324
 #, kde-format
 msgctxt "@label:slider"
 msgid "Responsiveness"
 msgstr "応答性重視"
 
-#: ui/main.qml:317
+#: ui/main.qml:330
 #, kde-format
 msgctxt "@label:slider"
 msgid "Quality"
 msgstr "品質重視"
 
-#: ui/main.qml:324
+#: ui/main.qml:337
 #, kde-format
 msgctxt "title:group Group of RDP server settings"
 msgid "Security Certificates"
 msgstr "セキュリティ証明書"
 
-#: ui/main.qml:329
+#: ui/main.qml:342
 #, kde-format
 msgctxt "@label:check generate security certificates automatically"
 msgid "Generate automatically"
 msgstr "自動的に生成"
 
-#: ui/main.qml:347
+#: ui/main.qml:360
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate path:"
 msgstr "証明書のパス:"
 
-#: ui/main.qml:361
+#: ui/main.qml:374
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate File…"
 msgstr "証明書ファイルを選択…"
 
-#: ui/main.qml:373
+#: ui/main.qml:386
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Certificate key path:"
 msgstr "証明書鍵のパス:"
 
-#: ui/main.qml:388
+#: ui/main.qml:401
 #, kde-format
 msgctxt "@action:button"
 msgid "Choose Certificate Key File…"
@@ -387,6 +411,9 @@ msgstr "ユーザーを編集…"
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "ユーザーを削除…"
+
+#~ msgid "The quality of the video stream"
+#~ msgstr "映像ストリームの品質"
 
 #~ msgctxt "@info:usagetip"
 #~ msgid "Use any of the following addresses to connect to this device:"
