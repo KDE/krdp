@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-08-28 00:47+0000\n"
-"PO-Revision-Date: 2026-07-31 08:45+0300\n"
+"PO-Revision-Date: 2026-08-28 13:25+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -49,6 +49,7 @@ msgid ""
 "The quality of the video stream. The maximum quality when AdaptiveQuality is "
 "enabled."
 msgstr ""
+"Якість відеопотоку. Максимальна якість, якщо увімкнено AdaptiveQuality."
 
 #. i18n: ectx: label, entry (adaptiveQuality), group (General)
 #: krdpserversettings.kcfg:32
@@ -57,6 +58,8 @@ msgid ""
 "Adjust the video quality at runtime based on the client's network "
 "conditions, up to Quality."
 msgstr ""
+"Скоригувати якість відео у динамічному режимі на основі умов роботи мережі, "
+"аж до значення параметра «Якість»."
 
 #. i18n: ectx: label, entry (Users), group (General)
 #: krdpserversettings.kcfg:36
@@ -242,15 +245,13 @@ msgstr "Блокувати сеанс при від'єднанні, розбло
 #, kde-format
 msgctxt "@option:check"
 msgid "Adjust quality for network conditions"
-msgstr ""
+msgstr "Скоригувати якість за умовами роботи мережі"
 
 #: ui/main.qml:304
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Video quality:"
+#, kde-format
 msgctxt "@label:textbox"
 msgid "Maximum video quality:"
-msgstr "Якість відео:"
+msgstr "Максимальна якість відео:"
 
 #: ui/main.qml:304
 #, kde-format

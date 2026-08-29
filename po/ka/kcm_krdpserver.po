@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-08-28 00:47+0000\n"
-"PO-Revision-Date: 2026-07-31 05:24+0200\n"
+"PO-Revision-Date: 2026-08-28 06:44+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -48,7 +48,7 @@ msgstr "გასაღები, რომელიც TLS სერტიფ�
 msgid ""
 "The quality of the video stream. The maximum quality when AdaptiveQuality is "
 "enabled."
-msgstr ""
+msgstr "ვიდეონაკადის ხარისხი. მაქს. ხარისხი, როცა AdaptiveQuality ჩართულია."
 
 #. i18n: ectx: label, entry (adaptiveQuality), group (General)
 #: krdpserversettings.kcfg:32
@@ -57,6 +57,8 @@ msgid ""
 "Adjust the video quality at runtime based on the client's network "
 "conditions, up to Quality."
 msgstr ""
+"ვიდეოს ხარისხის გასწორება მუშაობისას კლიენტის ქსელის მდგომარეობაზე "
+"დამოკიდებულებით."
 
 #. i18n: ectx: label, entry (Users), group (General)
 #: krdpserversettings.kcfg:36
@@ -240,15 +242,13 @@ msgstr "სესიის დაბლოკვა გათიშვისა�
 #, kde-format
 msgctxt "@option:check"
 msgid "Adjust quality for network conditions"
-msgstr ""
+msgstr "ხარისხის გასწორება ქსელის მდგომარეობაზე დამოკიდებულებით"
 
 #: ui/main.qml:304
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Video quality:"
+#, kde-format
 msgctxt "@label:textbox"
 msgid "Maximum video quality:"
-msgstr "ვიდეოს ხარისხი:"
+msgstr "მაქს. ვიდეოს ხარისხი:"
 
 #: ui/main.qml:304
 #, kde-format

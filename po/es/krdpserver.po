@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: krdpserver\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-08-28 00:47+0000\n"
-"PO-Revision-Date: 2026-07-23 11:53+0100\n"
+"PO-Revision-Date: 2026-08-28 16:38+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 26.04.3\n"
+"X-Generator: Lokalize 26.08.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -61,6 +61,8 @@ msgid ""
 "The quality of the video stream. The maximum quality when AdaptiveQuality is "
 "enabled."
 msgstr ""
+"Calidad de la transmisión de vídeo. La máxima calidad cuando AdaptiveQuality "
+"está activado."
 
 #. i18n: ectx: label, entry (adaptiveQuality), group (General)
 #: krdpserversettings.kcfg:32
@@ -69,6 +71,8 @@ msgid ""
 "Adjust the video quality at runtime based on the client's network "
 "conditions, up to Quality."
 msgstr ""
+"Ajustar la calidad de vídeo en tiempo de ejecución en función de las "
+"condiciones de la red del cliente hasta un nivel de calidad determinado."
 
 #. i18n: ectx: label, entry (Users), group (General)
 #: krdpserversettings.kcfg:36
@@ -107,6 +111,3 @@ msgstr "Servidor RDP"
 #, kde-format
 msgid "Quit"
 msgstr "Salir"
-
-#~ msgid "The quality of the video stream"
-#~ msgstr "La calidad de la emisión de vídeo"

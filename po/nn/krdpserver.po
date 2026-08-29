@@ -104,6 +104,3 @@ msgstr "RDP-tenar"
 #, kde-format
 msgid "Quit"
 msgstr "Avslutt"
-
-#~ msgid "The quality of the video stream"
-#~ msgstr "Kvaliteten på videostraumen"

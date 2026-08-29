@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-08-28 00:47+0000\n"
-"PO-Revision-Date: 2026-07-23 21:20+0300\n"
+"PO-Revision-Date: 2026-08-28 20:10+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 26.04.2\n"
+"X-Generator: Lokalize 26.08.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -59,6 +59,8 @@ msgid ""
 "The quality of the video stream. The maximum quality when AdaptiveQuality is "
 "enabled."
 msgstr ""
+"Video akışının kalitesi. AdaptiveQuality etkinken sunulan en yüksek kaliteyi "
+"belirtir."
 
 #. i18n: ectx: label, entry (adaptiveQuality), group (General)
 #: krdpserversettings.kcfg:32
@@ -67,6 +69,8 @@ msgid ""
 "Adjust the video quality at runtime based on the client's network "
 "conditions, up to Quality."
 msgstr ""
+"Video kalitesini çalışma sırasında istemcinin ağ koşullarına bağlı olarak ve "
+"en yüksek kaliteye kadar gerçek zamanlı olarak ayarlayın."
 
 #. i18n: ectx: label, entry (Users), group (General)
 #: krdpserversettings.kcfg:36

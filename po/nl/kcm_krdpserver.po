@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-08-28 00:47+0000\n"
-"PO-Revision-Date: 2026-07-31 18:06+0200\n"
+"PO-Revision-Date: 2026-08-28 10:28+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 26.04.3\n"
+"X-Generator: Lokalize 26.08.0\n"
 
 #. i18n: ectx: label, entry (listenPort), group (General)
 #: krdpserversettings.kcfg:14
@@ -49,6 +49,8 @@ msgid ""
 "The quality of the video stream. The maximum quality when AdaptiveQuality is "
 "enabled."
 msgstr ""
+"De kwaliteit van de videostream. De maximale kwaliteit wanneer "
+"AdaptiveQuality is ingeschakeld."
 
 #. i18n: ectx: label, entry (adaptiveQuality), group (General)
 #: krdpserversettings.kcfg:32
@@ -57,6 +59,8 @@ msgid ""
 "Adjust the video quality at runtime based on the client's network "
 "conditions, up to Quality."
 msgstr ""
+"Pas de videokwaliteit tijdens uitvoeren aan op basis van de "
+"netwerkomstandigheden van de client, tot aan de opgegeven kwaliteit."
 
 #. i18n: ectx: label, entry (Users), group (General)
 #: krdpserversettings.kcfg:36
@@ -245,15 +249,13 @@ msgstr ""
 #, kde-format
 msgctxt "@option:check"
 msgid "Adjust quality for network conditions"
-msgstr ""
+msgstr "Pas de kwaliteit aan op basis van de netwerkomstandigheden"
 
 #: ui/main.qml:304
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Video quality:"
+#, kde-format
 msgctxt "@label:textbox"
 msgid "Maximum video quality:"
-msgstr "Videokwaliteit:"
+msgstr "Maximale videokwaliteit:"
 
 #: ui/main.qml:304
 #, kde-format

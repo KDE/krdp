@@ -238,12 +238,10 @@ msgid "Adjust quality for network conditions"
 msgstr ""
 
 #: ui/main.qml:304
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Video quality:"
+#, kde-format
 msgctxt "@label:textbox"
 msgid "Maximum video quality:"
-msgstr "视频画质："
+msgstr ""
 
 #: ui/main.qml:304
 #, kde-format
@@ -399,6 +397,3 @@ msgstr "修改用户…"
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "移除用户…"
-
-#~ msgid "The quality of the video stream"
-#~ msgstr "视频流的画质"

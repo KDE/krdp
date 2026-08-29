@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-08-28 00:47+0000\n"
-"PO-Revision-Date: 2026-07-23 06:24+0200\n"
+"PO-Revision-Date: 2026-08-28 07:11+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <kde-i18n-doc@kde.org>\n"
 "Language: sl\n"
@@ -60,6 +60,8 @@ msgid ""
 "The quality of the video stream. The maximum quality when AdaptiveQuality is "
 "enabled."
 msgstr ""
+"Kakovost video toka. Najvišja kakovost, ko je omogočena možnost "
+"AdaptiveQuality."
 
 #. i18n: ectx: label, entry (adaptiveQuality), group (General)
 #: krdpserversettings.kcfg:32
@@ -68,6 +70,8 @@ msgid ""
 "Adjust the video quality at runtime based on the client's network "
 "conditions, up to Quality."
 msgstr ""
+"Prilagodite kakovost videa med izvajanjem glede na omrežne pogoje odjemalca, "
+"do najvišje vrednosti Kakovosti."
 
 #. i18n: ectx: label, entry (Users), group (General)
 #: krdpserversettings.kcfg:36

@@ -101,6 +101,3 @@ msgstr "RDP 服务器"
 #, kde-format
 msgid "Quit"
 msgstr "退出"
-
-#~ msgid "The quality of the video stream"
-#~ msgstr "视频流的画质"
