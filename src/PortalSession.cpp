@@ -81,7 +81,17 @@ public:
     bool ignoreNextSystemClipboardChange = false;
 
     QDBusObjectPath sessionPath;
+
+    // Input notifications are issued one at a time, each only after the
+    // previous one has been replied to. See dispatchNextInputCall().
+    QQueue<std::function<QDBusPendingCall()>> pendingInputCalls;
+    bool inputCallInFlight = false;
 };
+
+// Upper bound on queued input notifications. Reaching it means the portal has
+// stopped replying, at which point the session is already unusable; dropping
+// the oldest event is better than growing the queue without limit.
+static constexpr int maxPendingInputCalls = 1024;
 
 QString createHandleToken()
 {
@@ -139,6 +149,9 @@ PortalSession::~PortalSession()
         return;
     }
 
+    // Anything still queued belongs to a session that is going away.
+    d->pendingInputCalls.clear();
+
     // Make sure to clear any modifier keys that were pressed when the session closed, otherwise
     // we risk those keys getting stuck and the original session becoming unusable.
     for (auto keycode : {KEY_LEFTCTRL, KEY_RIGHTCTRL, KEY_LEFTSHIFT, KEY_RIGHTSHIFT, KEY_LEFTALT, KEY_RIGHTALT, KEY_LEFTMETA, KEY_RIGHTMETA}) {
@@ -185,14 +198,19 @@ void PortalSession::sendEvent(const std::shared_ptr<QEvent> &event)
             return;
         }
         uint state = me->type() == QEvent::MouseButtonPress ? 1 : 0;
-        d->remoteInterface->NotifyPointerButton(d->sessionPath, QVariantMap{}, button, state);
+        enqueueInputCall([this, button, state]() {
+            return d->remoteInterface->NotifyPointerButton(d->sessionPath, QVariantMap{}, button, state);
+        });
         break;
     }
     case QEvent::MouseMove: {
         auto me = std::static_pointer_cast<QMouseEvent>(event);
         auto position = me->position();
         auto logicalPosition = QPointF{(position.x() / size().width()) * logicalSize().width(), (position.y() / size().height()) * logicalSize().height()};
-        d->remoteInterface->NotifyPointerMotionAbsolute(d->sessionPath, QVariantMap{}, nodeId(), logicalPosition.x(), logicalPosition.y());
+        const auto node = nodeId();
+        enqueueInputCall([this, node, logicalPosition]() {
+            return d->remoteInterface->NotifyPointerMotionAbsolute(d->sessionPath, QVariantMap{}, node, logicalPosition.x(), logicalPosition.y());
+        });
         break;
     }
     case QEvent::Wheel: {
@@ -202,7 +220,9 @@ void PortalSession::sendEvent(const std::shared_ptr<QEvent> &event)
         // degrees by InputHandler. The vertical axis is negated to
         // account for the sign convention in
         // xdg-desktop-portal-kde's requestPointerAxis.
-        d->remoteInterface->NotifyPointerAxis(d->sessionPath, QVariantMap{}, delta.x(), -delta.y());
+        enqueueInputCall([this, delta]() {
+            return d->remoteInterface->NotifyPointerAxis(d->sessionPath, QVariantMap{}, delta.x(), -delta.y());
+        });
         break;
     }
     case QEvent::KeyPress:
@@ -211,14 +231,63 @@ void PortalSession::sendEvent(const std::shared_ptr<QEvent> &event)
         auto state = ke->type() == QEvent::KeyPress ? 1 : 0;
 
         if (ke->nativeScanCode()) {
-            d->remoteInterface->NotifyKeyboardKeycode(d->sessionPath, QVariantMap{}, ke->nativeScanCode(), state);
+            const int keycode = ke->nativeScanCode();
+            enqueueInputCall([this, keycode, state]() {
+                return d->remoteInterface->NotifyKeyboardKeycode(d->sessionPath, QVariantMap{}, keycode, state);
+            });
         } else {
-            d->remoteInterface->NotifyKeyboardKeysym(d->sessionPath, QVariantMap{}, ke->nativeVirtualKey(), state);
+            const int keysym = ke->nativeVirtualKey();
+            enqueueInputCall([this, keysym, state]() {
+                return d->remoteInterface->NotifyKeyboardKeysym(d->sessionPath, QVariantMap{}, keysym, state);
+            });
         }
         break;
     }
     default:
         break;
+    }
+}
+
+void PortalSession::enqueueInputCall(std::function<QDBusPendingCall()> &&call)
+{
+    if (d->pendingInputCalls.size() >= maxPendingInputCalls) {
+        qCWarning(KRDP) << "Portal input queue overflowed; dropping the oldest event";
+        d->pendingInputCalls.dequeue();
+    }
+
+    d->pendingInputCalls.enqueue(std::move(call));
+    dispatchNextInputCall();
+}
+
+void PortalSession::dispatchNextInputCall()
+{
+    // xdg-desktop-portal exports the RemoteDesktop interface with
+    // G_DBUS_INTERFACE_SKELETON_FLAGS_HANDLE_METHOD_INVOCATIONS_IN_THREAD, so
+    // every Notify* invocation runs on its own worker thread. Two calls that
+    // are in flight together therefore race each other to the corresponding
+    // org.freedesktop.impl.portal.RemoteDesktop call, and the implementation
+    // can see them in the wrong order. A key release that overtakes its own
+    // press is dropped by KWin -- its fake input backend ignores a release for
+    // a key it is not holding -- leaving the key logically held: it repeats
+    // until some later release lands, and its next press is swallowed as a
+    // duplicate.
+    //
+    // The frontend issues the impl call *before* it completes the invocation,
+    // so waiting for a reply before sending the next call is sufficient: by
+    // the time reply N arrives, impl call N is already on the frontend's
+    // connection to the implementation, and D-Bus preserves ordering within a
+    // connection. One call in flight at a time therefore makes the ordering
+    // exact rather than merely likely.
+    while (!d->inputCallInFlight && !d->pendingInputCalls.isEmpty()) {
+        auto call = d->pendingInputCalls.dequeue();
+        d->inputCallInFlight = true;
+
+        auto watcher = new QDBusPendingCallWatcher(call(), this);
+        connect(watcher, &QDBusPendingCallWatcher::finished, this, [this](QDBusPendingCallWatcher *watcher) {
+            watcher->deleteLater();
+            d->inputCallInFlight = false;
+            dispatchNextInputCall();
+        });
     }
 }
 

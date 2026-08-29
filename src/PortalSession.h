@@ -54,6 +54,16 @@ private:
     void onSessionStarted(uint code, const QVariantMap &result);
     Q_SLOT void onSessionClosed();
 
+    /**
+     * Queue one input notification for the portal.
+     *
+     * Input must reach the portal implementation in the order it was
+     * generated, which requires that only one Notify* method call is ever in
+     * flight. See dispatchNextInputCall().
+     */
+    void enqueueInputCall(std::function<QDBusPendingCall()> &&call);
+    void dispatchNextInputCall();
+
     class Private;
     const std::unique_ptr<Private> d;
 };
