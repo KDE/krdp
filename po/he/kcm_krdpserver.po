@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-08-28 00:47+0000\n"
-"PO-Revision-Date: 2026-07-31 13:07+0300\n"
+"PO-Revision-Date: 2026-08-30 21:51+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -48,7 +48,7 @@ msgstr "המפתח שמתאים לאישור ה־TLS"
 msgid ""
 "The quality of the video stream. The maximum quality when AdaptiveQuality is "
 "enabled."
-msgstr ""
+msgstr "איכות שידור הווידאו. האיכות המרבית כאשר איכות מסתגלת פעילה."
 
 #. i18n: ectx: label, entry (adaptiveQuality), group (General)
 #: krdpserversettings.kcfg:32
@@ -57,6 +57,8 @@ msgid ""
 "Adjust the video quality at runtime based on the client's network "
 "conditions, up to Quality."
 msgstr ""
+"להתאים את איכות הווידאו תוך כדי פעילות לפי תנאי הרשת של הלקוח, עד איכות "
+"מסוימת."
 
 #. i18n: ectx: label, entry (Users), group (General)
 #: krdpserversettings.kcfg:36
@@ -238,15 +240,13 @@ msgstr "לנעול את ההפעלה בעת התנתקות, לשחרר אותה 
 #, kde-format
 msgctxt "@option:check"
 msgid "Adjust quality for network conditions"
-msgstr ""
+msgstr "התאמת האיכות לתנאי הרשת"
 
 #: ui/main.qml:304
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Video quality:"
+#, kde-format
 msgctxt "@label:textbox"
 msgid "Maximum video quality:"
-msgstr "איכות וידאו:"
+msgstr "איכות וידאו מרבית:"
 
 #: ui/main.qml:304
 #, kde-format

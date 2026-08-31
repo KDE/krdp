@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-08-28 00:47+0000\n"
-"PO-Revision-Date: 2026-08-01 07:06+0200\n"
+"PO-Revision-Date: 2026-08-28 11:52+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 26.04.3\n"
+"X-Generator: Lokalize 26.08.0\n"
 
 #. i18n: ectx: label, entry (listenPort), group (General)
 #: krdpserversettings.kcfg:14
@@ -48,6 +48,8 @@ msgid ""
 "The quality of the video stream. The maximum quality when AdaptiveQuality is "
 "enabled."
 msgstr ""
+"La qualità del flusso video. La qualità massima quando AdaptiveQuality è "
+"abilitato."
 
 #. i18n: ectx: label, entry (adaptiveQuality), group (General)
 #: krdpserversettings.kcfg:32
@@ -56,6 +58,8 @@ msgid ""
 "Adjust the video quality at runtime based on the client's network "
 "conditions, up to Quality."
 msgstr ""
+"Regola la qualità video in tempo reale in base alle condizioni di rete del "
+"client, fino a Qualità."
 
 #. i18n: ectx: label, entry (Users), group (General)
 #: krdpserversettings.kcfg:36
@@ -240,15 +244,13 @@ msgstr "Blocca la sessione alla disconnessione, sbloccala alla connessione"
 #, kde-format
 msgctxt "@option:check"
 msgid "Adjust quality for network conditions"
-msgstr ""
+msgstr "Regola la qualità in base alle condizioni della rete"
 
 #: ui/main.qml:304
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Video quality:"
+#, kde-format
 msgctxt "@label:textbox"
 msgid "Maximum video quality:"
-msgstr "Qualità video:"
+msgstr "Qualità massima del video:"
 
 #: ui/main.qml:304
 #, kde-format
