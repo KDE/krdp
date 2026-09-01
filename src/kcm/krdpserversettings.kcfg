@@ -43,8 +43,8 @@ SPDX-License-Identifier: BSD-2-Clause
       <label>Autostart the server on login</label>
       <default>false</default>
     </entry>
-    <entry name="lockOnDisconnect" key="LockOnDisconnect" type="Bool">
-      <label>Lock the session when the last client disconnects and unlock it on connect</label>
+    <entry name="exclusiveMode" key="ExclusiveMode" type="Bool">
+      <label>Disable the host monitors and create virtual screens for exclusive session use by a remote user</label>
       <default>false</default>
     </entry>
   </group>

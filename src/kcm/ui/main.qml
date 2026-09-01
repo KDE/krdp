@@ -271,17 +271,46 @@ KCM.ScrollViewKCM {
                         }
                     }
 
-                    QQC2.CheckBox {
-                        id: lockOnDisconnect
-                        text: i18nc("@option:check", "Lock the session when disconnecting, unlock on connect")
-                        checked: settings.lockOnDisconnect
-                        onToggled: {
-                            settings.lockOnDisconnect = checked;
+                    Item {
+                        Kirigami.FormData.isSection: true
+                    }
+
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        Kirigami.FormData.label: i18nc("@label", "Operating mode:")
+                        Kirigami.FormData.buddyFor: exclusiveMode
+
+                        spacing: 0
+
+
+                        QQC2.CheckBox {
+                            id: exclusiveMode
+                            text: i18nc("@option:check", "Enable exclusive mode")
+                            checked: settings.exclusiveMode
+                            onToggled: settings.exclusiveMode = checked
+
+                            KCM.SettingStateBinding {
+                                configObject: settings
+                                settingName: "exclusiveMode"
+                            }
                         }
-                        KCM.SettingStateBinding {
-                            configObject: settings
-                            settingName: "lockOnDisconnect"
+
+                        QQC2.Label {
+                            Layout.fillWidth: true
+                            leftPadding: Application.layoutDirection === Qt.LeftToRight ?
+                                exclusiveMode.indicator.width + exclusiveMode.spacing : padding
+                            rightPadding: Application.layoutDirection === Qt.RightToLeft ?
+                                exclusiveMode.indicator.width + exclusiveMode.spacing : padding
+                            text: i18nc("@info:usagetip", "Displays will be locked, and the remote user will see a virtual screen.")
+                            textFormat: Text.PlainText
+                            wrapMode: Text.Wrap
+                            font: Kirigami.Theme.smallFont
                         }
+                    }
+
+
+                    Item {
+                        Kirigami.FormData.isSection: true
                     }
 
                     QQC2.CheckBox {

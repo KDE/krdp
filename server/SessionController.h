@@ -23,10 +23,17 @@ class SessionController : public QObject
 {
     Q_OBJECT
 public:
+    enum class OperationMode {
+        RemoteAccess,
+        SharedAccess,
+        AdditionalDisplay,
+    };
+
     enum class SessionType {
         Portal,
         Plasma,
     };
+    Q_ENUM(SessionType)
 
     SessionController(KRdp::Server *server, SessionType sessionType);
     ~SessionController() override;
@@ -35,21 +42,17 @@ public:
     void setMonitorIndex(const std::optional<int> &index);
     void setQuality(const std::optional<int> &quality);
     void setAdaptiveQuality(bool adaptive);
+    OperationMode operationMode() const;
+    void setOperationMode(OperationMode mode);
     void setSNIStatus(const KRdp::RdpConnection::State state);
     void stopFromSNI();
-
-    /**
-     * When enabled, lock the desktop session as the last client disconnects and
-     * unlock it (via logind) when a client connects, so the physical machine is
-     * left locked while no one is using it remotely.
-     */
-    void setLockOnDisconnect(bool lock);
 
 private:
     void onNewConnection(KRdp::RdpConnection *newConnection);
     std::unique_ptr<KRdp::AbstractSession> makeSession();
-    // Lock/unlock the desktop session via logind (no-op unless setLockOnDisconnect(true)).
+    // Lock/unlock the desktop session via logind when operating in remote-access mode.
     void setSessionLocked(bool locked);
+    void switchToGreeter();
 
     KRdp::Server *m_server = nullptr;
     SessionType m_sessionType;
@@ -62,7 +65,7 @@ private:
 
     std::vector<std::unique_ptr<SessionWrapper>> m_wrappers;
 
-    bool m_lockOnDisconnect = false;
+    OperationMode m_operatingMode = OperationMode::SharedAccess;
 
     KStatusNotifierItem *m_sni;
 };

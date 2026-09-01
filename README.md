@@ -60,6 +60,8 @@ The following command line options are available for the example server:
     <dt>--certificate-key <certificate-key></dt>  
     <dd>The path to the TLS certificate key that matches the provided certificate.</dd>
     <dt>--monitor <monitor></dt>The index of the monitor to use for streaming video. If not supplied the whole workspace is used.</dd>
+    <dt>--mode <mode></dt>
+    <dd>Set the operation mode to <code>RemoteAccess</code>, <code>SharedAccess</code>, or <code>AdditionalDisplay</code>.</dd>
     <dt>--quality <quality></dt>
     <dd>Set the video quality, from 0 (lowest) to 100 (highest).</dd>
 </dl>

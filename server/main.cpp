@@ -23,6 +23,21 @@
 
 using namespace Qt::StringLiterals;
 
+static std::optional<SessionController::OperationMode> parseOperationMode(QAnyStringView value)
+{
+    if (value == u"RemoteAccess"_s) {
+        return SessionController::OperationMode::RemoteAccess;
+    }
+    if (value == u"SharedAccess"_s) {
+        return SessionController::OperationMode::SharedAccess;
+    }
+    if (value == u"AdditionalDisplay"_s) {
+        return SessionController::OperationMode::AdditionalDisplay;
+    }
+
+    return std::nullopt;
+}
+
 int main(int argc, char **argv)
 {
     QApplication application{argc, argv};
@@ -50,6 +65,7 @@ int main(int argc, char **argv)
          u"Creates a new virtual output to connect to (WIDTHxHEIGHT@SCALE, e.g. 1920x1080@1). Incompatible with --monitor."_s,
          u"data"_s,
          u"1920x1080@1"_s},
+        {u"mode"_s, u"The operation mode to use: RemoteAccess, SharedAccess, or AdditionalDisplay."_s, u"mode"_s},
         {u"quality"_s,
          u"Encoding quality of the stream, from 0 (lowest) to 100 (highest). With adaptive quality (the default) this is the upper bound; with --static-quality it is the fixed quality."_s,
          u"quality"_s},
@@ -145,7 +161,16 @@ int main(int argc, char **argv)
     }
     controller.setQuality(parserValueWithDefault(u"quality", config->quality()));
     controller.setAdaptiveQuality((parser.isSet(u"adaptive-quality"_s) || config->adaptiveQuality()) && !parser.isSet(u"static-quality"_s));
-    controller.setLockOnDisconnect(config->lockOnDisconnect());
+    if (parser.isSet(u"mode"_s)) {
+        const auto mode = parseOperationMode(parser.value(u"mode"_s));
+        if (!mode) {
+            qWarning() << "failed to parse operation mode" << parser.value(u"mode"_s) << ". Expected RemoteAccess, SharedAccess, or AdditionalDisplay";
+            return 1;
+        }
+        controller.setOperationMode(*mode);
+    } else {
+        controller.setOperationMode(config->exclusiveMode() ? SessionController::OperationMode::RemoteAccess : SessionController::OperationMode::SharedAccess);
+    }
 
     if (!server.start()) {
         return -1;

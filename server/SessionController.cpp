@@ -122,6 +122,30 @@ SessionController::~SessionController() noexcept
 {
 }
 
+void SessionController::switchToGreeter()
+{
+    QDBusMessage message = QDBusMessage::createMethodCall(QStringLiteral("org.freedesktop.DisplayManager"),
+                                                          QStringLiteral("/org/freedesktop/DisplayManager/Seat0"),
+                                                          QStringLiteral("org.freedesktop.DisplayManager.Seat"),
+                                                          QStringLiteral("SwitchToGreeter"));
+
+    QDBusPendingCall pendingCall = QDBusConnection::systemBus().asyncCall(message);
+
+    auto *watcher = new QDBusPendingCallWatcher(pendingCall);
+
+    QObject::connect(watcher, &QDBusPendingCallWatcher::finished, watcher, [watcher]() {
+        QDBusPendingReply<> reply = *watcher;
+
+        if (reply.isError()) {
+            qWarning() << "Failed to switch to greeter:" << reply.error().name() << reply.error().message();
+        } else {
+            qDebug() << "Switched to greeter successfully.";
+        }
+
+        watcher->deleteLater();
+    });
+}
+
 void SessionController::setMonitorIndex(const std::optional<int> &index)
 {
     m_monitorIndex = index;
@@ -142,17 +166,18 @@ void SessionController::setAdaptiveQuality(bool adaptive)
     m_adaptiveQuality = adaptive;
 }
 
-void SessionController::setLockOnDisconnect(bool lock)
+SessionController::OperationMode SessionController::operationMode() const
 {
-    m_lockOnDisconnect = lock;
+    return m_operatingMode;
+}
+
+void SessionController::setOperationMode(OperationMode mode)
+{
+    m_operatingMode = mode;
 }
 
 void SessionController::setSessionLocked(bool locked)
 {
-    if (!m_lockOnDisconnect) {
-        return;
-    }
-
     auto bus = QDBusConnection::systemBus();
     const QString service = u"org.freedesktop.login1"_s;
 
@@ -184,12 +209,30 @@ void SessionController::onNewConnection(KRdp::RdpConnection *newConnection)
             wrapper->session->setVirtualMonitor(*m_virtualMonitor);
         } else if (m_monitorIndex) {
             wrapper->session->setActiveStream(*m_monitorIndex);
+        } else {
+            // without an explicit override, we follow the operating mode
+            KRdp::VirtualMonitor defaultMonitor;
+            defaultMonitor.name = i18n("Remote Monitor");
+            defaultMonitor.dpr = 1;
+            defaultMonitor.size = QSize(1024, 768);
+            switch (m_operatingMode) {
+            case OperationMode::SharedAccess:
+                // we do not set a virtual monitor, allowing the client to see all the existing session.
+                break;
+            case OperationMode::RemoteAccess:
+                wrapper->session->setVirtualMonitor(defaultMonitor);
+                // DAVE I kinda feel this shouldn't be here, we should message kwin which should then do this internally
+                // we also want something to prevent a VT switch breaking things
+                switchToGreeter();
+                setSessionLocked(false);
+                break;
+            case OperationMode::AdditionalDisplay:
+                wrapper->session->setVirtualMonitor(defaultMonitor);
+                break;
+            }
         }
         wrapper->connection->videoStream()->setAdaptiveQuality(m_adaptiveQuality);
         wrapper->connection->videoStream()->setVideoQuality(m_quality.value());
-
-        setSessionLocked(false);
-
         connect(wrapper.get(), &SessionWrapper::connectionDestroyed, this, [this](SessionWrapper *wrapper) {
             m_wrappers.erase(std::remove_if(m_wrappers.begin(),
                                             m_wrappers.end(),
@@ -198,7 +241,7 @@ void SessionController::onNewConnection(KRdp::RdpConnection *newConnection)
                                             }),
                              m_wrappers.end());
 
-            if (m_wrappers.empty()) {
+            if (m_wrappers.empty() && m_operatingMode == OperationMode::RemoteAccess) {
                 setSessionLocked(true);
             }
         });
