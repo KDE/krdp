@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-28 00:47+0000\n"
+"POT-Creation-Date: 2026-09-02 00:45+0000\n"
 "PO-Revision-Date: 2026-08-04 07:00+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -85,12 +85,13 @@ msgstr "目前使用者是否能夠透過 PAM 登入"
 msgid "Autostart the server on login"
 msgstr "登入時自動啟動伺服器"
 
-#. i18n: ectx: label, entry (lockOnDisconnect), group (General)
+#. i18n: ectx: label, entry (exclusiveMode), group (General)
 #: krdpserversettings.kcfg:47
 #, kde-format
 msgid ""
-"Lock the session when the last client disconnects and unlock it on connect"
-msgstr "最後一個用戶端斷線時鎖定工作階段，之後連線時再解鎖"
+"Disable the host monitors and create virtual screens for exclusive session "
+"use by a remote user"
+msgstr ""
 
 #: SessionController.cpp:111
 #, kde-format
@@ -101,6 +102,15 @@ msgstr "RDP 伺服器"
 #, kde-format
 msgid "Quit"
 msgstr "離開"
+
+#: SessionController.cpp:215
+#, kde-format
+msgid "Remote Monitor"
+msgstr ""
+
+#~ msgid ""
+#~ "Lock the session when the last client disconnects and unlock it on connect"
+#~ msgstr "最後一個用戶端斷線時鎖定工作階段，之後連線時再解鎖"
 
 #~ msgid "The quality of the video stream"
 #~ msgstr "視訊串流的品質"

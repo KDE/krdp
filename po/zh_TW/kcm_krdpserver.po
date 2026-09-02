@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-28 00:47+0000\n"
+"POT-Creation-Date: 2026-09-02 00:45+0000\n"
 "PO-Revision-Date: 2026-08-04 07:00+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -75,12 +75,13 @@ msgstr "目前使用者是否能夠透過 PAM 登入"
 msgid "Autostart the server on login"
 msgstr "登入時自動啟動伺服器"
 
-#. i18n: ectx: label, entry (lockOnDisconnect), group (General)
+#. i18n: ectx: label, entry (exclusiveMode), group (General)
 #: krdpserversettings.kcfg:47
 #, kde-format
 msgid ""
-"Lock the session when the last client disconnects and unlock it on connect"
-msgstr "最後一個用戶端斷線時鎖定工作階段，之後連線時再解鎖"
+"Disable the host monitors and create virtual screens for exclusive session "
+"use by a remote user"
+msgstr ""
 
 #: ui/CertError.qml:14
 #, kde-format
@@ -88,16 +89,20 @@ msgctxt "@info:status"
 msgid "Generating certificates automatically has failed!"
 msgstr "自動產生金鑰時失敗了！"
 
-#: ui/CertLoader.qml:16
-#, kde-format
+#: ui/CertLoader.qml:19
+#, fuzzy, kde-format
+#| msgctxt "@title:window"
+#| msgid "Select Certificate Key file"
 msgctxt "@title:window"
-msgid "Select Certificate Key file"
+msgid "Select certificate key file"
 msgstr "選擇憑證金鑰檔案"
 
-#: ui/CertLoader.qml:16
-#, kde-format
+#: ui/CertLoader.qml:19
+#, fuzzy, kde-format
+#| msgctxt "@title:window"
+#| msgid "Select Certificate file"
 msgctxt "@title:window"
-msgid "Select Certificate file"
+msgid "Select certificate file"
 msgstr "選擇憑證檔案"
 
 #: ui/CodecError.qml:13
@@ -170,134 +175,198 @@ msgctxt "@info"
 msgid "Received following error with password keychain: %1"
 msgstr "收到以下的密碼鑰匙圈錯誤：%1"
 
-#: ui/main.qml:76
+#: ui/main.qml:77
 #, kde-format
 msgctxt "@option:check Enable RDP server"
 msgid "Enable RDP server"
 msgstr "啟用 RDP 伺服器"
 
-#: ui/main.qml:118
+#: ui/main.qml:119
 #, kde-format
 msgctxt "@info:status"
 msgid "Systemd not found. krdpserver will require manual activation."
 msgstr "找不到 systemd。krdpserver 會需要手動啟動。"
 
-#: ui/main.qml:127
+#: ui/main.qml:128
 #, kde-kuit-format
 msgctxt "@info:status"
 msgid "Error message from the RDP server:<nl/>%1"
 msgstr "來自 RDP 伺服器的錯誤訊息：<nl/>%1"
 
-#: ui/main.qml:142 ui/main_phone.qml:101
+#: ui/main.qml:143 ui/main_phone.qml:101
 #, kde-format
 msgid ""
 "Users listed below can log into this device remotely using apps that support "
 "the “RDP” protocol."
 msgstr "以下所列的使用者可以用支援 RDP 協定的應用程式來遠端登入此裝置。"
 
-#: ui/main.qml:152
+#: ui/main.qml:153
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Connect to this device at any of the following addresses:"
 msgstr "用這些位址任何一個來連線到此裝置："
 
-#: ui/main.qml:187 ui/main_phone.qml:158
+#: ui/main.qml:188 ui/main_phone.qml:158
 #, kde-format
 msgctxt "@action:button"
 msgid "Copy Address to Clipboard"
 msgstr "複製位址到剪貼簿"
 
-#: ui/main.qml:241
+#: ui/main.qml:233 ui/main_phone.qml:173
 #, kde-format
-msgctxt "title:group Group of RDP server settings"
+msgctxt "@title:group"
 msgid "Server Settings"
 msgstr "伺服器設定"
 
-#: ui/main.qml:247
-#, kde-format
-msgctxt "@option:check"
-msgid "Autostart on login"
+#: ui/main.qml:236
+#, fuzzy, kde-format
+#| msgid "Restart Server"
+msgctxt "part of a sentence: 'Start server [automatically on login]'"
+msgid "Start server:"
+msgstr "重新啟動伺服器"
+
+#: ui/main.qml:240
+#, fuzzy, kde-format
+#| msgctxt "@option:check"
+#| msgid "Autostart on login"
+msgctxt "part of a sentence: 'Start server automatically on login'"
+msgid "Automatically on login"
 msgstr "登入時自動啟動"
 
-#: ui/main.qml:263
-#, kde-format
-msgctxt "@label:textbox"
-msgid "Listening Port:"
-msgstr "監聽連接埠："
-
-#: ui/main.qml:276
-#, kde-format
-msgctxt "@option:check"
-msgid "Lock the session when disconnecting, unlock on connect"
-msgstr "斷線時鎖定工作階段，連線時解鎖"
-
-#: ui/main.qml:289
-#, kde-format
-msgctxt "@option:check"
-msgid "Adjust quality for network conditions"
-msgstr ""
-
-#: ui/main.qml:304
+#: ui/main.qml:252
 #, fuzzy, kde-format
 #| msgctxt "@label:textbox"
-#| msgid "Video quality:"
-msgctxt "@label:textbox"
-msgid "Maximum video quality:"
-msgstr "視訊品質："
+#| msgid "Listening Port:"
+msgid "Listening port:"
+msgstr "監聽連接埠："
 
-#: ui/main.qml:304
+#: ui/main.qml:284
 #, kde-format
-msgctxt "@label:textbox"
-msgid "Video quality:"
-msgstr "視訊品質："
+msgid "Operating mode:"
+msgstr ""
 
-#: ui/main.qml:324
+#: ui/main.qml:285
 #, kde-format
-msgctxt "@label:slider"
+msgctxt "@info:usagetip"
+msgid "Displays will be locked, and the remote user will see a virtual screen."
+msgstr ""
+
+#: ui/main.qml:288
+#, kde-format
+msgid "Enable exclusive mode"
+msgstr ""
+
+#: ui/main.qml:302
+#, fuzzy, kde-format
+#| msgctxt "@label:slider"
+#| msgid "Quality"
+msgid "Quality:"
+msgstr "品質"
+
+#: ui/main.qml:338
+#, fuzzy, kde-format
+#| msgctxt "@label:slider"
+#| msgid "Responsiveness"
+msgctxt "Animation speed"
 msgid "Responsiveness"
 msgstr "靈敏度"
 
-#: ui/main.qml:330
-#, kde-format
-msgctxt "@label:slider"
+#: ui/main.qml:345
+#, fuzzy, kde-format
+#| msgctxt "@label:slider"
+#| msgid "Quality"
+msgctxt "Animation speed"
 msgid "Quality"
 msgstr "品質"
 
-#: ui/main.qml:337
+#: ui/main.qml:355
 #, kde-format
-msgctxt "title:group Group of RDP server settings"
+msgid "Automatically adjust quality for network conditions"
+msgstr ""
+
+#: ui/main.qml:368
+#, fuzzy, kde-format
+#| msgctxt "title:group Group of RDP server settings"
+#| msgid "Security Certificates"
+msgctxt "@title:group"
 msgid "Security Certificates"
 msgstr "安全性憑證"
 
-#: ui/main.qml:342
-#, kde-format
-msgctxt "@label:check generate security certificates automatically"
-msgid "Generate automatically"
+#: ui/main.qml:371
+#, fuzzy, kde-format
+#| msgctxt "title:group Group of RDP server settings"
+#| msgid "Security Certificates"
+msgctxt "part of a sentence: 'Generate certificates [automatically]'"
+msgid "Generate certificates:"
+msgstr "安全性憑證"
+
+#: ui/main.qml:376
+#, fuzzy, kde-format
+#| msgctxt "@label:check generate security certificates automatically"
+#| msgid "Generate automatically"
+msgctxt "part of a sentence: '[Generate certificates] automatically'"
+msgid "Automatically"
 msgstr "自動產生"
 
-#: ui/main.qml:360
-#, kde-format
-msgctxt "@label:textbox"
+#: ui/main.qml:396
+#, fuzzy, kde-format
+#| msgctxt "@label:textbox"
+#| msgid "Certificate path:"
 msgid "Certificate path:"
 msgstr "憑證路徑："
 
-#: ui/main.qml:374
-#, kde-format
+#: ui/main.qml:406
+#, fuzzy, kde-format
+#| msgctxt "@label:textbox"
+#| msgid "Certificate path:"
+msgctxt "@info:placeholder"
+msgid "Enter certificate path…"
+msgstr "憑證路徑："
+
+#: ui/main.qml:426
+#, fuzzy, kde-format
+#| msgctxt "@action:button"
+#| msgid "Choose Certificate File…"
 msgctxt "@action:button"
-msgid "Choose Certificate File…"
+msgid "Choose certificate file…"
 msgstr "選擇憑證檔案…"
 
-#: ui/main.qml:386
-#, kde-format
-msgctxt "@label:textbox"
+#: ui/main.qml:438
+#, fuzzy, kde-format
+#| msgctxt "@title:window"
+#| msgid "Select Certificate file"
+msgid "Opens a file picker for the certificate file"
+msgstr "選擇憑證檔案"
+
+#: ui/main.qml:445
+#, fuzzy, kde-format
+#| msgctxt "@label:textbox"
+#| msgid "Certificate key path:"
 msgid "Certificate key path:"
 msgstr "憑證金鑰路徑："
 
-#: ui/main.qml:401
-#, kde-format
+#: ui/main.qml:455
+#, fuzzy, kde-format
+#| msgctxt "@label:textbox"
+#| msgid "Certificate key path:"
+msgctxt "@info:placeholder"
+msgid "Enter certificate key path…"
+msgstr "憑證金鑰路徑："
+
+#: ui/main.qml:475
+#, fuzzy, kde-format
+#| msgctxt "@action:button"
+#| msgid "Choose Certificate Key File…"
 msgctxt "@action:button"
-msgid "Choose Certificate Key File…"
+msgid "Choose certificate key file…"
 msgstr "選擇憑證金鑰檔案…"
+
+#: ui/main.qml:487
+#, fuzzy, kde-format
+#| msgctxt "@title:window"
+#| msgid "Select Certificate Key file"
+msgid "Opens a file picker for the certificate key file"
+msgstr "選擇憑證金鑰檔案"
 
 #: ui/main_phone.qml:94
 #, kde-format
@@ -320,12 +389,6 @@ msgstr "主機名稱："
 #, kde-format
 msgid "Connect to this device at any of the following addresses:"
 msgstr "用這些位址任何一個來連線到此裝置："
-
-#: ui/main_phone.qml:173
-#, kde-format
-msgctxt "@title:group"
-msgid "Server Settings"
-msgstr "伺服器設定"
 
 #: ui/RestartServerWarning.qml:13
 #, kde-format
@@ -399,6 +462,29 @@ msgstr "修改使用者…"
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "遠端使用者…"
+
+#~ msgid ""
+#~ "Lock the session when the last client disconnects and unlock it on connect"
+#~ msgstr "最後一個用戶端斷線時鎖定工作階段，之後連線時再解鎖"
+
+#~ msgctxt "title:group Group of RDP server settings"
+#~ msgid "Server Settings"
+#~ msgstr "伺服器設定"
+
+#~ msgctxt "@option:check"
+#~ msgid "Lock the session when disconnecting, unlock on connect"
+#~ msgstr "斷線時鎖定工作階段，連線時解鎖"
+
+#, fuzzy
+#~| msgctxt "@label:textbox"
+#~| msgid "Video quality:"
+#~ msgctxt "@label:textbox"
+#~ msgid "Maximum video quality:"
+#~ msgstr "視訊品質："
+
+#~ msgctxt "@label:textbox"
+#~ msgid "Video quality:"
+#~ msgstr "視訊品質："
 
 #~ msgid "The quality of the video stream"
 #~ msgstr "視訊串流的品質"

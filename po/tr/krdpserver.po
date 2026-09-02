@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-28 00:47+0000\n"
+"POT-Creation-Date: 2026-09-02 00:45+0000\n"
 "PO-Revision-Date: 2026-08-28 20:10+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -91,14 +91,13 @@ msgstr "Geçerli kullanıcının PAM ile oturum açıp açamayacağı"
 msgid "Autostart the server on login"
 msgstr "Oturum açılışında sunucuyu kendiliğinden başlat"
 
-#. i18n: ectx: label, entry (lockOnDisconnect), group (General)
+#. i18n: ectx: label, entry (exclusiveMode), group (General)
 #: krdpserversettings.kcfg:47
 #, kde-format
 msgid ""
-"Lock the session when the last client disconnects and unlock it on connect"
+"Disable the host monitors and create virtual screens for exclusive session "
+"use by a remote user"
 msgstr ""
-"Son istemci bağlantısı kesildiğinde oturumu kilitleyin ve bağlandığında "
-"kilidi açın"
 
 #: SessionController.cpp:111
 #, kde-format
@@ -109,6 +108,17 @@ msgstr "RDP Sunucusu"
 #, kde-format
 msgid "Quit"
 msgstr "Çık"
+
+#: SessionController.cpp:215
+#, kde-format
+msgid "Remote Monitor"
+msgstr ""
+
+#~ msgid ""
+#~ "Lock the session when the last client disconnects and unlock it on connect"
+#~ msgstr ""
+#~ "Son istemci bağlantısı kesildiğinde oturumu kilitleyin ve bağlandığında "
+#~ "kilidi açın"
 
 #~ msgid "The quality of the video stream"
 #~ msgstr "Video akışının kalitesi"

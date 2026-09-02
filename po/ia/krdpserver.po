@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-28 00:47+0000\n"
-"PO-Revision-Date: 2026-07-23 12:05+0200\n"
+"POT-Creation-Date: 2026-09-02 00:45+0000\n"
+"PO-Revision-Date: 2026-09-01 12:36+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -59,6 +59,8 @@ msgid ""
 "The quality of the video stream. The maximum quality when AdaptiveQuality is "
 "enabled."
 msgstr ""
+"Le qualitate del fluxo (stream) video.Le qualitate maxime quando "
+"AdaptiveQuality es habilitate."
 
 #. i18n: ectx: label, entry (adaptiveQuality), group (General)
 #: krdpserversettings.kcfg:32
@@ -67,6 +69,8 @@ msgid ""
 "Adjust the video quality at runtime based on the client's network "
 "conditions, up to Quality."
 msgstr ""
+"Adjusta le qualitate del video in tempore de execution basate super le "
+"conditiones de rete del cliente, usque a Qualitate."
 
 #. i18n: ectx: label, entry (Users), group (General)
 #: krdpserversettings.kcfg:36
@@ -86,14 +90,13 @@ msgstr "Si le usator currente pote acceder via PAM"
 msgid "Autostart the server on login"
 msgstr "Starta automaticamente le servitor al accesso"
 
-#. i18n: ectx: label, entry (lockOnDisconnect), group (General)
+#. i18n: ectx: label, entry (exclusiveMode), group (General)
 #: krdpserversettings.kcfg:47
 #, kde-format
 msgid ""
-"Lock the session when the last client disconnects and unlock it on connect"
+"Disable the host monitors and create virtual screens for exclusive session "
+"use by a remote user"
 msgstr ""
-"Bloca le session quando le ultime cliente se disconnecte e disbloca lo al "
-"connexion."
 
 #: SessionController.cpp:111
 #, kde-format
@@ -104,6 +107,17 @@ msgstr "Servitor RDP"
 #, kde-format
 msgid "Quit"
 msgstr "Quita"
+
+#: SessionController.cpp:215
+#, kde-format
+msgid "Remote Monitor"
+msgstr ""
+
+#~ msgid ""
+#~ "Lock the session when the last client disconnects and unlock it on connect"
+#~ msgstr ""
+#~ "Bloca le session quando le ultime cliente se disconnecte e disbloca lo al "
+#~ "connexion."
 
 #~ msgid "The quality of the video stream"
 #~ msgstr "Le qualitate del fluxo de video"

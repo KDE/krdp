@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-28 00:47+0000\n"
+"POT-Creation-Date: 2026-09-02 00:45+0000\n"
 "PO-Revision-Date: 2026-08-29 08:55+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: fr\n"
@@ -79,14 +79,13 @@ msgstr "Définit si l'utilisateur actuel peut ou non se connecter grâce à PAM"
 msgid "Autostart the server on login"
 msgstr "Démarrer automatiquement le serveur à la connexion"
 
-#. i18n: ectx: label, entry (lockOnDisconnect), group (General)
+#. i18n: ectx: label, entry (exclusiveMode), group (General)
 #: krdpserversettings.kcfg:47
 #, kde-format
 msgid ""
-"Lock the session when the last client disconnects and unlock it on connect"
+"Disable the host monitors and create virtual screens for exclusive session "
+"use by a remote user"
 msgstr ""
-"Verrouiller la session lorsque le dernier client se déconnecte et la "
-"déverrouille à la connexion"
 
 #: ui/CertError.qml:14
 #, kde-format
@@ -94,16 +93,20 @@ msgctxt "@info:status"
 msgid "Generating certificates automatically has failed!"
 msgstr "La génération automatique des certificats a échoué !"
 
-#: ui/CertLoader.qml:16
-#, kde-format
+#: ui/CertLoader.qml:19
+#, fuzzy, kde-format
+#| msgctxt "@title:window"
+#| msgid "Select Certificate Key file"
 msgctxt "@title:window"
-msgid "Select Certificate Key file"
+msgid "Select certificate key file"
 msgstr "Sélectionner un fichier de clé de certificat"
 
-#: ui/CertLoader.qml:16
-#, kde-format
+#: ui/CertLoader.qml:19
+#, fuzzy, kde-format
+#| msgctxt "@title:window"
+#| msgid "Select Certificate file"
 msgctxt "@title:window"
-msgid "Select Certificate file"
+msgid "Select certificate file"
 msgstr "Sélectionner un fichier de certificat"
 
 #: ui/CodecError.qml:13
@@ -177,13 +180,13 @@ msgctxt "@info"
 msgid "Received following error with password keychain: %1"
 msgstr "Erreur suivante reçue avec le trousseau de mots de passe : %1"
 
-#: ui/main.qml:76
+#: ui/main.qml:77
 #, kde-format
 msgctxt "@option:check Enable RDP server"
 msgid "Enable RDP server"
 msgstr "Activer le serveur « RDP »"
 
-#: ui/main.qml:118
+#: ui/main.qml:119
 #, kde-format
 msgctxt "@info:status"
 msgid "Systemd not found. krdpserver will require manual activation."
@@ -191,13 +194,13 @@ msgstr ""
 "Impossible de trouver le module « systemd ». Le module « krdpserver » "
 "nécessitera une activation manuelle."
 
-#: ui/main.qml:127
+#: ui/main.qml:128
 #, kde-kuit-format
 msgctxt "@info:status"
 msgid "Error message from the RDP server:<nl/>%1"
 msgstr "Message d'erreur du serveur « RDP » :<nl/>%1"
 
-#: ui/main.qml:142 ui/main_phone.qml:101
+#: ui/main.qml:143 ui/main_phone.qml:101
 #, kde-format
 msgid ""
 "Users listed below can log into this device remotely using apps that support "
@@ -207,109 +210,175 @@ msgstr ""
 "utilisant ce périphérique à distance à l'aide d'applications prenant en "
 "charge le protocole de bureau à distance « RDP »."
 
-#: ui/main.qml:152
+#: ui/main.qml:153
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Connect to this device at any of the following addresses:"
 msgstr "Connectez-vous à ce périphérique à l'une des adresses suivantes :"
 
-#: ui/main.qml:187 ui/main_phone.qml:158
+#: ui/main.qml:188 ui/main_phone.qml:158
 #, kde-format
 msgctxt "@action:button"
 msgid "Copy Address to Clipboard"
 msgstr "Copier l'adresse dans le presse-papier"
 
-#: ui/main.qml:241
+#: ui/main.qml:233 ui/main_phone.qml:173
 #, kde-format
-msgctxt "title:group Group of RDP server settings"
+msgctxt "@title:group"
 msgid "Server Settings"
 msgstr "Configuration du serveur"
 
-#: ui/main.qml:247
-#, kde-format
-msgctxt "@option:check"
-msgid "Autostart on login"
+#: ui/main.qml:236
+#, fuzzy, kde-format
+#| msgid "Restart Server"
+msgctxt "part of a sentence: 'Start server [automatically on login]'"
+msgid "Start server:"
+msgstr "Redémarrer le serveur"
+
+#: ui/main.qml:240
+#, fuzzy, kde-format
+#| msgctxt "@option:check"
+#| msgid "Autostart on login"
+msgctxt "part of a sentence: 'Start server automatically on login'"
+msgid "Automatically on login"
 msgstr "Démarrer automatiquement à la connexion"
 
-#: ui/main.qml:263
-#, kde-format
-msgctxt "@label:textbox"
-msgid "Listening Port:"
+#: ui/main.qml:252
+#, fuzzy, kde-format
+#| msgctxt "@label:textbox"
+#| msgid "Listening Port:"
+msgid "Listening port:"
 msgstr "Port en écoute :"
 
-#: ui/main.qml:276
+#: ui/main.qml:284
 #, kde-format
-msgctxt "@option:check"
-msgid "Lock the session when disconnecting, unlock on connect"
+msgid "Operating mode:"
 msgstr ""
-"Verrouiller la session lors de la déconnexion et la déverrouiller à la "
-"connexion"
 
-#: ui/main.qml:289
+#: ui/main.qml:285
 #, kde-format
-msgctxt "@option:check"
-msgid "Adjust quality for network conditions"
-msgstr "Ajustez la qualité aux performances du réseau"
+msgctxt "@info:usagetip"
+msgid "Displays will be locked, and the remote user will see a virtual screen."
+msgstr ""
 
-#: ui/main.qml:304
+#: ui/main.qml:288
 #, kde-format
-msgctxt "@label:textbox"
-msgid "Maximum video quality:"
-msgstr "Qualité vidéo maximale :"
+msgid "Enable exclusive mode"
+msgstr ""
 
-#: ui/main.qml:304
-#, kde-format
-msgctxt "@label:textbox"
-msgid "Video quality:"
-msgstr "Qualité vidéo :"
+#: ui/main.qml:302
+#, fuzzy, kde-format
+#| msgctxt "@label:slider"
+#| msgid "Quality"
+msgid "Quality:"
+msgstr "Qualité"
 
-#: ui/main.qml:324
-#, kde-format
-msgctxt "@label:slider"
+#: ui/main.qml:338
+#, fuzzy, kde-format
+#| msgctxt "@label:slider"
+#| msgid "Responsiveness"
+msgctxt "Animation speed"
 msgid "Responsiveness"
 msgstr "Réactivité"
 
-#: ui/main.qml:330
-#, kde-format
-msgctxt "@label:slider"
+#: ui/main.qml:345
+#, fuzzy, kde-format
+#| msgctxt "@label:slider"
+#| msgid "Quality"
+msgctxt "Animation speed"
 msgid "Quality"
 msgstr "Qualité"
 
-#: ui/main.qml:337
-#, kde-format
-msgctxt "title:group Group of RDP server settings"
+#: ui/main.qml:355
+#, fuzzy, kde-format
+#| msgctxt "@option:check"
+#| msgid "Adjust quality for network conditions"
+msgid "Automatically adjust quality for network conditions"
+msgstr "Ajustez la qualité aux performances du réseau"
+
+#: ui/main.qml:368
+#, fuzzy, kde-format
+#| msgctxt "title:group Group of RDP server settings"
+#| msgid "Security Certificates"
+msgctxt "@title:group"
 msgid "Security Certificates"
 msgstr "Certificats de sécurité"
 
-#: ui/main.qml:342
-#, kde-format
-msgctxt "@label:check generate security certificates automatically"
-msgid "Generate automatically"
+#: ui/main.qml:371
+#, fuzzy, kde-format
+#| msgctxt "title:group Group of RDP server settings"
+#| msgid "Security Certificates"
+msgctxt "part of a sentence: 'Generate certificates [automatically]'"
+msgid "Generate certificates:"
+msgstr "Certificats de sécurité"
+
+#: ui/main.qml:376
+#, fuzzy, kde-format
+#| msgctxt "@label:check generate security certificates automatically"
+#| msgid "Generate automatically"
+msgctxt "part of a sentence: '[Generate certificates] automatically'"
+msgid "Automatically"
 msgstr "Générer automatiquement"
 
-#: ui/main.qml:360
-#, kde-format
-msgctxt "@label:textbox"
+#: ui/main.qml:396
+#, fuzzy, kde-format
+#| msgctxt "@label:textbox"
+#| msgid "Certificate path:"
 msgid "Certificate path:"
 msgstr "Emplacement du certificat :"
 
-#: ui/main.qml:374
-#, kde-format
+#: ui/main.qml:406
+#, fuzzy, kde-format
+#| msgctxt "@label:textbox"
+#| msgid "Certificate path:"
+msgctxt "@info:placeholder"
+msgid "Enter certificate path…"
+msgstr "Emplacement du certificat :"
+
+#: ui/main.qml:426
+#, fuzzy, kde-format
+#| msgctxt "@action:button"
+#| msgid "Choose Certificate File…"
 msgctxt "@action:button"
-msgid "Choose Certificate File…"
+msgid "Choose certificate file…"
 msgstr "Sélectionner un fichier de certificat…"
 
-#: ui/main.qml:386
-#, kde-format
-msgctxt "@label:textbox"
+#: ui/main.qml:438
+#, fuzzy, kde-format
+#| msgctxt "@title:window"
+#| msgid "Select Certificate file"
+msgid "Opens a file picker for the certificate file"
+msgstr "Sélectionner un fichier de certificat"
+
+#: ui/main.qml:445
+#, fuzzy, kde-format
+#| msgctxt "@label:textbox"
+#| msgid "Certificate key path:"
 msgid "Certificate key path:"
 msgstr "Emplacement de la clé du certificat :"
 
-#: ui/main.qml:401
-#, kde-format
+#: ui/main.qml:455
+#, fuzzy, kde-format
+#| msgctxt "@label:textbox"
+#| msgid "Certificate key path:"
+msgctxt "@info:placeholder"
+msgid "Enter certificate key path…"
+msgstr "Emplacement de la clé du certificat :"
+
+#: ui/main.qml:475
+#, fuzzy, kde-format
+#| msgctxt "@action:button"
+#| msgid "Choose Certificate Key File…"
 msgctxt "@action:button"
-msgid "Choose Certificate Key File…"
+msgid "Choose certificate key file…"
 msgstr "Sélectionner un fichier de clé de certificat…"
+
+#: ui/main.qml:487
+#, fuzzy, kde-format
+#| msgctxt "@title:window"
+#| msgid "Select Certificate Key file"
+msgid "Opens a file picker for the certificate key file"
+msgstr "Sélectionner un fichier de clé de certificat"
 
 #: ui/main_phone.qml:94
 #, kde-format
@@ -332,12 +401,6 @@ msgstr "Nom d'hôte :"
 #, kde-format
 msgid "Connect to this device at any of the following addresses:"
 msgstr "Connectez-vous à ce périphérique à l'une des adresses suivantes :"
-
-#: ui/main_phone.qml:173
-#, kde-format
-msgctxt "@title:group"
-msgid "Server Settings"
-msgstr "Configuration du serveur"
 
 #: ui/RestartServerWarning.qml:13
 #, kde-format
@@ -415,6 +478,30 @@ msgstr "Modifier un utilisateur..."
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "Supprimer un utilisateur..."
+
+#~ msgid ""
+#~ "Lock the session when the last client disconnects and unlock it on connect"
+#~ msgstr ""
+#~ "Verrouiller la session lorsque le dernier client se déconnecte et la "
+#~ "déverrouille à la connexion"
+
+#~ msgctxt "title:group Group of RDP server settings"
+#~ msgid "Server Settings"
+#~ msgstr "Configuration du serveur"
+
+#~ msgctxt "@option:check"
+#~ msgid "Lock the session when disconnecting, unlock on connect"
+#~ msgstr ""
+#~ "Verrouiller la session lors de la déconnexion et la déverrouiller à la "
+#~ "connexion"
+
+#~ msgctxt "@label:textbox"
+#~ msgid "Maximum video quality:"
+#~ msgstr "Qualité vidéo maximale :"
+
+#~ msgctxt "@label:textbox"
+#~ msgid "Video quality:"
+#~ msgstr "Qualité vidéo :"
 
 #~ msgid "The quality of the video stream"
 #~ msgstr "La qualité du flux vidéo"

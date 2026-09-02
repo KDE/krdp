@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdpserver\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-28 00:47+0000\n"
+"POT-Creation-Date: 2026-09-02 00:45+0000\n"
 "PO-Revision-Date: 2026-08-28 16:38+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -93,14 +93,13 @@ msgstr "Indica si el usuario actual puede iniciar sesión mediante PAM"
 msgid "Autostart the server on login"
 msgstr "Lanzar automáticamente el servidor al iniciar sesión"
 
-#. i18n: ectx: label, entry (lockOnDisconnect), group (General)
+#. i18n: ectx: label, entry (exclusiveMode), group (General)
 #: krdpserversettings.kcfg:47
 #, kde-format
 msgid ""
-"Lock the session when the last client disconnects and unlock it on connect"
+"Disable the host monitors and create virtual screens for exclusive session "
+"use by a remote user"
 msgstr ""
-"Bloquear la sesión cuando se desconecte el último cliente y desbloquearla al "
-"conectarse"
 
 #: SessionController.cpp:111
 #, kde-format
@@ -111,3 +110,14 @@ msgstr "Servidor RDP"
 #, kde-format
 msgid "Quit"
 msgstr "Salir"
+
+#: SessionController.cpp:215
+#, kde-format
+msgid "Remote Monitor"
+msgstr ""
+
+#~ msgid ""
+#~ "Lock the session when the last client disconnects and unlock it on connect"
+#~ msgstr ""
+#~ "Bloquear la sesión cuando se desconecte el último cliente y desbloquearla "
+#~ "al conectarse"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-28 00:47+0000\n"
+"POT-Creation-Date: 2026-09-02 00:45+0000\n"
 "PO-Revision-Date: 2026-08-13 08:47+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
@@ -76,14 +76,13 @@ msgstr "Дали текущият потребител може да влиза 
 msgid "Autostart the server on login"
 msgstr "Автоматично стартиране на сървъра при влизане"
 
-#. i18n: ectx: label, entry (lockOnDisconnect), group (General)
+#. i18n: ectx: label, entry (exclusiveMode), group (General)
 #: krdpserversettings.kcfg:47
 #, kde-format
 msgid ""
-"Lock the session when the last client disconnects and unlock it on connect"
+"Disable the host monitors and create virtual screens for exclusive session "
+"use by a remote user"
 msgstr ""
-"Заключване на сесията при прекъсване на връзката на последния клиент и "
-"отключване при свързване"
 
 #: ui/CertError.qml:14
 #, kde-format
@@ -91,16 +90,20 @@ msgctxt "@info:status"
 msgid "Generating certificates automatically has failed!"
 msgstr "Автоматичното генериране на сертификати е неуспешно!"
 
-#: ui/CertLoader.qml:16
-#, kde-format
+#: ui/CertLoader.qml:19
+#, fuzzy, kde-format
+#| msgctxt "@title:window"
+#| msgid "Select Certificate Key file"
 msgctxt "@title:window"
-msgid "Select Certificate Key file"
+msgid "Select certificate key file"
 msgstr "Избор на файл с ключ на сертификат"
 
-#: ui/CertLoader.qml:16
-#, kde-format
+#: ui/CertLoader.qml:19
+#, fuzzy, kde-format
+#| msgctxt "@title:window"
+#| msgid "Select Certificate file"
 msgctxt "@title:window"
-msgid "Select Certificate file"
+msgid "Select certificate file"
 msgstr "Избор на файл със сертификат"
 
 #: ui/CodecError.qml:13
@@ -174,25 +177,25 @@ msgctxt "@info"
 msgid "Received following error with password keychain: %1"
 msgstr "Получена е следната грешка с ключодържателя на паролата: %1"
 
-#: ui/main.qml:76
+#: ui/main.qml:77
 #, kde-format
 msgctxt "@option:check Enable RDP server"
 msgid "Enable RDP server"
 msgstr "Активиране на RDP сървър"
 
-#: ui/main.qml:118
+#: ui/main.qml:119
 #, kde-format
 msgctxt "@info:status"
 msgid "Systemd not found. krdpserver will require manual activation."
 msgstr "Systemd не е намерен. krdpserver ще изисква ръчна активация."
 
-#: ui/main.qml:127
+#: ui/main.qml:128
 #, kde-kuit-format
 msgctxt "@info:status"
 msgid "Error message from the RDP server:<nl/>%1"
 msgstr "Съобщение за грешка от сървъра RDP:<nl></nl>%1"
 
-#: ui/main.qml:142 ui/main_phone.qml:101
+#: ui/main.qml:143 ui/main_phone.qml:101
 #, kde-format
 msgid ""
 "Users listed below can log into this device remotely using apps that support "
@@ -201,110 +204,173 @@ msgstr ""
 "Потребителите, изброени по-долу, могат да влязат отдалечено в това "
 "устройство, използвайки приложения, които поддържат протокола „RDP“."
 
-#: ui/main.qml:152
+#: ui/main.qml:153
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Connect to this device at any of the following addresses:"
 msgstr "Свързване с това устройство на някой от следните адреси:"
 
-#: ui/main.qml:187 ui/main_phone.qml:158
+#: ui/main.qml:188 ui/main_phone.qml:158
 #, kde-format
 msgctxt "@action:button"
 msgid "Copy Address to Clipboard"
 msgstr "Копиране на адреса в клипборда"
 
-#: ui/main.qml:241
+#: ui/main.qml:233 ui/main_phone.qml:173
 #, kde-format
-msgctxt "title:group Group of RDP server settings"
+msgctxt "@title:group"
 msgid "Server Settings"
 msgstr "Настройки на сървъра"
 
-#: ui/main.qml:247
-#, kde-format
-msgctxt "@option:check"
-msgid "Autostart on login"
+#: ui/main.qml:236
+#, fuzzy, kde-format
+#| msgid "Restart Server"
+msgctxt "part of a sentence: 'Start server [automatically on login]'"
+msgid "Start server:"
+msgstr "Рестартиране на сървъра"
+
+#: ui/main.qml:240
+#, fuzzy, kde-format
+#| msgctxt "@option:check"
+#| msgid "Autostart on login"
+msgctxt "part of a sentence: 'Start server automatically on login'"
+msgid "Automatically on login"
 msgstr "Автоматично стартиране при влизане"
 
-#: ui/main.qml:263
-#, kde-format
-msgctxt "@label:textbox"
-msgid "Listening Port:"
-msgstr "Порт за следене:"
-
-#: ui/main.qml:276
-#, kde-format
-msgctxt "@option:check"
-msgid "Lock the session when disconnecting, unlock on connect"
-msgstr ""
-"Заключване на сесията при прекъсване на връзката, отключване при свързване"
-
-#: ui/main.qml:289
-#, kde-format
-msgctxt "@option:check"
-msgid "Adjust quality for network conditions"
-msgstr ""
-
-#: ui/main.qml:304
+#: ui/main.qml:252
 #, fuzzy, kde-format
 #| msgctxt "@label:textbox"
-#| msgid "Video quality:"
-msgctxt "@label:textbox"
-msgid "Maximum video quality:"
-msgstr "Качество на видеото:"
+#| msgid "Listening Port:"
+msgid "Listening port:"
+msgstr "Порт за следене:"
 
-#: ui/main.qml:304
+#: ui/main.qml:284
 #, kde-format
-msgctxt "@label:textbox"
-msgid "Video quality:"
-msgstr "Качество на видеото:"
+msgid "Operating mode:"
+msgstr ""
 
-#: ui/main.qml:324
+#: ui/main.qml:285
 #, kde-format
-msgctxt "@label:slider"
+msgctxt "@info:usagetip"
+msgid "Displays will be locked, and the remote user will see a virtual screen."
+msgstr ""
+
+#: ui/main.qml:288
+#, kde-format
+msgid "Enable exclusive mode"
+msgstr ""
+
+#: ui/main.qml:302
+#, fuzzy, kde-format
+#| msgctxt "@label:slider"
+#| msgid "Quality"
+msgid "Quality:"
+msgstr "Качество"
+
+#: ui/main.qml:338
+#, fuzzy, kde-format
+#| msgctxt "@label:slider"
+#| msgid "Responsiveness"
+msgctxt "Animation speed"
 msgid "Responsiveness"
 msgstr "Скорост на реакция"
 
-#: ui/main.qml:330
-#, kde-format
-msgctxt "@label:slider"
+#: ui/main.qml:345
+#, fuzzy, kde-format
+#| msgctxt "@label:slider"
+#| msgid "Quality"
+msgctxt "Animation speed"
 msgid "Quality"
 msgstr "Качество"
 
-#: ui/main.qml:337
+#: ui/main.qml:355
 #, kde-format
-msgctxt "title:group Group of RDP server settings"
+msgid "Automatically adjust quality for network conditions"
+msgstr ""
+
+#: ui/main.qml:368
+#, fuzzy, kde-format
+#| msgctxt "title:group Group of RDP server settings"
+#| msgid "Security Certificates"
+msgctxt "@title:group"
 msgid "Security Certificates"
 msgstr "Сертификати за сигурност"
 
-#: ui/main.qml:342
-#, kde-format
-msgctxt "@label:check generate security certificates automatically"
-msgid "Generate automatically"
+#: ui/main.qml:371
+#, fuzzy, kde-format
+#| msgctxt "title:group Group of RDP server settings"
+#| msgid "Security Certificates"
+msgctxt "part of a sentence: 'Generate certificates [automatically]'"
+msgid "Generate certificates:"
+msgstr "Сертификати за сигурност"
+
+#: ui/main.qml:376
+#, fuzzy, kde-format
+#| msgctxt "@label:check generate security certificates automatically"
+#| msgid "Generate automatically"
+msgctxt "part of a sentence: '[Generate certificates] automatically'"
+msgid "Automatically"
 msgstr "Автоматично генериране"
 
-#: ui/main.qml:360
-#, kde-format
-msgctxt "@label:textbox"
+#: ui/main.qml:396
+#, fuzzy, kde-format
+#| msgctxt "@label:textbox"
+#| msgid "Certificate path:"
 msgid "Certificate path:"
 msgstr "Път на сертификата:"
 
-#: ui/main.qml:374
-#, kde-format
+#: ui/main.qml:406
+#, fuzzy, kde-format
+#| msgctxt "@label:textbox"
+#| msgid "Certificate path:"
+msgctxt "@info:placeholder"
+msgid "Enter certificate path…"
+msgstr "Път на сертификата:"
+
+#: ui/main.qml:426
+#, fuzzy, kde-format
+#| msgctxt "@action:button"
+#| msgid "Choose Certificate File…"
 msgctxt "@action:button"
-msgid "Choose Certificate File…"
+msgid "Choose certificate file…"
 msgstr "Избиране на файл със сертификат..."
 
-#: ui/main.qml:386
-#, kde-format
-msgctxt "@label:textbox"
+#: ui/main.qml:438
+#, fuzzy, kde-format
+#| msgctxt "@title:window"
+#| msgid "Select Certificate file"
+msgid "Opens a file picker for the certificate file"
+msgstr "Избор на файл със сертификат"
+
+#: ui/main.qml:445
+#, fuzzy, kde-format
+#| msgctxt "@label:textbox"
+#| msgid "Certificate key path:"
 msgid "Certificate key path:"
 msgstr "Път на ключа на сертификата:"
 
-#: ui/main.qml:401
-#, kde-format
+#: ui/main.qml:455
+#, fuzzy, kde-format
+#| msgctxt "@label:textbox"
+#| msgid "Certificate key path:"
+msgctxt "@info:placeholder"
+msgid "Enter certificate key path…"
+msgstr "Път на ключа на сертификата:"
+
+#: ui/main.qml:475
+#, fuzzy, kde-format
+#| msgctxt "@action:button"
+#| msgid "Choose Certificate Key File…"
 msgctxt "@action:button"
-msgid "Choose Certificate Key File…"
+msgid "Choose certificate key file…"
 msgstr "Избиране на файл с ключ на сертификат..."
+
+#: ui/main.qml:487
+#, fuzzy, kde-format
+#| msgctxt "@title:window"
+#| msgid "Select Certificate Key file"
+msgid "Opens a file picker for the certificate key file"
+msgstr "Избор на файл с ключ на сертификат"
 
 #: ui/main_phone.qml:94
 #, kde-format
@@ -327,12 +393,6 @@ msgstr "Име на хост:"
 #, kde-format
 msgid "Connect to this device at any of the following addresses:"
 msgstr "Свързване с това устройство на който и да е от следните адреси:"
-
-#: ui/main_phone.qml:173
-#, kde-format
-msgctxt "@title:group"
-msgid "Server Settings"
-msgstr "Настройки на сървъра"
 
 #: ui/RestartServerWarning.qml:13
 #, kde-format
@@ -410,6 +470,32 @@ msgstr "Промяна на потребителя..."
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "Премахване на потребител..."
+
+#~ msgid ""
+#~ "Lock the session when the last client disconnects and unlock it on connect"
+#~ msgstr ""
+#~ "Заключване на сесията при прекъсване на връзката на последния клиент и "
+#~ "отключване при свързване"
+
+#~ msgctxt "title:group Group of RDP server settings"
+#~ msgid "Server Settings"
+#~ msgstr "Настройки на сървъра"
+
+#~ msgctxt "@option:check"
+#~ msgid "Lock the session when disconnecting, unlock on connect"
+#~ msgstr ""
+#~ "Заключване на сесията при прекъсване на връзката, отключване при свързване"
+
+#, fuzzy
+#~| msgctxt "@label:textbox"
+#~| msgid "Video quality:"
+#~ msgctxt "@label:textbox"
+#~ msgid "Maximum video quality:"
+#~ msgstr "Качество на видеото:"
+
+#~ msgctxt "@label:textbox"
+#~ msgid "Video quality:"
+#~ msgstr "Качество на видеото:"
 
 #~ msgid "The quality of the video stream"
 #~ msgstr "Качеството на видео потока"

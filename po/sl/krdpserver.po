@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-28 00:47+0000\n"
+"POT-Creation-Date: 2026-09-02 00:45+0000\n"
 "PO-Revision-Date: 2026-08-28 07:11+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <kde-i18n-doc@kde.org>\n"
@@ -91,14 +91,13 @@ msgstr "Ali se trenutni uporabnik lahko prijavi prek PAMa"
 msgid "Autostart the server on login"
 msgstr "Samodejni zagon strežnika ob prijavi"
 
-#. i18n: ectx: label, entry (lockOnDisconnect), group (General)
+#. i18n: ectx: label, entry (exclusiveMode), group (General)
 #: krdpserversettings.kcfg:47
 #, kde-format
 msgid ""
-"Lock the session when the last client disconnects and unlock it on connect"
+"Disable the host monitors and create virtual screens for exclusive session "
+"use by a remote user"
 msgstr ""
-"Zakleni sejo, ko se zadnji odjemalec prekine, in jo odkleni ob vzpostavitvi "
-"povezave"
 
 #: SessionController.cpp:111
 #, kde-format
@@ -109,6 +108,17 @@ msgstr "Strežnik RDP"
 #, kde-format
 msgid "Quit"
 msgstr "Zapusti"
+
+#: SessionController.cpp:215
+#, kde-format
+msgid "Remote Monitor"
+msgstr ""
+
+#~ msgid ""
+#~ "Lock the session when the last client disconnects and unlock it on connect"
+#~ msgstr ""
+#~ "Zakleni sejo, ko se zadnji odjemalec prekine, in jo odkleni ob "
+#~ "vzpostavitvi povezave"
 
 #~ msgid "The quality of the video stream"
 #~ msgstr "Kakovost video toka"

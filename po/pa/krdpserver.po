@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-28 00:47+0000\n"
+"POT-Creation-Date: 2026-09-02 00:45+0000\n"
 "PO-Revision-Date: 2024-10-01 14:51-0500\n"
 "Last-Translator: A S Alam <aalam@punlinux.org>\n"
 "Language-Team: pa\n"
@@ -85,11 +85,12 @@ msgstr ""
 msgid "Autostart the server on login"
 msgstr ""
 
-#. i18n: ectx: label, entry (lockOnDisconnect), group (General)
+#. i18n: ectx: label, entry (exclusiveMode), group (General)
 #: krdpserversettings.kcfg:47
 #, kde-format
 msgid ""
-"Lock the session when the last client disconnects and unlock it on connect"
+"Disable the host monitors and create virtual screens for exclusive session "
+"use by a remote user"
 msgstr ""
 
 #: SessionController.cpp:111
@@ -100,4 +101,9 @@ msgstr ""
 #: SessionController.cpp:114
 #, kde-format
 msgid "Quit"
+msgstr ""
+
+#: SessionController.cpp:215
+#, kde-format
+msgid "Remote Monitor"
 msgstr ""

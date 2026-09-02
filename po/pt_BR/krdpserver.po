@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-28 00:47+0000\n"
+"POT-Creation-Date: 2026-09-02 00:45+0000\n"
 "PO-Revision-Date: 2026-08-28 07:28-0300\n"
 "Last-Translator: Marcus Gama <marcus.gama@gmail.com>\n"
 "Language-Team: Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -96,14 +96,13 @@ msgstr "Se o usuário atual pode efetuar login via PAM"
 msgid "Autostart the server on login"
 msgstr "Inicialização automática do servidor no login"
 
-#. i18n: ectx: label, entry (lockOnDisconnect), group (General)
+#. i18n: ectx: label, entry (exclusiveMode), group (General)
 #: krdpserversettings.kcfg:47
 #, kde-format
 msgid ""
-"Lock the session when the last client disconnects and unlock it on connect"
+"Disable the host monitors and create virtual screens for exclusive session "
+"use by a remote user"
 msgstr ""
-"Bloquear a sessão quando o último cliente se desconectar e desbloqueá-la ao "
-"conectar"
 
 #: SessionController.cpp:111
 #, kde-format
@@ -114,6 +113,17 @@ msgstr "Servidor RDP"
 #, kde-format
 msgid "Quit"
 msgstr "Sair"
+
+#: SessionController.cpp:215
+#, kde-format
+msgid "Remote Monitor"
+msgstr ""
+
+#~ msgid ""
+#~ "Lock the session when the last client disconnects and unlock it on connect"
+#~ msgstr ""
+#~ "Bloquear a sessão quando o último cliente se desconectar e desbloqueá-la "
+#~ "ao conectar"
 
 #~ msgid "The quality of the video stream"
 #~ msgstr "A qualidade da transmissão de vídeo"
