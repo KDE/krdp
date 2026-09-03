@@ -5,6 +5,7 @@
 #include "Server.h"
 
 #include <qevent.h>
+#include <qtcpsocket.h>
 #include <vector>
 
 #include <QCoreApplication>
@@ -197,8 +198,10 @@ peekRdpRoutingInfo(QIODevice* device)
      *
      * Total                     11 bytes
      */
-    if (!waitForBytes(device, 11))
+    if (!waitForBytes(device, 11)) {
+        qDebug() << "failed to read 11 bytes";
         return std::nullopt;
+    }
 
     QByteArray header = device->peek(11);
 
@@ -309,8 +312,8 @@ void Server::incomingConnection(qintptr handle)
 {
     qDebug() << "incoming connection";
     {
-        QFile tmpIoDevice;
-        tmpIoDevice.open(handle, QIODeviceBase::ReadOnly);
+        QTcpSocket tmpIoDevice;
+        tmpIoDevice.setSocketDescriptor(handle, QTcpSocket::ConnectedState, QIODeviceBase::ReadWrite);
 
         auto info = peekRdpRoutingInfo(&tmpIoDevice);
 
