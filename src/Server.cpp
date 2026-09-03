@@ -163,6 +163,7 @@ void Server::incomingConnection(qintptr handle)
         &RdpConnection::stateChanged,
         this,
         [this, sessionPtr](RdpConnection::State state) {
+            qDebug() << "state changed" << (int)state;
             if (state == RdpConnection::State::Closed) {
                 auto itr = std::find_if(d->sessions.begin(), d->sessions.end(), [sessionPtr](auto &session) {
                     return session.get() == sessionPtr;

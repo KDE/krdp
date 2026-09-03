@@ -4,11 +4,12 @@
 
 #include "DaemonServer.h"
 
+#include <cerrno>
 #include <fcntl.h>
 #include <qevent.h>
 #include <qprocess.h>
 #include <qstandardpaths.h>
-#include <qtcpsocket.h>
+#include <sys/socket.h>
 #include <vector>
 
 #include <QCoreApplication>
@@ -166,17 +167,18 @@ void DaemonServer::setTlsCertificateKey(const std::filesystem::path &newTlsCerti
     d->tlsCertificateKey = newTlsCertificateKey;
 }
 
-
-
-static bool waitForBytes(QIODevice* device, qint64 count)
+static bool peekSocketBytes(int fd, QByteArray &buffer)
 {
-    while (device->bytesAvailable() < count)
-    {
-        if (!device->waitForReadyRead(-1))
-            return false;
+    while (true) {
+        const auto bytesRead = ::recv(fd, buffer.data(), buffer.size(), MSG_PEEK | MSG_WAITALL);
+        if (bytesRead == buffer.size()) {
+            return true;
+        }
+        if (bytesRead < 0 && errno == EINTR) {
+            continue;
+        }
+        return false;
     }
-
-    return true;
 }
 
 
@@ -185,13 +187,8 @@ struct RdpRoutingInfo
     QString token;
 };
 
-
-static std::optional<RdpRoutingInfo>
-peekRdpRoutingInfo(QIODevice* device)
+static std::optional<RdpRoutingInfo> peekRdpRoutingInfo(int fd)
 {
-    if (!device)
-        return std::nullopt;
-
     /*
      * First get enough for:
      *
@@ -200,15 +197,11 @@ peekRdpRoutingInfo(QIODevice* device)
      *
      * Total                     11 bytes
      */
-    if (!waitForBytes(device, 11)) {
+    QByteArray header(11, Qt::Uninitialized);
+    if (!peekSocketBytes(fd, header)) {
         qDebug() << "failed to read 11 bytes";
         return std::nullopt;
     }
-
-    QByteArray header = device->peek(11);
-
-    if (header.size() < 11)
-        return std::nullopt;
 
     const auto* p =
         reinterpret_cast<const quint8*>(header.constData());
@@ -243,16 +236,9 @@ peekRdpRoutingInfo(QIODevice* device)
     /*
      * Block until the whole initial TPKT has arrived.
      */
-    if (!waitForBytes(device, tpktLength))
+    QByteArray packet(tpktLength, Qt::Uninitialized);
+    if (!peekSocketBytes(fd, packet))
         return std::nullopt;
-
-    QByteArray packet = device->peek(tpktLength);
-
-    if (packet.size() != tpktLength)
-        return std::nullopt;
-
-    const auto* data =
-        reinterpret_cast<const quint8*>(packet.constData());
 
     /*
      * Fixed X.224 Connection Request header ends at offset 11:
@@ -309,15 +295,11 @@ peekRdpRoutingInfo(QIODevice* device)
     return result;
 }
 
-
 void DaemonServer::incomingConnection(qintptr handle)
 {
     qDebug() << "incoming connection";
     {
-        QTcpSocket tmpIoDevice;
-        tmpIoDevice.setSocketDescriptor(handle, QTcpSocket::ConnectedState, QIODeviceBase::ReadWrite);
-
-        auto info = peekRdpRoutingInfo(&tmpIoDevice);
+        auto info = peekRdpRoutingInfo(handle);
 
         if (!info)
         {

@@ -446,8 +446,8 @@ void RdpConnection::initialize()
     freerdp_settings_set_pointer_len(settings, FreeRDP_RdpServerRsaKey, key, 1);
 
     freerdp_settings_set_bool(settings, FreeRDP_RdpSecurity, false);
-    freerdp_settings_set_bool(settings, FreeRDP_TlsSecurity, usePamAuthentication);
-    freerdp_settings_set_bool(settings, FreeRDP_NlaSecurity, !usePamAuthentication);
+    freerdp_settings_set_bool(settings, FreeRDP_TlsSecurity, false);
+    freerdp_settings_set_bool(settings, FreeRDP_NlaSecurity, true);
 
     freerdp_settings_set_uint32(settings, FreeRDP_OsMajorType, OSMAJORTYPE_UNIX);
     // PSEUDO_XSERVER is apparently required for things to work properly.
@@ -521,6 +521,8 @@ void RdpConnection::run(std::stop_token stopToken)
     auto channelEvent = WTSVirtualChannelManagerGetEventHandle(context->virtualChannelManager);
     BYTE lastDrdynvcState = 0xFF;
     bool lastDrdynvcJoined = false;
+
+    qDebug() << "running";
     setState(State::Running);
 
     while (!stopToken.stop_requested()) {
@@ -611,6 +613,8 @@ void RdpConnection::run(std::stop_token stopToken)
 
 bool RdpConnection::onCapabilities()
 {
+    qDebug() << "caps";
+
     auto settings = d->peer->context->settings;
     if (!freerdp_settings_get_bool(settings, FreeRDP_SupportGraphicsPipeline)) {
         qCWarning(KRDP) << "Client does not support graphics pipeline which is required";
@@ -640,6 +644,8 @@ bool RdpConnection::onActivate()
 bool RdpConnection::onPostConnect()
 {
     qCInfo(KRDP) << "New client connected:" << d->peer->hostname << freerdp_peer_os_major_type_string(d->peer) << freerdp_peer_os_minor_type_string(d->peer);
+
+    qDebug() << "in post connect";
 
     d->samFile.remove();
 
