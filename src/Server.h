@@ -34,7 +34,7 @@ struct User {
  * incoming connection. It takes care of basic system initialisation. It also
  * stores connection and security settings.
  */
-class KRDP_EXPORT Server : public QTcpServer
+class KRDP_EXPORT Server : public QObject
 {
     Q_OBJECT
 
@@ -54,26 +54,7 @@ public:
      */
     void stop();
 
-    /**
-     * The host address to listen on.
-     *
-     * Set this to an appropriate address for the server to listen on. Common
-     * options are `0.0.0.0` to listen on all interfaces and accept all incoming
-     * connections or `127.0.0.1` to only listen on the loopback interface and
-     * only allow local connections.
-     *
-     * By default the address is set to QHostAddress::LocalHost
-     */
-    QHostAddress address() const;
-    void setAddress(const QHostAddress &newAddress);
-
-    /**
-     * The port to listen on.
-     *
-     * By default this is set to 3389, which is the standard port used for RDP.
-     */
-    quint16 port() const;
-    void setPort(quint16 newPort);
+    void setFd(int fd);
 
     /**
      * The list of users allowed to log in to the server.
@@ -116,10 +97,7 @@ public:
     Q_SIGNAL void newConnectionCreated(RdpConnection *connection);
 
 protected:
-    /**
-     * Overridden from QTcpServer
-     */
-    void incomingConnection(qintptr handle) override;
+    void incomingConnection(qintptr handle);
 
 private:
     friend class RdpConnection;
