@@ -18,8 +18,8 @@
 #include <freerdp/peer.h>
 #include <qt6keychain/keychain.h>
 
-#include "RdpConnection.h"
-#include "Server.h"
+#include "DaemonRdpConnection.h"
+#include "DaemonServer.h"
 #include "krdp_version.h"
 #include "krdpserversettings.h"
 
@@ -86,7 +86,7 @@ int main(int argc, char **argv)
     auto certificate = std::filesystem::path(parserValueWithDefault(u"certificate", config->certificate()).toStdString());
     auto certificateKey = std::filesystem::path(parserValueWithDefault(u"certificate-key", config->certificateKey()).toStdString());
 
-    KRdp::Server server(nullptr);
+    KRdp::DaemonServer server(nullptr);
 
     server.setAddress(address);
     server.setPort(port);
@@ -145,11 +145,11 @@ int main(int argc, char **argv)
     controller.setLockOnDisconnect(config->lockOnDisconnect());
     */
 
-    QObject::connect(&server, &KRdp::Server::newConnectionCreated, qApp, [](KRdp::RdpConnection *connection) {
+    QObject::connect(&server, &KRdp::DaemonServer::newConnectionCreated, qApp, [](KRdp::DaemonRdpConnection *connection) {
         qDebug() << connection;
 
-        QObject::connect(connection, &KRdp::RdpConnection::stateChanged, [connection](KRdp::RdpConnection::State newState) {
-            if (newState == KRdp::RdpConnection::State::Activated) {
+        QObject::connect(connection, &KRdp::DaemonRdpConnection::stateChanged, [connection](KRdp::DaemonRdpConnection::State newState) {
+            if (newState == KRdp::DaemonRdpConnection::State::Activated) {
                 // We've authenticated, start krdpserver
                 qDebug() << "activated, starting krdpserver";
 

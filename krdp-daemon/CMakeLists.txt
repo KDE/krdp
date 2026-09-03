@@ -5,7 +5,12 @@ add_definitions(-DTRANSLATION_DOMAIN=\"krdp-daemon\")
 
 add_executable(krdp-daemon)
 
-target_sources(krdp-daemon PRIVATE main.cpp)
+target_sources(krdp-daemon PRIVATE
+    main.cpp
+    DaemonServer.cpp
+    DaemonRdpConnection.cpp
+    DaemonPeerContext.cpp
+)
 
 kconfig_target_kcfg_file(krdp-daemon FILE krdpserversettings.kcfg CLASS_NAME ServerConfig SINGLETON)
 
