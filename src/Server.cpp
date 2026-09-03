@@ -43,7 +43,7 @@ Server::Server(QObject *parent)
     winpr_InitializeSSL(WINPR_SSL_INIT_DEFAULT);
     WTSRegisterWtsApiFunctionTable(FreeRDP_InitWtsApi());
 
-    int m_connectionFd;
+    int m_connectionFd = -1;
 }
 
 Server::~Server()
@@ -53,6 +53,8 @@ Server::~Server()
 
 bool Server::start()
 {
+    qDebug() << "starting server with connection fd" << d->connectionFd;
+
     if (!std::filesystem::exists(d->tlsCertificate) || !std::filesystem::exists(d->tlsCertificateKey)) {
         qCCritical(KRDP).nospace() << "A valid TLS certificate (" << QString::fromStdString(d->tlsCertificate.filename().string()) << ") and key ("
                                    << QString::fromStdString(d->tlsCertificateKey.filename().string()) << ") is required for the server to run!";
@@ -62,9 +64,12 @@ bool Server::start()
     Q_ASSERT(d->connectionFd >= 0);
 
     // TODO, just make main call this directly?
-    QMetaObject::invokeMethod(this, [this]() {
-        incomingConnection(d->connectionFd);
-    });
+    QMetaObject::invokeMethod(
+        this,
+        [this]() {
+            incomingConnection(d->connectionFd);
+        },
+        Qt::QueuedConnection);
 
     // if (!listen(d->address, d->port)) {
     //     // NOTE: We cannot use QTcpServer methods to get the server address and port because it won't initialize them if listen fails.
@@ -148,6 +153,8 @@ void Server::setFd(int fd)
 
 void Server::incomingConnection(qintptr handle)
 {
+    qDebug() << "new connection";
+
     auto session = std::make_unique<RdpConnection>(this, handle);
     auto sessionPtr = session.get();
     // queued: signal comes from the run thread, and it keeps the erase below from destroying the sender mid-emission
