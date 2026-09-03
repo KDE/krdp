@@ -426,39 +426,7 @@ void DaemonRdpConnection::initialize()
     // PSEUDO_XSERVER is apparently required for things to work properly.
     freerdp_settings_set_uint32(settings, FreeRDP_OsMinorType, OSMINORTYPE_PSEUDO_XSERVER);
 
-    // TODO: Implement audio support
-    freerdp_settings_set_bool(settings, FreeRDP_AudioPlayback, false);
-
     freerdp_settings_set_uint32(settings, FreeRDP_ColorDepth, 32);
-
-    freerdp_settings_set_bool(settings, FreeRDP_SupportGraphicsPipeline, true);
-    freerdp_settings_set_bool(settings, FreeRDP_GfxAVC444, false);
-    freerdp_settings_set_bool(settings, FreeRDP_GfxAVC444v2, false);
-    freerdp_settings_set_bool(settings, FreeRDP_GfxH264, false);
-    freerdp_settings_set_bool(settings, FreeRDP_GfxProgressive, true);
-    freerdp_settings_set_bool(settings, FreeRDP_SmartSizing, true);
-
-    freerdp_settings_set_bool(settings, FreeRDP_GfxSmallCache, false);
-    freerdp_settings_set_bool(settings, FreeRDP_GfxThinClient, false);
-    freerdp_settings_set_bool(settings, FreeRDP_SupportDynamicChannels, true);
-
-    freerdp_settings_set_bool(settings, FreeRDP_HasExtendedMouseEvent, true);
-    freerdp_settings_set_bool(settings, FreeRDP_HasHorizontalWheel, true);
-    freerdp_settings_set_bool(settings, FreeRDP_UnicodeInput, true);
-
-    // TODO: Implement network performance detection
-    freerdp_settings_set_bool(settings, FreeRDP_NetworkAutoDetect, true);
-
-    freerdp_settings_set_bool(settings, FreeRDP_RefreshRect, true);
-    freerdp_settings_set_bool(settings, FreeRDP_RemoteConsoleAudio, true);
-    freerdp_settings_set_bool(settings, FreeRDP_RemoteFxCodec, false);
-    freerdp_settings_set_bool(settings, FreeRDP_NSCodec, false);
-    freerdp_settings_set_bool(settings, FreeRDP_FrameMarkerCommandEnabled, true);
-    freerdp_settings_set_bool(settings, FreeRDP_SurfaceFrameMarkerEnabled, true);
-
-    freerdp_settings_set_bool(settings, FreeRDP_SupportMonitorLayoutPdu, true);
-    freerdp_settings_set_bool(settings, FreeRDP_SupportDisplayControl, true);
-
 
     d->peer->Capabilities = peerCapabilities;
     d->peer->Activate = peerActivate;

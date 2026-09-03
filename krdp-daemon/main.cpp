@@ -151,9 +151,7 @@ int main(int argc, char **argv)
         QObject::connect(connection, &KRdp::DaemonRdpConnection::stateChanged, [connection](KRdp::DaemonRdpConnection::State newState) {
             if (newState == KRdp::DaemonRdpConnection::State::Activated) {
                 // We've authenticated, redirect
-                qDebug() << "sending routing token";
                 connection->sendRedirection(QStringLiteral("dave"));
-                qDebug() << "Done!";
             }
         });
     });
