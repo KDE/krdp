@@ -87,26 +87,6 @@ public:
      */
     void sendRedirection(const QString &redirectionToken);
 
-    /**
-     * The InputHandler instance associated with this session.
-     */
-    InputHandler *inputHandler() const;
-    /**
-     * The VideoStream instance associated with this session.
-     */
-    VideoStream *videoStream() const;
-    /**
-     * The Cursor instance associated with this session.
-     */
-    Cursor *cursor() const;
-
-    Clipboard *clipboard() const;
-
-    /*DisplayControl *displayControl() const;*/ // TODO RM
-
-    NetworkDetection *networkDetection() const;
-    freerdp_peer *rdpPeer() const;
-
 private:
     friend BOOL peerCapabilities(freerdp_peer *);
     friend BOOL peerActivate(freerdp_peer *);
@@ -121,8 +101,6 @@ private:
     void setState(State newState);
     void initialize();
     void run(std::stop_token stopToken);
-
-    rdpContext *rdpPeerContext() const;
 
     bool onCapabilities();
     bool onActivate();

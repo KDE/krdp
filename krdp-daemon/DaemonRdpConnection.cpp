@@ -538,16 +538,6 @@ bool DaemonRdpConnection::onClose()
     setState(State::Closed);
     return true;
 }
-
-freerdp_peer *DaemonRdpConnection::rdpPeer() const
-{
-    return d->peer;
-}
-
-rdpContext *DaemonRdpConnection::rdpPeerContext() const
-{
-    return d->peer->context;
-}
 }
 
 #include "moc_DaemonRdpConnection.cpp"
