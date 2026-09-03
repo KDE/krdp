@@ -16,12 +16,11 @@
 #include <winpr/ssl.h>
 
 #include "DaemonRdpConnection.h"
-
-#include "krdp_logging.h"
+#include "krdpd_logging.h"
 
 using namespace KRdp;
 
-class KRDP_NO_EXPORT DaemonServer::Private
+class DaemonServer::Private
 {
 public:
     std::vector<std::unique_ptr<DaemonRdpConnection>> sessions;
@@ -53,14 +52,14 @@ DaemonServer::~DaemonServer()
 bool DaemonServer::start()
 {
     if (!std::filesystem::exists(d->tlsCertificate) || !std::filesystem::exists(d->tlsCertificateKey)) {
-        qCCritical(KRDP).nospace() << "A valid TLS certificate (" << QString::fromStdString(d->tlsCertificate.filename().string()) << ") and key ("
-                                   << QString::fromStdString(d->tlsCertificateKey.filename().string()) << ") is required for the server to run!";
+        qCCritical(KRDPD).nospace() << "A valid TLS certificate (" << QString::fromStdString(d->tlsCertificate.filename().string()) << ") and key ("
+                                    << QString::fromStdString(d->tlsCertificateKey.filename().string()) << ") is required for the server to run!";
         return false;
     }
 
     if (!listen(d->address, d->port)) {
         // NOTE: We cannot use QTcpServer methods to get the server address and port because it won't initialize them if listen fails.
-        qCCritical(KRDP) << "Unable to listen for connections on" << d->address << d->port;
+        qCCritical(KRDPD) << "Unable to listen for connections on" << d->address << d->port;
         return false;
     }
 
@@ -69,7 +68,7 @@ bool DaemonServer::start()
     // global default instance. So create one here and use that.
     d->settings = freerdp_settings_new(FREERDP_SETTINGS_SERVER_MODE);
 
-    qCDebug(KRDP) << "Listening for connections on" << serverAddress() << serverPort();
+    qCDebug(KRDPD) << "Listening for connections on" << serverAddress() << serverPort();
     return true;
 }
 

@@ -11,8 +11,6 @@
 
 #include <freerdp/settings.h>
 
-#include "krdp_export.h"
-
 namespace KRdp
 {
 
@@ -34,7 +32,7 @@ struct User {
  * incoming connection. It takes care of basic system initialisation. It also
  * stores connection and security settings.
  */
-class KRDP_EXPORT DaemonServer : public QTcpServer
+class DaemonServer : public QTcpServer
 {
     Q_OBJECT
 

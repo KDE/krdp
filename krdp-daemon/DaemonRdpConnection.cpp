@@ -25,19 +25,12 @@
 
 #include <freerdp/channels/drdynvc.h>
 
-#include "AbstractSession.h"
-#include "Clipboard.h"
-#include "Cursor.h"
-/*#include "DisplayControl.h" */ // TODO RM
-#include "InputHandler.h"
-#include "NetworkDetection.h"
 #include "DaemonPeerContext_p.h"
 #include "DaemonServer.h"
-#include "VideoStream.h"
 
 #include <KUser>
 
-#include "krdp_logging.h"
+#include "krdpd_logging.h"
 
 namespace fs = std::filesystem;
 
@@ -58,7 +51,7 @@ static bool createSamFile(QTemporaryFile &file, const QList<User> &users)
 
     file.setFileTemplate(QString::fromStdString(path / "rdp-sam-XXXXXX"));
     if (!file.open()) {
-        qCWarning(KRDP) << "Could not open SAM file";
+        qCWarning(KRDPD) << "Could not open SAM file";
         return false;
     }
 
@@ -236,7 +229,7 @@ BOOL suppressOutput(rdpContext *context, uint8_t allow, const RECTANGLE_16 *)
     return FALSE;
 }
 
-class KRDP_NO_EXPORT DaemonRdpConnection::Private
+class DaemonRdpConnection::Private
 {
 public:
     DaemonServer *server = nullptr;
@@ -245,11 +238,6 @@ public:
 
     qintptr socketHandle;
 
-    std::unique_ptr<InputHandler> inputHandler;
-    std::unique_ptr<VideoStream> videoStream;
-    std::unique_ptr<Cursor> cursor;
-    std::unique_ptr<NetworkDetection> networkDetection;
-    std::unique_ptr<Clipboard> clipboard;
     /*std::unique_ptr<DisplayControl> displayControl;*/ // TODO RM
 
     freerdp_peer *peer = nullptr;
@@ -281,17 +269,6 @@ DaemonRdpConnection::DaemonRdpConnection(DaemonServer *server, qintptr socketHan
     d->server = server;
     d->socketHandle = socketHandle;
 
-    d->inputHandler = std::make_unique<InputHandler>(this);
-    d->videoStream = std::make_unique<VideoStream>(this);
-    connect(d->videoStream.get(), &VideoStream::closed, this, [this]() {
-        if (d->state == State::Running || d->state == State::Streaming) {
-            qCDebug(KRDP) << "Video stream closed, closing session";
-            d->requestStop();
-        }
-    });
-    d->cursor = std::make_unique<Cursor>(this);
-    d->networkDetection = std::make_unique<NetworkDetection>(this);
-    d->clipboard = std::make_unique<Clipboard>(this);
     /*d->displayControl = std::make_unique<DisplayControl>(this);*/ // TODO RM
 
     QMetaObject::invokeMethod(this, &DaemonRdpConnection::initialize, Qt::QueuedConnection);
@@ -360,45 +337,13 @@ void DaemonRdpConnection::close(DaemonRdpConnection::CloseReason reason)
     d->requestStop();
 }
 
-InputHandler *DaemonRdpConnection::inputHandler() const
-{
-    return d->inputHandler.get();
-}
-
-KRdp::VideoStream *DaemonRdpConnection::videoStream() const
-{
-    return d->videoStream.get();
-}
-
-Cursor *DaemonRdpConnection::cursor() const
-{
-    return d->cursor.get();
-}
-
-Clipboard *DaemonRdpConnection::clipboard() const
-{
-    return d->clipboard.get();
-}
-
-/*
-DisplayControl *DaemonRdpConnection::displayControl() const
-{
-    return d->displayControl.get();
-}
-*/ // TODO RM
-
-NetworkDetection *DaemonRdpConnection::networkDetection() const
-{
-    return d->networkDetection.get();
-}
-
 void DaemonRdpConnection::initialize()
 {
     setState(State::Starting);
 
     d->peer = freerdp_peer_new(d->socketHandle);
     if (!d->peer) {
-        qCWarning(KRDP) << "Failed to create peer";
+        qCWarning(KRDPD) << "Failed to create peer";
         return;
     }
 
@@ -410,7 +355,7 @@ void DaemonRdpConnection::initialize()
 
     auto result = freerdp_peer_context_new_ex(d->peer, d->server->rdpSettings());
     if (!result) {
-        qCWarning(KRDP) << "Failed to create peer context";
+        qCWarning(KRDPD) << "Failed to create peer context";
         return;
     }
 
@@ -435,14 +380,14 @@ void DaemonRdpConnection::initialize()
 
     auto certificate = freerdp_certificate_new_from_file(d->server->tlsCertificate().string().data());
     if (!certificate) {
-        qCWarning(KRDP) << "Could not read certificate file" << d->server->tlsCertificate().string();
+        qCWarning(KRDPD) << "Could not read certificate file" << d->server->tlsCertificate().string();
         return;
     }
     freerdp_settings_set_pointer_len(settings, FreeRDP_RdpServerCertificate, certificate, 1);
 
     auto key = freerdp_key_new_from_file(d->server->tlsCertificateKey().string().data());
     if (!key) {
-        qCWarning(KRDP) << "Could not read certificate file" << d->server->tlsCertificate().string();
+        qCWarning(KRDPD) << "Could not read certificate file" << d->server->tlsCertificate().string();
         return;
     }
     freerdp_settings_set_pointer_len(settings, FreeRDP_RdpServerRsaKey, key, 1);
@@ -463,7 +408,7 @@ void DaemonRdpConnection::initialize()
     freerdp_settings_set_bool(settings, FreeRDP_SupportGraphicsPipeline, true);
     freerdp_settings_set_bool(settings, FreeRDP_GfxAVC444, false);
     freerdp_settings_set_bool(settings, FreeRDP_GfxAVC444v2, false);
-    freerdp_settings_set_bool(settings, FreeRDP_GfxH264, !VideoStream::h264Disabled());
+    freerdp_settings_set_bool(settings, FreeRDP_GfxH264, false);
     freerdp_settings_set_bool(settings, FreeRDP_GfxProgressive, true);
     freerdp_settings_set_bool(settings, FreeRDP_SmartSizing, true);
 
@@ -495,18 +440,12 @@ void DaemonRdpConnection::initialize()
 
     d->peer->context->update->SuppressOutput = suppressOutput;
 
-    d->inputHandler->initialize(d->peer->context->input);
-    context->inputHandler = d->inputHandler.get();
-
-    context->networkDetection = d->networkDetection.get();
-    d->networkDetection->initialize();
-
     if (!d->peer->Initialize(d->peer)) {
-        qCWarning(KRDP) << "Unable to initialize peer";
+        qCWarning(KRDPD) << "Unable to initialize peer";
         return;
     }
 
-    qCDebug(KRDP) << "Session setup completed, start processing...";
+    qCDebug(KRDPD) << "Session setup completed, start processing...";
 
     // Manual-reset event the run thread waits on, so teardown can wake it
     // without protocol I/O on the peer. Created before the thread starts.
@@ -531,7 +470,7 @@ void DaemonRdpConnection::run(std::stop_token stopToken)
         std::array<HANDLE, 33> events{channelEvent, d->stopEvent};
         auto handleCount = d->peer->GetEventHandles(d->peer, events.data() + 2, 31);
         if (handleCount <= 0) {
-            qCDebug(KRDP) << "Unable to get transport event handles";
+            qCDebug(KRDPD) << "Unable to get transport event handles";
             break;
         }
         // Wait for something to happen on the connection.
@@ -545,63 +484,12 @@ void DaemonRdpConnection::run(std::stop_token stopToken)
 
         // Read data from the socket and have FreeRDP process it.
         if (d->peer->CheckFileDescriptor(d->peer) != TRUE) {
-            qCDebug(KRDP) << "Unable to check file descriptor";
+            qCDebug(KRDPD) << "Unable to check file descriptor";
             break;
         }
-
-        const bool cliprdrJoined = WTSVirtualChannelManagerIsChannelJoined(context->virtualChannelManager, CLIPRDR_SVC_CHANNEL_NAME);
-        const bool drdynvcJoined = WTSVirtualChannelManagerIsChannelJoined(context->virtualChannelManager, DRDYNVC_SVC_CHANNEL_NAME);
-        const BYTE drdynvcState = WTSVirtualChannelManagerGetDrdynvcState(context->virtualChannelManager);
-
-        if (d->peer->connected && d->state == State::Activated && drdynvcJoined && drdynvcState == DRDYNVC_STATE_NONE) {
-            if (WTSVirtualChannelManagerOpen(context->virtualChannelManager) != TRUE) {
-                qCDebug(KRDP) << "Unable to open Virtual Channel Manager for drdynvc";
-                break;
-            }
-        }
-
-        if (WTSVirtualChannelManagerCheckFileDescriptorEx(context->virtualChannelManager, FALSE) != TRUE) {
-            qCDebug(KRDP) << "Unable to check Virtual Channel Manager file descriptor, closing connection";
-            break;
-        }
-
-        if (d->peer->connected && d->state == State::Activated && cliprdrJoined) {
-            if (!d->clipboard->initialize()) {
-                break;
-            }
-        }
-
-        if (d->peer->connected && d->state == State::Activated && drdynvcJoined && drdynvcState == DRDYNVC_STATE_READY) {
-            /*
-            if (!d->displayControl->initialize()) {
-                break;
-            }
-            */ // TODO RM
-            if (!d->videoStream->initialize()) {
-                break;
-            }
-            d->videoStream->setEnabled(true);
-        }
-
-        if (drdynvcJoined != lastDrdynvcJoined || drdynvcState != lastDrdynvcState) {
-            lastDrdynvcJoined = drdynvcJoined;
-            lastDrdynvcState = drdynvcState;
-        }
-
-        if (d->peer->connected && d->state == State::Activated && drdynvcJoined) {
-            if (drdynvcState == DRDYNVC_STATE_READY) {
-                if (!d->videoStream->openChannel()) {
-                    qCWarning(KRDP) << "Unable to open RDPGFX channel";
-                } else {
-                    setState(State::Streaming);
-                }
-            }
-        }
-
-        d->networkDetection->update();
     }
 
-    qCDebug(KRDP) << "Closing session";
+    qCDebug(KRDPD) << "Closing session";
 
     // Close the peer here, on the thread that owns it. Every other close path
     // just asks this thread to stop, so once a run thread exists this is the
@@ -615,23 +503,6 @@ void DaemonRdpConnection::run(std::stop_token stopToken)
 
 bool DaemonRdpConnection::onCapabilities()
 {
-    auto settings = d->peer->context->settings;
-    if (!freerdp_settings_get_bool(settings, FreeRDP_SupportGraphicsPipeline)) {
-        qCWarning(KRDP) << "Client does not support graphics pipeline which is required";
-        return false;
-    }
-
-    auto colorDepth = freerdp_settings_get_uint32(settings, FreeRDP_ColorDepth);
-    if (colorDepth != 32) {
-        qCDebug(KRDP) << "Correcting invalid color depth from client:" << colorDepth;
-        freerdp_settings_set_uint32(settings, FreeRDP_ColorDepth, 32);
-    }
-
-    if (freerdp_settings_get_uint32(settings,FreeRDP_PointerCacheSize) <= 0) {
-        qCWarning(KRDP) << "Client doesn't support pointer caching, aborting";
-        return false;
-    }
-
     return true;
 }
 
@@ -643,7 +514,7 @@ bool DaemonRdpConnection::onActivate()
 
 bool DaemonRdpConnection::onPostConnect()
 {
-    qCInfo(KRDP) << "New client connected:" << d->peer->hostname << freerdp_peer_os_major_type_string(d->peer) << freerdp_peer_os_minor_type_string(d->peer);
+    qCInfo(KRDPD) << "New client connected:" << d->peer->hostname << freerdp_peer_os_major_type_string(d->peer) << freerdp_peer_os_minor_type_string(d->peer);
 
     d->samFile.remove();
 
@@ -656,10 +527,10 @@ bool DaemonRdpConnection::onPostConnect()
         }
 
         const QString password = QString::fromLatin1(freerdp_settings_get_string(settings, FreeRDP_Password));
-        qCDebug(KRDP) << "Attempting authenticating user with PAM";
+        qCDebug(KRDPD) << "Attempting authenticating user with PAM";
         if (username == KUser().loginName() || KUser().loginName() == QStringLiteral("plasmalogin")) {
             if (pamAuthenticate(username, password) >= 0) {
-                qCDebug(KRDP) << "PAM authentication succeeded for user" << username;
+                qCDebug(KRDPD) << "PAM authentication succeeded for user" << username;
                 return true;
             }
         }
@@ -669,7 +540,7 @@ bool DaemonRdpConnection::onPostConnect()
                 return false;
             }
             if (user.name == username && user.password == password) {
-                qCDebug(KRDP) << "User" << username << "authenticated successfully";
+                qCDebug(KRDPD) << "User" << username << "authenticated successfully";
                 return true;
             }
         }
@@ -682,21 +553,12 @@ bool DaemonRdpConnection::onPostConnect()
 
 bool DaemonRdpConnection::onClose()
 {
-    /*d->displayControl->close();*/ // TODO RM
-    d->clipboard->close();
-    d->videoStream->close();
     setState(State::Closed);
     return true;
 }
 
 bool DaemonRdpConnection::onSuppressOutput(uint8_t allow)
 {
-    if (allow) {
-        d->videoStream->setEnabled(true);
-    } else {
-        d->videoStream->setEnabled(false);
-    }
-
     return true;
 }
 

@@ -6,7 +6,7 @@
 
 #include <freerdp/peer.h>
 
-#include "krdp_logging.h"
+#include "krdpd_logging.h"
 
 namespace KRdp
 {
@@ -26,7 +26,7 @@ BOOL newPeerContext(freerdp_peer *peer, rdpContext *context)
     // dynamic channels.
     peerContext->virtualChannelManager = WTSOpenServerA((LPSTR)peer->context);
     if (!peerContext->virtualChannelManager || peerContext->virtualChannelManager == INVALID_HANDLE_VALUE) {
-        qCWarning(KRDP) << "Failed creating virtual channel manager";
+        qCWarning(KRDPD) << "Failed creating virtual channel manager";
         freerdp_peer_context_free(peer);
         return FALSE;
     }

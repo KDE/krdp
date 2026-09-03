@@ -11,8 +11,6 @@
 
 #include <freerdp/freerdp.h>
 
-#include "krdp_export.h"
-
 namespace KRdp
 {
 
@@ -34,7 +32,7 @@ class Clipboard;
  * Note that this class starts its own thread for performing the actual
  * communication.
  */
-class KRDP_EXPORT DaemonRdpConnection : public QObject
+class DaemonRdpConnection : public QObject
 {
     Q_OBJECT
 
