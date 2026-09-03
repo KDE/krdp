@@ -5,6 +5,8 @@
 #include "DaemonServer.h"
 
 #include <qevent.h>
+#include <qprocess.h>
+#include <qstandardpaths.h>
 #include <qtcpsocket.h>
 #include <vector>
 
@@ -323,6 +325,35 @@ void DaemonServer::incomingConnection(qintptr handle)
             qDebug() << "Normal RDP connection";
         } else {
             qDebug() << "RDP routing token:" << info->token;
+
+            int newFd = dup(handle);
+
+            // const int originalFlags = fcntl(socket, F_GETFD);
+            // if (originalFlags < 0) {
+            //     m_inputMethodProcess->failChildProcessModifier("failed to get file descriptor flags", errno);
+            //     return;
+            // }
+            // if (fcntl(socket, F_SETFD, originalFlags & ~FD_CLOEXEC) < 0) {
+            //     m_inputMethodProcess->failChildProcessModifier("failed to unset O_CLOEXEC", errno);
+            // }
+
+            qDebug() << "launching real krdp";
+
+            QProcess *p = new QProcess(this);
+            p->setProgram(QStandardPaths::findExecutable(QStringLiteral("krdpserver")));
+            p->setArguments(
+                {QStringLiteral("-u"), QStringLiteral("david"), QStringLiteral("-p"), QStringLiteral("foo"), QStringLiteral("--fd"), QString::number(newFd)});
+            ::close(handle);
+
+            qDebug() << newFd;
+
+            connect(p, &QProcess::finished, []() {
+                qDebug() << "krdp server closed";
+            });
+
+            p->setProcessChannelMode(QProcess::ForwardedErrorChannel);
+
+            p->start();
         }
     }
 

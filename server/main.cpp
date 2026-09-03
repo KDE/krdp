@@ -53,7 +53,7 @@ int main(int argc, char **argv)
         {u"quality"_s, u"Encoding quality of the stream, from 0 (lowest) to 100 (highest)"_s, u"quality"_s},
 #ifdef WITH_PLASMA_SESSION
         {u"plasma"_s, u"Use Plasma protocols instead of XDP"_s},
-        {u"fd"_s, u"FD Yolo!"_s},
+        {u"fd"_s, u"FD Yolo!"_s, u"fd"_s, QStringLiteral("")},
 
 #endif
     });
