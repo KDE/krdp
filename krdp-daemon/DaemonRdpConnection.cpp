@@ -220,16 +220,6 @@ BOOL peerActivate(freerdp_peer *peer)
     return FALSE;
 }
 
-BOOL suppressOutput(rdpContext *context, uint8_t allow, const RECTANGLE_16 *)
-{
-    auto peerContext = reinterpret_cast<DaemonPeerContext *>(context);
-    if (peerContext->connection->onSuppressOutput(allow)) {
-        return TRUE;
-    }
-
-    return FALSE;
-}
-
 class DaemonRdpConnection::Private
 {
 public:
@@ -432,8 +422,6 @@ void DaemonRdpConnection::initialize()
     d->peer->Activate = peerActivate;
     d->peer->PostConnect = peerPostConnect;
 
-    d->peer->context->update->SuppressOutput = suppressOutput;
-
     if (!d->peer->Initialize(d->peer)) {
         qCWarning(KRDPD) << "Unable to initialize peer";
         return;
@@ -548,11 +536,6 @@ bool DaemonRdpConnection::onPostConnect()
 bool DaemonRdpConnection::onClose()
 {
     setState(State::Closed);
-    return true;
-}
-
-bool DaemonRdpConnection::onSuppressOutput(uint8_t allow)
-{
     return true;
 }
 

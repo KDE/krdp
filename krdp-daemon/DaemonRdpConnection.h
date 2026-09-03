@@ -111,7 +111,6 @@ private:
     friend BOOL peerCapabilities(freerdp_peer *);
     friend BOOL peerActivate(freerdp_peer *);
     friend BOOL peerPostConnect(freerdp_peer *);
-    friend BOOL suppressOutput(rdpContext *, uint8_t, const RECTANGLE_16 *);
 
     friend class Cursor;
     friend class VideoStream;
@@ -129,7 +128,6 @@ private:
     bool onActivate();
     bool onPostConnect();
     bool onClose();
-    bool onSuppressOutput(uint8_t allow);
 
     class Private;
     const std::unique_ptr<Private> d;
