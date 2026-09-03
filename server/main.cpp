@@ -53,6 +53,8 @@ int main(int argc, char **argv)
         {u"quality"_s, u"Encoding quality of the stream, from 0 (lowest) to 100 (highest)"_s, u"quality"_s},
 #ifdef WITH_PLASMA_SESSION
         {u"plasma"_s, u"Use Plasma protocols instead of XDP"_s},
+        {u"fd"_s, u"FD Yolo!"_s},
+
 #endif
     });
     about.setupCommandLine(&parser);
@@ -86,11 +88,12 @@ int main(int argc, char **argv)
 
     KRdp::Server server(nullptr);
 
-    server.setAddress(address);
-    server.setPort(port);
-
     server.setTlsCertificate(certificate);
     server.setTlsCertificateKey(certificateKey);
+
+    int fd = parser.value(u"fd"_s).toInt();
+    qDebug() << "using fd" << fd;
+    server.setFd(fd);
 
     // Use parsed username/pw if set
     if (parser.isSet(u"username"_s)) {
