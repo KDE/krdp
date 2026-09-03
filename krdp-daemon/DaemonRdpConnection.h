@@ -83,6 +83,11 @@ public:
     void close(CloseReason reason = CloseReason::None);
 
     /**
+     * Send an RDP server-redirection PDU containing \a redirectionToken.
+     */
+    void sendRedirection(const QString &redirectionToken);
+
+    /**
      * The InputHandler instance associated with this session.
      */
     InputHandler *inputHandler() const;

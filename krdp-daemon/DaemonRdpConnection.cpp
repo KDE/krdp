@@ -21,6 +21,7 @@
 
 #include <freerdp/channels/wtsvc.h>
 #include <freerdp/freerdp.h>
+#include <freerdp/redirection.h>
 #include <freerdp/server/cliprdr.h>
 
 #include <freerdp/channels/drdynvc.h>
@@ -335,6 +336,31 @@ void DaemonRdpConnection::close(DaemonRdpConnection::CloseReason reason)
     // from video-encoding threads (VideoStream), so it must not drive the peer
     // directly - that would race with the run thread reading the same transport.
     d->requestStop();
+}
+
+void DaemonRdpConnection::sendRedirection(const QString &redirectionToken)
+{
+    const QByteArray routingToken = redirectionToken.toUtf8();
+    auto *redirection = redirection_new();
+    if (!redirection) {
+        qCWarning(KRDPD) << "Failed to create redirection PDU";
+        return;
+    }
+
+    redirection_set_byte_option(redirection, LB_LOAD_BALANCE_INFO, reinterpret_cast<const BYTE *>(routingToken.constData()), routingToken.size());
+    redirection_set_flags(redirection, LB_LOAD_BALANCE_INFO);
+
+    uint32_t incorrectFlags = 0;
+    if (!redirection_settings_are_valid(redirection, &incorrectFlags)) {
+        qCWarning(KRDPD) << "Invalid redirection PDU flags:" << incorrectFlags;
+        redirection_free(redirection);
+        return;
+    }
+
+    if (!d->peer->SendServerRedirection(d->peer, redirection)) {
+        qCWarning(KRDPD) << "Failed to send server redirection";
+    }
+    redirection_free(redirection);
 }
 
 void DaemonRdpConnection::initialize()

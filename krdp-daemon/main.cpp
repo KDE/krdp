@@ -150,34 +150,11 @@ int main(int argc, char **argv)
 
         QObject::connect(connection, &KRdp::DaemonRdpConnection::stateChanged, [connection](KRdp::DaemonRdpConnection::State newState) {
             if (newState == KRdp::DaemonRdpConnection::State::Activated) {
-                // We've authenticated, start krdpserver
-                qDebug() << "activated, starting krdpserver";
-
-                // QProcess::startDetached(QStringLiteral("krdpserver"), QStringList()); // NOTE: presume run from build folder's bin
-
-                QByteArray routingToken = QByteArrayLiteral("dave");
-
-                // dont' ship this of course!
+                // We've authenticated, redirect
                 qDebug() << "sending routing token";
-                auto redir = redirection_new();
-                redirection_set_byte_option(redir,
-                                            LB_LOAD_BALANCE_INFO,
-                                            reinterpret_cast<const BYTE *>(routingToken.constData()),
-                                            strlen(routingToken.constData()));
-
-                redirection_set_flags(redir, LB_LOAD_BALANCE_INFO);
-
-                uint32_t redirection_incorrect_flags = 0;
-
-                qDebug() << redirection_settings_are_valid(redir, &redirection_incorrect_flags);
-
-                // not thread safe!!!
-                qDebug() << connection->rdpPeer();
-                connection->rdpPeer()->SendServerRedirection(connection->rdpPeer(), redir);
+                connection->sendRedirection(QStringLiteral("dave"));
                 qDebug() << "Done!";
             }
-
-            // delete redir
         });
     });
 
