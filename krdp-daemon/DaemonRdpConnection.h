@@ -14,13 +14,7 @@
 namespace KRdp
 {
 
-class InputHandler;
 class DaemonServer;
-class VideoStream;
-class Cursor;
-class NetworkDetection;
-class Clipboard;
-/*class DisplayControl;*/ // TODO RM
 
 /**
  * An RDP session.
@@ -45,23 +39,13 @@ public:
         Starting,
         Running,
         Activated,
-        Streaming,
         Closed,
-    };
-
-    /**
-     * Reasons for closing the stream.
-     */
-    enum class CloseReason {
-        None, ///< No particular reason, e.g. closing due to normal operation
-              ///  like client disconnect.
-        VideoInitFailed, ///< VideoStream failed to initialize.
     };
 
     /**
      * Constructor.
      *
-     * \param server The KRdp::Server instance this session is part of.
+     * \param server The KRdp::DaemonServer instance this connection is part of.
      * \param socketHandle A file handle to the socket this session should use
      *                     for communication.
      */
@@ -75,14 +59,6 @@ public:
     Q_SIGNAL void stateChanged(State newState);
 
     /**
-     * Close the connection
-     *
-     * \param reason The reason to close the connection. May set error state if
-     *               it is something different than CloseReason::None.
-     */
-    void close(CloseReason reason = CloseReason::None);
-
-    /**
      * Send an RDP server-redirection PDU containing \a redirectionToken.
      */
     void sendRedirection(const QString &redirectionToken);
@@ -91,12 +67,6 @@ private:
     friend BOOL peerCapabilities(freerdp_peer *);
     friend BOOL peerActivate(freerdp_peer *);
     friend BOOL peerPostConnect(freerdp_peer *);
-
-    friend class Cursor;
-    friend class VideoStream;
-    friend class NetworkDetection;
-    friend class Clipboard;
-    /*friend class DisplayControl; */ // TODO RM
 
     void setState(State newState);
     void initialize();

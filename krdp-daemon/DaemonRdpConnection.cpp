@@ -307,27 +307,6 @@ void DaemonRdpConnection::setState(KRdp::DaemonRdpConnection::State newState)
     Q_EMIT stateChanged(newState);
 }
 
-void DaemonRdpConnection::close(DaemonRdpConnection::CloseReason reason)
-{
-    if (d->state == State::Closed) {
-        return;
-    }
-
-    switch (reason) {
-    case CloseReason::VideoInitFailed:
-        freerdp_set_error_info(d->peer->context->rdp, ERRINFO_GRAPHICS_SUBSYSTEM_FAILED);
-        break;
-    case CloseReason::None:
-        break;
-    }
-
-    // Hand teardown to the run thread; it owns the peer transport and closes it
-    // as it exits. This is called from the main thread (SessionController) and
-    // from video-encoding threads (VideoStream), so it must not drive the peer
-    // directly - that would race with the run thread reading the same transport.
-    d->requestStop();
-}
-
 void DaemonRdpConnection::sendRedirection(const QString &redirectionToken)
 {
     const QByteArray routingToken = redirectionToken.toUtf8();
