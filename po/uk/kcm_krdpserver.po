@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-09-02 00:45+0000\n"
-"PO-Revision-Date: 2026-08-28 13:25+0300\n"
+"PO-Revision-Date: 2026-09-02 08:36+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -87,6 +87,8 @@ msgid ""
 "Disable the host monitors and create virtual screens for exclusive session "
 "use by a remote user"
 msgstr ""
+"Вимкнути монітори основної системи і створити віртуальні екрани для "
+"виключного використання сеансами віддаленого користувача"
 
 #: ui/CertError.qml:14
 #, kde-format
@@ -95,17 +97,13 @@ msgid "Generating certificates automatically has failed!"
 msgstr "Не вдалося створити сертифікати в автоматичному режимі!"
 
 #: ui/CertLoader.qml:19
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select Certificate Key file"
+#, kde-format
 msgctxt "@title:window"
 msgid "Select certificate key file"
 msgstr "Вибір файла ключа сертифіката"
 
 #: ui/CertLoader.qml:19
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select Certificate file"
+#, kde-format
 msgctxt "@title:window"
 msgid "Select certificate file"
 msgstr "Виберіть файл сертифіката"
@@ -227,156 +225,122 @@ msgid "Server Settings"
 msgstr "Параметри сервера"
 
 #: ui/main.qml:236
-#, fuzzy, kde-format
-#| msgid "Restart Server"
+#, kde-format
 msgctxt "part of a sentence: 'Start server [automatically on login]'"
 msgid "Start server:"
-msgstr "Перезапустити сервер"
+msgstr "Запустити сервер:"
 
 #: ui/main.qml:240
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid "Autostart on login"
+#, kde-format
 msgctxt "part of a sentence: 'Start server automatically on login'"
 msgid "Automatically on login"
-msgstr "Автозапуск при вході"
+msgstr "Автоматично при вході"
 
 #: ui/main.qml:252
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Listening Port:"
+#, kde-format
 msgid "Listening port:"
 msgstr "Порт очікування даних:"
 
 #: ui/main.qml:284
 #, kde-format
 msgid "Operating mode:"
-msgstr ""
+msgstr "Режим роботи:"
 
 #: ui/main.qml:285
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Displays will be locked, and the remote user will see a virtual screen."
 msgstr ""
+"Дисплеї буде заблоковано і віддалений користувач бачитиме віртуальний екран."
 
 #: ui/main.qml:288
 #, kde-format
 msgid "Enable exclusive mode"
-msgstr ""
+msgstr "Увімкнути виключний режим"
 
 #: ui/main.qml:302
-#, fuzzy, kde-format
-#| msgctxt "@label:slider"
-#| msgid "Quality"
+#, kde-format
 msgid "Quality:"
-msgstr "Якість"
+msgstr "Якість:"
 
 #: ui/main.qml:338
-#, fuzzy, kde-format
-#| msgctxt "@label:slider"
-#| msgid "Responsiveness"
+#, kde-format
 msgctxt "Animation speed"
 msgid "Responsiveness"
 msgstr "Швидкодія"
 
 #: ui/main.qml:345
-#, fuzzy, kde-format
-#| msgctxt "@label:slider"
-#| msgid "Quality"
+#, kde-format
 msgctxt "Animation speed"
 msgid "Quality"
 msgstr "Якість"
 
 #: ui/main.qml:355
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid "Adjust quality for network conditions"
+#, kde-format
 msgid "Automatically adjust quality for network conditions"
-msgstr "Скоригувати якість за умовами роботи мережі"
+msgstr "Автоматично скоригувати якість за умовами роботи мережі"
 
 #: ui/main.qml:368
-#, fuzzy, kde-format
-#| msgctxt "title:group Group of RDP server settings"
-#| msgid "Security Certificates"
+#, kde-format
 msgctxt "@title:group"
 msgid "Security Certificates"
 msgstr "Сертифікати захисту"
 
 #: ui/main.qml:371
-#, fuzzy, kde-format
-#| msgctxt "title:group Group of RDP server settings"
-#| msgid "Security Certificates"
+#, kde-format
 msgctxt "part of a sentence: 'Generate certificates [automatically]'"
 msgid "Generate certificates:"
-msgstr "Сертифікати захисту"
+msgstr "Створити сертифікати:"
 
 #: ui/main.qml:376
-#, fuzzy, kde-format
-#| msgctxt "@label:check generate security certificates automatically"
-#| msgid "Generate automatically"
+#, kde-format
 msgctxt "part of a sentence: '[Generate certificates] automatically'"
 msgid "Automatically"
-msgstr "Створити автоматично"
+msgstr "Автоматично"
 
 #: ui/main.qml:396
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Certificate path:"
+#, kde-format
 msgid "Certificate path:"
 msgstr "Шлях до сертифіката:"
 
 #: ui/main.qml:406
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Certificate path:"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "Enter certificate path…"
-msgstr "Шлях до сертифіката:"
+msgstr "Введіть шлях до сертифіката…"
 
 #: ui/main.qml:426
-#, fuzzy, kde-format
-#| msgctxt "@action:button"
-#| msgid "Choose Certificate File…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Choose certificate file…"
 msgstr "Вибрати файл сертифіката…"
 
 #: ui/main.qml:438
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select Certificate file"
+#, kde-format
 msgid "Opens a file picker for the certificate file"
-msgstr "Виберіть файл сертифіката"
+msgstr "Відкриває засіб вибору файла сертифіката"
 
 #: ui/main.qml:445
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Certificate key path:"
+#, kde-format
 msgid "Certificate key path:"
 msgstr "Шлях до ключа сертифіката:"
 
 #: ui/main.qml:455
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Certificate key path:"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "Enter certificate key path…"
-msgstr "Шлях до ключа сертифіката:"
+msgstr "Введіть шлях до ключа сертифіката…"
 
 #: ui/main.qml:475
-#, fuzzy, kde-format
-#| msgctxt "@action:button"
-#| msgid "Choose Certificate Key File…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Choose certificate key file…"
 msgstr "Вибрати файл ключа сертифіката…"
 
 #: ui/main.qml:487
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select Certificate Key file"
+#, kde-format
 msgid "Opens a file picker for the certificate key file"
-msgstr "Вибір файла ключа сертифіката"
+msgstr "Відкриває засіб вибору файла ключа сертифіката"
 
 #: ui/main_phone.qml:94
 #, kde-format

@@ -242,9 +242,7 @@ msgid "Automatically on login"
 msgstr "Automaticky spustit při přihlášení"
 
 #: ui/main.qml:252
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Listening Port:"
+#, kde-format
 msgid "Listening port:"
 msgstr "Naslouchací port:"
 
@@ -265,11 +263,9 @@ msgid "Enable exclusive mode"
 msgstr ""
 
 #: ui/main.qml:302
-#, fuzzy, kde-format
-#| msgctxt "@label:slider"
-#| msgid "Quality"
+#, kde-format
 msgid "Quality:"
-msgstr "Kvalita"
+msgstr "Kvalita:"
 
 #: ui/main.qml:338
 #, fuzzy, kde-format

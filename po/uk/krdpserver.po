@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-09-02 00:45+0000\n"
-"PO-Revision-Date: 2026-08-28 13:24+0300\n"
+"PO-Revision-Date: 2026-09-02 08:33+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -97,6 +97,8 @@ msgid ""
 "Disable the host monitors and create virtual screens for exclusive session "
 "use by a remote user"
 msgstr ""
+"Вимкнути монітори основної системи і створити віртуальні екрани для "
+"виключного використання сеансами віддаленого користувача"
 
 #: SessionController.cpp:111
 #, kde-format
@@ -111,7 +113,7 @@ msgstr "Вийти"
 #: SessionController.cpp:215
 #, kde-format
 msgid "Remote Monitor"
-msgstr ""
+msgstr "Віддалений монітор"
 
 #~ msgid ""
 #~ "Lock the session when the last client disconnects and unlock it on connect"

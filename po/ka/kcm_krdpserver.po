@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-09-02 00:45+0000\n"
-"PO-Revision-Date: 2026-08-28 06:44+0200\n"
+"PO-Revision-Date: 2026-09-02 06:02+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -85,6 +85,8 @@ msgid ""
 "Disable the host monitors and create virtual screens for exclusive session "
 "use by a remote user"
 msgstr ""
+"ჰოსტის ეკრანების გამორთვა და ვირტუალური ეკრანების შექმნა დაშორებული "
+"მომხმარებლის ექსკლუზიური წვდომისთვის"
 
 #: ui/CertError.qml:14
 #, kde-format
@@ -93,20 +95,16 @@ msgid "Generating certificates automatically has failed!"
 msgstr "სერტიფიკატების ავტომატური გენერაცია ჩავარდა!"
 
 #: ui/CertLoader.qml:19
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select Certificate Key file"
+#, kde-format
 msgctxt "@title:window"
 msgid "Select certificate key file"
 msgstr "აირჩიეთ სერტიფიკატის გასაღების ფაილი"
 
 #: ui/CertLoader.qml:19
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select Certificate file"
+#, kde-format
 msgctxt "@title:window"
 msgid "Select certificate file"
-msgstr "აირჩიეთ სერტიფიკატის ფაილი"
+msgstr "სერტიფიკატის ფაილის არჩევა"
 
 #: ui/CodecError.qml:13
 #, kde-format
@@ -225,156 +223,122 @@ msgid "Server Settings"
 msgstr "სერვერის მორგება"
 
 #: ui/main.qml:236
-#, fuzzy, kde-format
-#| msgid "Restart Server"
+#, kde-format
 msgctxt "part of a sentence: 'Start server [automatically on login]'"
 msgid "Start server:"
-msgstr "სერვერის გადატვირთვა"
+msgstr "სერვერის გაშვება:"
 
 #: ui/main.qml:240
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid "Autostart on login"
+#, kde-format
 msgctxt "part of a sentence: 'Start server automatically on login'"
 msgid "Automatically on login"
-msgstr "ავტოგაშვება შესვლისას"
+msgstr "ავტომატურად შესვლისას"
 
 #: ui/main.qml:252
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Listening Port:"
+#, kde-format
 msgid "Listening port:"
 msgstr "მოსასმენი პორტი:"
 
 #: ui/main.qml:284
 #, kde-format
 msgid "Operating mode:"
-msgstr ""
+msgstr "ოპერირების რეჟიმი:"
 
 #: ui/main.qml:285
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Displays will be locked, and the remote user will see a virtual screen."
 msgstr ""
+"ეკრანები დაიბლოკება და დაშორებული მომხმარებელი ვირტუალურ ეკრანს დაინახავს."
 
 #: ui/main.qml:288
 #, kde-format
 msgid "Enable exclusive mode"
-msgstr ""
+msgstr "ექსკლუზიური რეჟიმის ჩართვა"
 
 #: ui/main.qml:302
-#, fuzzy, kde-format
-#| msgctxt "@label:slider"
-#| msgid "Quality"
+#, kde-format
 msgid "Quality:"
-msgstr "ხარისხი"
+msgstr "ხარისხი:"
 
 #: ui/main.qml:338
-#, fuzzy, kde-format
-#| msgctxt "@label:slider"
-#| msgid "Responsiveness"
+#, kde-format
 msgctxt "Animation speed"
 msgid "Responsiveness"
 msgstr "მგრძობიარობა"
 
 #: ui/main.qml:345
-#, fuzzy, kde-format
-#| msgctxt "@label:slider"
-#| msgid "Quality"
+#, kde-format
 msgctxt "Animation speed"
 msgid "Quality"
 msgstr "ხარისხი"
 
 #: ui/main.qml:355
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid "Adjust quality for network conditions"
+#, kde-format
 msgid "Automatically adjust quality for network conditions"
 msgstr "ხარისხის გასწორება ქსელის მდგომარეობაზე დამოკიდებულებით"
 
 #: ui/main.qml:368
-#, fuzzy, kde-format
-#| msgctxt "title:group Group of RDP server settings"
-#| msgid "Security Certificates"
+#, kde-format
 msgctxt "@title:group"
 msgid "Security Certificates"
 msgstr "უსაფრთხოების სერტიფიკატები"
 
 #: ui/main.qml:371
-#, fuzzy, kde-format
-#| msgctxt "title:group Group of RDP server settings"
-#| msgid "Security Certificates"
+#, kde-format
 msgctxt "part of a sentence: 'Generate certificates [automatically]'"
 msgid "Generate certificates:"
-msgstr "უსაფრთხოების სერტიფიკატები"
+msgstr "სერტიფიკატების გენერაცია:"
 
 #: ui/main.qml:376
-#, fuzzy, kde-format
-#| msgctxt "@label:check generate security certificates automatically"
-#| msgid "Generate automatically"
+#, kde-format
 msgctxt "part of a sentence: '[Generate certificates] automatically'"
 msgid "Automatically"
-msgstr "ავტომატური გენერაცია"
+msgstr "ავტომატურად"
 
 #: ui/main.qml:396
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Certificate path:"
+#, kde-format
 msgid "Certificate path:"
 msgstr "სერტიფიკატის ბილიკი:"
 
 #: ui/main.qml:406
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Certificate path:"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "Enter certificate path…"
-msgstr "სერტიფიკატის ბილიკი:"
+msgstr "სერტიფიკატის ბილიკის შეყვანა…"
 
 #: ui/main.qml:426
-#, fuzzy, kde-format
-#| msgctxt "@action:button"
-#| msgid "Choose Certificate File…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Choose certificate file…"
-msgstr "აირჩიეთ სერტიფიკატის ფაილი…"
+msgstr "სერტიფიკატის ფაილის არჩევა…"
 
 #: ui/main.qml:438
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select Certificate file"
+#, kde-format
 msgid "Opens a file picker for the certificate file"
-msgstr "აირჩიეთ სერტიფიკატის ფაილი"
+msgstr "გახსნის ფაილის ამრჩევს სერტიფიკატის ფაილისთვის"
 
 #: ui/main.qml:445
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Certificate key path:"
+#, kde-format
 msgid "Certificate key path:"
 msgstr "სერტიფიკატის გასაღების ბილიკი:"
 
 #: ui/main.qml:455
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Certificate key path:"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "Enter certificate key path…"
-msgstr "სერტიფიკატის გასაღების ბილიკი:"
+msgstr "სერტიფიკატის გასაღების ბილიკის შეყვანა…"
 
 #: ui/main.qml:475
-#, fuzzy, kde-format
-#| msgctxt "@action:button"
-#| msgid "Choose Certificate Key File…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Choose certificate key file…"
-msgstr "აირჩიეთ სერტიფიკატის გასაღების ფაილი…"
+msgstr "სერტიფიკატის გასაღების ფაილის არჩევა…"
 
 #: ui/main.qml:487
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select Certificate Key file"
+#, kde-format
 msgid "Opens a file picker for the certificate key file"
-msgstr "აირჩიეთ სერტიფიკატის გასაღების ფაილი"
+msgstr "გახსნის ფაილის ამრჩევს სერტიფიკატის გასაღების ფაილისთვის"
 
 #: ui/main_phone.qml:94
 #, kde-format
