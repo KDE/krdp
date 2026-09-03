@@ -4,6 +4,7 @@
 
 #include "DaemonServer.h"
 
+#include <fcntl.h>
 #include <qevent.h>
 #include <qprocess.h>
 #include <qstandardpaths.h>
@@ -328,14 +329,14 @@ void DaemonServer::incomingConnection(qintptr handle)
 
             int newFd = dup(handle);
 
-            // const int originalFlags = fcntl(socket, F_GETFD);
-            // if (originalFlags < 0) {
-            //     m_inputMethodProcess->failChildProcessModifier("failed to get file descriptor flags", errno);
-            //     return;
-            // }
-            // if (fcntl(socket, F_SETFD, originalFlags & ~FD_CLOEXEC) < 0) {
-            //     m_inputMethodProcess->failChildProcessModifier("failed to unset O_CLOEXEC", errno);
-            // }
+            const int originalFlags = fcntl(newFd, F_GETFD);
+            if (originalFlags < 0) {
+                qFatal("omgwtfbbq");
+                return;
+            }
+            if (fcntl(newFd, F_SETFD, originalFlags & ~FD_CLOEXEC) < 0) {
+                qFatal("omgwtfbbq");
+            }
 
             qDebug() << "launching real krdp";
 
