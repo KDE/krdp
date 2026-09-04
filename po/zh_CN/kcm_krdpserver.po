@@ -218,13 +218,13 @@ msgstr "视频画质："
 #, kde-format
 msgctxt "@label:slider"
 msgid "Responsiveness"
-msgstr "响应速度"
+msgstr "响应速度优先"
 
 #: ui/main.qml:279
 #, kde-format
 msgctxt "@label:slider"
 msgid "Quality"
-msgstr "画质"
+msgstr "画质优先"
 
 #: ui/main.qml:286
 #, kde-format
