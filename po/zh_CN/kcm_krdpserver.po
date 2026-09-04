@@ -47,7 +47,7 @@ msgstr "匹配该 TLS 证书的密钥"
 msgid ""
 "The quality of the video stream. The maximum quality when AdaptiveQuality is "
 "enabled."
-msgstr ""
+msgstr "视频流的画质。启用自适应质量时的最大画质。"
 
 #. i18n: ectx: label, entry (adaptiveQuality), group (General)
 #: krdpserversettings.kcfg:32
@@ -55,7 +55,7 @@ msgstr ""
 msgid ""
 "Adjust the video quality at runtime based on the client's network "
 "conditions, up to Quality."
-msgstr ""
+msgstr "根据客户端的网络条件调整运行时的视频画质，以画质值为上限。"
 
 #. i18n: ectx: label, entry (Users), group (General)
 #: krdpserversettings.kcfg:36
@@ -81,7 +81,7 @@ msgstr "登录时自动启动服务器"
 msgid ""
 "Disable the host monitors and create virtual screens for exclusive session "
 "use by a remote user"
-msgstr ""
+msgstr "禁用主机监视器，并为远程用户的独占会话创建虚拟屏幕"
 
 #: ui/CertError.qml:14
 #, kde-format
@@ -90,17 +90,13 @@ msgid "Generating certificates automatically has failed!"
 msgstr "自动生成证书失败！"
 
 #: ui/CertLoader.qml:19
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select Certificate Key file"
+#, kde-format
 msgctxt "@title:window"
 msgid "Select certificate key file"
 msgstr "选择证书密钥文件"
 
 #: ui/CertLoader.qml:19
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select Certificate file"
+#, kde-format
 msgctxt "@title:window"
 msgid "Select certificate file"
 msgstr "选择证书文件"
@@ -219,154 +215,121 @@ msgid "Server Settings"
 msgstr "服务器设置"
 
 #: ui/main.qml:236
-#, fuzzy, kde-format
-#| msgid "Restart Server"
+#, kde-format
 msgctxt "part of a sentence: 'Start server [automatically on login]'"
 msgid "Start server:"
-msgstr "重启服务器"
+msgstr "启动服务器："
 
 #: ui/main.qml:240
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid "Autostart on login"
+#, kde-format
 msgctxt "part of a sentence: 'Start server automatically on login'"
 msgid "Automatically on login"
-msgstr "登录时自动启动"
+msgstr "登录时自动启动服务器"
 
 #: ui/main.qml:252
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Listening Port:"
+#, kde-format
 msgid "Listening port:"
 msgstr "监听端口："
 
 #: ui/main.qml:284
 #, kde-format
 msgid "Operating mode:"
-msgstr ""
+msgstr "工作模式："
 
 #: ui/main.qml:285
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Displays will be locked, and the remote user will see a virtual screen."
-msgstr ""
+msgstr "显示器将被锁定，远程用户将看到一个虚拟屏幕。"
 
 #: ui/main.qml:288
 #, kde-format
 msgid "Enable exclusive mode"
-msgstr ""
+msgstr "启用独占模式"
 
 #: ui/main.qml:302
-#, fuzzy, kde-format
-#| msgctxt "@label:slider"
-#| msgid "Quality"
+#, kde-format
 msgid "Quality:"
-msgstr "画质"
+msgstr "画质："
 
 #: ui/main.qml:338
-#, fuzzy, kde-format
-#| msgctxt "@label:slider"
-#| msgid "Responsiveness"
+#, kde-format
 msgctxt "Animation speed"
 msgid "Responsiveness"
-msgstr "响应速度"
+msgstr "响应速度优先"
 
 #: ui/main.qml:345
-#, fuzzy, kde-format
-#| msgctxt "@label:slider"
-#| msgid "Quality"
+#, kde-format
 msgctxt "Animation speed"
 msgid "Quality"
-msgstr "画质"
+msgstr "画质优先"
 
 #: ui/main.qml:355
 #, kde-format
 msgid "Automatically adjust quality for network conditions"
-msgstr ""
+msgstr "自动调整不同网络条件下的画质"
 
 #: ui/main.qml:368
-#, fuzzy, kde-format
-#| msgctxt "title:group Group of RDP server settings"
-#| msgid "Security Certificates"
+#, kde-format
 msgctxt "@title:group"
 msgid "Security Certificates"
 msgstr "安全证书"
 
 #: ui/main.qml:371
-#, fuzzy, kde-format
-#| msgctxt "title:group Group of RDP server settings"
-#| msgid "Security Certificates"
+#, kde-format
 msgctxt "part of a sentence: 'Generate certificates [automatically]'"
 msgid "Generate certificates:"
-msgstr "安全证书"
+msgstr "生成证书："
 
 #: ui/main.qml:376
-#, fuzzy, kde-format
-#| msgctxt "@label:check generate security certificates automatically"
-#| msgid "Generate automatically"
+#, kde-format
 msgctxt "part of a sentence: '[Generate certificates] automatically'"
 msgid "Automatically"
-msgstr "自动生成"
+msgstr "自动"
 
 #: ui/main.qml:396
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Certificate path:"
+#, kde-format
 msgid "Certificate path:"
 msgstr "证书路径："
 
 #: ui/main.qml:406
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Certificate path:"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "Enter certificate path…"
-msgstr "证书路径："
+msgstr "输入证书路径…"
 
 #: ui/main.qml:426
-#, fuzzy, kde-format
-#| msgctxt "@action:button"
-#| msgid "Choose Certificate File…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Choose certificate file…"
 msgstr "选择证书文件…"
 
 #: ui/main.qml:438
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select Certificate file"
+#, kde-format
 msgid "Opens a file picker for the certificate file"
-msgstr "选择证书文件"
+msgstr "打开文件选择器指定一个证书文件"
 
 #: ui/main.qml:445
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Certificate key path:"
+#, kde-format
 msgid "Certificate key path:"
 msgstr "证书密钥路径："
 
 #: ui/main.qml:455
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Certificate key path:"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "Enter certificate key path…"
-msgstr "证书密钥路径："
+msgstr "输入证书密钥路径…"
 
 #: ui/main.qml:475
-#, fuzzy, kde-format
-#| msgctxt "@action:button"
-#| msgid "Choose Certificate Key File…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Choose certificate key file…"
 msgstr "选择证书密钥文件…"
 
 #: ui/main.qml:487
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select Certificate Key file"
+#, kde-format
 msgid "Opens a file picker for the certificate key file"
-msgstr "选择证书密钥文件"
+msgstr "打开文件选择器指定一个证书密钥文件"
 
 #: ui/main_phone.qml:94
 #, kde-format
@@ -462,19 +425,3 @@ msgstr "修改用户…"
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "移除用户…"
-
-#~ msgid ""
-#~ "Lock the session when the last client disconnects and unlock it on connect"
-#~ msgstr "当最后一个客户断开连接时锁定会话并在连接时解锁"
-
-#~ msgctxt "title:group Group of RDP server settings"
-#~ msgid "Server Settings"
-#~ msgstr "服务器设置"
-
-#~ msgctxt "@option:check"
-#~ msgid "Lock the session when disconnecting, unlock on connect"
-#~ msgstr "连接断开时锁定会话，连接时解锁"
-
-#~ msgctxt "@label:textbox"
-#~ msgid "Video quality:"
-#~ msgstr "视频画质："

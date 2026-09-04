@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-09-02 00:45+0000\n"
-"PO-Revision-Date: 2026-08-28 11:36+0200\n"
+"PO-Revision-Date: 2026-09-03 12:03+0200\n"
 "Last-Translator: Libor Filipek <libor.filipek@gmail.com>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
@@ -87,6 +87,8 @@ msgid ""
 "Disable the host monitors and create virtual screens for exclusive session "
 "use by a remote user"
 msgstr ""
+"Deaktivujte monitory hostitelského počítače a vytvořte virtuální obrazovky "
+"určené výhradně pro relaci vzdáleného uživatele"
 
 #: ui/CertError.qml:14
 #, kde-format
@@ -95,17 +97,13 @@ msgid "Generating certificates automatically has failed!"
 msgstr "Automatické generování certifikátů selhalo!"
 
 #: ui/CertLoader.qml:19
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select Certificate Key file"
+#, kde-format
 msgctxt "@title:window"
 msgid "Select certificate key file"
 msgstr "Vyberte soubor klíče certifikátu"
 
 #: ui/CertLoader.qml:19
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select Certificate file"
+#, kde-format
 msgctxt "@title:window"
 msgid "Select certificate file"
 msgstr "Vyberte soubor s certifikátem"
@@ -227,19 +225,16 @@ msgid "Server Settings"
 msgstr "Nastavení serveru"
 
 #: ui/main.qml:236
-#, fuzzy, kde-format
-#| msgid "Restart Server"
+#, kde-format
 msgctxt "part of a sentence: 'Start server [automatically on login]'"
 msgid "Start server:"
-msgstr "Restartovat server"
+msgstr "Spustit server:"
 
 #: ui/main.qml:240
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid "Autostart on login"
+#, kde-format
 msgctxt "part of a sentence: 'Start server automatically on login'"
 msgid "Automatically on login"
-msgstr "Automaticky spustit při přihlášení"
+msgstr "Automaticky při přihlášení:"
 
 #: ui/main.qml:252
 #, kde-format
@@ -249,18 +244,18 @@ msgstr "Naslouchací port:"
 #: ui/main.qml:284
 #, kde-format
 msgid "Operating mode:"
-msgstr ""
+msgstr "Operační režimy:"
 
 #: ui/main.qml:285
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Displays will be locked, and the remote user will see a virtual screen."
-msgstr ""
+msgstr "Displeje budou uzamčeny a vzdálený uživatel uvidí virtuální obrazovku."
 
 #: ui/main.qml:288
 #, kde-format
 msgid "Enable exclusive mode"
-msgstr ""
+msgstr "Zapnout exkluzivní režim"
 
 #: ui/main.qml:302
 #, kde-format
@@ -268,111 +263,83 @@ msgid "Quality:"
 msgstr "Kvalita:"
 
 #: ui/main.qml:338
-#, fuzzy, kde-format
-#| msgctxt "@label:slider"
-#| msgid "Responsiveness"
+#, kde-format
 msgctxt "Animation speed"
 msgid "Responsiveness"
 msgstr "Reakční schopnost"
 
 #: ui/main.qml:345
-#, fuzzy, kde-format
-#| msgctxt "@label:slider"
-#| msgid "Quality"
+#, kde-format
 msgctxt "Animation speed"
 msgid "Quality"
 msgstr "Kvalita"
 
 #: ui/main.qml:355
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid "Adjust quality for network conditions"
+#, kde-format
 msgid "Automatically adjust quality for network conditions"
-msgstr "Přizpůsobit kvalitu stavu sítě"
+msgstr "Automaticky přizpůsobit kvalitu stavu sítě"
 
 #: ui/main.qml:368
-#, fuzzy, kde-format
-#| msgctxt "title:group Group of RDP server settings"
-#| msgid "Security Certificates"
+#, kde-format
 msgctxt "@title:group"
 msgid "Security Certificates"
 msgstr "Bezpečnostní certifikáty"
 
 #: ui/main.qml:371
-#, fuzzy, kde-format
-#| msgctxt "title:group Group of RDP server settings"
-#| msgid "Security Certificates"
+#, kde-format
 msgctxt "part of a sentence: 'Generate certificates [automatically]'"
 msgid "Generate certificates:"
-msgstr "Bezpečnostní certifikáty"
+msgstr "Generovat certifikáty:"
 
 #: ui/main.qml:376
-#, fuzzy, kde-format
-#| msgctxt "@label:check generate security certificates automatically"
-#| msgid "Generate automatically"
+#, kde-format
 msgctxt "part of a sentence: '[Generate certificates] automatically'"
 msgid "Automatically"
-msgstr "Generovat automaticky"
+msgstr "Automaticky"
 
 #: ui/main.qml:396
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Certificate path:"
+#, kde-format
 msgid "Certificate path:"
 msgstr "Cesta k certifikátu:"
 
 #: ui/main.qml:406
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Certificate path:"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "Enter certificate path…"
-msgstr "Cesta k certifikátu:"
+msgstr "Zadat cestu k certifikátu…"
 
 #: ui/main.qml:426
-#, fuzzy, kde-format
-#| msgctxt "@action:button"
-#| msgid "Choose Certificate File…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Choose certificate file…"
 msgstr "Vyberte soubor certifikátu…"
 
 #: ui/main.qml:438
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select Certificate file"
+#, kde-format
 msgid "Opens a file picker for the certificate file"
-msgstr "Vyberte soubor s certifikátem"
+msgstr "Otevře okno pro výběr souboru s certifikátem"
 
 #: ui/main.qml:445
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Certificate key path:"
+#, kde-format
 msgid "Certificate key path:"
 msgstr "Cesta ke klíči certifikátu:"
 
 #: ui/main.qml:455
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Certificate key path:"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "Enter certificate key path…"
-msgstr "Cesta ke klíči certifikátu:"
+msgstr "Zadat cestu k certifikátu…"
 
 #: ui/main.qml:475
-#, fuzzy, kde-format
-#| msgctxt "@action:button"
-#| msgid "Choose Certificate Key File…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Choose certificate key file…"
 msgstr "Vyberte soubor klíče certifikátu…"
 
 #: ui/main.qml:487
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select Certificate Key file"
+#, kde-format
 msgid "Opens a file picker for the certificate key file"
-msgstr "Vyberte soubor klíče certifikátu"
+msgstr "Otevře okno pro výběr souboru s klíčem certifikátu"
 
 #: ui/main_phone.qml:94
 #, kde-format

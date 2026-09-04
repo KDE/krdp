@@ -57,7 +57,7 @@ msgstr "匹配该 TLS 证书的密钥"
 msgid ""
 "The quality of the video stream. The maximum quality when AdaptiveQuality is "
 "enabled."
-msgstr ""
+msgstr "视频流的画质。启用自适应质量时的最大画质。"
 
 #. i18n: ectx: label, entry (adaptiveQuality), group (General)
 #: krdpserversettings.kcfg:32
@@ -65,7 +65,7 @@ msgstr ""
 msgid ""
 "Adjust the video quality at runtime based on the client's network "
 "conditions, up to Quality."
-msgstr ""
+msgstr "根据客户端的网络条件调整运行时的视频画质，以画质值为上限。"
 
 #. i18n: ectx: label, entry (Users), group (General)
 #: krdpserversettings.kcfg:36
@@ -91,7 +91,7 @@ msgstr "登录时自动启动服务器"
 msgid ""
 "Disable the host monitors and create virtual screens for exclusive session "
 "use by a remote user"
-msgstr ""
+msgstr "禁用主机监视器，并为远程用户的独占会话创建虚拟屏幕"
 
 #: SessionController.cpp:111
 #, kde-format
@@ -106,8 +106,4 @@ msgstr "退出"
 #: SessionController.cpp:215
 #, kde-format
 msgid "Remote Monitor"
-msgstr ""
-
-#~ msgid ""
-#~ "Lock the session when the last client disconnects and unlock it on connect"
-#~ msgstr "当最后一个客户断开连接时锁定会话并在连接时解锁"
+msgstr "远程监视器"
