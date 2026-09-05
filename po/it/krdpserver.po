@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-09-02 00:45+0000\n"
-"PO-Revision-Date: 2026-08-28 11:51+0200\n"
+"PO-Revision-Date: 2026-09-02 14:27+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -96,6 +96,8 @@ msgid ""
 "Disable the host monitors and create virtual screens for exclusive session "
 "use by a remote user"
 msgstr ""
+"Disabilita i monitor dell'host e crea schermi virtuali per l'uso esclusivo "
+"della sessione da parte di un utente remoto."
 
 #: SessionController.cpp:111
 #, kde-format
@@ -110,7 +112,7 @@ msgstr "Esci"
 #: SessionController.cpp:215
 #, kde-format
 msgid "Remote Monitor"
-msgstr ""
+msgstr "Monitor remoto"
 
 #~ msgid ""
 #~ "Lock the session when the last client disconnects and unlock it on connect"
