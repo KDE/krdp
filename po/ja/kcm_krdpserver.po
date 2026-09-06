@@ -4,9 +4,9 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-09-02 00:45+0000\n"
-"PO-Revision-Date: 2026-05-10 18:28+0900\n"
+"PO-Revision-Date: 2026-08-31 22:05+0900\n"
 "Last-Translator: Mint <5602mint@gmail.com>\n"
-"Language-Team: Japanese <kde-i18n-doc@kde.org>\n"
+"Language-Team: Japanese <kde-jp@kde.org>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
-"X-Generator: Lokalize 26.04.1\n"
+"X-Generator: Lokalize 26.08.0\n"
 
 #. i18n: ectx: label, entry (listenPort), group (General)
 #: krdpserversettings.kcfg:14
@@ -195,22 +195,20 @@ msgid "Error message from the RDP server:<nl/>%1"
 msgstr "RDP サーバーのエラーメッセージ:<nl/>%1"
 
 #: ui/main.qml:143 ui/main_phone.qml:101
-#, fuzzy, kde-format
-#| msgid ""
-#| "Set up remote login to connect using apps supporting the “RDP” remote "
-#| "desktop protocol."
+#, kde-format
 msgid ""
 "Users listed below can log into this device remotely using apps that support "
 "the “RDP” protocol."
 msgstr ""
-"\"RDP\" リモートデスクトッププロトコルに対応したアプリから接続する際に使用す"
-"るリモートログインを設定できます。"
+"ここに表示されているユーザーは “RDP” と呼ばれるプロトコルに対応するアプリを使"
+"い、このデバイスに遠隔ログインできます。"
 
 #: ui/main.qml:153
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Connect to this device at any of the following addresses:"
 msgstr ""
+"このデバイスに接続する際は、以下のいずれかのアドレスを使用してください。"
 
 #: ui/main.qml:188 ui/main_phone.qml:158
 #, kde-format
@@ -395,6 +393,7 @@ msgstr "ホスト名:"
 #, kde-format
 msgid "Connect to this device at any of the following addresses:"
 msgstr ""
+"このデバイスに接続する際は、以下のいずれかのアドレスを使用してください。"
 
 #: ui/RestartServerWarning.qml:13
 #, kde-format
@@ -415,7 +414,7 @@ msgstr "サーバーを再起動"
 #, kde-format
 msgctxt "@title"
 msgid "Allowed users"
-msgstr ""
+msgstr "許可済みのユーザー"
 
 #: ui/UserListView.qml:25
 #, kde-format
@@ -456,12 +455,10 @@ msgid "Other Users"
 msgstr "その他のユーザー"
 
 #: ui/UserListView.qml:67
-#, fuzzy, kde-format
-#| msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
-#| msgid "Login with your system password"
+#, kde-format
 msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
 msgid "Log in with your system password"
-msgstr "システムパスワードでログイン"
+msgstr "システムパスワードでログインできます"
 
 #: ui/UserListView.qml:104
 #, kde-format
@@ -474,34 +471,3 @@ msgstr "ユーザーを編集…"
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "ユーザーを削除…"
-
-#~ msgctxt "title:group Group of RDP server settings"
-#~ msgid "Server Settings"
-#~ msgstr "サーバー設定"
-
-#, fuzzy
-#~| msgctxt "@label:textbox"
-#~| msgid "Video quality:"
-#~ msgctxt "@label:textbox"
-#~ msgid "Maximum video quality:"
-#~ msgstr "映像品質:"
-
-#~ msgctxt "@label:textbox"
-#~ msgid "Video quality:"
-#~ msgstr "映像品質:"
-
-#~ msgid "The quality of the video stream"
-#~ msgstr "映像ストリームの品質"
-
-#~ msgctxt "@info:usagetip"
-#~ msgid "Use any of the following addresses to connect to this device:"
-#~ msgstr ""
-#~ "このデバイスに接続するには、以下のいずれかのアドレスを使用してください。"
-
-#~ msgid "Use any of the following addresses to connect to this device:"
-#~ msgstr ""
-#~ "このデバイスに接続するには、以下のいずれかのアドレスを使用してください。"
-
-#~ msgctxt "@title"
-#~ msgid "Usernames"
-#~ msgstr "ユーザー名"

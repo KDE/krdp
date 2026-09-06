@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-09-02 00:45+0000\n"
-"PO-Revision-Date: 2026-07-24 21:28+0300\n"
+"PO-Revision-Date: 2026-09-05 13:48+0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: lt\n"
@@ -109,7 +109,7 @@ msgstr "Išjungti"
 #: SessionController.cpp:215
 #, kde-format
 msgid "Remote Monitor"
-msgstr ""
+msgstr "Nuotolinis monitorius"
 
 #~ msgid ""
 #~ "Lock the session when the last client disconnects and unlock it on connect"
