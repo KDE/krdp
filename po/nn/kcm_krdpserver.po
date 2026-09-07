@@ -469,28 +469,3 @@ msgstr "Endra brukar …"
 msgctxt "@action:button"
 msgid "Remove user…"
 msgstr "Fjern brukar …"
-
-#~ msgid ""
-#~ "Lock the session when the last client disconnects and unlock it on connect"
-#~ msgstr ""
-#~ "Lås økta når den siste klienten koplar frå, og lås opp når klientar "
-#~ "koplar til"
-
-#~ msgctxt "title:group Group of RDP server settings"
-#~ msgid "Server Settings"
-#~ msgstr "Tenarinnstillingar"
-
-#~ msgctxt "@option:check"
-#~ msgid "Lock the session when disconnecting, unlock on connect"
-#~ msgstr "Lås økta ved fråkopling, og lås opp ved tilkopling"
-
-#, fuzzy
-#~| msgctxt "@label:textbox"
-#~| msgid "Video quality:"
-#~ msgctxt "@label:textbox"
-#~ msgid "Maximum video quality:"
-#~ msgstr "Videokvalitet:"
-
-#~ msgctxt "@label:textbox"
-#~ msgid "Video quality:"
-#~ msgstr "Videokvalitet:"

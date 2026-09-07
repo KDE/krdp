@@ -108,9 +108,3 @@ msgstr "Avslutt"
 #, kde-format
 msgid "Remote Monitor"
 msgstr ""
-
-#~ msgid ""
-#~ "Lock the session when the last client disconnects and unlock it on connect"
-#~ msgstr ""
-#~ "Lås økta når den siste klienten koplar frå, og lås opp når klientar "
-#~ "koplar til"
