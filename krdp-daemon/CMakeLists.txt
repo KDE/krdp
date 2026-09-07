@@ -17,6 +17,7 @@ target_sources(krdp-daemon PRIVATE
     DaemonServer.cpp
     DaemonRdpConnection.cpp
     DaemonPeerContext.cpp
+    SessionAdaptor.cpp
 )
 
 target_include_directories(krdp-daemon PRIVATE ${FreeRDP_INCLUDE_DIR} ${WinPR_INCLUDE_DIR} ${FreeRDP_Server_INCLUDE_DIR})
@@ -24,7 +25,7 @@ kconfig_target_kcfg_file(krdp-daemon FILE krdpserversettings.kcfg CLASS_NAME Ser
 
 target_include_directories(krdp-daemon PRIVATE ${CMAKE_BINARY_DIR})
 
-target_link_libraries(krdp-daemon PRIVATE Qt6::Gui Qt6::Network KF6::CoreAddons KF6::ConfigGui KF6::DBusAddons KF6::Crash qt6keychain KF6::StatusNotifierItem KF6::I18n
+target_link_libraries(krdp-daemon PRIVATE Qt6::DBus Qt6::Gui Qt6::Network KF6::CoreAddons KF6::ConfigGui KF6::DBusAddons KF6::Crash qt6keychain KF6::StatusNotifierItem KF6::I18n
 
     freerdp
     winpr

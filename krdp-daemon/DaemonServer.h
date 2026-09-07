@@ -113,6 +113,8 @@ public:
      */
     Q_SIGNAL void newConnectionCreated(DaemonRdpConnection *connection);
 
+    DaemonRdpConnection *getSession() const;
+
 protected:
     /**
      * Overridden from QTcpServer
