@@ -10,6 +10,8 @@
 #include <DmaBufHandler>
 #include <PipeWireEncodedStream>
 #include <PipeWireSourceStream>
+#include <freerdp/codec/progressive.h>
+#include <freerdp/server/rdpgfx.h>
 
 #include "VideoStream.h"
 
@@ -36,6 +38,8 @@ public:
     void queueFrame(const VideoFrame &frame);
     void onPacketReceived(const PipeWireEncodedStream::Packet &data);
     void onFrameReceived(const PipeWireFrame &data);
+    bool sendFrameH264(RdpgfxServerContext *gfxContext, uint32_t frameId, const VideoFrame &frame);
+    bool sendFrameProgressive(RdpgfxServerContext *gfxContext, PROGRESSIVE_CONTEXT *progressive, uint32_t frameId, const VideoFrame &frame);
 
     std::unique_ptr<PipeWireEncodedStream> encodedStream;
     std::unique_ptr<PipeWireSourceStream> sourceStream;

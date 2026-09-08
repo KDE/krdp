@@ -114,8 +114,6 @@ private:
     void performReset(QSize size);
     bool hasInFlightCapacity() const;
     void sendFrame(const VideoFrame &frame);
-    void sendFrameH264(const VideoFrame &frame);
-    void sendFrameProgressive(const VideoFrame &frame);
 
     void updateInFlightWindow();
     double effectiveProducerFps();
