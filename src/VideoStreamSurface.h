@@ -6,12 +6,16 @@
 #pragma once
 
 #include <memory>
+#include <mutex>
+#include <optional>
 
 #include <DmaBufHandler>
 #include <PipeWireEncodedStream>
 #include <PipeWireSourceStream>
 #include <freerdp/codec/progressive.h>
 #include <freerdp/server/rdpgfx.h>
+
+#include <QQueue>
 
 #include "VideoStream.h"
 
@@ -36,10 +40,16 @@ public:
     void setPipeWireSource(quint32 nodeId, quint64 objectSerial, int fd);
 
     void queueFrame(const VideoFrame &frame);
+    // This can be called from the submission thread
+    bool hasNextFrame() const;
     void onPacketReceived(const PipeWireEncodedStream::Packet &data);
     void onFrameReceived(const PipeWireFrame &data);
-    bool sendFrameH264(RdpgfxServerContext *gfxContext, uint32_t frameId, const VideoFrame &frame);
-    bool sendFrameProgressive(RdpgfxServerContext *gfxContext, PROGRESSIVE_CONTEXT *progressive, uint32_t frameId, const VideoFrame &frame);
+
+    // This can be called from the submission thread
+    bool sendFrameH264(RdpgfxServerContext *gfxContext, uint32_t frameId);
+
+    // This can be called from the submission thread
+    bool sendFrameProgressive(RdpgfxServerContext *gfxContext, PROGRESSIVE_CONTEXT *progressive, uint32_t frameId);
 
     std::unique_ptr<PipeWireEncodedStream> encodedStream;
     std::unique_ptr<PipeWireSourceStream> sourceStream;
@@ -53,6 +63,12 @@ public:
     bool pendingReset = true;
 
 private:
+    void updateBackpressure();
+    VideoFrame takeNextFrame();
+
     VideoStream *const m_stream;
+    std::optional<VideoStream::EncodingMode> m_encodingMode;
+    mutable std::mutex m_frameQueueMutex;
+    QQueue<VideoFrame> m_frameQueue;
 };
 }

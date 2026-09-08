@@ -47,9 +47,6 @@ constexpr double RttEwmaAlpha = 0.125; // second-stage smoothing of the (already
 constexpr double MinimumValidRttMs = 5.0; // ignore implausibly-low RTT samples
 constexpr double MaximumValidRttMs = 60000.0; // ignore garbage RTT samples
 
-constexpr qsizetype HighQueueCount = 3; // Level of frames in the pending-send queue that pauses frames pre-encoder
-constexpr qsizetype LowQueueCount = 1; // Level of frames in the pending-send queue that resumes the encoder
-
 constexpr uint32_t ProgressiveCodecContextId = 1;
 
 constexpr clk::system_clock::duration QualityUpdateInterval = clk::milliseconds(1500);
@@ -161,8 +158,6 @@ public:
     bool channelOpen = false;
 
     std::jthread frameSubmissionThread;
-    std::mutex frameQueueMutex;
-    QQueue<VideoFrame> frameQueue;
     QSet<uint32_t> pendingFrames;
     std::mutex pendingFramesMutex;
 
@@ -217,10 +212,6 @@ void VideoStream::setActiveEncodingMode(EncodingMode mode)
         return;
     }
 
-    {
-        std::lock_guard lock(d->frameQueueMutex);
-        d->frameQueue.clear();
-    }
     d->surface->setActiveEncodingMode(mode, d->quality, d->requestedFrameRate.load());
     d->activeEncodingMode = mode;
 }
@@ -232,12 +223,23 @@ void VideoStream::setSize(const QSize &newSize)
     }
 
     d->surface->size = newSize;
+    d->surface->pendingReset = true;
     Q_EMIT sizeChanged(newSize);
 }
 
 bool VideoStream::streamingEnabled() const
 {
     return d->streamingEnabled;
+}
+
+bool VideoStream::acceptsFrames() const
+{
+    return d->session->state() == RdpConnection::State::Streaming && d->enabled;
+}
+
+void VideoStream::frameProduced()
+{
+    d->producedFrames.fetch_add(1, std::memory_order_relaxed);
 }
 
 void VideoStream::failVideoInitialization()
@@ -294,18 +296,11 @@ bool VideoStream::initialize()
                 continue;
             }
 
-            VideoFrame nextFrame;
-            {
-                std::unique_lock lock(d->frameQueueMutex);
-                if (!d->frameQueue.isEmpty()) {
-                    nextFrame = d->frameQueue.takeFirst();
-                }
-            }
-            if (nextFrame.size.isEmpty()) {
+            if (!d->surface->hasNextFrame()) {
                 std::this_thread::sleep_for(std::chrono::milliseconds(1000) / d->requestedFrameRate.load());
                 continue;
             }
-            sendFrame(nextFrame);
+            sendNextFrame();
         }
     });
 
@@ -331,10 +326,6 @@ void VideoStream::close()
         std::lock_guard lock(d->pendingFramesMutex);
         d->pendingFrames.clear();
     }
-    {
-        std::lock_guard lock(d->frameQueueMutex);
-        d->frameQueue.clear();
-    }
 
     destroySurface();
 
@@ -349,34 +340,6 @@ void VideoStream::close()
     d->initialized = false;
 
     Q_EMIT closed();
-}
-
-void VideoStream::queueFrame(const KRdp::VideoFrame &frame)
-{
-    if (d->session->state() != RdpConnection::State::Streaming || !d->enabled) {
-        return;
-    }
-    d->producedFrames.fetch_add(1, std::memory_order_relaxed);
-
-    if (d->activeEncodingMode == EncodingMode::H264) {
-        std::lock_guard lock(d->frameQueueMutex);
-        if (frame.isKeyFrame) {
-            d->frameQueue.clear();
-        }
-        d->frameQueue.append(frame);
-    } else if (d->activeEncodingMode == EncodingMode::Progressive) {
-        std::lock_guard lock(d->frameQueueMutex);
-        // for the raster path we only need to keep the latest frame, but accumulate damage
-        QRegion lastDamage;
-        if (!d->frameQueue.isEmpty()) {
-            lastDamage = d->frameQueue.last().damage;
-            d->frameQueue.clear();
-        }
-        VideoFrame nextFrame = frame;
-        nextFrame.damage += lastDamage;
-        d->frameQueue.append(std::move(nextFrame));
-    }
-    updateBackpressure();
 }
 
 void VideoStream::reset()
@@ -837,7 +800,7 @@ bool VideoStream::hasInFlightCapacity() const
     return d->pendingFrames.size() < d->maxInFlight.load();
 }
 
-void VideoStream::sendFrame(const VideoFrame &frame)
+void VideoStream::sendNextFrame()
 {
     auto peer = d->session->rdpPeer();
     if (peer->IsWriteBlocked && peer->IsWriteBlocked(peer)) {
@@ -854,10 +817,7 @@ void VideoStream::sendFrame(const VideoFrame &frame)
 
     if (d->surface->pendingReset) {
         d->surface->pendingReset = false;
-        performReset(frame.size);
-    }
-    if (d->surface->surface.size != frame.size) {
-        performReset(frame.size);
+        performReset(d->surface->size);
     }
 
     const auto frameId = d->frameId++;
@@ -868,39 +828,14 @@ void VideoStream::sendFrame(const VideoFrame &frame)
 
     bool submitted = false;
     if (d->activeEncodingMode == EncodingMode::H264) {
-        submitted = d->surface->sendFrameH264(d->gfxContext.get(), frameId, frame);
+        submitted = d->surface->sendFrameH264(d->gfxContext.get(), frameId);
     } else {
-        submitted = d->surface->sendFrameProgressive(d->gfxContext.get(), d->progressive.get(), frameId, frame);
+        submitted = d->surface->sendFrameProgressive(d->gfxContext.get(), d->progressive.get(), frameId);
     }
 
     if (!submitted) {
         std::lock_guard lock(d->pendingFramesMutex);
         d->pendingFrames.remove(frameId);
-    }
-
-    QMetaObject::invokeMethod(this, &VideoStream::updateBackpressure, Qt::QueuedConnection);
-}
-
-void VideoStream::updateBackpressure()
-{
-    if (!d->surface->encodedStream) {
-        return;
-    }
-
-    qsizetype pendingSendQueueCount = 0;
-    {
-        std::lock_guard lock(d->frameQueueMutex);
-        pendingSendQueueCount = d->frameQueue.count();
-    }
-
-    const bool encodingPaused = d->surface->encodedStream->encoderPaused();
-
-    if (!encodingPaused && pendingSendQueueCount > HighQueueCount) {
-        qCDebug(KRDP) << "Encoder backpressure activated" << pendingSendQueueCount;
-        d->surface->encodedStream->setEncoderPaused(true);
-    } else if (encodingPaused && pendingSendQueueCount < LowQueueCount) {
-        qCDebug(KRDP) << "Encoder backpressure released" << pendingSendQueueCount;
-        d->surface->encodedStream->setEncoderPaused(false);
     }
 }
 }

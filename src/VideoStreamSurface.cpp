@@ -17,6 +17,9 @@ namespace KRdp
 
 namespace clk = std::chrono;
 
+constexpr qsizetype HighQueueCount = 3; // Level of frames in the pending-send queue that pauses frames pre-encoder
+constexpr qsizetype LowQueueCount = 1; // Level of frames in the pending-send queue that resumes the encoder
+
 static RECTANGLE_16 toRectangle16(const QRect &rect)
 {
     RECTANGLE_16 result = {};
@@ -64,6 +67,12 @@ VideoStreamSurface::VideoStreamSurface(VideoStream *stream)
 
 void VideoStreamSurface::setActiveEncodingMode(VideoStream::EncodingMode mode, quint8 quality, int requestedFrameRate)
 {
+    {
+        std::lock_guard lock(m_frameQueueMutex);
+        m_frameQueue.clear();
+        m_encodingMode = mode;
+    }
+
     if (encodedStream) {
         encodedStream->stop();
         encodedStream.reset();
@@ -152,7 +161,72 @@ void VideoStreamSurface::setActiveEncodingMode(VideoStream::EncodingMode mode, q
 
 void VideoStreamSurface::queueFrame(const VideoFrame &frame)
 {
-    m_stream->queueFrame(frame);
+    if (!m_stream->acceptsFrames()) {
+        return;
+    }
+    m_stream->frameProduced();
+
+    {
+        std::lock_guard lock(m_frameQueueMutex);
+        if (m_encodingMode == VideoStream::EncodingMode::H264) {
+            if (frame.isKeyFrame) {
+                m_frameQueue.clear();
+            }
+            m_frameQueue.append(frame);
+        } else if (m_encodingMode == VideoStream::EncodingMode::Progressive) {
+            // For the raster path we only need to keep the latest frame, but accumulate damage.
+            QRegion lastDamage;
+            if (!m_frameQueue.isEmpty()) {
+                lastDamage = m_frameQueue.last().damage;
+                m_frameQueue.clear();
+            }
+            VideoFrame nextFrame = frame;
+            nextFrame.damage += lastDamage;
+            m_frameQueue.append(std::move(nextFrame));
+        }
+    }
+    updateBackpressure();
+}
+
+bool VideoStreamSurface::hasNextFrame() const
+{
+    std::lock_guard lock(m_frameQueueMutex);
+    return !m_frameQueue.isEmpty();
+}
+
+VideoFrame VideoStreamSurface::takeNextFrame()
+{
+    VideoFrame frame;
+    {
+        std::lock_guard lock(m_frameQueueMutex);
+        if (!m_frameQueue.isEmpty()) {
+            frame = m_frameQueue.takeFirst();
+        }
+    }
+    updateBackpressure();
+    return frame;
+}
+
+void VideoStreamSurface::updateBackpressure()
+{
+    if (!encodedStream) {
+        return;
+    }
+
+    qsizetype pendingSendQueueCount = 0;
+    {
+        std::lock_guard lock(m_frameQueueMutex);
+        pendingSendQueueCount = m_frameQueue.count();
+    }
+
+    const bool encodingPaused = encodedStream->encoderPaused();
+    if (!encodingPaused && pendingSendQueueCount > HighQueueCount) {
+        qCDebug(KRDP) << "Encoder backpressure activated" << pendingSendQueueCount;
+        encodedStream->setEncoderPaused(true);
+    } else if (encodingPaused && pendingSendQueueCount < LowQueueCount) {
+        qCDebug(KRDP) << "Encoder backpressure released" << pendingSendQueueCount;
+        encodedStream->setEncoderPaused(false);
+    }
 }
 
 void VideoStreamSurface::setStreamingEnabled(bool enabled)
@@ -262,8 +336,9 @@ void VideoStreamSurface::onFrameReceived(const PipeWireFrame &data)
     queueFrame(frameData);
 }
 
-bool VideoStreamSurface::sendFrameH264(RdpgfxServerContext *gfxContext, uint32_t frameId, const VideoFrame &frame)
+bool VideoStreamSurface::sendFrameH264(RdpgfxServerContext *gfxContext, uint32_t frameId)
 {
+    const VideoFrame frame = takeNextFrame();
     if (frame.data.isEmpty()) {
         return false;
     }
@@ -318,11 +393,14 @@ bool VideoStreamSurface::sendFrameH264(RdpgfxServerContext *gfxContext, uint32_t
         qCWarning(KRDP) << "EndFrame failed" << endStatus << "frameId" << frameId;
     }
 
+    QMetaObject::invokeMethod(this, &VideoStreamSurface::updateBackpressure, Qt::QueuedConnection);
+
     return true;
 }
 
-bool VideoStreamSurface::sendFrameProgressive(RdpgfxServerContext *gfxContext, PROGRESSIVE_CONTEXT *progressive, uint32_t frameId, const VideoFrame &frame)
+bool VideoStreamSurface::sendFrameProgressive(RdpgfxServerContext *gfxContext, PROGRESSIVE_CONTEXT *progressive, uint32_t frameId)
 {
+    const VideoFrame frame = takeNextFrame();
     if (frame.image.isNull()) {
         return false;
     }
