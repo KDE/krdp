@@ -61,16 +61,6 @@ public:
     Q_SIGNAL void cursorChanged(const PipeWireCursor &cursor);
 
     /**
-     * Queue a frame to be sent to the client.
-     *
-     * This will add the provided frame to the queue of frames that should
-     * be sent to the client.
-     *
-     * \param frame The frame to send.
-     */
-    void queueFrame(const VideoFrame &frame);
-
-    /**
      * Indicate that the video state should be reset.
      *
      * This means the screen resolution and other information of the client
@@ -98,8 +88,6 @@ private:
     friend uint32_t gfxCapsAdvertise(RdpgfxServerContext *, const RDPGFX_CAPS_ADVERTISE_PDU *);
     friend uint32_t gfxFrameAcknowledge(RdpgfxServerContext *, const RDPGFX_FRAME_ACKNOWLEDGE_PDU *);
 
-    void updateBackpressure();
-
     bool onChannelIdAssigned(uint32_t channelId);
     uint32_t onCapsAdvertise(const RDPGFX_CAPS_ADVERTISE_PDU *capsAdvertise);
     uint32_t onFrameAcknowledge(const RDPGFX_FRAME_ACKNOWLEDGE_PDU *frameAcknowledge);
@@ -109,11 +97,13 @@ private:
     void setActiveEncodingMode(EncodingMode mode);
     void setSize(const QSize &size);
     bool streamingEnabled() const;
+    bool acceptsFrames() const;
+    void frameProduced();
     void failVideoInitialization();
     void destroySurface();
     void performReset(QSize size);
     bool hasInFlightCapacity() const;
-    void sendFrame(const VideoFrame &frame);
+    void sendNextFrame();
 
     void updateInFlightWindow();
     double effectiveProducerFps();
