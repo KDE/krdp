@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-09-02 00:45+0000\n"
+"POT-Creation-Date: 2026-09-09 00:51+0000\n"
 "PO-Revision-Date: 2026-06-08 22:28+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -107,7 +107,7 @@ msgctxt "@title:window"
 msgid "Select certificate file"
 msgstr "Tanúsítványfájl kiválasztása"
 
-#: ui/CodecError.qml:13
+#: ui/CodecError.qml:14
 #, kde-format
 msgctxt "@info:status"
 msgid ""
