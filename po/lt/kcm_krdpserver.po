@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-09-09 00:51+0000\n"
-"PO-Revision-Date: 2026-09-05 13:48+0300\n"
+"PO-Revision-Date: 2026-09-10 15:40+0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: lt\n"
@@ -50,6 +50,7 @@ msgid ""
 "The quality of the video stream. The maximum quality when AdaptiveQuality is "
 "enabled."
 msgstr ""
+"Vaizdo srauto kokybė. Aukščiausia kokybė, kai įjungta prisitaikanti kokybė."
 
 #. i18n: ectx: label, entry (adaptiveQuality), group (General)
 #: krdpserversettings.kcfg:32
@@ -58,6 +59,8 @@ msgid ""
 "Adjust the video quality at runtime based on the client's network "
 "conditions, up to Quality."
 msgstr ""
+"Derinkite vaizdo kokybę veikimo metu remiantis kliento tinklo sąlygomis, iki "
+"nurodyto kokybės lygio."
 
 #. i18n: ectx: label, entry (Users), group (General)
 #: krdpserversettings.kcfg:36
@@ -85,6 +88,8 @@ msgid ""
 "Disable the host monitors and create virtual screens for exclusive session "
 "use by a remote user"
 msgstr ""
+"Išjungti priimančios šalies monitorius ir sukurti virtualius ekranus, "
+"kuriuos nuotolinis naudotojas išskirtinai naudos seanso metu"
 
 #: ui/CertError.qml:14
 #, kde-format
