@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: krdpserver\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-09-02 00:45+0000\n"
-"PO-Revision-Date: 2024-11-11 17:49+0100\n"
+"PO-Revision-Date: 2026-09-14 20:10+0200\n"
 "Last-Translator: Roman Paholík <wizzardsk@gmail.com>\n"
 "Language-Team: Slovak <kde-sk@linux.sk>\n"
 "Language: sk\n"
@@ -56,6 +56,7 @@ msgid ""
 "The quality of the video stream. The maximum quality when AdaptiveQuality is "
 "enabled."
 msgstr ""
+"Kvalita video prúdu. Maximálna kvalita, keď je zapnutá AdaptiveQuality."
 
 #. i18n: ectx: label, entry (adaptiveQuality), group (General)
 #: krdpserversettings.kcfg:32
@@ -64,6 +65,8 @@ msgid ""
 "Adjust the video quality at runtime based on the client's network "
 "conditions, up to Quality."
 msgstr ""
+"Prispôsobovať kvalitu videa za behu podľa sieťových podmienok klienta, až do "
+"úrovne Kvalita."
 
 #. i18n: ectx: label, entry (Users), group (General)
 #: krdpserversettings.kcfg:36
@@ -90,6 +93,8 @@ msgid ""
 "Disable the host monitors and create virtual screens for exclusive session "
 "use by a remote user"
 msgstr ""
+"Vypnúť monitory hostiteľa a vytvoriť virtuálne obrazovky na výhradné "
+"použitie relácie vzdialeným používateľom"
 
 #: SessionController.cpp:111
 #, kde-format
@@ -104,7 +109,7 @@ msgstr "Ukončiť"
 #: SessionController.cpp:215
 #, kde-format
 msgid "Remote Monitor"
-msgstr ""
+msgstr "Vzdialený monitor"
 
 #~ msgid ""
 #~ "Lock the session when the last client disconnects and unlock it on connect"

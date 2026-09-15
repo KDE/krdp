@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: krdpserver\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-09-02 00:45+0000\n"
-"PO-Revision-Date: 2026-01-06 12:59+0100\n"
+"PO-Revision-Date: 2026-09-13 09:15+0200\n"
 "Last-Translator: Alois Spitzbart <spitz234@hotmail.com>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 26.03.70\n"
+"X-Generator: Lokalize 26.11.70\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -59,6 +59,8 @@ msgid ""
 "The quality of the video stream. The maximum quality when AdaptiveQuality is "
 "enabled."
 msgstr ""
+"Die Qualität des Videostreams. Die maximale Qualität, wenn „AdaptiveQuality“ "
+"aktiviert ist."
 
 #. i18n: ectx: label, entry (adaptiveQuality), group (General)
 #: krdpserversettings.kcfg:32
@@ -67,6 +69,8 @@ msgid ""
 "Adjust the video quality at runtime based on the client's network "
 "conditions, up to Quality."
 msgstr ""
+"Die Videoqualität während der Ausführung bis zur eingestellten maximalen "
+"Qualität anpassen (basierend auf der Netzwerkqualität des Teilnehmers)."
 
 #. i18n: ectx: label, entry (Users), group (General)
 #: krdpserversettings.kcfg:36
@@ -94,6 +98,8 @@ msgid ""
 "Disable the host monitors and create virtual screens for exclusive session "
 "use by a remote user"
 msgstr ""
+"Host-Monitore deaktivieren und virtuelle Bildschirme für die exklusive "
+"Nutzung in einer Sitzung durch einen entfernten Benutzer erstellen"
 
 #: SessionController.cpp:111
 #, kde-format
@@ -108,7 +114,7 @@ msgstr "Beenden"
 #: SessionController.cpp:215
 #, kde-format
 msgid "Remote Monitor"
-msgstr ""
+msgstr "Entfernter Monitor"
 
 #~ msgid "The quality of the video stream"
 #~ msgstr "Die Qualität des Videostreams"
