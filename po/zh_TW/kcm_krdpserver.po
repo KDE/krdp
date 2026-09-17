@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-09-09 00:51+0000\n"
-"PO-Revision-Date: 2026-08-04 07:00+0900\n"
+"PO-Revision-Date: 2026-09-17 00:43+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
@@ -47,7 +47,7 @@ msgstr "與 TLS 憑證相符的金鑰"
 msgid ""
 "The quality of the video stream. The maximum quality when AdaptiveQuality is "
 "enabled."
-msgstr ""
+msgstr "視訊串流的品質。AdaptiveQuality（適應性品質）啟用時的最大品質。"
 
 #. i18n: ectx: label, entry (adaptiveQuality), group (General)
 #: krdpserversettings.kcfg:32
@@ -55,7 +55,7 @@ msgstr ""
 msgid ""
 "Adjust the video quality at runtime based on the client's network "
 "conditions, up to Quality."
-msgstr ""
+msgstr "執行時基於用戶端的網路狀態調整視訊品質，最高到 Quality 值。"
 
 #. i18n: ectx: label, entry (Users), group (General)
 #: krdpserversettings.kcfg:36
@@ -81,7 +81,7 @@ msgstr "登入時自動啟動伺服器"
 msgid ""
 "Disable the host monitors and create virtual screens for exclusive session "
 "use by a remote user"
-msgstr ""
+msgstr "停用主機的螢幕，建立虛擬螢幕以便讓遠端使用者進行純遠端使用"
 
 #: ui/CertError.qml:14
 #, kde-format
@@ -90,17 +90,13 @@ msgid "Generating certificates automatically has failed!"
 msgstr "自動產生金鑰時失敗了！"
 
 #: ui/CertLoader.qml:19
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select Certificate Key file"
+#, kde-format
 msgctxt "@title:window"
 msgid "Select certificate key file"
 msgstr "選擇憑證金鑰檔案"
 
 #: ui/CertLoader.qml:19
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select Certificate file"
+#, kde-format
 msgctxt "@title:window"
 msgid "Select certificate file"
 msgstr "選擇憑證檔案"
@@ -219,62 +215,51 @@ msgid "Server Settings"
 msgstr "伺服器設定"
 
 #: ui/main.qml:236
-#, fuzzy, kde-format
-#| msgid "Restart Server"
+#, kde-format
 msgctxt "part of a sentence: 'Start server [automatically on login]'"
 msgid "Start server:"
-msgstr "重新啟動伺服器"
+msgstr "啟動伺服器："
 
 #: ui/main.qml:240
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid "Autostart on login"
+#, kde-format
 msgctxt "part of a sentence: 'Start server automatically on login'"
 msgid "Automatically on login"
 msgstr "登入時自動啟動"
 
 #: ui/main.qml:252
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Listening Port:"
+#, kde-format
 msgid "Listening port:"
 msgstr "監聽連接埠："
 
 #: ui/main.qml:284
 #, kde-format
 msgid "Operating mode:"
-msgstr ""
+msgstr "作業模式："
 
 #: ui/main.qml:285
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Displays will be locked, and the remote user will see a virtual screen."
-msgstr ""
+msgstr "實體螢幕會被鎖定，而遠端使用者看到的會是虛擬螢幕。"
 
 #: ui/main.qml:288
 #, kde-format
 msgid "Enable exclusive mode"
-msgstr ""
+msgstr "啟用純遠端模式"
 
 #: ui/main.qml:302
-#, fuzzy, kde-format
-#| msgctxt "@label:slider"
-#| msgid "Quality"
+#, kde-format
 msgid "Quality:"
-msgstr "品質"
+msgstr "品質："
 
 #: ui/main.qml:338
-#, fuzzy, kde-format
-#| msgctxt "@label:slider"
-#| msgid "Responsiveness"
+#, kde-format
 msgctxt "Animation speed"
 msgid "Responsiveness"
 msgstr "靈敏度"
 
 #: ui/main.qml:345
-#, fuzzy, kde-format
-#| msgctxt "@label:slider"
-#| msgid "Quality"
+#, kde-format
 msgctxt "Animation speed"
 msgid "Quality"
 msgstr "品質"
@@ -282,91 +267,69 @@ msgstr "品質"
 #: ui/main.qml:355
 #, kde-format
 msgid "Automatically adjust quality for network conditions"
-msgstr ""
+msgstr "自動依網路狀態調整品質"
 
 #: ui/main.qml:368
-#, fuzzy, kde-format
-#| msgctxt "title:group Group of RDP server settings"
-#| msgid "Security Certificates"
+#, kde-format
 msgctxt "@title:group"
 msgid "Security Certificates"
 msgstr "安全性憑證"
 
 #: ui/main.qml:371
-#, fuzzy, kde-format
-#| msgctxt "title:group Group of RDP server settings"
-#| msgid "Security Certificates"
+#, kde-format
 msgctxt "part of a sentence: 'Generate certificates [automatically]'"
 msgid "Generate certificates:"
-msgstr "安全性憑證"
+msgstr "產生憑證："
 
 #: ui/main.qml:376
-#, fuzzy, kde-format
-#| msgctxt "@label:check generate security certificates automatically"
-#| msgid "Generate automatically"
+#, kde-format
 msgctxt "part of a sentence: '[Generate certificates] automatically'"
 msgid "Automatically"
 msgstr "自動產生"
 
 #: ui/main.qml:396
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Certificate path:"
+#, kde-format
 msgid "Certificate path:"
 msgstr "憑證路徑："
 
 #: ui/main.qml:406
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Certificate path:"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "Enter certificate path…"
-msgstr "憑證路徑："
+msgstr "輸入憑證路徑…"
 
 #: ui/main.qml:426
-#, fuzzy, kde-format
-#| msgctxt "@action:button"
-#| msgid "Choose Certificate File…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Choose certificate file…"
 msgstr "選擇憑證檔案…"
 
 #: ui/main.qml:438
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select Certificate file"
+#, kde-format
 msgid "Opens a file picker for the certificate file"
-msgstr "選擇憑證檔案"
+msgstr "會開啟檔案選取工具來選取憑證檔案"
 
 #: ui/main.qml:445
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Certificate key path:"
+#, kde-format
 msgid "Certificate key path:"
 msgstr "憑證金鑰路徑："
 
 #: ui/main.qml:455
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Certificate key path:"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "Enter certificate key path…"
-msgstr "憑證金鑰路徑："
+msgstr "輸入憑證金鑰路徑…"
 
 #: ui/main.qml:475
-#, fuzzy, kde-format
-#| msgctxt "@action:button"
-#| msgid "Choose Certificate Key File…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Choose certificate key file…"
 msgstr "選擇憑證金鑰檔案…"
 
 #: ui/main.qml:487
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select Certificate Key file"
+#, kde-format
 msgid "Opens a file picker for the certificate key file"
-msgstr "選擇憑證金鑰檔案"
+msgstr "會開啟檔案選取工具來選取憑證金鑰檔案"
 
 #: ui/main_phone.qml:94
 #, kde-format
