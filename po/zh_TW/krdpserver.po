@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-09-02 00:45+0000\n"
-"PO-Revision-Date: 2026-08-04 07:00+0900\n"
+"PO-Revision-Date: 2026-09-17 00:44+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
@@ -57,7 +57,7 @@ msgstr "與 TLS 憑證相符的金鑰"
 msgid ""
 "The quality of the video stream. The maximum quality when AdaptiveQuality is "
 "enabled."
-msgstr ""
+msgstr "視訊串流的品質。AdaptiveQuality（適應性品質）啟用時的最大品質。"
 
 #. i18n: ectx: label, entry (adaptiveQuality), group (General)
 #: krdpserversettings.kcfg:32
@@ -65,7 +65,7 @@ msgstr ""
 msgid ""
 "Adjust the video quality at runtime based on the client's network "
 "conditions, up to Quality."
-msgstr ""
+msgstr "執行時基於用戶端的網路狀態調整視訊品質，最高到 Quality 值。"
 
 #. i18n: ectx: label, entry (Users), group (General)
 #: krdpserversettings.kcfg:36
@@ -91,7 +91,7 @@ msgstr "登入時自動啟動伺服器"
 msgid ""
 "Disable the host monitors and create virtual screens for exclusive session "
 "use by a remote user"
-msgstr ""
+msgstr "停用主機的螢幕，建立虛擬螢幕以便讓遠端使用者進行純遠端使用"
 
 #: SessionController.cpp:111
 #, kde-format
@@ -106,7 +106,7 @@ msgstr "離開"
 #: SessionController.cpp:215
 #, kde-format
 msgid "Remote Monitor"
-msgstr ""
+msgstr "遠端螢幕"
 
 #~ msgid ""
 #~ "Lock the session when the last client disconnects and unlock it on connect"
