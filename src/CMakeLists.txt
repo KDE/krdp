@@ -19,6 +19,8 @@ target_sources(KRdp PRIVATE
     Clipboard.h
     DisplayControl.cpp
     DisplayControl.h
+    EiInputHandler.cpp
+    EiInputHandler.h
     EiConnection.cpp
     EiConnection.h
     RdpConnection.cpp

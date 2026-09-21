@@ -30,6 +30,7 @@
 #include "Clipboard.h"
 #include "Cursor.h"
 #include "DisplayControl.h"
+#include "EiInputHandler.h"
 #include "InputHandler.h"
 #include "NetworkDetection.h"
 #include "PeerContext_p.h"
@@ -253,6 +254,7 @@ public:
     std::unique_ptr<Cursor> cursor;
     std::unique_ptr<NetworkDetection> networkDetection;
     std::unique_ptr<Clipboard> clipboard;
+    std::unique_ptr<EiInputHandler> eiInputHandler;
 
     freerdp_peer *peer = nullptr;
 
@@ -295,6 +297,7 @@ RdpConnection::RdpConnection(Server *server, qintptr socketHandle)
     d->cursor = std::make_unique<Cursor>(this);
     d->networkDetection = std::make_unique<NetworkDetection>(this);
     d->clipboard = std::make_unique<Clipboard>(this);
+    d->eiInputHandler = std::make_unique<EiInputHandler>(this);
 
     QMetaObject::invokeMethod(this, &RdpConnection::initialize, Qt::QueuedConnection);
 }
@@ -388,6 +391,11 @@ Clipboard *RdpConnection::clipboard() const
 DisplayControl *RdpConnection::displayControl() const
 {
     return d->displayControl.get();
+}
+
+EiInputHandler *RdpConnection::eiInputHandler() const
+{
+    return d->eiInputHandler.get();
 }
 
 NetworkDetection *RdpConnection::networkDetection() const
@@ -581,6 +589,9 @@ void RdpConnection::run(std::stop_token stopToken)
             if (!d->displayControl->initialize()) {
                 break;
             }
+            if (!d->eiInputHandler->initialize()) {
+                break;
+            }
             if (!d->videoStream->initialize()) {
                 break;
             }
@@ -719,6 +730,7 @@ bool RdpConnection::onPostConnect()
 bool RdpConnection::onClose()
 {
     d->displayControl->close();
+    d->eiInputHandler->close();
     d->clipboard->close();
     d->videoStream->close();
     setState(State::Closed);

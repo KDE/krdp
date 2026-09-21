@@ -24,6 +24,7 @@ class Cursor;
 class NetworkDetection;
 class Clipboard;
 class DisplayControl;
+class EiInputHandler;
 
 /**
  * An RDP session.
@@ -102,6 +103,7 @@ public:
     Clipboard *clipboard() const;
 
     DisplayControl *displayControl() const;
+    EiInputHandler *eiInputHandler() const;
 
     NetworkDetection *networkDetection() const;
 
@@ -117,6 +119,7 @@ private:
     friend class NetworkDetection;
     friend class Clipboard;
     friend class DisplayControl;
+    friend class EiInputHandler;
 
     void setState(State newState);
     void initialize();
