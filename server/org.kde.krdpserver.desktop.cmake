@@ -45,7 +45,6 @@ Name[sk]=KRdp
 Name[sl]=KRdp
 Name[sv]=KRDP
 Name[tr]=KRdp
-Name[ug]=KRdp
 Name[uk]=KRdp
 Name[zh_CN]=KRDP
 Name[zh_TW]=KRdp
