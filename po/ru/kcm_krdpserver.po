@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-09-09 00:51+0000\n"
-"PO-Revision-Date: 2025-12-23 19:11+0300\n"
+"PO-Revision-Date: 2026-09-23 09:29+0200\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
@@ -50,6 +50,7 @@ msgid ""
 "The quality of the video stream. The maximum quality when AdaptiveQuality is "
 "enabled."
 msgstr ""
+"Качество видеопотока. Максимальное качество при включённом AdaptiveQuality."
 
 #. i18n: ectx: label, entry (adaptiveQuality), group (General)
 #: krdpserversettings.kcfg:32
@@ -58,6 +59,8 @@ msgid ""
 "Adjust the video quality at runtime based on the client's network "
 "conditions, up to Quality."
 msgstr ""
+"Регулировать качество видео во время работы в зависимости от состояния сети "
+"клиента, вплоть до значения «Качество»."
 
 #. i18n: ectx: label, entry (Users), group (General)
 #: krdpserversettings.kcfg:36
@@ -84,6 +87,8 @@ msgid ""
 "Disable the host monitors and create virtual screens for exclusive session "
 "use by a remote user"
 msgstr ""
+"Отключать мониторы узла и создавать виртуальные экраны для монопольного "
+"использования сеанса удалённым пользователем"
 
 #: ui/CertError.qml:14
 #, kde-format
@@ -92,17 +97,13 @@ msgid "Generating certificates automatically has failed!"
 msgstr "Ошибка автоматической генерации сертификатов!"
 
 #: ui/CertLoader.qml:19
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select Certificate Key file"
+#, kde-format
 msgctxt "@title:window"
 msgid "Select certificate key file"
 msgstr "Выбор файла ключа сертификата"
 
 #: ui/CertLoader.qml:19
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select Certificate file"
+#, kde-format
 msgctxt "@title:window"
 msgid "Select certificate file"
 msgstr "Выбор файла сертификата"
@@ -199,22 +200,20 @@ msgid "Error message from the RDP server:<nl/>%1"
 msgstr "Сообщение RDP-сервера об ошибке:<nl/>%1"
 
 #: ui/main.qml:143 ui/main_phone.qml:101
-#, fuzzy, kde-format
-#| msgid ""
-#| "Set up remote login to connect using apps supporting the “RDP” remote "
-#| "desktop protocol."
+#, kde-format
 msgid ""
 "Users listed below can log into this device remotely using apps that support "
 "the “RDP” protocol."
 msgstr ""
-"Настройте удалённый вход для подключения с помощью приложений, "
-"поддерживающих протокол удалённого рабочего стола «RDP»."
+"Перечисленные ниже пользователи могут удалённо входить в систему на этом "
+"устройстве с помощью приложений, поддерживающих протокол удалённого рабочего "
+"стола «RDP»."
 
 #: ui/main.qml:153
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Connect to this device at any of the following addresses:"
-msgstr ""
+msgstr "К этому устройству можно подключиться по любому из следующих адресов:"
 
 #: ui/main.qml:188 ui/main_phone.qml:158
 #, kde-format
@@ -229,62 +228,53 @@ msgid "Server Settings"
 msgstr "Параметры сервера"
 
 #: ui/main.qml:236
-#, fuzzy, kde-format
-#| msgid "Restart Server"
+#, kde-format
 msgctxt "part of a sentence: 'Start server [automatically on login]'"
 msgid "Start server:"
-msgstr "Перезапустить сервер"
+msgstr "Запуск сервера:"
 
 #: ui/main.qml:240
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid "Autostart on login"
+#, kde-format
 msgctxt "part of a sentence: 'Start server automatically on login'"
 msgid "Automatically on login"
-msgstr "Автозапуск при входе"
+msgstr "Автоматически при входе в систему"
 
 #: ui/main.qml:252
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Listening Port:"
+#, kde-format
 msgid "Listening port:"
 msgstr "Порт прослушивания:"
 
 #: ui/main.qml:284
 #, kde-format
 msgid "Operating mode:"
-msgstr ""
+msgstr "Режим работы:"
 
 #: ui/main.qml:285
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Displays will be locked, and the remote user will see a virtual screen."
 msgstr ""
+"Экраны будут заблокированы, а удалённый пользователь увидит виртуальный "
+"экран."
 
 #: ui/main.qml:288
 #, kde-format
 msgid "Enable exclusive mode"
-msgstr ""
+msgstr "Включить монопольный режим"
 
 #: ui/main.qml:302
-#, fuzzy, kde-format
-#| msgctxt "@label:slider"
-#| msgid "Quality"
+#, kde-format
 msgid "Quality:"
-msgstr "Качество"
+msgstr "Качество:"
 
 #: ui/main.qml:338
-#, fuzzy, kde-format
-#| msgctxt "@label:slider"
-#| msgid "Responsiveness"
+#, kde-format
 msgctxt "Animation speed"
 msgid "Responsiveness"
 msgstr "Отзывчивость"
 
 #: ui/main.qml:345
-#, fuzzy, kde-format
-#| msgctxt "@label:slider"
-#| msgid "Quality"
+#, kde-format
 msgctxt "Animation speed"
 msgid "Quality"
 msgstr "Качество"
@@ -292,91 +282,69 @@ msgstr "Качество"
 #: ui/main.qml:355
 #, kde-format
 msgid "Automatically adjust quality for network conditions"
-msgstr ""
+msgstr "Автоматически регулировать качество в зависимости от состояния сети"
 
 #: ui/main.qml:368
-#, fuzzy, kde-format
-#| msgctxt "title:group Group of RDP server settings"
-#| msgid "Security Certificates"
+#, kde-format
 msgctxt "@title:group"
 msgid "Security Certificates"
 msgstr "Сертификаты безопасности"
 
 #: ui/main.qml:371
-#, fuzzy, kde-format
-#| msgctxt "title:group Group of RDP server settings"
-#| msgid "Security Certificates"
+#, kde-format
 msgctxt "part of a sentence: 'Generate certificates [automatically]'"
 msgid "Generate certificates:"
-msgstr "Сертификаты безопасности"
+msgstr "Генерация сертификатов:"
 
 #: ui/main.qml:376
-#, fuzzy, kde-format
-#| msgctxt "@label:check generate security certificates automatically"
-#| msgid "Generate automatically"
+#, kde-format
 msgctxt "part of a sentence: '[Generate certificates] automatically'"
 msgid "Automatically"
-msgstr "Генерировать автоматически"
+msgstr "Автоматически"
 
 #: ui/main.qml:396
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Certificate path:"
+#, kde-format
 msgid "Certificate path:"
 msgstr "Путь к сертификату:"
 
 #: ui/main.qml:406
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Certificate path:"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "Enter certificate path…"
-msgstr "Путь к сертификату:"
+msgstr "Введите путь к сертификату…"
 
 #: ui/main.qml:426
-#, fuzzy, kde-format
-#| msgctxt "@action:button"
-#| msgid "Choose Certificate File…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Choose certificate file…"
 msgstr "Выбрать файл сертификата…"
 
 #: ui/main.qml:438
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select Certificate file"
+#, kde-format
 msgid "Opens a file picker for the certificate file"
-msgstr "Выбор файла сертификата"
+msgstr "Открывает диалог выбора файла сертификата"
 
 #: ui/main.qml:445
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Certificate key path:"
+#, kde-format
 msgid "Certificate key path:"
 msgstr "Путь к ключу сертификата:"
 
 #: ui/main.qml:455
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Certificate key path:"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "Enter certificate key path…"
-msgstr "Путь к ключу сертификата:"
+msgstr "Введите путь к ключу сертификата…"
 
 #: ui/main.qml:475
-#, fuzzy, kde-format
-#| msgctxt "@action:button"
-#| msgid "Choose Certificate Key File…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Choose certificate key file…"
 msgstr "Выбрать файл ключа сертификата…"
 
 #: ui/main.qml:487
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select Certificate Key file"
+#, kde-format
 msgid "Opens a file picker for the certificate key file"
-msgstr "Выбор файла ключа сертификата"
+msgstr "Открывает диалог выбора файла ключа сертификата"
 
 #: ui/main_phone.qml:94
 #, kde-format
@@ -398,7 +366,7 @@ msgstr "Имя хоста:"
 #: ui/main_phone.qml:135
 #, kde-format
 msgid "Connect to this device at any of the following addresses:"
-msgstr ""
+msgstr "К этому устройству можно подключиться по любому из следующих адресов:"
 
 #: ui/RestartServerWarning.qml:13
 #, kde-format
@@ -419,7 +387,7 @@ msgstr "Перезапустить сервер"
 #, kde-format
 msgctxt "@title"
 msgid "Allowed users"
-msgstr ""
+msgstr "Разрешённые пользователи"
 
 #: ui/UserListView.qml:25
 #, kde-format
@@ -461,12 +429,10 @@ msgid "Other Users"
 msgstr "Другие пользователи"
 
 #: ui/UserListView.qml:67
-#, fuzzy, kde-format
-#| msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
-#| msgid "Login with your system password"
+#, kde-format
 msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
 msgid "Log in with your system password"
-msgstr "Войти с использованием пароля от системы"
+msgstr "Вход с помощью системного пароля"
 
 #: ui/UserListView.qml:104
 #, kde-format
