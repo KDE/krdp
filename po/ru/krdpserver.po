@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-09-02 00:45+0000\n"
-"PO-Revision-Date: 2025-10-30 19:51+0300\n"
+"PO-Revision-Date: 2026-09-23 09:29+0200\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
@@ -60,6 +60,7 @@ msgid ""
 "The quality of the video stream. The maximum quality when AdaptiveQuality is "
 "enabled."
 msgstr ""
+"Качество видеопотока. Максимальное качество при включённом AdaptiveQuality."
 
 #. i18n: ectx: label, entry (adaptiveQuality), group (General)
 #: krdpserversettings.kcfg:32
@@ -68,6 +69,8 @@ msgid ""
 "Adjust the video quality at runtime based on the client's network "
 "conditions, up to Quality."
 msgstr ""
+"Регулировать качество видео во время работы в зависимости от состояния сети "
+"клиента, вплоть до значения «Качество»."
 
 #. i18n: ectx: label, entry (Users), group (General)
 #: krdpserversettings.kcfg:36
@@ -94,6 +97,8 @@ msgid ""
 "Disable the host monitors and create virtual screens for exclusive session "
 "use by a remote user"
 msgstr ""
+"Отключать мониторы узла и создавать виртуальные экраны для монопольного "
+"использования сеанса удалённым пользователем"
 
 #: SessionController.cpp:111
 #, kde-format
@@ -108,7 +113,7 @@ msgstr "Выход"
 #: SessionController.cpp:215
 #, kde-format
 msgid "Remote Monitor"
-msgstr ""
+msgstr "Удалённый монитор"
 
 #~ msgid "The quality of the video stream"
 #~ msgstr "Качество видеопотока"
