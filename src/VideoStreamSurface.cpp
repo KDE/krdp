@@ -69,7 +69,7 @@ void VideoStreamSurface::setActiveEncodingMode(VideoStream::EncodingMode mode, q
         encodedStream.reset();
     }
     if (sourceStream) {
-        sourceStream->setActive(false);
+        sourceStream->stopStreaming();
         sourceStream.reset();
     }
 

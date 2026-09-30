@@ -320,7 +320,7 @@ void VideoStream::close()
         d->surface->encodedStream->stop();
     }
     if (d->surface->sourceStream) {
-        d->surface->sourceStream->setActive(false);
+        d->surface->sourceStream->stopStreaming();
     }
     if (d->frameSubmissionThread.joinable()) {
         d->frameSubmissionThread.request_stop();
