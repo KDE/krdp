@@ -450,6 +450,7 @@ void RdpConnection::initialize()
     freerdp_settings_set_bool(settings, FreeRDP_RdpSecurity, false);
     freerdp_settings_set_bool(settings, FreeRDP_TlsSecurity, usePamAuthentication);
     freerdp_settings_set_bool(settings, FreeRDP_NlaSecurity, !usePamAuthentication);
+    freerdp_settings_set_bool(settings, FreeRDP_ExtSecurity, false);
 
     freerdp_settings_set_uint32(settings, FreeRDP_OsMajorType, OSMAJORTYPE_UNIX);
     // PSEUDO_XSERVER is apparently required for things to work properly.
