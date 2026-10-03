@@ -1,13 +1,13 @@
 # Copyright (C) 2024 This file is copyright:
 # This file is distributed under the same license as the krdp package.
-# SPDX-FileCopyrightText: 2024, 2025 Tommi Nieminen <translator@legisign.org>
+# SPDX-FileCopyrightText: 2024, 2025, 2026 Tommi Nieminen <translator@legisign.org>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-09-09 00:51+0000\n"
-"PO-Revision-Date: 2025-11-13 18:10+0200\n"
+"PO-Revision-Date: 2026-08-25 16:04+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -194,22 +194,19 @@ msgid "Error message from the RDP server:<nl/>%1"
 msgstr "Virheviesti RDP-palvelimelta:<nl/>%1"
 
 #: ui/main.qml:143 ui/main_phone.qml:101
-#, fuzzy, kde-format
-#| msgid ""
-#| "Set up remote login to connect using apps supporting the “RDP” remote "
-#| "desktop protocol."
+#, kde-format
 msgid ""
 "Users listed below can log into this device remotely using apps that support "
 "the “RDP” protocol."
 msgstr ""
-"Aseta etäkirjautuminen RDP-etätyöpöytäyhteyskäytäntöä tukeville "
-"sovelluksille."
+"Alla luetellut käyttäjät voivat etäkirjautua tähän laitteeseen RDP-"
+"yhteyskäytäntöä tukevilla sovelluksilla."
 
 #: ui/main.qml:153
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Connect to this device at any of the following addresses:"
-msgstr ""
+msgstr "Yhdistä tähän laitteeseen mistä tahansa seuraavasta osoitteesta:"
 
 #: ui/main.qml:188 ui/main_phone.qml:158
 #, kde-format
@@ -393,7 +390,7 @@ msgstr "Konenimi:"
 #: ui/main_phone.qml:135
 #, kde-format
 msgid "Connect to this device at any of the following addresses:"
-msgstr ""
+msgstr "Yhdistä tähän laitteeseen mistä tahansa seuraavasta osoitteesta:"
 
 #: ui/RestartServerWarning.qml:13
 #, kde-format
@@ -414,7 +411,7 @@ msgstr "Käynnistä palvelin uudelleen"
 #, kde-format
 msgctxt "@title"
 msgid "Allowed users"
-msgstr ""
+msgstr "Sallitut käyttäjät"
 
 #: ui/UserListView.qml:25
 #, kde-format
@@ -454,9 +451,7 @@ msgid "Other Users"
 msgstr "Muut käyttäjät"
 
 #: ui/UserListView.qml:67
-#, fuzzy, kde-format
-#| msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
-#| msgid "Login with your system password"
+#, kde-format
 msgctxt "@info:usagetip used as a subtitle for a title+subtitle list item"
 msgid "Log in with your system password"
 msgstr "Kirjaudu järjestelmän salasanalla"
