@@ -164,6 +164,7 @@ public:
     std::mutex frameQueueMutex;
     QQueue<VideoFrame> frameQueue;
     QSet<uint32_t> pendingFrames;
+    bool frameAcknowledgementSuspended = false;
     std::mutex pendingFramesMutex;
 
     std::atomic_int requestedFrameRate = 60;
@@ -330,6 +331,7 @@ void VideoStream::close()
     {
         std::lock_guard lock(d->pendingFramesMutex);
         d->pendingFrames.clear();
+        d->frameAcknowledgementSuspended = false;
     }
     {
         std::lock_guard lock(d->frameQueueMutex);
@@ -473,6 +475,7 @@ uint32_t VideoStream::onCapsAdvertise(const RDPGFX_CAPS_ADVERTISE_PDU *capsAdver
         destroySurface();
         std::lock_guard lock(d->pendingFramesMutex);
         d->pendingFrames.clear();
+        d->frameAcknowledgementSuspended = false;
     }
 
     auto capsSets = capsAdvertise->capsSets;
@@ -567,6 +570,12 @@ uint32_t VideoStream::onFrameAcknowledge(const RDPGFX_FRAME_ACKNOWLEDGE_PDU *fra
     auto id = frameAcknowledge->frameId;
 
     std::lock_guard lock(d->pendingFramesMutex);
+
+    d->frameAcknowledgementSuspended = frameAcknowledge->queueDepth == SUSPEND_FRAME_ACKNOWLEDGEMENT;
+    if (d->frameAcknowledgementSuspended) {
+        d->pendingFrames.clear();
+        return CHANNEL_RC_OK;
+    }
 
     auto itr = d->pendingFrames.constFind(id);
     if (itr == d->pendingFrames.cend()) {
@@ -863,7 +872,9 @@ void VideoStream::sendFrame(const VideoFrame &frame)
     const auto frameId = d->frameId++;
     {
         std::lock_guard lock(d->pendingFramesMutex);
-        d->pendingFrames.insert(frameId);
+        if (!d->frameAcknowledgementSuspended) {
+            d->pendingFrames.insert(frameId);
+        }
     }
 
     bool submitted = false;
