@@ -21,7 +21,6 @@ public:
     ~ScreencastingStream() override;
 
     quint32 nodeId() const;
-    QSize size() const;
 
     quint64 objectSerial() const;
 

@@ -81,8 +81,6 @@ void PlasmaScreencastV1Session::start()
     connect(d->request.get(), &ScreencastingStream::failed, this, &PlasmaScreencastV1Session::error);
     connect(d->request.get(), &ScreencastingStream::created, this, [this](uint nodeId) {
         qCDebug(KRDP) << "Started Plasma session";
-
-        setLogicalSize(d->request->size());
         setNodeId(nodeId);
         setStarted(true);
     });

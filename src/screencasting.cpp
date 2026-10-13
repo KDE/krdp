@@ -50,7 +50,6 @@ public:
     }
 
     uint m_nodeId = 0;
-    QSize m_size;
     quint64 m_objectSerial = quint64(-1);
     QPointer<ScreencastingStream> q;
 };
@@ -66,11 +65,6 @@ ScreencastingStream::~ScreencastingStream() = default;
 quint32 ScreencastingStream::nodeId() const
 {
     return d->m_nodeId;
-}
-
-QSize ScreencastingStream::size() const
-{
-    return d->m_size;
 }
 
 quint64 ScreencastingStream::objectSerial() const
@@ -126,7 +120,6 @@ ScreencastingStream *Screencasting::createOutputStream(QScreen *screen, Screenca
     auto stream = new ScreencastingStream(this);
     stream->setObjectName(screen->name());
     stream->d->init(d->stream_output(output, mode));
-    stream->d->m_size = screen->virtualSize();
     return stream;
 }
 
@@ -152,7 +145,6 @@ ScreencastingStream *Screencasting::createRegionStream(QRect g, qreal scale, Scr
 {
     auto stream = new ScreencastingStream(this);
     stream->d->init(d->stream_region(g.x(), g.y(), g.width(), g.height(), wl_fixed_from_double(scale), mode));
-    stream->d->m_size = g.size();
     return stream;
 }
 
