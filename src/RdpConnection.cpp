@@ -66,7 +66,7 @@ static bool createSamFile(QTemporaryFile &file, const QList<User> &users)
     QString data;
 
     for (const auto &user : users) {
-        auto username = user.name;
+        auto username = user.name.section(QLatin1Char('\\'), -1);
         auto password = user.password.toUtf8();
 
         std::array<uint8_t, 16> hash;
@@ -448,7 +448,7 @@ void RdpConnection::initialize()
     freerdp_settings_set_pointer_len(settings, FreeRDP_RdpServerRsaKey, key, 1);
 
     freerdp_settings_set_bool(settings, FreeRDP_RdpSecurity, false);
-    freerdp_settings_set_bool(settings, FreeRDP_TlsSecurity, usePamAuthentication);
+    freerdp_settings_set_bool(settings, FreeRDP_TlsSecurity, true);
     freerdp_settings_set_bool(settings, FreeRDP_NlaSecurity, !usePamAuthentication);
     freerdp_settings_set_bool(settings, FreeRDP_ExtSecurity, false);
 
@@ -678,10 +678,8 @@ bool RdpConnection::onPostConnect()
 {
     qCInfo(KRDP) << "New client connected:" << d->peer->hostname << freerdp_peer_os_major_type_string(d->peer) << freerdp_peer_os_minor_type_string(d->peer);
 
-    d->samFile.remove();
-
     rdpSettings *settings = d->peer->context->settings;
-    const QString username = QString::fromLatin1(freerdp_settings_get_string(settings, FreeRDP_Username));
+    const QString username = QString::fromLatin1(freerdp_settings_get_string(settings, FreeRDP_Username)).section(QLatin1Char('\\'), -1);
 
     if (d->server->usePAMAuthentication()) {
         if (!freerdp_settings_set_bool(settings, FreeRDP_AutoLogonEnabled, true)) {
