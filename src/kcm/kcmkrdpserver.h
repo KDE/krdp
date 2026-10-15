@@ -50,8 +50,6 @@ public:
     Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY errorMessageChanged);
 
     Q_PROPERTY(QString hostName READ hostName CONSTANT)
-    Q_PROPERTY(QString defaultCertificatePath READ defaultCertificatePath CONSTANT)
-    Q_PROPERTY(QString defaultCertificateKeyPath READ defaultCertificateKeyPath CONSTANT)
     Q_PROPERTY(bool managementAvailable READ managementAvailable CONSTANT)
     Q_PROPERTY(H264::Support h264Support READ h264Support NOTIFY h264SupportChanged)
 
@@ -73,9 +71,6 @@ public:
     Q_INVOKABLE void toggleServer(const bool enabled);
     Q_INVOKABLE void restartServer();
 
-    QString defaultCertificatePath() const;
-    QString defaultCertificateKeyPath() const;
-    Q_INVOKABLE void generateCertificate();
     Q_INVOKABLE void copyAddressToClipboard(const QString &address);
     Q_INVOKABLE KRDPServerSettings *settings() const
     {
@@ -102,8 +97,6 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void krdpServerSettingsChanged();
-    void generateCertificateSucceeded();
-    void generateCertificateFailed();
     void passwordLoaded(const QString &user, const QString &password);
     void keychainError(const QString &errorText);
     void serverStatusChanged();

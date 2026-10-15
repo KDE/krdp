@@ -436,16 +436,16 @@ void RdpConnection::initialize()
         }
     }
 
-    auto certificate = freerdp_certificate_new_from_file(d->server->tlsCertificate().string().data());
+    auto certificate = freerdp_certificate_new_from_pem(d->server->tlsCertificate().toPem().constData());
     if (!certificate) {
-        qCWarning(KRDP) << "Could not read certificate file" << d->server->tlsCertificate().string();
+        qCWarning(KRDP) << "FreeRDP rejected the TLS certificate";
         return;
     }
     freerdp_settings_set_pointer_len(settings, FreeRDP_RdpServerCertificate, certificate, 1);
 
-    auto key = freerdp_key_new_from_file(d->server->tlsCertificateKey().string().data());
+    auto key = freerdp_key_new_from_pem(d->server->tlsKey().toPem().constData());
     if (!key) {
-        qCWarning(KRDP) << "Could not read certificate file" << d->server->tlsCertificate().string();
+        qCWarning(KRDP) << "FreeRDP rejected the TLS key";
         return;
     }
     freerdp_settings_set_pointer_len(settings, FreeRDP_RdpServerRsaKey, key, 1);

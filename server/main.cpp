@@ -102,16 +102,21 @@ int main(int argc, char **argv)
         address = QHostAddress(parser.value(u"address"_s));
     }
     auto port = parserValueWithDefault(u"port", config->listenPort());
-    auto certificate = std::filesystem::path(parserValueWithDefault(u"certificate", config->certificate()).toStdString());
-    auto certificateKey = std::filesystem::path(parserValueWithDefault(u"certificate-key", config->certificateKey()).toStdString());
+    auto tlsCertificate = std::filesystem::path(parserValueWithDefault(u"certificate", config->certificate()).toStdString());
+    auto tlsKey = std::filesystem::path(parserValueWithDefault(u"certificate-key", config->certificateKey()).toStdString());
 
     KRdp::Server server(nullptr);
 
     server.setAddress(address);
     server.setPort(port);
 
-    server.setTlsCertificate(certificate);
-    server.setTlsCertificateKey(certificateKey);
+    // Only automatically generate certificates by default for the default locations for security
+    // reasons, i.e. if a custom location is set, then we should be able to find them or error out
+    server.setAutogenerateCertificate(tlsCertificate == std::filesystem::path(config->defaultCertificateValue().toStdString())
+                                      && tlsKey == std::filesystem::path(config->defaultCertificateKeyValue().toStdString()));
+
+    server.setTlsCertificate(tlsCertificate);
+    server.setTlsKey(tlsKey);
 
     // Use parsed username/pw if set
     if (parser.isSet(u"username"_s)) {

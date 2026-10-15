@@ -7,6 +7,8 @@
 #include <filesystem>
 #include <memory>
 
+#include <QSslCertificate>
+#include <QSslKey>
 #include <QTcpServer>
 
 #include <freerdp/settings.h>
@@ -91,13 +93,23 @@ public:
     void setUsePAMAuthentication(bool usePAM);
 
     /**
+     * Whether to automatically generate the TLS certificate and key if they do
+     * not exist.
+     *
+     * By default this is disabled: the server will fail if the TLS
+     * certificate/key cannot be found.
+     */
+    bool autogenerateCertificate() const;
+    void setAutogenerateCertificate(const bool autogenerateCertificate);
+
+    /**
      * The path of a certificate file to use for encrypting communications.
      *
      * This is required to be set to a valid file, as the RDP login process only
      * works over an encrypted connection.
      */
-    std::filesystem::path tlsCertificate() const;
-    void setTlsCertificate(const std::filesystem::path &newTlsCertificate);
+    QSslCertificate tlsCertificate() const;
+    void setTlsCertificate(const std::filesystem::path &tlsCertificatePath);
 
     /**
      * The path of a certificate key to use for encrypting communications.
@@ -105,8 +117,8 @@ public:
      * This is required to be set to a valid file, as the RDP login process only
      * works over an encrypted connection.
      */
-    std::filesystem::path tlsCertificateKey() const;
-    void setTlsCertificateKey(const std::filesystem::path &newTlsCertificateKey);
+    QSslKey tlsKey() const;
+    void setTlsKey(const std::filesystem::path &tlsKeyPath);
 
     /**
      * Emitted whenever a new connection is started.
@@ -122,6 +134,8 @@ protected:
     void incomingConnection(qintptr handle) override;
 
 private:
+    bool generateCertificate();
+
     friend class RdpConnection;
     rdp_settings *rdpSettings() const;
 
