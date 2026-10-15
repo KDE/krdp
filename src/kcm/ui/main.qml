@@ -42,12 +42,6 @@ KCM.ScrollViewKCM {
             restartServerWarning.visible = toggleServerSwitch.checked;
             kcm.toggleAutoconnect(settings.autostart);
         }
-        function onGenerateCertificateSucceeded(): void {
-            certificateError.visible = false;
-        }
-        function onGenerateCertificateFailed(): void {
-            certificateError.visible = true;
-        }
         function onKeychainError(errorText: string): void {
             keychainErrorDialog.errorText = errorText;
             keychainErrorDialog.open();
@@ -106,10 +100,6 @@ KCM.ScrollViewKCM {
         }
 
         CodecError {}
-
-        CertError {
-            id: certificateError
-        }
 
         Kirigami.InlineMessage {
             type: Kirigami.MessageType.Warning
@@ -226,8 +216,6 @@ KCM.ScrollViewKCM {
 
             contentItem: Kirigami.Form {
                 id: settingsLayout
-
-                readonly property bool showAdvancedCertUI: !autoGenCertSwitch.checked
 
                 Kirigami.FormGroup {
                     title: i18nc("@title:group", "Server Settings")
@@ -368,33 +356,7 @@ KCM.ScrollViewKCM {
                     title: i18nc("@title:group", "Security Certificates")
 
                     Kirigami.FormEntry {
-                        title: i18nc("part of a sentence: 'Generate certificates [automatically]'", "Generate certificates:")
-
-                        contentItem: QQC2.CheckBox {
-                            id: autoGenCertSwitch
-
-                            text: i18nc("part of a sentence: '[Generate certificates] automatically'", "Automatically")
-                            checked: settings.autogenerateCertificates
-                            onCheckedChanged: {
-                                settings.autogenerateCertificates = checked;
-                                if (checked) {
-                                    kcm.generateCertificate();
-
-                                    certPathField.text = kcm.defaultCertificatePath;
-                                    certKeyPathField.text = kcm.defaultCertificateKeyPath;
-                                }
-                            }
-
-                            KCM.SettingStateBinding {
-                                configObject: settings
-                                settingName: "autogenerateCertificates"
-                            }
-                        }
-                    }
-
-                    Kirigami.FormEntry {
                         title: i18n("Certificate path:")
-                        visible: settingsLayout.showAdvancedCertUI
 
                         contentItem: RowLayout {
                             Kirigami.FormData.buddyFor: certPathField
@@ -416,8 +378,9 @@ KCM.ScrollViewKCM {
                                 text: settings.certificate
                                 onAccepted: settings.certificate = text
 
-                                KCM.SettingHighlighter {
-                                    highlight: certPathField.text !== kcm.defaultCertificatePath
+                                KCM.SettingStateBinding {
+                                    configObject: settings
+                                    settingName: "certificate"
                                 }
                             }
 
@@ -443,7 +406,6 @@ KCM.ScrollViewKCM {
 
                     Kirigami.FormEntry {
                         title: i18n("Certificate key path:")
-                        visible: settingsLayout.showAdvancedCertUI
 
                         contentItem: RowLayout {
                             Kirigami.FormData.buddyFor: certKeyPathField
@@ -465,8 +427,9 @@ KCM.ScrollViewKCM {
                                 text: settings.certificateKey
                                 onAccepted: settings.certificateKey = text
 
-                                KCM.SettingHighlighter {
-                                    highlight: certKeyPathField.text !== kcm.defaultCertificateKeyPath
+                                KCM.SettingStateBinding {
+                                    configObject: settings
+                                    settingName: "certificateKey"
                                 }
                             }
 

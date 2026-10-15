@@ -58,6 +58,7 @@ int main(int argc, char **argv)
         {{u"p"_s, u"password"_s}, u"The password to use for login. Requires username to be passed as well."_s, u"password"_s},
         {u"address"_s, u"The address to listen on for connections. Defaults to 0.0.0.0"_s, u"address"_s},
         {u"port"_s, u"The port to use for connections. Defaults to 3389."_s, u"port"_s, u"3389"_s},
+        {u"auto-generate"_s, u"Automatically generate the TLS certificate file and key if they do not exist"_s},
         {u"certificate"_s, u"The TLS certificate file to use."_s, u"certificate"_s, u"server.crt"_s},
         {u"certificate-key"_s, u"The TLS certificate key to use."_s, u"certificate-key"_s, u"server.key"_s},
         {u"monitor"_s, u"The index of the monitor to use when streaming."_s, u"monitor"_s, u"-1"_s},
@@ -109,6 +110,12 @@ int main(int argc, char **argv)
 
     server.setAddress(address);
     server.setPort(port);
+
+    // Only automatically generate certificates by default for the default locations for security
+    // reasons, i.e. if a custom location is set, then we should be able to find them or error out
+    server.setAutogenerateCertificate(parser.isSet(u"auto-generate"_s)
+                                      || (certificate == std::filesystem::path(config->defaultCertificateValue().toStdString())
+                                          && certificateKey == std::filesystem::path(config->defaultCertificateKeyValue().toStdString())));
 
     server.setTlsCertificate(certificate);
     server.setTlsCertificateKey(certificateKey);

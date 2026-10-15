@@ -91,6 +91,17 @@ public:
     void setUsePAMAuthentication(bool usePAM);
 
     /**
+     * Whether to automatically generate the TLS certificate and key if they do
+     * not exist.
+     *
+     * By default this is disabled: the server will fail if the TLS
+     * certificate/key cannot be found.
+     */
+
+    bool autogenerateCertificate() const;
+    void setAutogenerateCertificate(const bool autogenerateCertificate);
+
+    /**
      * The path of a certificate file to use for encrypting communications.
      *
      * This is required to be set to a valid file, as the RDP login process only
@@ -122,6 +133,8 @@ protected:
     void incomingConnection(qintptr handle) override;
 
 private:
+    bool generateCertificate() const;
+
     friend class RdpConnection;
     rdp_settings *rdpSettings() const;
 
