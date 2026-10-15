@@ -110,6 +110,11 @@ int main(int argc, char **argv)
     server.setAddress(address);
     server.setPort(port);
 
+    // Only automatically generate certificates by default for the default locations for security
+    // reasons, i.e. if a custom location is set, then we should be able to find them or error out
+    server.setAutogenerateCertificate(certificate == std::filesystem::path(config->defaultCertificateValue().toStdString())
+                                      && certificateKey == std::filesystem::path(config->defaultCertificateKeyValue().toStdString()));
+
     server.setTlsCertificate(certificate);
     server.setTlsCertificateKey(certificateKey);
 
