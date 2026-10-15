@@ -7,6 +7,9 @@
 #include <vector>
 
 #include <QCoreApplication>
+#include <QDir>
+#include <QProcess>
+#include <QStandardPaths>
 
 #include <freerdp/channels/channels.h>
 #include <freerdp/freerdp.h>
@@ -30,6 +33,7 @@ public:
     QList<User> users;
     bool usePamAuthentication = false;
 
+    bool autogenerateCertificate = false;
     std::filesystem::path tlsCertificate;
     std::filesystem::path tlsCertificateKey;
 };
@@ -50,9 +54,20 @@ Server::~Server()
 bool Server::start()
 {
     if (!std::filesystem::exists(d->tlsCertificate) || !std::filesystem::exists(d->tlsCertificateKey)) {
-        qCCritical(KRDP).nospace() << "A valid TLS certificate (" << QString::fromStdString(d->tlsCertificate.filename().string()) << ") and key ("
-                                   << QString::fromStdString(d->tlsCertificateKey.filename().string()) << ") is required for the server to run!";
-        return false;
+        if (autogenerateCertificate()) {
+            qCInfo(KRDP).nospace() << "A valid TLS certificate (" << QString::fromStdString(d->tlsCertificate.filename().string()) << ") and key ("
+                                   << QString::fromStdString(d->tlsCertificateKey.filename().string())
+                                   << ") could not be found. They will be automatically generated.";
+
+            if (!generateCertificate()) {
+                qCCritical(KRDP) << "Failed to generate TLS certificate and key.";
+                return false;
+            }
+        } else {
+            qCCritical(KRDP).nospace() << "A valid TLS certificate (" << QString::fromStdString(d->tlsCertificate.filename().string()) << ") and key ("
+                                       << QString::fromStdString(d->tlsCertificateKey.filename().string()) << ") is required for the server to run!";
+            return false;
+        }
     }
 
     if (!listen(d->address, d->port)) {
@@ -133,6 +148,20 @@ void Server::setUsePAMAuthentication(bool usePAM)
     d->usePamAuthentication = usePAM;
 }
 
+bool Server::autogenerateCertificate() const
+{
+    return d->autogenerateCertificate;
+}
+
+void Server::setAutogenerateCertificate(const bool autogenerateCertificate)
+{
+    if (autogenerateCertificate == d->autogenerateCertificate) {
+        return;
+    }
+
+    d->autogenerateCertificate = autogenerateCertificate;
+}
+
 std::filesystem::path Server::tlsCertificate() const
 {
     return d->tlsCertificate;
@@ -187,6 +216,35 @@ void Server::incomingConnection(qintptr handle)
         Qt::QueuedConnection);
     d->sessions.push_back(std::move(session));
     Q_EMIT newConnectionCreated(sessionPtr);
+}
+
+bool Server::generateCertificate() const
+{
+    if (!QDir(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)).mkpath(QStringLiteral("krdpserver"))) {
+        return false;
+    };
+
+    const QString qsCertificate = QString::fromStdString(d->tlsCertificate.string());
+    const QString qsCertificateKey = QString::fromStdString(d->tlsCertificateKey.string());
+
+    QProcess sslProcess;
+    sslProcess.start(QStringLiteral("openssl"), {
+       QStringLiteral("req"),
+         QStringLiteral("-noenc"),
+         QStringLiteral("-new"),
+         QStringLiteral("-x509"),
+         QStringLiteral("-out"), qsCertificate,
+         QStringLiteral("-keyout"), qsCertificateKey,
+         QStringLiteral("-days"), QStringLiteral("1"),
+         QStringLiteral("-batch")
+    });
+    sslProcess.waitForFinished();
+
+    if (!QFileInfo::exists(qsCertificate) || !QFileInfo::exists(qsCertificateKey)) {
+        return false;
+    }
+
+    return true;
 }
 
 rdp_settings *Server::rdpSettings() const

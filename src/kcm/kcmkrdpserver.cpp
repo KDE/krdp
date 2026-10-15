@@ -14,13 +14,10 @@
 #include <QDBusConnection>
 #include <QDBusPendingCallWatcher>
 #include <QDBusReply>
-#include <QDir>
-#include <QFileInfo>
 #include <QFutureWatcher>
 #include <QGuiApplication>
 #include <QHostInfo>
 #include <QNetworkInterface>
-#include <QProcess>
 #include <QQmlEngine>
 #include <QtConcurrentRun>
 #include <qt6keychain/keychain.h>
@@ -50,10 +47,6 @@ KRDPServerConfig::KRDPServerConfig(QObject *parent, const KPluginMetaData &data)
     qmlRegisterUncreatableMetaObject(H264::staticMetaObject, qmlUri, 1, 0, "H264Support", u"Error: only enums"_s);
 
     probeH264Support();
-
-    if (m_serverSettings->autogenerateCertificates()) {
-        generateCertificate();
-    }
 
     QDBusConnection::sessionBus().connect(dbusSystemdDestination,
                                           dbusKrdpServerServicePath,
@@ -308,57 +301,6 @@ void KRDPServerConfig::restartServer()
         updateServerStatus();
         w->deleteLater();
     });
-}
-
-QString KRDPServerConfig::defaultCertificatePath() const
-{
-    return QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + u"/krdpserver/krdp.crt"_s;
-}
-
-QString KRDPServerConfig::defaultCertificateKeyPath() const
-{
-    return QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + u"/krdpserver/krdp.key"_s;
-}
-
-void KRDPServerConfig::generateCertificate()
-{
-    if (!m_serverSettings->certificate().isEmpty() || !m_serverSettings->certificateKey().isEmpty()) {
-        return;
-    }
-    QDir(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)).mkpath(u"krdpserver"_s);
-    QString certificatePath(defaultCertificatePath());
-    QString certificateKeyPath(defaultCertificateKeyPath());
-    qDebug(KRDPKCM) << "Generating certificate files to: " << certificatePath << " and " << certificateKeyPath;
-    QProcess sslProcess;
-    sslProcess.start(u"openssl"_s,
-                     {
-                         u"req"_s,
-                         u"-nodes"_s,
-                         u"-new"_s,
-                         u"-x509"_s,
-                         u"-keyout"_s,
-                         certificateKeyPath,
-                         u"-out"_s,
-                         certificatePath,
-                         u"-days"_s,
-                         u"1"_s,
-                         u"-batch"_s,
-                     });
-    sslProcess.waitForFinished();
-
-    m_serverSettings->setCertificate(certificatePath);
-    m_serverSettings->setCertificateKey(certificateKeyPath);
-
-    // Check that the path is valid
-    if (QFileInfo::exists(certificatePath) && QFileInfo::exists(certificateKeyPath)) {
-        qDebug(KRDPKCM) << "Certificate generated; ready to accept connections.";
-        Q_EMIT generateCertificateSucceeded();
-    } else {
-        qCritical(KRDPKCM) << "Could not generate a certificate. A valid TLS certificate and key should be provided.";
-        Q_EMIT generateCertificateFailed();
-    }
-
-    m_serverSettings->save();
 }
 
 void KRDPServerConfig::updateServerStatus()
