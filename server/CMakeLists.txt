@@ -7,7 +7,7 @@ add_executable(krdpserver)
 
 target_sources(krdpserver PRIVATE main.cpp SessionController.cpp)
 
-kconfig_target_kcfg_file(krdpserver FILE krdpserversettings.kcfg CLASS_NAME ServerConfig SINGLETON)
+kconfig_target_kcfg_file(krdpserver FILE krdpserversettings.kcfg CLASS_NAME ServerConfig DEFAULT_VALUE_GETTERS SINGLETON)
 
 target_include_directories(krdpserver PRIVATE ${CMAKE_BINARY_DIR})
 
