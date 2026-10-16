@@ -448,7 +448,7 @@ void RdpConnection::initialize()
     freerdp_settings_set_pointer_len(settings, FreeRDP_RdpServerRsaKey, key, 1);
 
     freerdp_settings_set_bool(settings, FreeRDP_RdpSecurity, false);
-    freerdp_settings_set_bool(settings, FreeRDP_TlsSecurity, true);
+    freerdp_settings_set_bool(settings, FreeRDP_TlsSecurity, usePamAuthentication);
     freerdp_settings_set_bool(settings, FreeRDP_NlaSecurity, !usePamAuthentication);
     freerdp_settings_set_bool(settings, FreeRDP_ExtSecurity, !usePamAuthentication);
 
