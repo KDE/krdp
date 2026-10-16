@@ -5,6 +5,7 @@ set(PROJECT_VERSION "6.8.80")
 
 cmake_minimum_required(VERSION 3.16)
 
+set(PROJECT_DEP_VERSION "6.7.90")
 set(QT_MIN_VERSION "6.11.0")
 set(KF6_MIN_VERSION "6.30.0")
 set(KDE_COMPILERSETTINGS_LEVEL "5.85")
@@ -47,7 +48,7 @@ find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS Config DBusAddons KCMUti
 find_package(FreeRDP 3.1 REQUIRED)
 find_package(WinPR 3.1 REQUIRED)
 find_package(FreeRDP-Server 3.1 REQUIRED)
-find_package(KPipeWire 5.27.80 REQUIRED)
+find_package(KPipeWire ${PROJECT_DEP_VERSION} REQUIRED)
 find_package(XKB REQUIRED)
 
 find_package(Qt6Keychain CONFIG)
