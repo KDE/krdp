@@ -341,7 +341,7 @@ void KRDPServerConfig::generateCertificate()
                          u"-out"_s,
                          certificatePath,
                          u"-days"_s,
-                         u"1"_s,
+                         u"3650"_s,
                          u"-batch"_s,
                      });
     sslProcess.waitForFinished();
