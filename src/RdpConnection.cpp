@@ -697,7 +697,7 @@ bool RdpConnection::onPostConnect()
         const auto users = d->server->users();
         for (auto user : users) {
             if (user.password.isEmpty()) {
-                return false;
+                continue;
             }
             if (user.name == username && user.password == password) {
                 qCDebug(KRDP) << "User" << username << "authenticated successfully";
