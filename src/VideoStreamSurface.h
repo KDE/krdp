@@ -17,8 +17,8 @@ namespace KRdp
 {
 
 struct Surface {
-    uint16_t id;
-    uint32_t codecContextId;
+    uint16_t id = 0;
+    uint32_t codecContextId = 0;
     QSize size;
 };
 
