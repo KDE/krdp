@@ -9,6 +9,7 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QProcess>
+#include <QSslCertificate>
 #include <QStandardPaths>
 
 #include <freerdp/channels/channels.h>
@@ -53,9 +54,11 @@ Server::~Server()
 
 bool Server::start()
 {
-    if (!std::filesystem::exists(d->tlsCertificate) || !std::filesystem::exists(d->tlsCertificateKey)) {
+    if (const QDateTime certificateExpiryDate = getCertificateExpiry();
+        !certificateExpiryDate.isValid() || !std::filesystem::exists(d->tlsCertificate) || !std::filesystem::exists(d->tlsCertificateKey)) {
+        // If certificateExpiryDate is invalid, we have failed to open and read the certificate
         if (autogenerateCertificate()) {
-            qCInfo(KRDP).nospace() << "A valid TLS certificate (" << QString::fromStdString(d->tlsCertificate.filename().string()) << ") and key ("
+            qCInfo(KRDP).nospace() << "A valid TLS certificate (" << QString::fromStdString(d->tlsCertificate.filename().string()) << ") and/or key ("
                                    << QString::fromStdString(d->tlsCertificateKey.filename().string())
                                    << ") could not be found. They will be automatically generated.";
 
@@ -67,6 +70,22 @@ bool Server::start()
             qCCritical(KRDP).nospace() << "A valid TLS certificate (" << QString::fromStdString(d->tlsCertificate.filename().string()) << ") and key ("
                                        << QString::fromStdString(d->tlsCertificateKey.filename().string()) << ") is required for the server to run!";
             return false;
+        }
+    } else {
+        const auto now = QDateTime::currentDateTimeUtc();
+        const auto certificateDays = now.daysTo(certificateExpiryDate);
+
+        if (certificateDays <= 30) {
+            const bool expired = now.secsTo(certificateExpiryDate) <= 0;
+
+            qCWarning(KRDP).nospace() << "The TLS certificate (" << QString::fromStdString(d->tlsCertificate.filename().string())
+                                      << (expired ? ") expired " : ") expires in ") << (expired ? -certificateDays : certificateDays)
+                                      << (expired ? "days ago." : "days.")
+                                      << (autogenerateCertificate() ? " It will be re-generated." : " It should be replaced.");
+
+            if (!generateCertificate()) {
+                qCWarning(KRDP) << "Failed to generate TLS certificate and key.";
+            }
         }
     }
 
@@ -235,16 +254,41 @@ bool Server::generateCertificate() const
          QStringLiteral("-x509"),
          QStringLiteral("-out"), qsCertificate,
          QStringLiteral("-keyout"), qsCertificateKey,
-         QStringLiteral("-days"), QStringLiteral("1"),
+         QStringLiteral("-days"), QStringLiteral("3650"),
          QStringLiteral("-batch")
     });
     sslProcess.waitForFinished();
 
-    if (!QFileInfo::exists(qsCertificate) || !QFileInfo::exists(qsCertificateKey)) {
+    if (sslProcess.exitCode() != 0) {
+        qCWarning(KRDP) << "OpenSSL error in certificate generation:" << sslProcess.readAllStandardError();
         return false;
     }
 
+    Q_ASSERT(QFileInfo::exists(qsCertificate) && QFileInfo::exists(qsCertificateKey));
+
     return true;
+}
+
+QDateTime Server::getCertificateExpiry() const
+{
+    const QString qsCertificate = QString::fromStdString(d->tlsCertificate.string());
+
+    QFile file(qsCertificate);
+    if (!file.open(QIODevice::ReadOnly)) {
+        return {};
+    }
+
+    const QSslCertificate certificate(&file, QSsl::Pem);
+    if (certificate.isNull()) {
+        return {};
+    }
+
+    const QDateTime expiryDate = certificate.expiryDate();
+    if (!expiryDate.isValid()) {
+        return {};
+    }
+
+    return expiryDate;
 }
 
 rdp_settings *Server::rdpSettings() const

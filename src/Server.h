@@ -134,6 +134,7 @@ protected:
 
 private:
     bool generateCertificate() const;
+    QDateTime getCertificateExpiry() const;
 
     friend class RdpConnection;
     rdp_settings *rdpSettings() const;
