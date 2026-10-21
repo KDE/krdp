@@ -252,7 +252,7 @@ bool Server::generateCertificate() const
          QStringLiteral("-noenc"),
          QStringLiteral("-new"),
          QStringLiteral("-x509"),
-         QStringLiteral("-subj"), QStringLiteral("KRDP Auto-Generated Self-Signed Certificate"),
+         QStringLiteral("-subj"), QStringLiteral("/CN=KRDP Auto-Generated Self-Signed Certificate"),
          QStringLiteral("-out"), qsCertificate,
          QStringLiteral("-keyout"), qsCertificateKey,
          QStringLiteral("-days"), QStringLiteral("3650"),
