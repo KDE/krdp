@@ -4,148 +4,20 @@
 
 #include "PlasmaScreencastV1Session.h"
 
-#include <QGuiApplication>
-#include <QMouseEvent>
-#include <QQueue>
-#include <QWaylandClientExtensionTemplate>
-#include <qpa/qplatformnativeinterface.h>
-
-#include <linux/input-event-codes.h>
-#include <sys/mman.h>
-#include <unistd.h>
-#include <xkbcommon/xkbcommon.h>
-
+#include "EiConnection.h"
 #include "krdp_logging.h"
-#include "qwayland-fake-input.h"
-#include "qwayland-wayland.h"
 #include "screencasting_p.h"
+#include <QDBusConnection>
+#include <QDBusMessage>
+#include <QDBusPendingCallWatcher>
+#include <QDBusPendingReply>
+#include <QDBusUnixFileDescriptor>
+#include <QGuiApplication>
+
+using namespace Qt::StringLiterals;
 
 namespace KRdp
 {
-
-class FakeInput : public QWaylandClientExtensionTemplate<FakeInput>, public QtWayland::org_kde_kwin_fake_input
-{
-public:
-    FakeInput()
-        : QWaylandClientExtensionTemplate<FakeInput>(4)
-    {
-        initialize();
-        Q_ASSERT(isActive());
-    }
-};
-
-namespace
-{
-struct XKBStateDeleter {
-    void operator()(struct xkb_state *state) const
-    {
-        xkb_state_unref(state);
-    }
-};
-struct XKBKeymapDeleter {
-    void operator()(struct xkb_keymap *keymap) const
-    {
-        xkb_keymap_unref(keymap);
-    }
-};
-struct XKBContextDeleter {
-    void operator()(struct xkb_context *context) const
-    {
-        xkb_context_unref(context);
-    }
-};
-using ScopedXKBState = std::unique_ptr<struct xkb_state, XKBStateDeleter>;
-using ScopedXKBKeymap = std::unique_ptr<struct xkb_keymap, XKBKeymapDeleter>;
-using ScopedXKBContext = std::unique_ptr<struct xkb_context, XKBContextDeleter>;
-}
-class Xkb : public QtWayland::wl_keyboard
-{
-public:
-    struct Code {
-        const uint32_t level;
-        const uint32_t code;
-    };
-    std::optional<Code> keycodeFromKeysym(xkb_keysym_t keysym)
-    {
-        /* The offset between KEY_* numbering, and keycodes in the XKB evdev
-         * dataset. */
-        static const uint EVDEV_OFFSET = 8;
-
-        auto layout = xkb_state_serialize_layout(m_state.get(), XKB_STATE_LAYOUT_EFFECTIVE);
-        const xkb_keycode_t max = xkb_keymap_max_keycode(m_keymap.get());
-        for (xkb_keycode_t keycode = xkb_keymap_min_keycode(m_keymap.get()); keycode < max; keycode++) {
-            uint levelCount = xkb_keymap_num_levels_for_key(m_keymap.get(), keycode, layout);
-            for (uint currentLevel = 0; currentLevel < levelCount; currentLevel++) {
-                const xkb_keysym_t *syms;
-                uint num_syms = xkb_keymap_key_get_syms_by_level(m_keymap.get(), keycode, layout, currentLevel, &syms);
-                for (uint sym = 0; sym < num_syms; sym++) {
-                    if (syms[sym] == keysym) {
-                        return Code{currentLevel, keycode - EVDEV_OFFSET};
-                    }
-                }
-            }
-        }
-        return {};
-    }
-
-    static Xkb *self()
-    {
-        static Xkb self;
-        return &self;
-    }
-
-private:
-    Xkb()
-    {
-        m_ctx.reset(xkb_context_new(XKB_CONTEXT_NO_FLAGS));
-        if (!m_ctx) {
-            qCWarning(KRDP) << "Failed to create xkb context";
-            return;
-        }
-        m_keymap.reset(xkb_keymap_new_from_names(m_ctx.get(), nullptr, XKB_KEYMAP_COMPILE_NO_FLAGS));
-        if (!m_keymap) {
-            qCWarning(KRDP) << "Failed to create the keymap";
-            return;
-        }
-        m_state.reset(xkb_state_new(m_keymap.get()));
-        if (!m_state) {
-            qCWarning(KRDP) << "Failed to create the xkb state";
-            return;
-        }
-
-        QPlatformNativeInterface *nativeInterface = qGuiApp->platformNativeInterface();
-        auto seat = static_cast<wl_seat *>(nativeInterface->nativeResourceForIntegration("wl_seat"));
-        init(wl_seat_get_keyboard(seat));
-    }
-
-    void keyboard_keymap(uint32_t format, int32_t fd, uint32_t size) override
-    {
-        if (format != WL_KEYBOARD_KEYMAP_FORMAT_XKB_V1) {
-            qCWarning(KRDP) << "unknown keymap format:" << format;
-            close(fd);
-            return;
-        }
-
-        char *map_str = static_cast<char *>(mmap(nullptr, size, PROT_READ, MAP_SHARED, fd, 0));
-        if (map_str == MAP_FAILED) {
-            close(fd);
-            return;
-        }
-
-        m_keymap.reset(xkb_keymap_new_from_string(m_ctx.get(), map_str, XKB_KEYMAP_FORMAT_TEXT_V1, XKB_KEYMAP_COMPILE_NO_FLAGS));
-        munmap(map_str, size);
-        close(fd);
-
-        if (m_keymap)
-            m_state.reset(xkb_state_new(m_keymap.get()));
-        else
-            m_state.reset(nullptr);
-    }
-
-    ScopedXKBContext m_ctx;
-    ScopedXKBKeymap m_keymap;
-    ScopedXKBState m_state;
-};
 
 class KRDP_NO_EXPORT PlasmaScreencastV1Session::Private
 {
@@ -154,19 +26,46 @@ public:
 
     Screencasting m_screencasting;
     std::unique_ptr<ScreencastingStream> request;
-    std::unique_ptr<FakeInput> remoteInterface;
+    std::unique_ptr<EiConnection> eiConnection;
+    int eisCookie = 0;
 };
 
 PlasmaScreencastV1Session::PlasmaScreencastV1Session()
     : AbstractSession()
     , d(std::make_unique<Private>())
 {
-    d->remoteInterface = std::make_unique<FakeInput>();
-    d->remoteInterface->authenticate(QStringLiteral("krdpserver"), QString());
+    constexpr auto kwinService = "org.kde.KWin"_L1;
+    constexpr auto kwinRemoteDesktopPath = "/org/kde/KWin/EIS/RemoteDesktop"_L1;
+    constexpr auto kwinRemoteDesktopInterface = "org.kde.KWin.EIS.RemoteDesktop"_L1;
+    auto msg = QDBusMessage::createMethodCall(kwinService, kwinRemoteDesktopPath, kwinRemoteDesktopInterface, "connectToEIS"_L1);
+    msg.setArguments({7}); // Keyboard | Pointer | TouchScreen
+    auto *watcher = new QDBusPendingCallWatcher(QDBusConnection::sessionBus().asyncCall(msg), this);
+    connect(watcher, &QDBusPendingCallWatcher::finished, this, [this](QDBusPendingCallWatcher *watcher) {
+        watcher->deleteLater();
+
+        QDBusPendingReply<QDBusUnixFileDescriptor, int> reply = *watcher;
+        if (reply.isError()) {
+            qCWarning(KRDP) << "Failed to connect to EIS:" << reply.error();
+            return;
+        }
+        d->eisCookie = reply.argumentAt<1>();
+        d->eiConnection = std::make_unique<EiConnection>(reply.argumentAt<0>().takeFileDescriptor(), this);
+        if (!d->eiConnection->isValid()) {
+            qCWarning(KRDP) << "Failed to create EIS connection";
+        }
+    });
 }
 
 PlasmaScreencastV1Session::~PlasmaScreencastV1Session()
 {
+    if (d->eisCookie) {
+        constexpr auto kwinService = "org.kde.KWin"_L1;
+        constexpr auto kwinRemoteDesktopPath = "/org/kde/KWin/EIS/RemoteDesktop"_L1;
+        constexpr auto kwinRemoteDesktopInterface = "org.kde.KWin.EIS.RemoteDesktop"_L1;
+        auto msg = QDBusMessage::createMethodCall(kwinService, kwinRemoteDesktopPath, kwinRemoteDesktopInterface, QStringLiteral("disconnect"));
+        msg.setArguments({d->eisCookie});
+        QDBusConnection::sessionBus().send(msg);
+    }
     qCDebug(KRDP) << "Closing Plasma Remote Session";
 }
 
@@ -200,87 +99,8 @@ void PlasmaScreencastV1Session::start()
 
 void PlasmaScreencastV1Session::sendEvent(const std::shared_ptr<QEvent> &event)
 {
-    if (!isStarted()) {
-        return;
-    }
-
-    switch (event->type()) {
-    case QEvent::MouseButtonPress:
-    case QEvent::MouseButtonRelease: {
-        auto me = std::static_pointer_cast<QMouseEvent>(event);
-        int button = 0;
-        if (me->button() == Qt::LeftButton) {
-            button = BTN_LEFT;
-        } else if (me->button() == Qt::MiddleButton) {
-            button = BTN_MIDDLE;
-        } else if (me->button() == Qt::RightButton) {
-            button = BTN_RIGHT;
-        } else {
-            qCWarning(KRDP) << "Unsupported mouse button" << me->button();
-            return;
-        }
-        uint state = me->type() == QEvent::MouseButtonPress ? 1 : 0;
-        d->remoteInterface->button(button, state);
-        break;
-    }
-    case QEvent::MouseMove: {
-        auto me = std::static_pointer_cast<QMouseEvent>(event);
-        auto position = me->position();
-        auto logicalPosition = QPointF{(position.x() / size().width()) * logicalSize().width(), (position.y() / size().height()) * logicalSize().height()};
-        d->remoteInterface->pointer_motion_absolute(wl_fixed_from_double(logicalPosition.x()), wl_fixed_from_double(logicalPosition.y()));
-        break;
-    }
-    case QEvent::Wheel: {
-        auto we = std::static_pointer_cast<QWheelEvent>(event);
-        auto delta = we->pixelDelta();
-        // pixelDelta contains the scroll value already converted to
-        // degrees by InputHandler, preserving sub-notch precision
-        // from clients that send high-resolution wheel values
-        // (e.g. Microsoft Remote Desktop).
-        if (delta.y() != 0) {
-            d->remoteInterface->axis(WL_POINTER_AXIS_VERTICAL_SCROLL, wl_fixed_from_double(delta.y()));
-        }
-        if (delta.x() != 0) {
-            d->remoteInterface->axis(WL_POINTER_AXIS_HORIZONTAL_SCROLL, wl_fixed_from_double(delta.x()));
-        }
-        break;
-    }
-    case QEvent::KeyPress:
-    case QEvent::KeyRelease: {
-        auto ke = std::static_pointer_cast<QKeyEvent>(event);
-        auto state = ke->type() == QEvent::KeyPress ? 1 : 0;
-
-        if (ke->nativeScanCode()) {
-            d->remoteInterface->keyboard_key(ke->nativeScanCode(), state);
-        } else {
-            auto keycode = Xkb::self()->keycodeFromKeysym(ke->nativeVirtualKey());
-            if (!keycode) {
-                qCWarning(KRDP) << "Failed to convert keysym into keycode" << ke->nativeVirtualKey();
-                return;
-            }
-
-            auto sendKey = [this, state](int keycode) {
-                d->remoteInterface->keyboard_key(keycode, state);
-            };
-            switch (keycode->level) {
-            case 0:
-                break;
-            case 1:
-                sendKey(KEY_LEFTSHIFT);
-                break;
-            case 2:
-                sendKey(KEY_RIGHTALT);
-                break;
-            default:
-                qCWarning(KRDP) << "Unsupported key level" << keycode->level;
-                break;
-            }
-            sendKey(keycode->code);
-        }
-        break;
-    }
-    default:
-        break;
+    if (isStarted() && d->eiConnection) {
+        d->eiConnection->sendEvent(event, size(), {});
     }
 }
 }

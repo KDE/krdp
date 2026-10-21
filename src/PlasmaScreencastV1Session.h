@@ -9,7 +9,6 @@
 #include <optional>
 #include <type_traits>
 
-#include <QDBusPendingCallWatcher>
 #include <QPoint>
 #include <QPointer>
 
