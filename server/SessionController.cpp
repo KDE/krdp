@@ -223,7 +223,7 @@ void SessionController::watchSessionActive()
 void SessionController::onSessionPropertiesChanged(const QString &, const QVariantMap &changed, const QStringList &)
 {
     // In remote access mode the physical seat shows the greeter while clients are connected. If the
-    // session becomes active again, someone logged in there: disconnect the clients, like Windows does.
+    // session becomes active again, someone logged in there or switched VT: disconnect the clients
     if (m_operatingMode != OperationMode::RemoteAccess || m_wrappers.empty() || !changed.value(u"Active"_s).toBool()) {
         return;
     }
