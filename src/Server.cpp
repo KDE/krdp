@@ -80,7 +80,7 @@ bool Server::start()
 
             qCWarning(KRDP).nospace() << "The TLS certificate (" << QString::fromStdString(d->tlsCertificate.filename().string())
                                       << (expired ? ") expired " : ") expires in ") << (expired ? -certificateDays : certificateDays)
-                                      << (expired ? "days ago." : "days.")
+                                      << (expired ? " days ago." : " days.")
                                       << (autogenerateCertificate() ? " It will be re-generated." : " It should be replaced.");
 
             if (!generateCertificate()) {
@@ -252,6 +252,7 @@ bool Server::generateCertificate() const
          QStringLiteral("-noenc"),
          QStringLiteral("-new"),
          QStringLiteral("-x509"),
+         QStringLiteral("-subj"), QStringLiteral("KRDP Auto-Generated Self-Signed Certificate"),
          QStringLiteral("-out"), qsCertificate,
          QStringLiteral("-keyout"), qsCertificateKey,
          QStringLiteral("-days"), QStringLiteral("3650"),
