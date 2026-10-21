@@ -28,6 +28,8 @@ public:
     std::unique_ptr<ScreencastingStream> request;
     std::unique_ptr<EiConnection> eiConnection;
     int eisCookie = 0;
+    // Name of the streamed output, KWin uses it to map absolute pointer positions
+    QString mappingId;
 };
 
 PlasmaScreencastV1Session::PlasmaScreencastV1Session()
@@ -73,6 +75,8 @@ void PlasmaScreencastV1Session::start()
 {
     if (auto vm = virtualMonitor()) {
         d->request.reset(d->m_screencasting.createVirtualMonitorStream(vm->name, vm->size, vm->dpr, Screencasting::Metadata));
+        // KWin prefixes virtual output names with "Virtual-"
+        d->mappingId = "Virtual-"_L1 + vm->name;
     } else if (const auto streamIndex = activeStream()) {
         if (*streamIndex >= qApp->screens().size()) {
             qCWarning(KRDP) << "Invalid monitor index" << *streamIndex;
@@ -80,6 +84,7 @@ void PlasmaScreencastV1Session::start()
         }
         auto screen = qApp->screens().at(*streamIndex);
         d->request.reset(d->m_screencasting.createOutputStream(screen, Screencasting::Metadata));
+        d->mappingId = screen->name();
     } else {
         d->request.reset(d->m_screencasting.createWorkspaceStream(Screencasting::Metadata));
     }
@@ -100,7 +105,7 @@ void PlasmaScreencastV1Session::start()
 void PlasmaScreencastV1Session::sendEvent(const std::shared_ptr<QEvent> &event)
 {
     if (isStarted() && d->eiConnection) {
-        d->eiConnection->sendEvent(event, size(), {});
+        d->eiConnection->sendEvent(event, size(), d->mappingId);
     }
 }
 }
