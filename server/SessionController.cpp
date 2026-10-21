@@ -261,6 +261,12 @@ void SessionController::onNewConnection(KRdp::RdpConnection *newConnection)
                 // we do not set a virtual monitor, allowing the client to see all the existing session.
                 break;
             case OperationMode::RemoteAccess:
+                // Like Windows, a new connection takes the session over from the existing ones
+                for (const auto &other : m_wrappers) {
+                    if (other->connection) {
+                        other->connection->close(KRdp::RdpConnection::CloseReason::OtherConnection);
+                    }
+                }
                 wrapper->session->setVirtualMonitor(defaultMonitor);
                 // DAVE I kinda feel this shouldn't be here, we should message kwin which should then do this internally
                 // we also want something to prevent a VT switch breaking things
