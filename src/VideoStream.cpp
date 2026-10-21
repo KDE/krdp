@@ -324,6 +324,16 @@ bool VideoStream::initialize()
         return false;
     }
 
+    // Clients like mstsc only send a monitor layout when their window changes, so start
+    // from the desktop size the client asked for when connecting.
+    if (!d->surface->requestedSize.isValid()) {
+        auto settings = d->session->rdpPeerContext()->settings;
+        const QSize clientSize(freerdp_settings_get_uint32(settings, FreeRDP_DesktopWidth), freerdp_settings_get_uint32(settings, FreeRDP_DesktopHeight));
+        if (!clientSize.isEmpty()) {
+            setRequestedSize(clientSize);
+        }
+    }
+
     d->initialized = true;
 
     connect(d->session->networkDetection(), &NetworkDetection::rttChanged, this, &VideoStream::updateInFlightWindow);
