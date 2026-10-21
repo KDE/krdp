@@ -59,6 +59,7 @@ public:
         None, ///< No particular reason, e.g. closing due to normal operation
               ///  like client disconnect.
         VideoInitFailed, ///< VideoStream failed to initialize.
+        OtherConnection, ///< Someone else took over the session.
     };
 
     /**

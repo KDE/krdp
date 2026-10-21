@@ -53,6 +53,8 @@ private:
     // Lock/unlock the desktop session via logind when operating in remote-access mode.
     void setSessionLocked(bool locked);
     void switchToGreeter();
+    void watchSessionActive();
+    Q_SLOT void onSessionPropertiesChanged(const QString &interface, const QVariantMap &changed, const QStringList &invalidated);
 
     KRdp::Server *m_server = nullptr;
     SessionType m_sessionType;
@@ -66,6 +68,7 @@ private:
     std::vector<std::unique_ptr<SessionWrapper>> m_wrappers;
 
     OperationMode m_operatingMode = OperationMode::SharedAccess;
+    bool m_takenOverLocally = false;
 
     KStatusNotifierItem *m_sni;
 };

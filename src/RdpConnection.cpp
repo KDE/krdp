@@ -351,6 +351,9 @@ void RdpConnection::close(RdpConnection::CloseReason reason)
     case CloseReason::VideoInitFailed:
         freerdp_set_error_info(d->peer->context->rdp, ERRINFO_GRAPHICS_SUBSYSTEM_FAILED);
         break;
+    case CloseReason::OtherConnection:
+        freerdp_set_error_info(d->peer->context->rdp, ERRINFO_DISCONNECTED_BY_OTHER_CONNECTION);
+        break;
     case CloseReason::None:
         break;
     }

@@ -116,6 +116,8 @@ SessionController::SessionController(KRdp::Server *server, SessionType sessionTy
     connect(quitAction, &QAction::triggered, this, &SessionController::stopFromSNI);
     menu->addAction(quitAction);
     m_sni->setContextMenu(menu);
+
+    watchSessionActive();
 }
 
 SessionController::~SessionController() noexcept
@@ -195,6 +197,45 @@ void SessionController::setSessionLocked(bool locked)
     });
 }
 
+void SessionController::watchSessionActive()
+{
+    // PropertiesChanged is sent on the session's own object path, not on the "auto" alias
+    QDBusMessage message =
+        QDBusMessage::createMethodCall(u"org.freedesktop.login1"_s, u"/org/freedesktop/login1"_s, u"org.freedesktop.login1.Manager"_s, u"GetSession"_s);
+    message << u"auto"_s;
+    auto *watcher = new QDBusPendingCallWatcher(QDBusConnection::systemBus().asyncCall(message), this);
+    connect(watcher, &QDBusPendingCallWatcher::finished, this, [this](QDBusPendingCallWatcher *self) {
+        const QDBusPendingReply<QDBusObjectPath> reply = *self;
+        self->deleteLater();
+        if (reply.isError()) {
+            qWarning() << "krdp: could not find the logind session:" << reply.error().message();
+            return;
+        }
+        QDBusConnection::systemBus().connect(u"org.freedesktop.login1"_s,
+                                             reply.value().path(),
+                                             u"org.freedesktop.DBus.Properties"_s,
+                                             u"PropertiesChanged"_s,
+                                             this,
+                                             SLOT(onSessionPropertiesChanged(QString, QVariantMap, QStringList)));
+    });
+}
+
+void SessionController::onSessionPropertiesChanged(const QString &, const QVariantMap &changed, const QStringList &)
+{
+    // In remote access mode the physical seat shows the greeter while clients are connected. If the
+    // session becomes active again, someone logged in there: disconnect the clients, like Windows does.
+    if (m_operatingMode != OperationMode::RemoteAccess || m_wrappers.empty() || !changed.value(u"Active"_s).toBool()) {
+        return;
+    }
+
+    m_takenOverLocally = true;
+    for (const auto &wrapper : m_wrappers) {
+        if (wrapper->connection) {
+            wrapper->connection->close(KRdp::RdpConnection::CloseReason::OtherConnection);
+        }
+    }
+}
+
 void SessionController::onNewConnection(KRdp::RdpConnection *newConnection)
 {
     connect(newConnection, &KRdp::RdpConnection::stateChanged, this, [this, newConnection](KRdp::RdpConnection::State state) {
@@ -241,7 +282,8 @@ void SessionController::onNewConnection(KRdp::RdpConnection *newConnection)
                                             }),
                              m_wrappers.end());
 
-            if (m_wrappers.empty() && m_operatingMode == OperationMode::RemoteAccess) {
+            // Do not lock out whoever took over the session on the physical seat
+            if (m_wrappers.empty() && m_operatingMode == OperationMode::RemoteAccess && !std::exchange(m_takenOverLocally, false)) {
                 setSessionLocked(true);
             }
         });
