@@ -68,7 +68,6 @@ private:
     std::vector<std::unique_ptr<SessionWrapper>> m_wrappers;
 
     OperationMode m_operatingMode = OperationMode::SharedAccess;
-    bool m_takenOverLocally = false;
 
     KStatusNotifierItem *m_sni;
 };

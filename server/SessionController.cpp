@@ -228,7 +228,6 @@ void SessionController::onSessionPropertiesChanged(const QString &, const QVaria
         return;
     }
 
-    m_takenOverLocally = true;
     for (const auto &wrapper : m_wrappers) {
         if (wrapper->connection) {
             wrapper->connection->close(KRdp::RdpConnection::CloseReason::OtherConnection);
@@ -288,8 +287,7 @@ void SessionController::onNewConnection(KRdp::RdpConnection *newConnection)
                                             }),
                              m_wrappers.end());
 
-            // Do not lock out whoever took over the session on the physical seat
-            if (m_wrappers.empty() && m_operatingMode == OperationMode::RemoteAccess && !std::exchange(m_takenOverLocally, false)) {
+            if (m_wrappers.empty() && m_operatingMode == OperationMode::RemoteAccess) {
                 setSessionLocked(true);
             }
         });
