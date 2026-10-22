@@ -5,7 +5,10 @@
 #pragma once
 
 #include "freerdp/server/disp.h"
+#include <QList>
 #include <QObject>
+
+#include "AbstractSession.h"
 
 #include "krdp_export.h"
 
@@ -24,12 +27,18 @@ public:
     bool initialize();
     void close();
 
+    QList<VirtualMonitor> display() const;
+
 Q_SIGNALS:
-    void requestedScreenSizeChanged(const QSize &size);
+    void displayLayoutChanged();
 
 private:
+    static UINT displayControlReceiveMonitorLayout(DispServerContext *context, const DISPLAY_CONTROL_MONITOR_LAYOUT_PDU *pdu);
+    UINT receiveMonitorLayout(const DISPLAY_CONTROL_MONITOR_LAYOUT_PDU *pdu);
+
     RdpConnection *m_session = nullptr;
     DispServerContext *m_dispManager = nullptr;
+    QList<VirtualMonitor> m_display;
 };
 
 }

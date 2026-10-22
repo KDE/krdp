@@ -248,11 +248,11 @@ public:
     qintptr socketHandle;
 
     std::unique_ptr<InputHandler> inputHandler;
+    std::unique_ptr<DisplayControl> displayControl;
     std::unique_ptr<VideoStream> videoStream;
     std::unique_ptr<Cursor> cursor;
     std::unique_ptr<NetworkDetection> networkDetection;
     std::unique_ptr<Clipboard> clipboard;
-    std::unique_ptr<DisplayControl> displayControl;
 
     freerdp_peer *peer = nullptr;
 
@@ -284,7 +284,8 @@ RdpConnection::RdpConnection(Server *server, qintptr socketHandle)
     d->socketHandle = socketHandle;
 
     d->inputHandler = std::make_unique<InputHandler>(this);
-    d->videoStream = std::make_unique<VideoStream>(this);
+    d->displayControl = std::make_unique<DisplayControl>(this);
+    d->videoStream = std::make_unique<VideoStream>(this, d->displayControl.get());
     connect(d->videoStream.get(), &VideoStream::closed, this, [this]() {
         if (d->state == State::Running || d->state == State::Streaming) {
             qCDebug(KRDP) << "Video stream closed, closing session";
@@ -294,8 +295,6 @@ RdpConnection::RdpConnection(Server *server, qintptr socketHandle)
     d->cursor = std::make_unique<Cursor>(this);
     d->networkDetection = std::make_unique<NetworkDetection>(this);
     d->clipboard = std::make_unique<Clipboard>(this);
-    d->displayControl = std::make_unique<DisplayControl>(this);
-
     QMetaObject::invokeMethod(this, &RdpConnection::initialize, Qt::QueuedConnection);
 }
 

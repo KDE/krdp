@@ -22,6 +22,7 @@ namespace KRdp
 {
 
 class RdpConnection;
+class DisplayControl;
 class VideoStreamSurface;
 
 /**
@@ -49,7 +50,7 @@ public:
         Progressive,
     };
 
-    explicit VideoStream(RdpConnection *session);
+    explicit VideoStream(RdpConnection *session, DisplayControl *displayControl);
     ~VideoStream() override;
 
     static bool h264Disabled();
