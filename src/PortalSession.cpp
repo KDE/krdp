@@ -47,15 +47,37 @@ const QDBusArgument &operator>>(const QDBusArgument &arg, PortalSessionStream &s
     return arg;
 }
 
-void PortalRequest::onStarted(QDBusPendingCallWatcher *watcher)
+QString PortalRequest::requestPath(const QString &handleToken)
 {
-    QDBusPendingReply<QDBusObjectPath> reply = *watcher;
-    if (!reply.isError()) {
-        QDBusConnection::sessionBus().connect(QString{}, reply.value().path(), dbusRequestInterface, dbusResponse, this, SLOT(onFinished(uint, QVariantMap)));
-    } else {
-        m_callback(-1, {{QStringLiteral("errorMessage"), reply.error().message()}});
+    // The portal derives the request path from the caller's unique name, e.g. ":1.42" -> "1_42"
+    QString sender = QDBusConnection::sessionBus().baseService().mid(1);
+    sender.replace(u'.', u'_');
+    return QStringLiteral("/org/freedesktop/portal/desktop/request/%1/%2").arg(sender, handleToken);
+}
+
+void PortalRequest::listen(const QString &path)
+{
+    if (!m_path.isEmpty()) {
+        QDBusConnection::sessionBus().disconnect(QString{}, m_path, dbusRequestInterface, dbusResponse, this, SLOT(onFinished(uint, QVariantMap)));
     }
-    watcher->deleteLater();
+    m_path = path;
+    QDBusConnection::sessionBus().connect(QString{}, m_path, dbusRequestInterface, dbusResponse, this, SLOT(onFinished(uint, QVariantMap)));
+}
+
+void PortalRequest::start(const QDBusPendingCall &call)
+{
+    QDBusPendingReply<QDBusObjectPath> reply = call;
+    reply.waitForFinished();
+    if (reply.isError()) {
+        m_callback(-1, {{QStringLiteral("errorMessage"), reply.error().message()}});
+        deleteLater();
+        return;
+    }
+
+    // Portals older than 0.9 don't derive the request path from the handle token
+    if (reply.value().path() != m_path) {
+        listen(reply.value().path());
+    }
 }
 
 void PortalRequest::onFinished(uint code, const QVariantMap &result)
@@ -115,11 +137,13 @@ void PortalSession::start()
 {
     qCDebug(KRDP) << "Initializing Freedesktop Portal Session";
 
+    const QString handleToken = createHandleToken();
     auto parameters = QVariantMap{
-        {QStringLiteral("handle_token"), createHandleToken()},
+        {QStringLiteral("handle_token"), handleToken},
         {QStringLiteral("session_handle_token"), createHandleToken()},
     };
-    new PortalRequest(d->remoteInterface->CreateSession(parameters), this, &PortalSession::onCreateSession);
+    auto request = new PortalRequest(handleToken, this, &PortalSession::onCreateSession);
+    request->start(d->remoteInterface->CreateSession(parameters));
 }
 
 void PortalSession::sendEvent(const std::shared_ptr<QEvent> &event)
@@ -141,9 +165,10 @@ void PortalSession::onCreateSession(uint code, const QVariantMap &result)
 
     static const uint PermissionsPersistUntilExplicitlyRevoked = 2;
 
+    const QString handleToken = createHandleToken();
     auto parameters = QVariantMap{
         {QStringLiteral("types"), 7u},
-        {QStringLiteral("handle_token"), createHandleToken()},
+        {QStringLiteral("handle_token"), handleToken},
         {QStringLiteral("persist_mode"), PermissionsPersistUntilExplicitlyRevoked},
     };
     // name is set explicitly as this is also used by the KCM
@@ -161,7 +186,8 @@ void PortalSession::onCreateSession(uint code, const QVariantMap &result)
         parameters[QStringLiteral("restore_token")] = restoreToken;
     }
 
-    new PortalRequest(d->remoteInterface->SelectDevices(d->sessionPath, parameters), this, &PortalSession::onDevicesSelected);
+    auto request = new PortalRequest(handleToken, this, &PortalSession::onDevicesSelected);
+    request->start(d->remoteInterface->SelectDevices(d->sessionPath, parameters));
 }
 
 void PortalSession::onDevicesSelected(uint code, const QVariantMap & /*result*/)
@@ -181,7 +207,10 @@ void PortalSession::onDevicesSelected(uint code, const QVariantMap & /*result*/)
     }
     parameters[QStringLiteral("cursor_mode")] = 4u; // Metadata
 
-    new PortalRequest(d->screencastInterface->SelectSources(d->sessionPath, parameters), this, &PortalSession::onSourcesSelected);
+    const QString handleToken = createHandleToken();
+    parameters[QStringLiteral("handle_token")] = handleToken;
+    auto request = new PortalRequest(handleToken, this, &PortalSession::onSourcesSelected);
+    request->start(d->screencastInterface->SelectSources(d->sessionPath, parameters));
 }
 
 void PortalSession::onSourcesSelected(uint code, const QVariantMap & /*result*/)
@@ -192,10 +221,12 @@ void PortalSession::onSourcesSelected(uint code, const QVariantMap & /*result*/)
         return;
     }
 
+    const QString handleToken = createHandleToken();
     auto parameters = QVariantMap{
-        {QStringLiteral("handle_token"), createHandleToken()},
+        {QStringLiteral("handle_token"), handleToken},
     };
-    new PortalRequest(d->remoteInterface->Start(d->sessionPath, QString{}, parameters), this, &PortalSession::onSessionStarted);
+    auto request = new PortalRequest(handleToken, this, &PortalSession::onSessionStarted);
+    request->start(d->remoteInterface->Start(d->sessionPath, QString{}, parameters));
 }
 
 void KRdp::PortalSession::onSessionStarted(uint code, const QVariantMap &result)
