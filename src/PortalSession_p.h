@@ -25,13 +25,17 @@ namespace KRdp
  * A request to the portal requires first calling a method on the portal, which
  * will return an object path that should be listened to for a signal. The
  * signal provides the actual proper data for the original method call.
+ *
+ * The portal can send that signal before the method call returns, so the
+ * request listens on the path derived from the handle token before the call
+ * is made: create the request with the token, then pass the call to start().
  */
 class PortalRequest : public QObject
 {
     Q_OBJECT
 public:
     template<typename ContextType, typename Callback>
-    PortalRequest(const QDBusPendingCall &call, ContextType *context, Callback callback)
+    PortalRequest(const QString &handleToken, ContextType *context, Callback callback)
         : m_context(context)
     {
         if constexpr (std::is_member_function_pointer<Callback>::value) {
@@ -40,17 +44,21 @@ public:
             m_callback = callback;
         }
 
-        auto watcher = new QDBusPendingCallWatcher(call);
-        // We need to wait here because otherwise we risk the signal arriving
-        // before we know what path to listen on.
-        watcher->waitForFinished();
-        onStarted(watcher);
+        listen(requestPath(handleToken));
     }
 
+    /**
+     * Start the request with a portal method call that was given the same
+     * handle token as the constructor.
+     */
+    void start(const QDBusPendingCall &call);
+
 private:
-    void onStarted(QDBusPendingCallWatcher *watcher);
+    static QString requestPath(const QString &handleToken);
+    void listen(const QString &path);
     Q_SLOT void onFinished(uint code, const QVariantMap &result);
 
+    QString m_path;
     QPointer<QObject> m_context;
     std::function<void(uint, const QVariantMap &)> m_callback;
 };
