@@ -2,13 +2,13 @@
 
 KRDP provides a Remote Desktop Protocol server for the KDE Plasma desktop, allowing you to connect to and control your computer remotely.
 
+![Remote Desktop Settings](https://cdn.kde.org/screenshots/krdp/krdp-montage.png)
+
 See also: [Testing KRDP](TESTING.md)
 
 ## Getting Started
 
 To begin using KRDP, navigate to _Remote Desktop_ in _System Settings_' _Security & Privacy_ category.
-
-![Remote Desktop Settings](https://cdn.kde.org/screenshots/krdp/krdp-settings.png)
 
 You can configure:
  - The **user identity** used to connect to the server
