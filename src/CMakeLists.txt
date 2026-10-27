@@ -8,7 +8,6 @@ if (BUILD_PLASMA_SESSION)
         PRIVATE_CODE
         FILES
             ${PLASMA_WAYLAND_PROTOCOLS_DIR}/zkde-screencast-unstable-v1.xml
-            ${PLASMA_WAYLAND_PROTOCOLS_DIR}/fake-input.xml
             ${Wayland_DATADIR}/wayland.xml
     )
     target_sources(KRdp PRIVATE screencasting.cpp PlasmaScreencastV1Session.cpp)

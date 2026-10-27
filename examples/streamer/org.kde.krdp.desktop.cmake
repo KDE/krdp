@@ -146,4 +146,4 @@ Comment[uk]=Спільні стільниці
 Comment[zh_CN]=桌面共享
 Comment[zh_TW]=桌面分享
 Categories=Qt;KDE;Network;RemoteAccess;
-X-KDE-Wayland-Interfaces=org_kde_kwin_fake_input,zkde_screencast_unstable_v1
+X-KDE-Wayland-Interfaces=zkde_screencast_unstable_v1
