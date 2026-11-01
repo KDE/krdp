@@ -305,7 +305,7 @@ bool VideoStreamSurface::sendFrameH264(RdpgfxServerContext *gfxContext, uint32_t
     const UINT startStatus = gfxContext->StartFrame(gfxContext, &startFramePdu);
     if (startStatus != CHANNEL_RC_OK) {
         qCWarning(KRDP) << "StartFrame failed" << startStatus << "frameId" << frameId;
-        return true;
+        return false;
     }
 
     const UINT commandStatus = gfxContext->SurfaceCommand(gfxContext, &surfaceCommand);
@@ -316,6 +316,7 @@ bool VideoStreamSurface::sendFrameH264(RdpgfxServerContext *gfxContext, uint32_t
     const UINT endStatus = gfxContext->EndFrame(gfxContext, &endFramePdu);
     if (endStatus != CHANNEL_RC_OK) {
         qCWarning(KRDP) << "EndFrame failed" << endStatus << "frameId" << frameId;
+        return false;
     }
 
     return true;
@@ -384,12 +385,13 @@ bool VideoStreamSurface::sendFrameProgressive(RdpgfxServerContext *gfxContext, P
     surfaceCommand.data = encodedData;
 
     const UINT status = gfxContext->SurfaceFrameCommand(gfxContext, &surfaceCommand, &startFramePdu, &endFramePdu);
+    region16_uninit(&*invalidRegion);
     if (status != CHANNEL_RC_OK) {
         qCWarning(KRDP) << "SurfaceFrameCommand failed" << status << "frameId" << frameId << "surface" << surface.id << "encodedBytes" << encodedSize
                         << "damageRects" << rectCount;
+        return false;
     }
 
-    region16_uninit(&*invalidRegion);
     return true;
 }
 }
