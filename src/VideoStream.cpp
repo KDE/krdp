@@ -483,9 +483,6 @@ uint32_t VideoStream::onCapsAdvertise(const RDPGFX_CAPS_ADVERTISE_PDU *capsAdver
         d->capsConfirmed = false;
         d->surface->pendingReset = true;
         destroySurface();
-        std::lock_guard lock(d->pendingFramesMutex);
-        d->pendingFrames.clear();
-        d->frameAcknowledgementSuspended = false;
     }
 
     auto capsSets = capsAdvertise->capsSets;
@@ -628,6 +625,12 @@ bool VideoStream::openChannel()
 
 void VideoStream::destroySurface()
 {
+    {
+        std::lock_guard lock(d->pendingFramesMutex);
+        d->pendingFrames.clear();
+        d->frameAcknowledgementSuspended = false;
+    }
+
     auto &surface = d->surface->surface;
     if (surface.id == 0) {
         return;
