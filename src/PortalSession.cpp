@@ -321,13 +321,6 @@ void PortalSession::onCreateSession(uint code, const QVariantMap &result)
     KConfigGroup restorationGroup = KSharedConfig::openStateConfig(QStringLiteral("krdp-serverstaterc"))->group(QStringLiteral("General"));
     QString restoreToken = restorationGroup.readEntry(QStringLiteral("restorationToken"));
 
-    // this is a compatibility path for krdp < 6.3 that used a different name and in .config
-    // in 6.4 onwards it can be killed
-    if (restoreToken.isEmpty()) {
-        KConfigGroup restorationGroup = KSharedConfig::openConfig(QStringLiteral("krdp-serverrc"))->group(QStringLiteral("General"));
-        restoreToken = restorationGroup.readEntry(QStringLiteral("restorationToken"));
-    } // end compat
-
     if (!restoreToken.isEmpty()) {
         parameters[QStringLiteral("restore_token")] = restoreToken;
     }
