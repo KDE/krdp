@@ -26,7 +26,6 @@
 
 #include <freerdp/channels/drdynvc.h>
 
-#include "AbstractSession.h"
 #include "Clipboard.h"
 #include "Cursor.h"
 #include "DisplayControl.h"

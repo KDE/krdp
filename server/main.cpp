@@ -72,9 +72,6 @@ int main(int argc, char **argv)
         {u"adaptive-quality"_s,
          u"Adjust the encoding quality at runtime based on the client's network conditions, up to --quality. On by default; only matters if disabled in the configuration."_s},
         {u"static-quality"_s, u"Pin the encoding quality at --quality instead of adapting it to the client's network conditions."_s},
-#ifdef WITH_PLASMA_SESSION
-        {u"plasma"_s, u"Use Plasma protocols instead of XDP"_s},
-#endif
     });
     about.setupCommandLine(&parser);
     parser.process(application);
@@ -146,7 +143,7 @@ int main(int argc, char **argv)
         }
     }
 
-    SessionController controller(&server, parser.isSet(u"plasma"_s) ? SessionController::SessionType::Plasma : SessionController::SessionType::Portal);
+    SessionController controller(&server);
     if (parser.isSet(u"virtual-monitor"_s)) {
         const QString vmData = parser.value(u"virtual-monitor"_s);
         const QRegularExpression rx(uR"((\d+)x(\d+)@([\d.]+))"_s);

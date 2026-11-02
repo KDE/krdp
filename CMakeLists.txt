@@ -35,7 +35,6 @@ include(ECMQmlModule)
 include(ECMFindQmlModule)
 
 option(BUILD_EXAMPLES "Build example applications" ON)
-option(BUILD_PLASMA_SESSION "Build support for Plasma Screencasting extensions" ON)
 
 find_package(PkgConfig REQUIRED)
 
@@ -56,10 +55,6 @@ set_package_properties(Qt6Keychain PROPERTIES
                                    DESCRIPTION "Provides support for secure credentials storage"
                                    URL "https://github.com/frankosterfeld/qtkeychain"
 				   TYPE REQUIRED)
-
-if(BUILD_PLASMA_SESSION)
-    find_package(PlasmaWaylandProtocols REQUIRED)
-endif()
 
 find_package(Systemd 254 QUIET)
 set_package_properties(Systemd PROPERTIES TYPE OPTIONAL PURPOSE "If available, used by KCM to integrate with systemd to enable/disable the service and show logs")

@@ -26,10 +26,6 @@
 #include <RdpConnection.h>
 #include <Server.h>
 
-#ifdef WITH_PLASMA_SESSION
-#include <PlasmaScreencastV1Session.h>
-#endif
-
 #include "VideoStream.h"
 
 using namespace Qt::StringLiterals;
@@ -38,20 +34,20 @@ class SessionWrapper : public QObject
 {
     Q_OBJECT
 public:
-    SessionWrapper(KRdp::RdpConnection *conn, std::unique_ptr<KRdp::AbstractSession> &&sess, KStatusNotifierItem *sni)
+    SessionWrapper(KRdp::RdpConnection *conn, std::unique_ptr<KRdp::PortalSession> &&sess, KStatusNotifierItem *sni)
         : session(std::move(sess))
         , connection(conn)
     {
         m_sni = sni;
 
-        connect(session.get(), &KRdp::AbstractSession::error, this, &SessionWrapper::sessionError);
-        connect(session.get(), &KRdp::AbstractSession::started, this, &SessionWrapper::onSessionStarted);
-        connect(session.get(), &KRdp::AbstractSession::clipboardDataChanged, connection->clipboard(), &KRdp::Clipboard::setServerData);
+        connect(session.get(), &KRdp::PortalSession::error, this, &SessionWrapper::sessionError);
+        connect(session.get(), &KRdp::PortalSession::started, this, &SessionWrapper::onSessionStarted);
+        connect(session.get(), &KRdp::PortalSession::clipboardDataChanged, connection->clipboard(), &KRdp::Clipboard::setServerData);
 
         connect(connection->videoStream(), &KRdp::VideoStream::cursorChanged, this, &SessionWrapper::onCursorUpdate);
-        connect(connection->videoStream(), &KRdp::VideoStream::sizeChanged, session.get(), &KRdp::AbstractSession::setSize);
+        connect(connection->videoStream(), &KRdp::VideoStream::sizeChanged, session.get(), &KRdp::PortalSession::setSize);
         connect(connection->videoStream(), &KRdp::VideoStream::enabledChanged, this, &SessionWrapper::onVideoStreamEnabledChanged);
-        connect(connection->inputHandler(), &KRdp::InputHandler::inputEvent, session.get(), &KRdp::AbstractSession::sendEvent);
+        connect(connection->inputHandler(), &KRdp::InputHandler::inputEvent, session.get(), &KRdp::PortalSession::sendEvent);
         connect(connection->clipboard(), &KRdp::Clipboard::clientDataChanged, session.get(), [clipboard = connection->clipboard(), this]() {
             session->setClipboardData(clipboard->getClipboard());
         });
@@ -92,15 +88,14 @@ public:
     Q_SIGNAL void sessionError();
     Q_SIGNAL void connectionDestroyed(SessionWrapper *wrapper);
 
-    std::unique_ptr<KRdp::AbstractSession> session;
+    std::unique_ptr<KRdp::PortalSession> session;
     QPointer<KRdp::RdpConnection> connection;
     KStatusNotifierItem *m_sni;
     bool m_sessionStarted = false;
 };
 
-SessionController::SessionController(KRdp::Server *server, SessionType sessionType)
+SessionController::SessionController(KRdp::Server *server)
     : m_server(server)
-    , m_sessionType(sessionType)
 {
     connect(m_server, &KRdp::Server::newConnectionCreated, this, &SessionController::onNewConnection);
     // Status notification item
@@ -244,7 +239,7 @@ void SessionController::onNewConnection(KRdp::RdpConnection *newConnection)
             return;
         }
 
-        auto wrapper = std::make_unique<SessionWrapper>(newConnection, makeSession(), m_sni);
+        auto wrapper = std::make_unique<SessionWrapper>(newConnection, std::make_unique<KRdp::PortalSession>(), m_sni);
         if (m_virtualMonitor) {
             wrapper->session->setVirtualMonitor(*m_virtualMonitor);
         } else if (m_monitorIndex) {
@@ -311,18 +306,6 @@ void SessionController::stopFromSNI()
 
     unit.asyncCall(u"Stop"_s);
     QCoreApplication::quit();
-}
-
-std::unique_ptr<KRdp::AbstractSession> SessionController::makeSession()
-{
-#ifdef WITH_PLASMA_SESSION
-    if (m_sessionType == SessionType::Plasma) {
-        return std::make_unique<KRdp::PlasmaScreencastV1Session>();
-    } else
-#endif
-    {
-        return std::make_unique<KRdp::PortalSession>();
-    }
 }
 
 #include "SessionController.moc"

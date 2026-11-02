@@ -3,18 +3,7 @@
 
 add_library(KRdp)
 
-if (BUILD_PLASMA_SESSION)
-    qt6_generate_wayland_protocol_client_sources(KRdp
-        PRIVATE_CODE
-        FILES
-            ${PLASMA_WAYLAND_PROTOCOLS_DIR}/zkde-screencast-unstable-v1.xml
-            ${Wayland_DATADIR}/wayland.xml
-    )
-    target_sources(KRdp PRIVATE screencasting.cpp PlasmaScreencastV1Session.cpp)
-endif()
-
 target_sources(KRdp PRIVATE
-    AbstractSession.cpp
     Clipboard.cpp
     Clipboard.h
     DisplayControl.cpp

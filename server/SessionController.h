@@ -4,15 +4,14 @@
 #pragma once
 
 #include "RdpConnection.h"
-#include <AbstractSession.h>
 #include <KStatusNotifierItem>
+#include <PortalSession.h>
 #include <vector>
 
 #include <QObject>
 
 namespace KRdp
 {
-class AbstractSession;
 class Server;
 class RdpConnection;
 }
@@ -29,13 +28,7 @@ public:
         AdditionalDisplay,
     };
 
-    enum class SessionType {
-        Portal,
-        Plasma,
-    };
-    Q_ENUM(SessionType)
-
-    SessionController(KRdp::Server *server, SessionType sessionType);
+    SessionController(KRdp::Server *server);
     ~SessionController() override;
 
     void setVirtualMonitor(const KRdp::VirtualMonitor &vm);
@@ -49,7 +42,6 @@ public:
 
 private:
     void onNewConnection(KRdp::RdpConnection *newConnection);
-    std::unique_ptr<KRdp::AbstractSession> makeSession();
     // Lock/unlock the desktop session via logind when operating in remote-access mode.
     void setSessionLocked(bool locked);
     void switchToGreeter();
@@ -57,13 +49,12 @@ private:
     Q_SLOT void onSessionPropertiesChanged(const QString &interface, const QVariantMap &changed, const QStringList &invalidated);
 
     KRdp::Server *m_server = nullptr;
-    SessionType m_sessionType;
     std::optional<int> m_monitorIndex;
     std::optional<int> m_quality;
     bool m_adaptiveQuality = true;
     std::optional<KRdp::VirtualMonitor> m_virtualMonitor;
 
-    std::unique_ptr<KRdp::AbstractSession> m_initializationSession;
+    std::unique_ptr<KRdp::PortalSession> m_initializationSession;
 
     std::vector<std::unique_ptr<SessionWrapper>> m_wrappers;
 
