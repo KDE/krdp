@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-09-02 00:45+0000\n"
+"POT-Creation-Date: 2026-11-03 00:56+0000\n"
 "PO-Revision-Date: 2026-09-02 19:54+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -108,7 +108,7 @@ msgstr "خادم سطح المكتب البعيد"
 msgid "Quit"
 msgstr "أنهِ"
 
-#: SessionController.cpp:215
+#: SessionController.cpp:255
 #, kde-format
 msgid "Remote Monitor"
 msgstr "شاشة بعيدة"

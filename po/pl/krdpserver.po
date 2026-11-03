@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-09-02 00:45+0000\n"
+"POT-Creation-Date: 2026-11-03 00:56+0000\n"
 "PO-Revision-Date: 2025-09-27 08:41+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: pl\n"
@@ -104,7 +104,7 @@ msgstr "Serwer RDP"
 msgid "Quit"
 msgstr "Zakończ"
 
-#: SessionController.cpp:215
+#: SessionController.cpp:255
 #, kde-format
 msgid "Remote Monitor"
 msgstr ""

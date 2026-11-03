@@ -273,17 +273,13 @@ msgid "Quality:"
 msgstr "Calidade"
 
 #: ui/main.qml:338
-#, fuzzy, kde-format
-#| msgctxt "@label:slider"
-#| msgid "Responsiveness"
+#, kde-format
 msgctxt "Animation speed"
 msgid "Responsiveness"
 msgstr "Reactividade"
 
 #: ui/main.qml:345
-#, fuzzy, kde-format
-#| msgctxt "@label:slider"
-#| msgid "Quality"
+#, kde-format
 msgctxt "Animation speed"
 msgid "Quality"
 msgstr "Calidade"
@@ -294,9 +290,7 @@ msgid "Automatically adjust quality for network conditions"
 msgstr ""
 
 #: ui/main.qml:368
-#, fuzzy, kde-format
-#| msgctxt "title:group Group of RDP server settings"
-#| msgid "Security Certificates"
+#, kde-format
 msgctxt "@title:group"
 msgid "Security Certificates"
 msgstr "Certificados de seguridade"
@@ -318,9 +312,7 @@ msgid "Automatically"
 msgstr "Xerar automaticamente"
 
 #: ui/main.qml:396
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Certificate path:"
+#, kde-format
 msgid "Certificate path:"
 msgstr "Ruta do certificado:"
 
@@ -348,9 +340,7 @@ msgid "Opens a file picker for the certificate file"
 msgstr "Seleccionar un ficheiro de certificado"
 
 #: ui/main.qml:445
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Certificate key path:"
+#, kde-format
 msgid "Certificate key path:"
 msgstr "Ruta da chave do certificado:"
 

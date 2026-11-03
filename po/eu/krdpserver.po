@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-09-02 00:45+0000\n"
+"POT-Creation-Date: 2026-11-03 00:56+0000\n"
 "PO-Revision-Date: 2026-10-13 00:08+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -114,7 +114,7 @@ msgstr "RDP zerbitzaria"
 msgid "Quit"
 msgstr "Irten"
 
-#: SessionController.cpp:215
+#: SessionController.cpp:255
 #, kde-format
 msgid "Remote Monitor"
 msgstr "Urruneko monitorea"
