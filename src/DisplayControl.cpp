@@ -15,16 +15,24 @@
 
 using namespace KRdp;
 
-static UINT display_control_receive_monitor_layout(DispServerContext *context, const DISPLAY_CONTROL_MONITOR_LAYOUT_PDU *pdu)
+UINT DisplayControl::displayControlReceiveMonitorLayout(DispServerContext *context, const DISPLAY_CONTROL_MONITOR_LAYOUT_PDU *pdu)
+{
+    auto c = static_cast<DisplayControl *>(context->custom);
+    return c->receiveMonitorLayout(pdu);
+}
+
+UINT DisplayControl::receiveMonitorLayout(const DISPLAY_CONTROL_MONITOR_LAYOUT_PDU *pdu)
 {
     if (pdu->NumMonitors != 1) {
         return CHANNEL_RC_BAD_CHANNEL;
     }
 
-    QSize monitorSize = QSize(pdu->Monitors[0].Width, pdu->Monitors[0].Height);
-
-    auto c = static_cast<DisplayControl *>(context->custom);
-    Q_EMIT c->requestedScreenSizeChanged(monitorSize);
+    m_display = {VirtualMonitor{
+        QStringLiteral("RDP Monitor"),
+        QSize(pdu->Monitors[0].Width, pdu->Monitors[0].Height),
+        pdu->Monitors[0].DesktopScaleFactor / 100.0,
+    }};
+    Q_EMIT displayLayoutChanged();
 
     return CHANNEL_RC_OK;
 }
@@ -32,6 +40,11 @@ static UINT display_control_receive_monitor_layout(DispServerContext *context, c
 DisplayControl::DisplayControl(RdpConnection *session)
     : m_session(session)
 {
+}
+
+QList<VirtualMonitor> DisplayControl::display() const
+{
+    return m_display;
 }
 
 bool DisplayControl::initialize()
@@ -51,7 +64,7 @@ bool DisplayControl::initialize()
     m_dispManager->rdpcontext = m_session->rdpPeer()->context;
     m_dispManager->custom = this;
 
-    m_dispManager->DispMonitorLayout = display_control_receive_monitor_layout;
+    m_dispManager->DispMonitorLayout = displayControlReceiveMonitorLayout;
 
     m_dispManager->MaxNumMonitors = 1;
     m_dispManager->MaxMonitorAreaFactorA = 8192;

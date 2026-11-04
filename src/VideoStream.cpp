@@ -8,6 +8,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include "VideoStream.h"
+#include "DisplayControl.h"
 #include "VideoStreamSurface.h"
 
 #include <algorithm>
@@ -146,6 +147,7 @@ public:
     using ProgressiveContextPtr = std::unique_ptr<PROGRESSIVE_CONTEXT, decltype(&progressive_context_free)>;
 
     RdpConnection *session;
+    DisplayControl *displayControl;
     std::optional<EncodingMode> activeEncodingMode;
     std::unique_ptr<VideoStreamSurface> surface;
 
@@ -204,12 +206,20 @@ bool VideoStream::h264Disabled()
     return h264Disabled;
 }
 
-VideoStream::VideoStream(RdpConnection *session)
+VideoStream::VideoStream(RdpConnection *session, DisplayControl *displayControl)
     : QObject(nullptr)
     , d(std::make_unique<Private>())
 {
     d->session = session;
+    d->displayControl = displayControl;
     d->surface = std::make_unique<VideoStreamSurface>(this);
+
+    connect(d->displayControl, &DisplayControl::displayLayoutChanged, this, [this]() {
+        const auto displays = d->displayControl->display();
+        if (!displays.isEmpty()) {
+            setRequestedSize(displays.constFirst().size);
+        }
+    });
 }
 
 void VideoStream::setActiveEncodingMode(EncodingMode mode)

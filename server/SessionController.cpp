@@ -55,8 +55,6 @@ public:
         connect(connection->clipboard(), &KRdp::Clipboard::clientDataChanged, session.get(), [clipboard = connection->clipboard(), this]() {
             session->setClipboardData(clipboard->getClipboard());
         });
-        connect(connection->displayControl(), &KRdp::DisplayControl::requestedScreenSizeChanged, connection->videoStream(), &KRdp::VideoStream::setRequestedSize);
-
         connect(connection, &QObject::destroyed, this, &SessionWrapper::onConnectionDestroyed);
     }
 
