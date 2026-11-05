@@ -23,6 +23,7 @@
 #include <freerdp/channels/wtsvc.h>
 #include <freerdp/freerdp.h>
 #include <freerdp/server/cliprdr.h>
+#include <freerdp/session.h>
 
 #include <freerdp/channels/drdynvc.h>
 
@@ -696,7 +697,7 @@ bool RdpConnection::onPostConnect()
         if (username == KUser().loginName() || KUser().loginName() == QStringLiteral("plasmalogin")) {
             if (pamAuthenticate(username, password) >= 0) {
                 qCDebug(KRDP) << "PAM authentication succeeded for user" << username;
-                return true;
+                return sendLogonNotification();
             }
         }
         const auto users = d->server->users();
@@ -706,14 +707,45 @@ bool RdpConnection::onPostConnect()
             }
             if (user.name == username && user.password == password) {
                 qCDebug(KRDP) << "User" << username << "authenticated successfully";
-                return true;
+                return sendLogonNotification();
             }
         }
         return false;
     } else {
         // In the NLA case the user has been authorised against the SAM database
-        return true;
+        return sendLogonNotification();
     }
+}
+
+bool RdpConnection::sendLogonNotification()
+{
+    auto context = d->peer->context;
+    auto settings = context->settings;
+
+    // MS-RDPBCGR 3.3.5.10.1 recommends notifying the client after a successful
+    // logon. Include the account details only when the client requested them.
+    const bool includeCredentials = freerdp_settings_get_bool(settings, FreeRDP_LogonNotify);
+    const auto type = includeCredentials ? (freerdp_settings_get_bool(settings, FreeRDP_LongCredentialsSupported) ? INFO_TYPE_LOGON_LONG : INFO_TYPE_LOGON)
+                                         : INFO_TYPE_LOGON_PLAIN_NOTIFY;
+
+    QByteArray username;
+    QByteArray domain;
+    logon_info info{};
+    const void *data = nullptr;
+    if (includeCredentials) {
+        username = freerdp_settings_get_string(settings, FreeRDP_Username);
+        domain = freerdp_settings_get_string(settings, FreeRDP_Domain);
+        info.username = username.data();
+        info.domain = domain.data();
+        data = &info;
+    }
+
+    if (context->update->SaveSessionInfo(context, type, data) != TRUE) {
+        qCWarning(KRDP) << "Unable to send logon notification";
+        return false;
+    }
+
+    return true;
 }
 
 bool RdpConnection::onClose()

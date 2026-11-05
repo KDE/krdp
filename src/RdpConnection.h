@@ -128,6 +128,7 @@ private:
     bool onCapabilities();
     bool onActivate();
     bool onPostConnect();
+    bool sendLogonNotification();
     bool onClose();
     bool onSuppressOutput(uint8_t allow);
 
