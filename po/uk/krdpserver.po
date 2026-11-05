@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-03 00:56+0000\n"
+"POT-Creation-Date: 2026-11-05 00:57+0000\n"
 "PO-Revision-Date: 2026-09-02 08:33+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
@@ -100,17 +100,17 @@ msgstr ""
 "Вимкнути монітори основної системи і створити віртуальні екрани для "
 "виключного використання сеансами віддаленого користувача"
 
-#: SessionController.cpp:111
+#: SessionController.cpp:109
 #, kde-format
 msgid "RDP Server"
 msgstr "Сервер RDP"
 
-#: SessionController.cpp:114
+#: SessionController.cpp:112
 #, kde-format
 msgid "Quit"
 msgstr "Вийти"
 
-#: SessionController.cpp:255
+#: SessionController.cpp:253
 #, kde-format
 msgid "Remote Monitor"
 msgstr "Віддалений монітор"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdpserver\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-03 00:56+0000\n"
+"POT-Creation-Date: 2026-11-05 00:57+0000\n"
 "PO-Revision-Date: 2026-09-13 09:15+0200\n"
 "Last-Translator: Alois Spitzbart <spitz234@hotmail.com>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -101,17 +101,17 @@ msgstr ""
 "Host-Monitore deaktivieren und virtuelle Bildschirme für die exklusive "
 "Nutzung in einer Sitzung durch einen entfernten Benutzer erstellen"
 
-#: SessionController.cpp:111
+#: SessionController.cpp:109
 #, kde-format
 msgid "RDP Server"
 msgstr "RDP-Server"
 
-#: SessionController.cpp:114
+#: SessionController.cpp:112
 #, kde-format
 msgid "Quit"
 msgstr "Beenden"
 
-#: SessionController.cpp:255
+#: SessionController.cpp:253
 #, kde-format
 msgid "Remote Monitor"
 msgstr "Entfernter Monitor"

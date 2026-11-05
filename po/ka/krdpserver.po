@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-03 00:56+0000\n"
+"POT-Creation-Date: 2026-11-05 00:57+0000\n"
 "PO-Revision-Date: 2026-09-02 06:02+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -98,17 +98,17 @@ msgstr ""
 "ჰოსტის ეკრანების გამორთვა და ვირტუალური ეკრანების შექმნა დაშორებული "
 "მომხმარებლის ექსკლუზიური წვდომისთვის"
 
-#: SessionController.cpp:111
+#: SessionController.cpp:109
 #, kde-format
 msgid "RDP Server"
 msgstr "RDP სერვერი"
 
-#: SessionController.cpp:114
+#: SessionController.cpp:112
 #, kde-format
 msgid "Quit"
 msgstr "გასვლა"
 
-#: SessionController.cpp:255
+#: SessionController.cpp:253
 #, kde-format
 msgid "Remote Monitor"
 msgstr "დაშორებული ეკრანი"
