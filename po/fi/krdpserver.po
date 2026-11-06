@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-09-02 00:45+0000\n"
-"PO-Revision-Date: 2025-09-12 16:43+0300\n"
+"PO-Revision-Date: 2026-10-06 13:27+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -58,6 +58,8 @@ msgid ""
 "The quality of the video stream. The maximum quality when AdaptiveQuality is "
 "enabled."
 msgstr ""
+"Videovirran laatu. Paras käytettävissä oleva laatu, kun mukautuva laatu on "
+"käytössä."
 
 #. i18n: ectx: label, entry (adaptiveQuality), group (General)
 #: krdpserversettings.kcfg:32
@@ -65,7 +67,7 @@ msgstr ""
 msgid ""
 "Adjust the video quality at runtime based on the client's network "
 "conditions, up to Quality."
-msgstr ""
+msgstr "Säädä videon ajonaikaista laatua asiakasverkon kunnon mukaan."
 
 #. i18n: ectx: label, entry (Users), group (General)
 #: krdpserversettings.kcfg:36
@@ -92,6 +94,8 @@ msgid ""
 "Disable the host monitors and create virtual screens for exclusive session "
 "use by a remote user"
 msgstr ""
+"Poista isäntänäytöt käytöstä ja luo virtuaalinäyttöjä yksinoikeudella "
+"etäkäyttäjäistunnon käyttöön"
 
 #: SessionController.cpp:111
 #, kde-format
@@ -106,7 +110,7 @@ msgstr "Lopeta"
 #: SessionController.cpp:215
 #, kde-format
 msgid "Remote Monitor"
-msgstr ""
+msgstr "Etänäyttö"
 
 #~ msgid "The quality of the video stream"
 #~ msgstr "Videovirran laatu"
