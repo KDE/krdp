@@ -241,7 +241,17 @@ void Server::setTlsKey(const std::filesystem::path &tlsKeyPath)
         return;
     }
 
-    QSslKey key = QSslKey(&tlsKeyFile, QSsl::Rsa, QSsl::Pem, QSsl::PrivateKey);
+    const QByteArray keyData = tlsKeyFile.readAll();
+
+    QSslKey key;
+    for (QSsl::KeyAlgorithm algorithm : {QSsl::Rsa, QSsl::Ec}) {
+        key = QSslKey(keyData, algorithm, QSsl::Pem, QSsl::PrivateKey);
+
+        if (!key.isNull()) {
+            break;
+        }
+    }
+
     if (key.isNull()) {
         qCWarning(KRDP) << tlsKeyPath.filename().string() << "could not be read";
         return;
