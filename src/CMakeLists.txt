@@ -38,14 +38,24 @@ target_sources(KRdp PRIVATE
     Cursor.h
     NetworkDetection.cpp
     NetworkDetection.h
+    FreeRDPLogging.cpp
+    FreeRDPLogging.h
 )
 
 ecm_qt_declare_logging_category(KRdp
     HEADER krdp_logging.h
     IDENTIFIER KRDP
     CATEGORY_NAME org.kde.krdp
-    DESCRIPTION "KRdp"
-    EXPORT KRdp
+    DESCRIPTION "KRDP"
+    EXPORT KRDP
+)
+
+ecm_qt_declare_logging_category(KRdp
+    HEADER freerdp_logging.h
+    IDENTIFIER FREERDP
+    CATEGORY_NAME com.freerdp
+    DESCRIPTION "FreeRDP"
+    EXPORT FreeRDP
 )
 
 ecm_generate_export_header(KRdp
