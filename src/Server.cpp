@@ -4,6 +4,7 @@
 
 #include "Server.h"
 
+#include <fstream>
 #include <vector>
 
 #include <QCoreApplication>
@@ -16,6 +17,7 @@
 
 #include "FreeRDPLogging.h"
 #include "RdpConnection.h"
+#include "TlsHelpers.h"
 
 #include "krdp_logging.h"
 
@@ -290,46 +292,55 @@ void Server::incomingConnection(qintptr handle)
 
 bool Server::generateCertificate()
 {
-    // OpenSSL requires the parent directories exist
+    if (d->tlsKey.path.empty() || d->tlsCertificate.path.empty()) {
+        qCDebug(KRDP) << "Certificate generation failed because the key or certificate path was empty";
+        return false;
+    }
+
+    const TlsHelpers::TlsResult<QSslKey> key = TlsHelpers::generatePrivateKey();
+    if (key.value.isNull()) {
+        qCDebug(KRDP) << "Certificate generation returned a null key";
+        return false;
+    }
+
+    const TlsHelpers::TlsResult<QSslCertificate> certificate =
+        TlsHelpers::generateSelfSignedCertificate(key, QStringLiteral("KRDP Auto-Generated Self-Signed Certificate"), -1, 365 * 5);
+    if (certificate.value.isNull()) {
+        qCDebug(KRDP) << "Certificate generation returned a null certificate";
+        return false;
+    }
+
+    // Ensure parent directories exist
     std::error_code ec;
     std::filesystem::create_directories(d->tlsCertificate.path.parent_path(), ec);
     if (ec) {
+        qCDebug(KRDP) << "The generated key could not be saved because the parent directories could not be created";
         return false;
     }
     std::filesystem::create_directories(d->tlsKey.path.parent_path(), ec);
     if (ec) {
+        qCDebug(KRDP) << "The generated certificate could not be saved because the parent directories could not be created";
         return false;
     }
 
-    const QString qsCertificate = QString::fromStdString(d->tlsCertificate.path.string());
-    const QString qsKey = QString::fromStdString(d->tlsKey.path.string());
-
-    QProcess sslProcess;
-    sslProcess.start(QStringLiteral("openssl"), {
-       QStringLiteral("req"),
-         QStringLiteral("-noenc"),
-         QStringLiteral("-new"),
-         QStringLiteral("-x509"),
-         QStringLiteral("-subj"), QStringLiteral("/CN=KRDP Auto-Generated Self-Signed Certificate"),
-         QStringLiteral("-out"), qsCertificate,
-         QStringLiteral("-keyout"), qsKey,
-         QStringLiteral("-days"), QStringLiteral("3650"),
-         QStringLiteral("-batch")
-    });
-    sslProcess.waitForFinished();
-
-    if (sslProcess.exitCode() != 0) {
-        qCWarning(KRDP) << "OpenSSL error in certificate generation:" << sslProcess.readAllStandardError();
+    // Write out key and certificate
+    std::ofstream keyFile(d->tlsKey.path, std::ios::binary | std::ios::trunc);
+    if (!keyFile) {
+        qCDebug(KRDP) << "The generated key could not be saved because the file could not be opened";
         return false;
     }
+    keyFile.write(key.pem.constData(), key.pem.size());
 
-    Q_ASSERT(std::filesystem::exists(d->tlsCertificate.path) && std::filesystem::exists(d->tlsKey.path));
+    std::ofstream certificateFile(d->tlsCertificate.path, std::ios::binary | std::ios::trunc);
+    if (!certificateFile) {
+        qCDebug(KRDP) << "The generated certificate could not be saved because the file could not be opened";
+        return false;
+    }
+    certificateFile.write(certificate.pem.constData(), certificate.pem.size());
 
-    // Load the re-generated cert/key
-    setTlsCertificate(d->tlsCertificate.path);
-    setTlsKey(d->tlsKey.path);
-
-    Q_ASSERT(!d->tlsCertificate.value.isNull() && !d->tlsKey.value.isNull());
+    // Use the generated key and certificate
+    d->tlsKey.value = key.value;
+    d->tlsCertificate.value = certificate.value;
 
     return true;
 }
