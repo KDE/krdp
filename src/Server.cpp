@@ -12,6 +12,7 @@
 #include <freerdp/freerdp.h>
 #include <winpr/ssl.h>
 
+#include "FreeRDPLogging.h"
 #include "RdpConnection.h"
 
 #include "krdp_logging.h"
@@ -40,6 +41,8 @@ Server::Server(QObject *parent)
 {
     winpr_InitializeSSL(WINPR_SSL_INIT_DEFAULT);
     WTSRegisterWtsApiFunctionTable(FreeRDP_InitWtsApi());
+
+    installFreeRDPLogging();
 }
 
 Server::~Server()
