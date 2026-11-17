@@ -48,6 +48,7 @@ find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS Config DBusAddons KCMUti
 find_package(FreeRDP 3.1 REQUIRED)
 find_package(WinPR 3.1 REQUIRED)
 find_package(FreeRDP-Server 3.1 REQUIRED)
+find_package(OpenSSL 3.6 REQUIRED COMPONENTS Crypto)
 find_package(KPipeWire ${PROJECT_DEP_VERSION} REQUIRED)
 find_package(XKB REQUIRED)
 

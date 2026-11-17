@@ -38,6 +38,8 @@ target_sources(KRdp PRIVATE
     Cursor.h
     NetworkDetection.cpp
     NetworkDetection.h
+    TlsHelpers.cpp
+    TlsHelpers.h
 )
 
 ecm_qt_declare_logging_category(KRdp
@@ -72,6 +74,7 @@ target_link_libraries(KRdp PUBLIC
     freerdp
     winpr
     freerdp-server
+    OpenSSL::Crypto
     KF6::CoreAddons
     KF6::GuiAddons
     ${PAM_LIBRARIES}
