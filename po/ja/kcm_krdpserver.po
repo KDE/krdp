@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: krdp\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-09-09 00:51+0000\n"
-"PO-Revision-Date: 2026-08-31 22:05+0900\n"
+"PO-Revision-Date: 2026-11-14 12:22+0900\n"
 "Last-Translator: Mint <5602mint@gmail.com>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
 "Language: ja\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
-"X-Generator: Lokalize 26.08.0\n"
+"X-Generator: Lokalize 26.08.3\n"
 
 #. i18n: ectx: label, entry (listenPort), group (General)
 #: krdpserversettings.kcfg:14
@@ -46,7 +46,7 @@ msgstr "TLS 証明書にマッチする鍵"
 msgid ""
 "The quality of the video stream. The maximum quality when AdaptiveQuality is "
 "enabled."
-msgstr ""
+msgstr "映像ストリームの品質設定 (AdaptiveQuality 有効時は品質の最高値)"
 
 #. i18n: ectx: label, entry (adaptiveQuality), group (General)
 #: krdpserversettings.kcfg:32
@@ -55,6 +55,7 @@ msgid ""
 "Adjust the video quality at runtime based on the client's network "
 "conditions, up to Quality."
 msgstr ""
+"クライアントのネットワーク接続状態に合わせて映像品質をリアルタイムに調節"
 
 #. i18n: ectx: label, entry (Users), group (General)
 #: krdpserversettings.kcfg:36
@@ -81,6 +82,8 @@ msgid ""
 "Disable the host monitors and create virtual screens for exclusive session "
 "use by a remote user"
 msgstr ""
+"ホストのモニターを無効化し遠隔操作ユーザー専用セッション向けの仮想スクリーン"
+"を作成"
 
 #: ui/CertError.qml:14
 #, kde-format
@@ -89,20 +92,16 @@ msgid "Generating certificates automatically has failed!"
 msgstr "証明書の自動生成に失敗しました。"
 
 #: ui/CertLoader.qml:19
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select Certificate Key file"
+#, kde-format
 msgctxt "@title:window"
 msgid "Select certificate key file"
-msgstr "証明書鍵のファイルを選択"
+msgstr "証明書鍵ファイルの選択"
 
 #: ui/CertLoader.qml:19
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select Certificate file"
+#, kde-format
 msgctxt "@title:window"
 msgid "Select certificate file"
-msgstr "証明書のファイルを選択"
+msgstr "証明書ファイルの選択"
 
 #: ui/CodecError.qml:14
 #, kde-format
@@ -131,13 +130,13 @@ msgstr "本当にユーザー %1 を削除しますか？"
 #, kde-format
 msgctxt "@title:window"
 msgid "Add new user"
-msgstr "新しいユーザーを追加"
+msgstr "新しいユーザーの追加"
 
 #: ui/EditUserModal.qml:20
 #, kde-format
 msgctxt "@title:window"
 msgid "Modify user"
-msgstr "ユーザーを編集"
+msgstr "ユーザーの編集"
 
 #: ui/EditUserModal.qml:67
 #, kde-format
@@ -223,154 +222,123 @@ msgid "Server Settings"
 msgstr "サーバー設定"
 
 #: ui/main.qml:236
-#, fuzzy, kde-format
-#| msgid "Restart Server"
+#, kde-format
 msgctxt "part of a sentence: 'Start server [automatically on login]'"
 msgid "Start server:"
-msgstr "サーバーを再起動"
+msgstr "サーバーの起動:"
 
 #: ui/main.qml:240
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid "Autostart on login"
+#, kde-format
 msgctxt "part of a sentence: 'Start server automatically on login'"
 msgid "Automatically on login"
-msgstr "ログイン時に自動開始"
+msgstr "ログイン時に自動起動"
 
 #: ui/main.qml:252
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Listening Port:"
+#, kde-format
 msgid "Listening port:"
 msgstr "リッスンするポート:"
 
 #: ui/main.qml:284
 #, kde-format
 msgid "Operating mode:"
-msgstr ""
+msgstr "制御モード:"
 
 #: ui/main.qml:285
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Displays will be locked, and the remote user will see a virtual screen."
 msgstr ""
+"ディスプレイがロックされた上で、遠隔操作を行うユーザーには仮想スクリーンが表"
+"示されます。"
 
 #: ui/main.qml:288
 #, kde-format
 msgid "Enable exclusive mode"
-msgstr ""
+msgstr "排他モードを有効化"
 
 #: ui/main.qml:302
-#, fuzzy, kde-format
-#| msgctxt "@label:slider"
-#| msgid "Quality"
+#, kde-format
 msgid "Quality:"
-msgstr "品質重視"
+msgstr "画質:"
 
 #: ui/main.qml:338
-#, fuzzy, kde-format
-#| msgctxt "@label:slider"
-#| msgid "Responsiveness"
+#, kde-format
 msgctxt "Animation speed"
 msgid "Responsiveness"
 msgstr "応答性重視"
 
 #: ui/main.qml:345
-#, fuzzy, kde-format
-#| msgctxt "@label:slider"
-#| msgid "Quality"
+#, kde-format
 msgctxt "Animation speed"
 msgid "Quality"
-msgstr "品質重視"
+msgstr "画質重視"
 
 #: ui/main.qml:355
 #, kde-format
 msgid "Automatically adjust quality for network conditions"
-msgstr ""
+msgstr "ネットワークの接続状態にあわせて自動調節"
 
 #: ui/main.qml:368
-#, fuzzy, kde-format
-#| msgctxt "title:group Group of RDP server settings"
-#| msgid "Security Certificates"
+#, kde-format
 msgctxt "@title:group"
 msgid "Security Certificates"
 msgstr "セキュリティ証明書"
 
 #: ui/main.qml:371
-#, fuzzy, kde-format
-#| msgctxt "title:group Group of RDP server settings"
-#| msgid "Security Certificates"
+#, kde-format
 msgctxt "part of a sentence: 'Generate certificates [automatically]'"
 msgid "Generate certificates:"
-msgstr "セキュリティ証明書"
+msgstr "証明書の生成:"
 
 #: ui/main.qml:376
-#, fuzzy, kde-format
-#| msgctxt "@label:check generate security certificates automatically"
-#| msgid "Generate automatically"
+#, kde-format
 msgctxt "part of a sentence: '[Generate certificates] automatically'"
 msgid "Automatically"
-msgstr "自動的に生成"
+msgstr "自動"
 
 #: ui/main.qml:396
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Certificate path:"
+#, kde-format
 msgid "Certificate path:"
 msgstr "証明書のパス:"
 
 #: ui/main.qml:406
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Certificate path:"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "Enter certificate path…"
-msgstr "証明書のパス:"
+msgstr "証明書のパスを入力…"
 
 #: ui/main.qml:426
-#, fuzzy, kde-format
-#| msgctxt "@action:button"
-#| msgid "Choose Certificate File…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Choose certificate file…"
 msgstr "証明書ファイルを選択…"
 
 #: ui/main.qml:438
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select Certificate file"
+#, kde-format
 msgid "Opens a file picker for the certificate file"
-msgstr "証明書のファイルを選択"
+msgstr "証明書ファイルの選択画面を開きます"
 
 #: ui/main.qml:445
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Certificate key path:"
+#, kde-format
 msgid "Certificate key path:"
 msgstr "証明書鍵のパス:"
 
 #: ui/main.qml:455
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Certificate key path:"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "Enter certificate key path…"
-msgstr "証明書鍵のパス:"
+msgstr "証明書鍵のパスを入力…"
 
 #: ui/main.qml:475
-#, fuzzy, kde-format
-#| msgctxt "@action:button"
-#| msgid "Choose Certificate Key File…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Choose certificate key file…"
-msgstr "証明書鍵ファイルを選択…"
+msgstr "証明書鍵のファイルを選択…"
 
 #: ui/main.qml:487
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select Certificate Key file"
+#, kde-format
 msgid "Opens a file picker for the certificate key file"
-msgstr "証明書鍵のファイルを選択"
+msgstr "証明書鍵のファイル選択画面を開きます"
 
 #: ui/main_phone.qml:94
 #, kde-format
