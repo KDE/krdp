@@ -12,6 +12,7 @@ extern "C" {
 #include <openssl/evp.h>
 #include <openssl/pem.h>
 #include <openssl/x509.h>
+#include <openssl/x509v3.h>
 }
 
 #include "krdp_logging.h"
@@ -32,6 +33,9 @@ using x509_ptr = std::unique_ptr<X509, decltype([](X509 *p) {
 using x509_name_ptr = std::unique_ptr<X509_NAME, decltype([](X509_NAME *p) {
                                           X509_NAME_free(p);
                                       })>;
+using x509_extension_ptr = std::unique_ptr<X509_EXTENSION, decltype([](X509_EXTENSION *p) {
+                                               X509_EXTENSION_free(p);
+                                           })>;
 using bn_ptr = std::unique_ptr<BIGNUM, decltype([](BIGNUM *p) {
                                    BN_free(p);
                                })>;
@@ -141,6 +145,32 @@ TlsResult<QSslCertificate> generateSelfSignedCertificate(const TlsResult<QSslKey
 
     if (!X509_time_adj_ex(X509_getm_notAfter(x509.get()), notAfterDays, 0, &now)) {
         return fail("setting not after time");
+    }
+
+    // Add certificate extensions
+    auto addExtension = [](X509 *cert, int nid, const char *value) {
+        X509V3_CTX ctx;
+        X509V3_set_ctx_nodb(&ctx);
+        X509V3_set_ctx(&ctx, cert, cert, nullptr, nullptr, 0);
+
+        x509_extension_ptr ext(X509V3_EXT_conf_nid(nullptr, &ctx, nid, value));
+        if (!ext) {
+            return false;
+        }
+
+        return X509_add_ext(cert, ext.get(), -1) == 1;
+    };
+
+    if (!addExtension(x509.get(), NID_basic_constraints, "critical,CA:FALSE")) {
+        return fail("adding basicContraints extension");
+    }
+
+    if (!addExtension(x509.get(), NID_key_usage, "critical,digitalSignature")) {
+        return fail("adding basicContraints extension");
+    }
+
+    if (!addExtension(x509.get(), NID_ext_key_usage, "serverAuth")) {
+        return fail("adding basicContraints extension");
     }
 
     // Get the private key to sign certificate from QSslKey's PEM
